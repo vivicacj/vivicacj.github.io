@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level华文考试全览平台</title>
+    <style>
+        /* 重置和基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* 头部样式 */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: white;
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2rem;
+        }
+        
+        /* 概览卡片样式 */
+        .overview-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(145deg, #f8f9ff, #e6e8ff);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        /* 分区标题样式 */
+        .section-title {
+            text-align: center;
+            margin: 50px 0 30px 0;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            color: white;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        
+        .section-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+        }
+        
+        /* 试卷网格样式 */
+        .papers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        /* 分析工具区域样式 */
+        .analysis-section {
+            margin-top: 60px;
+        }
+        
+        .analysis-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            cursor: default; /* 主卡片不可点击 */
+        }
+        
+        .analysis-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .analysis-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .analysis-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .analysis-content {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .analysis-description {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .analysis-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .feature-item {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item.clickable:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            background: #e9ecef;
+        }
+
+        .feature-item.disabled {
+            background: #f0f0f0;
+            color: #aaa;
+            border-left-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feature-item.disabled .feature-icon,
+        .feature-item.disabled .feature-text {
+             color: #aaa;
+        }
+
+        .feature-link {
+            text-decoration: none;
+            color: inherit;
+            display: block; /* 使整个区域可点击 */
+        }
+        
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .feature-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        /* 试卷卡片样式 */
+        .paper-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .paper-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+        }
+        
+        .paper-header {
+            padding: 25px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .paper-1 { background: linear-gradient(135deg, #ff6b6b, #ff8e53); }
+        .paper-2 { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .paper-3 { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333 !important; }
+        
+        .paper-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .paper-score {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .paper-content {
+            padding: 25px;
+        }
+        
+        .module {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none; /* 为 a 标签添加 */
+            color: inherit; /* 为 a 标签添加 */
+        }
+        
+        .module:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .module-writing { border-left-color: #ff6b6b; }
+        .module-reading { border-left-color: #4ecdc4; }
+        .module-oral { border-left-color: #fed6e3; }
+
+        .module-highlight-writing {
+            border-left-color: #667eea !important;
+            background: linear-gradient(145deg, #ffe6e6, #fff0f0) !important;
+        }
+
+        .module-highlight-reading {
+            border-left-color: #667eea !important;
+            background: linear-gradient(145deg, #f0f4ff, #e6f0ff) !important;
+        }
+        
+        .module-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .module-skills {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .module-score {
+            text-align: right;
+        }
+        
+        .score-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .score-percentage {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        /* 技能图例样式 */
+        .skills-legend {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 1px solid #e6e8ff;
+        }
+        
+        .legend-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .color-comprehension { background: #4ecdc4; }
+        .color-analysis { background: #667eea; }
+        .color-expression { background: #ff6b6b; }
+        .color-application { background: #ffd93d; }
+        .color-communication { background: #a8edea; }
+        
+        /* CTA（号召性用语）区域样式 */
+        .cta-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .cta-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .cta-subtitle {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .cta-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .cta-button.disabled {
+            background: linear-gradient(135deg, #ccc, #999);
+            cursor: not-allowed;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .cta-button.disabled:hover {
+            transform: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .papers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .overview-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .cta-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>O-Level华文考试全览平台</h1>
+            <p>全面掌握考试结构，精准提升各项能力</p>
+        </div>
+        
+        <div class="overview-card">
+            <h2 style="text-align: center; color: #333; margin-bottom: 20px;">考试总览</h2>
+            <div class="overview-stats">
+                <div class="stat-item">
+                    <div class="stat-number">200</div>
+                    <div class="stat-label">总分</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">试卷数量</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2小时</div>
+                    <div class="stat-label">笔试时长</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">题型模块</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-title">
+            <h2>O-Level学习之旅</h2>
+            <p class="section-subtitle">系统化训练，逐步提升各项核心能力</p>
+        </div>
+        
+        <div class="papers-grid">
+            <div class="paper-card">
+                <div class="paper-header paper-1">
+                    <div class="paper-title">试卷一：写作</div>
+                    <div class="paper-score">80分</div>
+                    <div>占总分40%</div>
+                </div>
+                <div class="paper-content">
+                    <a href="practical-writing.html" class="module module-writing module-highlight-writing">
+                        <div class="module-info">
+                            <h4>实用文 ⭐</h4>
+                            <div class="module-skills">考查：语言表达、应用写作</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">20分</div>
+                            <div class="score-percentage">10%</div>
+                        </div>
+                    </a>
+                    
+                    <a href="composition.html" class="module module-writing">
+                        <div class="module-info">
+                            <h4>作文</h4>
+                            <div class="module-skills">考查：创意表达、文字组织</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">60分</div>
+                            <div class="score-percentage">30%</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="paper-card">
+                <div class="paper-header paper-2">
+                    <div class="paper-title">试卷二：语文应用与阅读理解</div>
+                    <div class="paper-score">80分</div>
+                    <div>占总分40%</div>
+                </div>
+                <div class="paper-content">
+                    <div class="module module-reading" onclick="showModuleDetails('短文填充')">
+                        <div class="module-info">
+                            <h4>短文填充</h4>
+                            <div class="module-skills">考查：语文应用、词语理解</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">10分</div>
+                            <div class="score-percentage">5%</div>
+                        </div>
+                    </div>
+                    
+                    <a href="grammar.html" class="module module-reading module-highlight-reading">
+                        <div class="module-info">
+                            <h4>病句改正 ⭐</h4>
+                            <div class="module-skills">考查：语法应用、句法分析</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">10分</div>
+                            <div class="score-percentage">5%</div>
+                        </div>
+                    </a>
+                    
+                    <a href="reading.html" class="module module-reading module-highlight-reading">
+                        <div class="module-info">
+                            <h4>阅读理解一 & 二 ⭐</h4>
+                            <div class="module-skills">考查：文本理解、深度分析</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">48分</div>
+                            <div class="score-percentage">24%</div>
+                        </div>
+                    </a>
+                    
+                    <a href="summary.html" class="module module-reading module-highlight-reading">
+                        <div class="module-info">
+                            <h4>片段缩写 ⭐</h4>
+                            <div class="module-skills">考查：概括能力、文字精炼</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">12分</div>
+                            <div class="score-percentage">6%</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="paper-card">
+                <div class="paper-header paper-3">
+                    <div class="paper-title">试卷三：口试</div>
+                    <div class="paper-score">40分</div>
+                    <div>占总分20%</div>
+                </div>
+                <div class="paper-content">
+                    <div class="module module-oral" onclick="showModuleDetails('口头报告')">
+                        <div class="module-info">
+                            <h4>口头报告</h4>
+                            <div class="module-skills">考查：口语表达、内容组织</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">20分</div>
+                            <div class="score-percentage">10%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module module-oral" onclick="showModuleDetails('讨论')">
+                        <div class="module-info">
+                            <h4>讨论</h4>
+                            <div class="module-skills">考查：互动沟通、思辨能力</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">20分</div>
+                            <div class="score-percentage">10%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <div class="cta-title">开始你的O-Level学习之旅</div>
+            <div class="cta-subtitle">选择模块开始针对性训练</div>
+            <div class="cta-buttons">
+                <a href="reading.html" target="_blank" class="cta-button">阅读理解训练</a>
+                <a href="grammar.html" target="_blank" class="cta-button">病句改正训练</a>
+                <a href="summary.html" target="_blank" class="cta-button">片段缩写训练</a>
+                <a href="practical-writing.html" target="_blank" class="cta-button">实用文训练</a>
+                <a href="composition.html" target="_blank" class="cta-button">作文训练</a>
+                <a href="#" class="cta-button disabled" onclick="showComingSoon('口试练习')">口试模块（即将开放）</a>
+            </div>
+        </div>
+        
+        <div class="analysis-section">
+            <div class="section-title">
+                <h2>分析诊断中心</h2>
+                <p class="section-subtitle">深度分析学习数据，精准定位提升方向</p>
+            </div>
+            
+            <div class="analysis-card">
+                <div class="analysis-header">
+                    <div class="analysis-title">O-Level「高华」历届考题趋势分析</div>
+                    <div class="analysis-subtitle">AI驱动的学习行为深度洞察</div>
+                </div>
+                <div class="analysis-content">
+                    <div class="analysis-description">
+                        通过先进的数据挖掘技术，深度分析学生在各个模块的学习行为模式，识别知识薄弱点，提供个性化的学习建议和优化方案。
+                    </div>
+                    <div class="analysis-features">
+                        <div class="feature-item clickable">
+                            <a href="summary-analysis.html" target="_blank" class="feature-link">
+                                <div class="feature-icon">📊</div>
+                                <div class="feature-text">片段缩写趋势洞察</div>
+                            </a>
+                        </div>
+                        <div class="feature-item clickable">
+                            <a href="reading-analysis.html" target="_blank" class="feature-link">
+                                <div class="feature-icon">🎯</div>
+                                <div class="feature-text">阅读理解趋势分析</div>
+                            </a>
+                        </div>
+                        <div class="feature-item clickable">
+                           <a href="grammar-analysis.html" target="_blank" class="feature-link">
+                                <div class="feature-icon">🔧</div>
+                                <div class="feature-text">病句修改趋势洞察</div>
+                            </a>
+                        </div>
+                        <div class="feature-item clickable">
+                            <a href="practical-writing-analysis.html" target="_blank" class="feature-link">
+                                <div class="feature-icon">📝</div>
+                                <div class="feature-text">实用文趋势分析</div>
+                            </a>
+                        </div>
+                        <div class="feature-item clickable">
+                            <a href="composition-analysis.html" target="_blank" class="feature-link">
+                                <div class="feature-icon">✍️</div>
+                                <div class="feature-text">作文趋势分析</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="skills-legend">
+            <div class="legend-title">考查能力图例</div>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-color color-comprehension"></div>
+                    文本理解与分析
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-analysis"></div>
+                    语言应用能力
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-expression"></div>
+                    表达与写作
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-application"></div>
+                    实际应用技能
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color color-communication"></div>
+                    口语沟通能力
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 为了让卡片也能跳转，我们将所有 onclick 事件改为使用 a 标签，并简化了JS
+        
+        function showModuleDetails(moduleName) {
+            const details = {
+                '短文填充': '在短文中填入合适的词语\n重点：词汇掌握、语境理解',
+                '口头报告': '根据材料进行3分钟口头报告\n重点：内容组织、表达流畅',
+                '讨论': '与考官就话题进行讨论\n重点：观点表达、互动交流'
+            };
+            
+            alert(`${moduleName}模块详情：\n\n${details[moduleName] || '详情待补充...'}`);
+        }
+        
+        function showComingSoon(moduleName) {
+            alert(`${moduleName}模块即将上线！\n敬请期待...`);
+        }
+        
+        // 添加动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.paper-card, .analysis-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>

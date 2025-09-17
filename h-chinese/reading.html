@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level高级华文阅读理解 · 十年题型解构分析平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .navigation {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 10px;
+            z-index: 999;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .nav-tab.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+
+        .inner-content {
+             background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        /* 筛选器样式 */
+        .filter-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-checkbox {
+            display: none;
+        }
+
+        .filter-option {
+            padding: 6px 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .filter-checkbox:checked + .filter-option {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .filter-actions {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+
+        .stats-panel {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #856404;
+            font-weight: 500;
+        }
+
+        /* 表格样式 */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9ff;
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+            margin: 2px 0;
+        }
+
+        .type-fact { background: #28a745; }
+        .type-inference { background: #007bff; }
+        .type-language { background: #ffc107; color: #333; }
+        .type-structure { background: #6f42c1; }
+        .type-open { background: #dc3545; }
+
+        /* 总览页面样式 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        #baodian .stats-grid {
+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        #baodian .stat-card {
+             background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+        #baodian .stat-number {
+             font-size: 1.8rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .overview-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .overview-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .overview-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .overview-card li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .overview-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+        }
+
+        .trend-analysis {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #2c3e50;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .trend-point {
+            background: rgba(255,255,255,0.7);
+            padding: 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        /* 方法论样式 */
+        .method-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .method-box h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        /* 训练计划样式 */
+        .training-schedule {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .training-week h4 {
+            color: #856404;
+            margin-bottom: 8px;
+        }
+
+        /* 模板样式 */
+        .template-box {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .template-title {
+            font-weight: bold;
+            color: #155724;
+            margin-bottom: 8px;
+        }
+
+        .template-content {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        /* 技法宝典专属样式 */
+        .control-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .technique-tree {
+            margin-top: 30px;
+        }
+
+        .main-category {
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .category-sentence { border-left: 6px solid #00b894; }
+        .category-text { border-left: 6px solid #6c5ce7; }
+        .category-genre { border-left: 6px solid #e17055; }
+        .category-universal { border-left: 6px solid #fd79a8; }
+
+        .category-header {
+            padding: 18px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .category-sentence .category-header {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+        }
+
+        .category-text .category-header {
+            background: linear-gradient(135deg, #6c5ce7, #5f3dc4);
+            color: white;
+        }
+
+        .category-genre .category-header {
+            background: linear-gradient(135deg, #e17055, #d63031);
+            color: white;
+        }
+
+        .category-universal .category-header {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+        }
+
+        .category-header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(90deg);
+        }
+
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .category-content.expanded {
+            max-height: 8000px;
+        }
+
+        .category-body {
+            padding: 0 25px 25px 25px;
+            background: #f8f9fa;
+        }
+
+        .sub-technique {
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .sub-header {
+            padding: 12px 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            color: #2c3e50;
+        }
+
+        .sub-header:hover {
+            background: #f1f3f4;
+        }
+
+        .sub-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #ffffff;
+        }
+
+        .sub-content.expanded {
+            max-height: 5000px;
+        }
+
+        .sub-body {
+            padding: 20px;
+        }
+
+        .technique-item {
+            background: #f8f9fa;
+            border-left: 4px solid #74b9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .item-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .formula-content {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #e9ecef;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            margin: 8px 0;
+            border-left: 3px solid #74b9ff;
+        }
+
+        .method-steps {
+            background: #ffffff;
+            padding: 12px;
+            border-radius: 4px;
+            margin: 8px 0;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 10px 0;
+            color: #856404;
+        }
+
+        .tips-list {
+            margin-left: 20px;
+            margin-top: 8px;
+            list-style-type: disc;
+        }
+
+        .tips-list li {
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .category-sentence .technique-item { border-left-color: #00b894; }
+        .category-sentence .formula-content { border-left-color: #00b894; background: #d1f2eb; }
+        .category-text .technique-item { border-left-color: #6c5ce7; }
+        .category-text .formula-content { border-left-color: #6c5ce7; background: #e8e6ff; }
+        .category-genre .technique-item { border-left-color: #e17055; }
+        .category-genre .formula-content { border-left-color: #e17055; background: #ffeaa7; }
+        .category-universal .technique-item { border-left-color: #fd79a8; }
+        .category-universal .formula-content { border-left-color: #fd79a8; background: #ffe0f0; }
+
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 2rem; }
+            .nav-tabs { justify-content: center; }
+            .filter-row { flex-direction: column; }
+            .data-table { font-size: 12px; }
+            .data-table th, .data-table td { padding: 8px 6px; }
+            .category-header { padding: 15px 20px; font-size: 1rem; }
+            .category-body { padding: 0 20px 20px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>O-Level高级华文阅读理解</h1>
+            <div style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 20px;">十年题型解构分析 · 阅读理解方法论实战指南 (2014-2023)</div>
+            <p style="font-size: 1rem; margin-top: 10px; opacity: 0.8;">基于真题数据的深度分析，助力精准备考</p>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('overview', this)">十年总览</button>
+                <button class="nav-tab" onclick="showSection('database', this)">题型数据库</button>
+                <button class="nav-tab" onclick="showSection('methods', this)">阅读理解方法论</button>
+                <button class="nav-tab" onclick="showSection('baodian', this)">技法宝典</button>
+                <button class="nav-tab" onclick="showSection('training', this)">训练计划</button>
+                <button class="nav-tab" onclick="showSection('templates', this)">答题模板</button>
+            </div>
+        </div>
+
+        <!-- 十年总览 -->
+        <div class="content-section active" id="overview">
+            <div class="inner-content">
+                <h2 class="section-title">十年命题趋势总览 (2014-2023)</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-number">10</div><div style="font-size: 0.9rem; opacity: 0.9;">年度数据分析</div></div>
+                    <div class="stat-card"><div class="stat-number">5</div><div style="font-size: 0.9rem; opacity: 0.9;">核心题型分类</div></div>
+                    <div class="stat-card"><div class="stat-number">120+</div><div style="font-size: 0.9rem; opacity: 0.9;">真题解构分析</div></div>
+                    <div class="stat-card"><div class="stat-number">95%</div><div style="font-size: 0.9rem; opacity: 0.9;">题型覆盖率</div></div>
+                </div>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <h3>五大稳定题型</h3>
+                        <ul>
+                            <li><strong>事实信息题</strong> - 定位筛选整合</li>
+                            <li><strong>推理判断题</strong> - 深层理解分析</li>
+                            <li><strong>语言鉴赏题</strong> - 修辞效果解析</li>
+                            <li><strong>结构作用题</strong> - 布局意图把握</li>
+                            <li><strong>开放评鉴题</strong> - 观点论证能力</li>
+                        </ul>
+                    </div>
+                    <div class="overview-card">
+                        <h3>命题演变规律</h3>
+                        <ul>
+                            <li>2014-2016：题型最全面，基础扎实</li>
+                            <li>2017-2019：推理判断成为重点</li>
+                            <li>2020-2022：语言鉴赏稳定考查</li>
+                            <li>2023：分差由"语鉴+开放"制造</li>
+                        </ul>
+                    </div>
+                    <div class="overview-card">
+                        <h3>分差制造机制</h3>
+                        <ul>
+                            <li><strong>基石层</strong>：事实信息（基础门槛）</li>
+                            <li><strong>深化层</strong>：推理判断（常设难点）</li>
+                            <li><strong>区分层</strong>：语言鉴赏（拉开差距）</li>
+                            <li><strong>拔高层</strong>：开放评鉴（思辨能力）</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="trend-analysis">
+                    <h3>关键命题趋势</h3>
+                    <div class="trend-point"><strong>信息提取精度化：</strong>从简单定位向"同义替换+指代链还原"升级，要求更精准的信息整合能力。</div>
+                    <div class="trend-point"><strong>推理从"意思"到"意图"：</strong>更多落到"作者意图/人物动机/思想转变路径"的深层分析。</div>
+                    <div class="trend-point"><strong>语鉴公式化显性化：</strong>明确"本义+语境义+主旨义"三段式，语言审美与主旨联动。</div>
+                    <div class="trend-point"><strong>结构作用隐性回归：</strong>少正面设问，常以标题含义/主旨统摄来考查。</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 题型数据库 -->
+        <div class="content-section" id="database">
+            <div class="inner-content">
+                <h2 class="section-title">题型数据库 - 多维度筛选分析 (2019-2023)</h2>
+                <div class="filter-panel">
+                    <div class="filter-row">
+                        <div class="filter-group"><label class="filter-label">年份选择：</label><div class="filter-options"><input type="checkbox" id="y2023" class="filter-checkbox" checked><label for="y2023" class="filter-option">2023</label><input type="checkbox" id="y2022" class="filter-checkbox" checked><label for="y2022" class="filter-option">2022</label><input type="checkbox" id="y2021" class="filter-checkbox" checked><label for="y2021" class="filter-option">2021</label><input type="checkbox" id="y2020" class="filter-checkbox" checked><label for="y2020" class="filter-option">2020</label><input type="checkbox" id="y2019" class="filter-checkbox" checked><label for="y2019" class="filter-option">2019</label></div></div>
+                        <div class="filter-group"><label class="filter-label">题型选择：</label><div class="filter-options"><input type="checkbox" id="tfact" class="filter-checkbox" checked><label for="tfact" class="filter-option">事实信息</label><input type="checkbox" id="tinfer" class="filter-checkbox" checked><label for="tinfer" class="filter-option">推理判断</label><input type="checkbox" id="tlang" class="filter-checkbox" checked><label for="tlang" class="filter-option">语言鉴赏</label><input type="checkbox" id="topen" class="filter-checkbox" checked><label for="topen" class="filter-option">开放评鉴</label></div></div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group"><label class="filter-label">模块选择：</label><div class="filter-options"><input type="checkbox" id="m1" class="filter-checkbox" checked><label for="m1" class="filter-option">阅读理解(一)</label><input type="checkbox" id="m2a" class="filter-checkbox" checked><label for="m2a" class="filter-option">阅读理解(二)A</label><input type="checkbox" id="m2b" class="filter-checkbox" checked><label for="m2b" class="filter-option">阅读理解(二)B</label></div></div>
+                    </div>
+                    <div class="filter-actions"><button class="btn btn-success" onclick="selectAll()">全选</button><button class="btn btn-danger" onclick="clearAll()">清空</button><button class="btn btn-primary" onclick="applyFilter()">筛选</button></div>
+                </div>
+                <div class="stats-panel" id="statsPanel"></div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">年份</th>
+                            <th style="width: 10%">模块</th>
+                            <th style="width: 24%">题目</th>
+                            <th style="width: 12%">核心题型</th>
+                            <th style="width: 20%">"技法宝典"调用</th>
+                            <th style="width: 28%">解题方案</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataTable">
+                        <tr data-year="2023" data-type="inference" data-module="m1"><td>2023</td><td>理解(一)</td><td>Q11. 母亲为什么会"终于点了点头"？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → 形象概括(心理)</td><td>分析+推断： 分析母亲从犹豫到同意的心理转变，核心是"为了成全儿子"。</td></tr>
+                        <tr data-year="2023" data-type="fact" data-module="m1"><td>2023</td><td>理解(一)</td><td>Q12. 送儿子上学为什么是重大决定？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+整合： 从原文中找出"出人头地"、"改变命运"、"经济困境"等关键词。</td></tr>
+                        <tr data-year="2023" data-type="inference" data-module="m1"><td>2023</td><td>理解(一)</td><td>Q13. 母亲的话为何让儿子百感交集？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → 形象概括(情感)</td><td>情感分析： 结合前后文，分析儿子领悟到母亲"隐忍"的伟大而产生的复杂情感。</td></tr>
+                        <tr data-year="2023" data-type="inference" data-module="m1"><td>2023</td><td>理解(一)</td><td>Q14. 从栽种树苗看出儿子有何性格？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → 形象概括(性格)</td><td>行为→品质： 通过儿子"坚持到底"、"毫不放弃"的行为，概括其"积极"、"坚韧"的性格。</td></tr>
+                        <tr data-year="2023" data-type="language" data-module="m1"><td>2023</td><td>理解(一)</td><td>Q15. 《成全一棵树》的两层含义？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>文本要素 → 标题批注 (象征)</td><td>表层+深层： 运用"语境义+象征义+主旨义"公式。表层指成全真实的树；深层指母亲成全儿子的成长。</td></tr>
+                        <tr data-year="2023" data-type="fact" data-module="m2a"><td>2023</td><td>理解(二)A</td><td>Q16. 登上珠峰后产生敬仰之心的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+概括： 从第一段直接定位并概括出"景色壮观"、"觉得自己渺小"等原因。</td></tr>
+                        <tr data-year="2023" data-type="fact" data-module="m2a"><td>2023</td><td>理解(二)A</td><td>Q17. 促使作者去攀登珠峰的因素？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+整合： 从第三、四段整合出"克服困难的乐趣"、"热爱大山"等多个原因。</td></tr>
+                        <tr data-year="2023" data-type="language" data-module="m2a"><td>2023</td><td>理解(二)A</td><td>Q18. 说明两句的意思。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (深层含义)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释句子的深层象征含义。</td></tr>
+                        <tr data-year="2023" data-type="inference" data-module="m2a"><td>2023</td><td>理解(二)A</td><td>Q19. 在攀登中获得情感和精神富足感。</td><td><span class="type-badge type-inference">推理判断题</span></td><td>主旨探究 → 散文主旨</td><td>提炼+概括： 分析第六段，提炼出"合作"、"坚持"、"战胜自我"等精神层面的感悟。</td></tr>
+                        <tr data-year="2023" data-type="open" data-module="m2a"><td>2023</td><td>理解(二)A</td><td>Q20. "你心里的峰顶只能由你自己攀登"。同意吗？</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场（同意）→ 原文理由（登山的内心动力）→ 个人经历（具体事例）→ 总结。</td></tr>
+                        <tr data-year="2023" data-type="language" data-module="m2b"><td>2023</td><td>理解(二)B</td><td>Q21. 第二段用什么手法形容行人？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 修辞赏析 (夸张/比喻)</td><td>黄金公式： 套用"明手法+释运用+答三表"的模板。</td></tr>
+                        <tr data-year="2023" data-type="inference" data-module="m2b"><td>2023</td><td>理解(二)B</td><td>Q22. 第四段描写妇女有什么用意？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>语句理解 → (深层含义)</td><td>情节分析： 分析情节的反差，并关联文章"难以预测"的主题。</td></tr>
+                        <tr data-year="2023" data-type="language" data-module="m2b"><td>2023</td><td>理解(二)B</td><td>Q23. 为什么说"每隔几步就会遇到一场太阳雨"？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>语句理解 → (比喻内涵)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释比喻的内涵。</td></tr>
+                        <tr data-year="2023" data-type="open" data-module="m2b"><td>2023</td><td>理解(二)B</td><td>Q24. 如何面对"太阳雨"？结合经验谈看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>三步结构： 概括作者态度 → 结合我的经历(具体) → 总结我的感悟。</td></tr>
+                        <tr data-year="2022" data-type="inference" data-module="m1"><td>2022</td><td>理解(一)</td><td>Q4. 外企老板有何性格/能力特征？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → 形象概括(性格/能力)</td><td>行为→品质： 通过老板"信任和鼓励"犯错员工的行为，概括其"有领导能力"、"懂得正向激励"的特点。</td></tr>
+                        <tr data-year="2022" data-type="fact" data-module="m1"><td>2022</td><td>理解(一)</td><td>Q5. 作者认为宽容能教育人…原因是…</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注/论证分析</td><td>定位+概括： 从第四段中直接定位并概括出"宽容能教育人"的观点和理由。</td></tr>
+                        <tr data-year="2022" data-type="language" data-module="m2a"><td>2022</td><td>理解(二)A</td><td>Q1. 排比句的作用？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 修辞赏析 (排比)</td><td>排比模板： 套用排比专用模板，分析其"加强语势、层层递进、强烈抒情"的作用。</td></tr>
+                        <tr data-year="2022" data-type="fact" data-module="m2a"><td>2022</td><td>理解(二)A</td><td>Q2. 作者对城市发展的观点？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注/论证分析</td><td>定位+整合： 从第四段中整合作者对城市发展的多方面看法（必然趋势、破坏环境等）。</td></tr>
+                        <tr data-year="2022" data-type="language" data-module="m2a"><td>2022</td><td>理解(二)A</td><td>Q3. 说明两句的意思。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (深层含义)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释句子的深层含义。</td></tr>
+                        <tr data-year="2022" data-type="fact" data-module="m2a"><td>2022</td><td>理解(二)A</td><td>Q4. "还野"计划与欧美的不同之处？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括 (对比)</td><td>定位+筛选： 从第三至第五段中找出并概括新加坡和欧美"还野"计划在阶段、内容、理念上的异同。</td></tr>
+                        <tr data-year="2022" data-type="open" data-module="m2a"><td>2022</td><td>理解(二)A</td><td>Q5. "我们都是生态环境中的一份子"。谈看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场（同意）→ 原文理由 → 现实例子（如环保行动）→ 总结。</td></tr>
+                        <tr data-year="2022" data-type="fact" data-module="m2b"><td>2022</td><td>理解(二)B</td><td>Q6. 作者第二次到德里感觉不同的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+概括： 从第一段中直接找出"印度已逐步进入了经济繁荣的新时代"等原因。</td></tr>
+                        <tr data-year="2022" data-type="fact" data-module="m2b"><td>2022</td><td>理解(二)B</td><td>Q7. 朋友告诫作者…但他不完全同意的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>人物批注 / 情节概括</td><td>定位+整合： 从第二段中整合作者对朋友告诫的态度及其理由。</td></tr>
+                        <tr data-year="2022" data-type="inference" data-module="m2b"><td>2022</td><td>理解(二)B</td><td>Q8. 作者不认同"简单就是美"的原因？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>议论文 → 论证分析</td><td>观点提炼： 分析第五段，提炼出作者认为"简单就是美"是"城市人因为少了几分自信"而"武装"自己的观点。</td></tr>
+                        <tr data-year="2022" data-type="open" data-module="m2b"><td>2022</td><td>理解(二)B</td><td>Q9. 作者认为不尝试"杂乱"人生会乏味。谈看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场 → 原文理由 → 个人经历(具体) → 感悟。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m1"><td>2021</td><td>理解(一)</td><td>Q4. 作者对导览人员的回应表示赞赏的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+整合： 从原文第一段中整合导览员回应的具体内容，概括出其值得赞赏之处。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m1"><td>2021</td><td>理解(一)</td><td>Q5. 作者认为行善与关怀社会是重要的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>议论文 → 论点概括</td><td>定位+提炼： 从原文最后一段中直接定位并提炼出"行善与关怀社会"的重要性的核心理由。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m2a"><td>2021</td><td>理解(二)A</td><td>Q1. 老师找作者谈话的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>多段定位+整合： 从第二、三、九段中整合信息，找出老师找作者谈话的根本原因（爱惜人才，引导规划）。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m2a"><td>2021</td><td>理解(二)A</td><td>Q2. 作者必须在音乐和演戏方面达成目标所需的努力？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>分点定位+概括： 从第四至七段中分别找出并概括音乐和演戏两方面需要付出的具体行动。</td></tr>
+                        <tr data-year="2021" data-type="language" data-module="m2a"><td>2021</td><td>理解(二)A</td><td>Q3. 说明两句的意思。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (比喻/象征)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释句子的深层含义。</td></tr>
+                        <tr data-year="2021" data-type="inference" data-module="m2a"><td>2021</td><td>理解(二)A</td><td>Q4. 周老师是怎样的人？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → 形象概括(性格)</td><td>行为→品质： 通过周老师"观察入微"、"引导规划"等具体行为，概括其"关爱学生"、"善于引导"的形象。</td></tr>
+                        <tr data-year="2021" data-type="open" data-module="m2a"><td>2021</td><td>理解(二)A</td><td>Q5. "能及时思考'十年后我会怎么样'…"你同意吗？</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场（同意）→ 原文理由（规划未来带来动力）→ 个人经历（具体事例）→ 总结。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m2b"><td>2021</td><td>理解(二)B</td><td>Q6. 农夫回答宰相时要附耳轻说的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+概括： 从第一段中直接定位并概括出农夫认为牛能分辨出他的评论这一原因。</td></tr>
+                        <tr data-year="2021" data-type="inference" data-module="m2b"><td>2021</td><td>理解(二)B</td><td>Q7. 文中采用对比手法的原因？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>手法赏析 → 对比</td><td>效果分析： 分析"公开批评"和"私下批评"的对比，阐明作者意在突出"私下批评"的有效性。</td></tr>
+                        <tr data-year="2021" data-type="fact" data-module="m2b"><td>2021</td><td>理解(二)B</td><td>Q8. 被表扬的人…表扬他人时必须注意…</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>多点定位+整合： 从第四、五、六段中找出并整合出关于表扬的反应、注意事项等多个信息点。</td></tr>
+                        <tr data-year="2021" data-type="open" data-module="m2b"><td>2021</td><td>理解(二)B</td><td>Q9. "批评和表扬不应针对与生俱来的特质"谈看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场 → 原文理由 → 个人具体经历 → 感悟。</td></tr>
+                        <tr data-year="2020" data-type="fact" data-module="m1"><td>2020</td><td>理解(一)</td><td>Q4. 不说谎的两种人有何异同？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>说明文 → 说明方法 (作比较)</td><td>定位+筛选： 在第四段中精准筛选出两种人的"相同点"和"不同点"信息，并分别列出。</td></tr>
+                        <tr data-year="2020" data-type="fact" data-module="m1"><td>2020</td><td>理解(一)</td><td>Q5. 作者认为有些谎言是语言艺术的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>议论文 → 论点概括</td><td>定位+提炼： 从原文最后一段中直接定位并提炼出"善意谎言是语言艺术"的观点及成立条件。</td></tr>
+                        <tr data-year="2020" data-type="fact" data-module="m2a"><td>2020</td><td>理解(二)A</td><td>Q1. 作者收衣服任务不简单的原因及克服方法？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括 (因果+发展)</td><td>定位+整合： 从第二、三段中整合信息，概括出任务"不简单"的原因以及后来"克服困难"的方法。</td></tr>
+                        <tr data-year="2020" data-type="language" data-module="m2a"><td>2020</td><td>理解(二)A</td><td>Q2. 找出拟人句并说明其表现了什么。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 修辞赏析 (拟人)</td><td>拟人模板： 套用拟人专用模板，分析其"人格化"的特点和效果。</td></tr>
+                        <tr data-year="2020" data-type="language" data-module="m2a"><td>2020</td><td>理解(二)A</td><td>Q3. 说明两句的意思。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (比喻/象征)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释句子的深层含义。</td></tr>
+                        <tr data-year="2020" data-type="inference" data-module="m2a"><td>2020</td><td>理解(二)A</td><td>Q4. 作者和白头翁及邻居的关系如何？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>人物批注 → (关系分析)</td><td>对比+推断： 通过分析"信任"、"默契"等细节概括与白头翁的亲密关系；通过"不互动"概括与邻居的疏远关系。</td></tr>
+                        <tr data-year="2020" data-type="open" data-module="m2a"><td>2020</td><td>理解(二)A</td><td>Q5. "我同意这个说法…"结合经历谈看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场 → 原文理由 → 个人具体经历 → 感悟。</td></tr>
+                        <tr data-year="2020" data-type="fact" data-module="m2b"><td>2020</td><td>理解(二)B</td><td>Q6. 业界前辈与作者对"成功的到来"的对立观点？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>议论文 → 论点概括 (对比)</td><td>定位+概括： 从第一、二段中分别找出并概括两种对立的观点。</td></tr>
+                        <tr data-year="2020" data-type="fact" data-module="m2b"><td>2020</td><td>理解(二)B</td><td>Q7. 作者认为歌曲与董姿彦的经历符合的原因？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+概括： 从第四至七段中找出作者认为两者"符合"的原因，并进行要点概括。</td></tr>
+                        <tr data-year="2020" data-type="language" data-module="m2b"><td>2020</td><td>理解(二)B</td><td>Q8. 如何理解《姗姗到访》歌词的含义？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (深层哲理)</td><td>联系主旨： 结合文章对董姿彦经历的分析，阐释歌词所蕴含的人生哲理。</td></tr>
+                        <tr data-year="2020" data-type="open" data-module="m2b"><td>2020</td><td>理解(二)B</td><td>Q9. 你赞同作者"等待成功"的态度吗？</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场 → 原文理由 → 个人观点/价值观论述 → 总结。</td></tr>
+                        <tr data-year="2019" data-type="fact" data-module="m1"><td>2019</td><td>理解(一)</td><td>Q4. 作者认为要拒绝消极，应该怎么做？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>议论文 → 论点概括</td><td>定位+概括： 从原文最后一段中直接定位并概括出"拒绝消极，亲近积极"的具体做法。</td></tr>
+                        <tr data-year="2019" data-type="language" data-module="m1"><td>2019</td><td>理解(一)</td><td>Q5. "人对了，世界就对了"的含义？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (深层哲理)</td><td>三义公式： 结合全文主旨，运用"本义+语境义+情感主旨义"的公式来解释。</td></tr>
+                        <tr data-year="2019" data-type="fact" data-module="m2a"><td>2019</td><td>理解(二)A</td><td>Q1. 男孩捡起的贝壳怎样？如何处理？为什么？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>三点定位： 从第一段分别找出关于贝壳"特点"、"处理方式"和"处理原因"的三个关键信息。</td></tr>
+                        <tr data-year="2019" data-type="inference" data-module="m2a"><td>2019</td><td>理解(二)A</td><td>Q2. 作者对男孩行动表情的描写表现了怎样的心情？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>手法赏析 → 描写赏析</td><td>描写→心理： 先概括描写内容（如"拖着脚步"、"眼眶都红了"），再分析其表现的"失落"心情。</td></tr>
+                        <tr data-year="2019" data-type="language" data-module="m2a"><td>2019</td><td>理解(二)A</td><td>Q3. 说明两句的意思。</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 语句理解 (比喻/象征)</td><td>三义公式： 运用"本义+语境义+情感主旨义"的公式，解释句子的深层含义。</td></tr>
+                        <tr data-year="2019" data-type="inference" data-module="m2a"><td>2019</td><td>理解(二)A</td><td>Q4. 文中"对人生海滩上…贝壳视而不见…"指的是什么？</td><td><span class="type-badge type-inference">推理判断题</span></td><td>主旨探究 → 散文主旨 (象征)</td><td>象征→哲理： 先分析"贝壳"象征生活中的美好，"乐趣"象征过程，从而提炼出文章道理。</td></tr>
+                        <tr data-year="2019" data-type="open" data-module="m2a"><td>2019</td><td>理解(二)A</td><td>Q5. "太执着于心中所追求的，只会带来失望…"同意吗？</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>四步结构： 立场 → 原文理由 → 现实例子(具体) → 感悟。</td></tr>
+                        <tr data-year="2019" data-type="fact" data-module="m2b"><td>2019</td><td>理解(二)B</td><td>Q6. 饮料与人生的对应关系？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>定位+概括： 从第一段中直接找出三种饮料分别对应的三种"人生"。</td></tr>
+                        <tr data-year="2019" data-type="fact" data-module="m2b"><td>2019</td><td>理解(二)B</td><td>Q7. "果汁人生"和"啤酒人生"的人各有什么特点？</td><td><span class="type-badge type-fact">事实信息题</span></td><td>情节批注 → 事件概括</td><td>分点定位+概括： 从第三、四段中分别找出两种人的特点并进行概括。</td></tr>
+                        <tr data-year="2019" data-type="language" data-module="m2b"><td>2019</td><td>理解(二)B</td><td>Q8. 用"矿泉水"比喻人生为何恰当？</td><td><span class="type-badge type-language">语言鉴赏题</span></td><td>句段分析 → 修辞赏析 (比喻)</td><td>比喻模板： 套用比喻模板，先说明比喻了什么，再分析两者在"平淡但有内涵"方面的相似点。</td></tr>
+                        <tr data-year="2019" data-type="open" data-module="m2b"><td>2019</td><td>理解(二)B</td><td>Q9. 结合生活阶段经历谈谈对"人生杂糅不同滋味"的看法。</td><td><span class="type-badge type-open">开放性评鉴题</span></td><td>(独立)</td><td>分阶段论述结构： 立场 → 原文理由 → 分阶段阐述个人经历与感悟 → 总结。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 阅读理解方法论 -->
+        <div class="content-section" id="methods">
+            <div class="inner-content">
+                <h2 class="section-title">阅读理解方法论实战指南</h2>
+                <div class="method-box"><h4>① 事实信息题（基石层）- 定位→筛选→整合</h4><p><strong>抓分动作：</strong>圈出题干"范围词/限定词/同义改写"，在对应段落找"同义/近义/指代回指/时空对应"信息，做并列/层递合并表述。</p><p><strong>依据：</strong>连年强调其"基石"地位与"精准提取"，是得分的绝对基础。</p></div>
+                <div class="method-box"><h4>② 推理判断题（深化层）- 细节→意图/关系/过程</h4><p><strong>抓分动作：</strong>先点明依据句，再用"因果/对比/转折/伏笔照应"链条推演，最后落到"作者意图/人物动机/思想转变（起—转—合）"。</p><p><strong>例据：</strong>2023 Q22明确要求"从情节反差推断作者深层写作意图"。</p></div>
+                <div class="method-box"><h4>③ 语言鉴赏题（区分层）- 本义+语境义+主旨/情感义</h4><p><strong>抓分动作：</strong>按"本义→语境义→情感/主旨义"三连步解析关键修辞或关键词，必要时补充"画面感/节奏/语势"效果词。</p><p><strong>进阶：</strong>修辞赏析可用"阅读理解黄金公式：明手法+释运用+答三表"。</p></div>
+                <div class="method-box"><h4>④ 结构作用题（隐性考查）- 三步走</h4><p><strong>抓分动作：</strong>"向上看（照应/总领/点题）→向下看（铺垫/承接/伏笔）→全文看（线索/对比/首尾呼应/结构严谨）"，并结合"段位"给出术语+对应内容。</p></div>
+                <div class="method-box"><h4>⑤ 开放性评鉴题（拔高层）- 立场+理由+案例+总结</h4><p><strong>抓分动作：</strong>先表态（同/不同/辩证）→引原文观点/细节为论据→结合个人/社会实例展开→升华/回扣主题收束。</p><p><strong>例据：</strong>历年对开放题均给出"立场—原文理由—经历/价值观—总结"的明确写作结构。</p></div>
+            </div>
+        </div>
+        
+        <!-- 技法宝典 -->
+        <div class="content-section" id="baodian">
+             <div class="inner-content">
+                <h2 class="section-title">技法宝典</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-number">4</div><div style="font-size: 0.9rem; opacity: 0.9;">技法模块</div></div>
+                    <div class="stat-card"><div class="stat-number">13</div><div style="font-size: 0.9rem; opacity: 0.9;">子技法类别</div></div>
+                    <div class="stat-card"><div class="stat-number">50+</div><div style="font-size: 0.9rem; opacity: 0.9;">具体方法</div></div>
+                    <div class="stat-card"><div class="stat-number">100%</div><div style="font-size: 0.9rem; opacity: 0.9;">原文保留</div></div>
+                </div>
+                <div class="control-buttons">
+                    <button class="btn btn-primary" onclick="expandAll()">全部展开</button>
+                    <button class="btn btn-success" onclick="collapseAll()">全部收起</button>
+                </div>
+                <div class="technique-tree">
+                    <!-- 一、句段分析技法 -->
+                    <div class="main-category category-sentence">
+                        <div class="category-header" onclick="toggleCategory(this)"><span>句段分析技法</span><span class="expand-icon">▶</span></div>
+                        <div class="category-content"><div class="category-body">
+                            <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>修辞赏析（比喻、拟人、排比等）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="method-steps"><strong>通用解题思路：</strong>明确手法、解释运用、表达效果、表现内容、表达情感。</div><div class="technique-item"><div class="item-title">比喻</div><div class="formula-content">公式：运用了比喻的修辞手法，将"XX"比喻为"YY"，生动形象地展现了……，表达了作者……情感。</div><div class="method-steps"><strong>补充：</strong>寻找并概括原文中描述特点的形容词，如"色彩绚丽"、"热烈奔放"、"充满激情"。分析时切忌脱离原文，答案可能在其他段落中。</div><div class="highlight-box"><strong>与象征的区别：</strong>比喻多用于单个句子，目的是使事物特征鲜明突出，化深奥为浅显，生动形象；象征则涉及较大篇幅，象征体通常真实存在，目的是使表达言浅意深，含蓄隽永。</div></div><div class="technique-item"><div class="item-title">拟人</div><div class="method-steps">通过赋予无生命事物人的情感或动作来使其生动形象。</div></div><div class="technique-item"><div class="item-title">多修辞赏析</div><div class="method-steps"><strong>"以人为本"和"以主为本"方法</strong>——不仅要写出写作对象本身的特点，还要写出写作对象背后的人或物的特点。</div></div><div class="technique-item"><div class="item-title">反复</div><div class="formula-content">公式：运用了反复的修辞手法，突出强调了……内容，抒发了……情感（主旨、情感）。</div><div class="method-steps"><strong>效果：</strong>多次强调，给人留下深刻印象；抒情强烈，富有感染力。</div></div><div class="technique-item"><div class="item-title">夸张</div><div class="formula-content">公式：运用了夸张的修辞手法，突出强调了……的……特征，表达了作者……情感。</div></div><div class="technique-item"><div class="item-title">排比</div><div class="formula-content">公式：运用了排比的修辞手法，写出了……特点，抒发了……情感，句式整齐，节奏鲜明，增强了语言表现力（气势）。</div><div class="method-steps"><strong>效果：</strong>句式整齐，富有美感；节奏感强，增强语言表达气势。</div></div><div class="technique-item"><div class="item-title">象征</div><div class="method-steps"><strong>定义：</strong>一种借由具体事物表达抽象概念、思想或情感的艺术手法。<br><strong>效果：</strong>使文章形象生动而隽永；是变平凡为深刻的催化剂。</div><div class="formula-content">公式：运用了象征的表现手法，用……象征……，赞颂了某类……的人（答品质），暗含主旨，表达了……思想感情，使文章立意高远，含蓄深刻。</div></div></div></div></div>
+                            <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>词语理解（本义+语境义+情感义）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="highlight-box"><strong>口诀：</strong>语境义跟本义区别很大时，先解释词语本义，再补充修辞手法（如果有），最后答出表达效果、表现内容和表达情感这三方面。</div><div class="method-steps"><strong>分析角度：</strong>本义 + 语境义 + "以人为本"情感义。</div></div></div></div>
+                            <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>语句理解（常规位置vs非常规位置）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">常规位置解题思路</div><ul class="tips-list"><li>如有修辞手法，先点明手法。</li><li>锁定关键词（即有丰富语境义、主旨义的词语）。</li><li>分析关键词在文中的临时含义（语境义）。</li><li>结合全文翻译句子语境义。</li><li>关联文章主旨（如果句子语境义即为主旨义，可灵活处理）。</li></ul><div class="highlight-box"><strong>快速锁定关键词的提示：</strong>带有明显修辞属性的词（多为名词）；句子中的形容词和动词；指代词（如"这""那"）；标题中出现的词；具有"一语双关"含义的词。</div></div><div class="technique-item"><div class="item-title">非常规位置（标题含义）解题思路</div><ul class="tips-list"><li>锁定标题中的关键词（即有丰富象征义、比喻义的词语）。</li><li>翻译标题中关键词的语境义。</li><li>翻译标题中关键词的象征义/比喻义/引申义。</li><li>关联文章主旨（主旨义）。</li></ul><div class="formula-content">组织答案：直接语境义 + 象征义 + 主旨义。</div></div><div class="technique-item"><div class="item-title">非常规位置（文末位置）解题思路</div><div class="method-steps">语境义（浅层含义）+ 引申义（深层含义）+ 情感主旨义。</div></div></div></div></div>
+                            <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>描写赏析（人物、环境、细节）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">人物描写+细节描写专用公式</div><div class="formula-content">运用了……的描写方法，通过……，生动传神（细腻）地写出了……（描写内容），表现了……情感/揭示了……品质/形象。</div></div><div class="technique-item"><div class="item-title">环境描写专用公式</div><div class="formula-content">运用了……的描写方法，通过写……，描绘出……的画面/渲染了……的气氛，烘托出人物……的心情，表达了作者……情感。</div></div><div class="technique-item"><div class="item-title">结合手法（动静结合、视听/感官结合）</div><div class="method-steps"><strong>动静结合：</strong>……为动景，……为静景……，使文章活泼生动，直观形象。<br><strong>感官结合：</strong>运用……（感官）可以让读者更深刻地体会作者的感受，身临其境。</div></div><div class="technique-item"><div class="item-title">其他表现手法</div><div class="method-steps"><strong>虚实结合：</strong>……为实写，……为虚写，充实文章内容，使文章内容丰富。<br><strong>正侧结合：</strong>正面描写……侧面描写……，使人物形象更加鲜明，使文章表达的中心更加突出。<br><strong>借景抒情：</strong>通过描写……表达了作者……情感，使情景互相感应，互相交融，互相依托，从而创造出一种物我一体的艺术境界。<br><strong>联想想象：</strong>由……联想/想象到……，使表达更生动，表达作者对某种事物/情况的期盼。</div></div></div></div></div>
+                            <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>句段作用（内容+结构）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">内容作用</div><ul class="tips-list"><li><strong>事件：</strong>交代起因/经过/结果/背景（概括情节）。</li><li><strong>人/物：</strong>塑造/突出形象/特点/品质/心情。</li><li><strong>环境：</strong>烘托/渲染/描绘氛围/画面/场景。</li><li><strong>情感：</strong>表达作者/文中人物情感/奠定情感基调。</li></ul></div><div class="technique-item"><div class="item-title">结构作用</div><ul class="tips-list"><li>承上启下。</li><li>照应标题，设置悬念。</li><li>引出下文，为后文做铺垫。</li><li>揭示文章主旨，引发思考。</li></ul></div><div class="technique-item"><div class="item-title">赏析角度</div><div class="method-steps">可从修辞手法、词语运用、表达方式、表现手法、句式、语气、语言风格、内容、情感主旨、艺术效果等方面分析。</div></div></div></div></div>
+                        </div></div>
+                    </div>
+                    <!-- 二、文本要素分析 -->
+                    <div class="main-category category-text"><div class="category-header" onclick="toggleCategory(this)"><span>文本要素分析</span><span class="expand-icon">▶</span></div><div class="category-content"><div class="category-body">
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>标题批注（作用+拟题技巧）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">标题作用</div><div class="highlight-box"><strong>"八字绝"方向：</strong>概（高度概括文章主要内容）、主（暗示/揭示/点明文章主题）、情（表达情感，奠定全文情感基调）、线（标明线索，贯穿全文，使文章结构完整严谨）、悬（设置悬念，激发阅读兴趣，引发读者思考）、手（运用修辞/表现手法，展示艺术效果）、语（语言隽永，意味深长，引起兴趣，引人深思）。</div><div class="method-steps"><strong>小窍门：</strong>答题目作用题时，尽量概括文章主要内容，按"八字绝"方向去概括。</div></div><div class="technique-item"><div class="item-title">拟标题</div><div class="method-steps"><strong>思路：</strong><br>① 概括文章主旨，作为拟标题的方向（标题必须与主旨有关）。<br>② 根据"八字诀"补充标题方向，特别注意"对、内、主、情、线"。<br>③ 根据前两步拟标题。<br>④ 组织答案。</div><div class="formula-content">答案呈现形式：标题 + 本文主要写了（标题方向概括）+"八字诀"。</div><div class="highlight-box"><strong>要求：</strong>拟标题时应抓住文章主旨和关键词语，注意语言简洁精炼、生动形象。</div></div></div></div></div>
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>人物批注（形象概括+作用分析）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">人物形象概括</div><div class="method-steps"><strong>分析思路：</strong><br>① <strong>析身份：</strong>社会、国家民族身份；家庭、人际关系身份——身份对应特点。<br>② <strong>找评价：</strong>作者对人物的评价；文中其他人的评价 + 侧面衬托——有"概括词"的话直接用原文词。<br>③ <strong>找情节：</strong>人物做了什么？为什么要这么做？——"分层"（如武松打虎前安排"痛饮十八碗"的情节，凸显武松的豪迈气度）。<br>④ <strong>析描写：</strong>外貌、语言、动作、心理、神态描写 + 细节描写。</div><div class="highlight-box"><strong>人物形象的四个层次：</strong><br>① <strong>身份：</strong>如石匠。<br>② <strong>外在特点：</strong>如外形丑陋、声音柔和。<br>③ <strong>性格特点（内在）：</strong>心理特质（如坚强、乐观）、道德品质（如善良、宽容）。<br>④ <strong>能力特点：</strong>如厨艺高超、教子有方、医术高超。</div><div class="method-steps"><strong>小窍门：</strong>如果题目问"性格品质"，只回答性格；如果问"形象特点"，则全部回答。</div></div><div class="technique-item"><div class="item-title">人物作用</div><div class="method-steps">（此部分在原文中未详细展开，保持原有结构）</div></div></div></div></div>
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>情节批注（作用+概括方法）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">情节作用</div><div class="method-steps"><strong>通用解题思路：</strong><br>① <strong>对情节：</strong>该情节为……做铺垫/为……埋伏笔/将小说情节推向高潮/与……形成呼应/与……形成对比，使情节更加完整、曲折。<br>② <strong>对人物：</strong>该情节展现了人物……的形象/性格/心理，使人物形象更加丰富/鲜明。<br>③ <strong>对主旨：</strong>该情节表现了……，揭示主旨，使主旨更加突出。</div><div class="method-steps"><strong>读者层面：</strong>设置悬念，吸引读者的阅读兴趣或注意力；引发读者思考。</div><div class="highlight-box"><strong>插叙&补叙的作用：</strong><br>① <strong>对情节：</strong>补充故事情结、对事件解释说明，使故事更完整。<br>② <strong>对人物：</strong>表现人物情感、丰富人物形象，使人物形象更丰满。<br>③ <strong>对环境：</strong>补充故事背景。<br>④ <strong>对主旨：</strong>凸显主题主旨。</div></div><div class="technique-item"><div class="item-title">事件概括</div><div class="method-steps"><strong>方法：</strong>表格式和链条式（事件+情感、事件+人物）。<br><strong>"强迫症"批注法：</strong>主语一致、字数一致、句式一致。</div></div></div></div></div>
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>主旨探究（小说vs散文）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">小说主旨</div><div class="formula-content">人性类主旨参考：文章通过塑造（形象）的（人物），歌颂/赞扬/批评了（一类人）的精神/品格。（表达了对……的思考）。</div><div class="formula-content">社会现象类主旨参考：文章通过描写/记叙/刻画了______（人物）为了______（目的/原因）而______（行为/心理）最终______（结果）的故事，表达/表现/揭露了______。（态度/情感/观点）。</div><div class="highlight-box"><strong>常见主旨思考方向：</strong>歌颂真情（亲情、友情、故乡情、爱国情、某物情怀等）、展现人性光辉（善良、质朴、理想、坚持、勇气、奉献等）、反映道理、反映社会问题。</div></div><div class="technique-item"><div class="item-title">散文主旨</div><div class="method-steps"><strong>常见主题：</strong>怀念亲人故友、追忆少年时光、牵挂乡土风情。<br><strong>暗示主旨：</strong>通常用在文章的标题/开头/末尾，全文没有明确写出主旨，让读者深思领悟。</div></div></div></div></div>
+                    </div></div></div>
+                    <!-- 三、文体专项技法 -->
+                    <div class="main-category category-genre"><div class="category-header" onclick="toggleCategory(this)"><span>文体专项技法</span><span class="expand-icon">▶</span></div><div class="category-content"><div class="category-body">
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>说明文（说明方法+语言特点）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">说明方法</div><div class="method-steps"><strong>解题思路：</strong>明方法 + 释运用 + 答二表（表达效果 + 表现内容）。</div><div class="highlight-box"><strong>十大说明方法：</strong>举例子、作比较、下定义、摹状貌、作诠释、打比方、列数字、列图表、引用说明等。</div></div><div class="technique-item"><div class="item-title">说明语言</div><div class="method-steps"><strong>特点：</strong>抓住说明文语言准确这一特点答题。</div><div class="formula-content">答题格式：① 说明词语的意思；② 说明用了该词句子的意思，准确/生动形象/地说明了事物……的特征/事理；③ XX 词体现了语言的准确性。</div></div><div class="technique-item"><div class="item-title">说明文句段作用</div><div class="method-steps">（此部分在原文中未详细展开，保持原有结构）</div></div></div></div></div>
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>议论文（论证作用+结构思路）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">论证作用</div><div class="method-steps"><strong>举例论证：</strong>举了……的例子，具体、有力地论证了……的观点，使文章更具有说服力。<br><strong>道理论证：</strong>引用了……的话，充分、有力地论证了……的观点，使论证更具有权威性。<br><strong>比喻论证：</strong>把 xx 比作 xx，生动、形象地论证了……的观点，使论证通俗易懂。<br><strong>对比论证：</strong>将……和……作对比，突出、强调了……这一观点，进一步证明了……的正确性/谬误性。</div></div><div class="technique-item"><div class="item-title">论证结构/思路</div><div class="highlight-box"><strong>基础框架（总—分—总）：</strong><br>① <strong>开头：</strong>中心论点 / 引入（事例/名人名言）。<br>② <strong>中间：</strong>各种论据，论证方法（分论点①，分论点②……）。<br>③ <strong>结尾：</strong>总结 / 拓展延伸。</div><div class="method-steps"><strong>替代结构：</strong>提出问题——分析问题——解决问题——总结。</div><div class="formula-content">基础答题模板：文章首先（通过 的事例/言论引入）提出了 的中心论点。接下来（运用了 的论证方法）从 （分论点 1）、 （分论点 2）……等几方面论述了中心论点，最后总结强调，重申了 （中心论点），（发出了 的号召）。</div></div><div class="technique-item"><div class="item-title">论点概括</div><div class="highlight-box"><strong>提示：</strong>中心论点是议论文中作者主要表达的观点，是高度概括全文的简单明了的一句话，从句式上看中心论点是个判断句。</div></div><div class="technique-item"><div class="item-title">论据题</div><div class="formula-content">"单个论据匹配不固定论点"解题思路：表明态度 → 概括段落分论点 → 概括所选论据主要内容 → 阐述论据和论点是否匹配 → 故材料/示例可以作为论据。</div></div></div></div></div>
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>非连续性文本（常见错误类型）</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">常见错误类型</div><div class="method-steps"><strong>绝对化：</strong>关注"所有""一切""绝大多数""全都""全部"等词。<br><strong>对应错误：</strong>原文并列或不应并列的内容被放到一个选项中，改变了并列关系，关注"、""和""与"等并联标志。<br><strong>因果混乱：</strong>因果倒置或强加因果关系，关注"因为""因此""因而""所以""故"等词。<br><strong>张冠李戴：</strong>将此事物表述成彼事物。<br><strong>曲解原意：</strong>与原文说的完全不一致。<br><strong>逻辑错误（或然与必然）：</strong>将"或然"（有可能但不一定发生）表述成"必然"（事理上必定发生）。</div></div></div></div></div>
+                    </div></div></div>
+                    <!-- 四、通用分析工具 -->
+                    <div class="main-category category-universal"><div class="category-header" onclick="toggleCategory(this)"><span>通用分析工具</span><span class="expand-icon">▶</span></div><div class="category-content"><div class="category-body">
+                        <div class="sub-technique"><div class="sub-header" onclick="toggleSub(this)"><span>环境描写"五字诀"</span><span class="expand-icon">▶</span></div><div class="sub-content"><div class="sub-body"><div class="technique-item"><div class="item-title">"环描作用五字诀"</div><div class="method-steps"><strong>背（背景）：</strong>交代故事发生的时间地点背景，交代矛盾冲突的起因。<br><strong>气（气氛）：</strong>渲染……的气氛，突出了环境……的特点（积极、中性、消极）。<br><strong>人（人物）：</strong>烘托人物……形象，使人物形象更加鲜明；衬托人物……心情；暗示人物……命运；表现作者对人物的……情感。<br><strong>情（情节）：</strong>推动情节发展，引出下文，为后文……情节做铺垫；与文中……相呼应；承上启下；作为线索。<br><strong>主（主旨）：</strong>揭示文章主旨（通常在结尾）。</div></div><div class="technique-item"><div class="item-title">通用公式</div><div class="formula-content">环境 + 人物 + 情节 + 主题</div></div></div></div></div>
+                    </div></div></div>
+                </div>
+                <div class="highlight-box" style="margin-top: 40px; text-align: center;">
+                    <h3 style="color: #856404; margin-bottom: 10px;">技法宝典使用说明</h3>
+                    <p>以上方法论体系旨在帮助学生系统、全面地分析和理解各类文学文本。建议结合具体文本进行反复练习，将技法内化为解题习惯。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 训练计划 -->
+        <div class="content-section" id="training">
+            <div class="inner-content">
+                <h2 class="section-title">4周上手训练单（可直接照做）</h2>
+                <div class="training-schedule">
+                    <div style="margin-bottom: 15px;"><h4>第1周：信息提取与指代还原</h4><ul style="margin-left: 20px;"><li>每篇文至少做5组"同义改写—原句"与3组"指代—所指"标注</li><li>最后写2句并列/层递式概括</li><li>依据2018/2020的"基石"要求设门槛</li><li>重点练习：定位关键词、同义替换识别、指代链追溯</li></ul></div>
+                    <div style="margin-bottom: 15px;"><h4>第2周：推理判断攻坚</h4><ul style="margin-left: 20px;"><li>以"依据句→逻辑链（因果/对比/转折）→意图/动机/转变路径"三段式作答</li><li>每题至少写出1句"如果删去/若无此处，则......"的反证句，巩固逻辑闭环</li><li>重点练习：人物动机分析、作者意图推断、思想转变路径梳理</li></ul></div>
+                    <div style="margin-bottom: 15px;"><h4>第3周：语鉴三连步与修辞模板</h4><ul style="margin-left: 20px;"><li>每天3句：按"本义—语境义—主旨/情感义"写满</li><li>再套"明手法+释运用+答三表"模板做1句（例如拟人专用模板）</li><li>重点练习：修辞手法识别、深层含义解析、情感主旨联系</li></ul></div>
+                    <div style="margin-bottom: 15px;"><h4>第4周：结构作用与开放评鉴</h4><ul style="margin-left: 20px;"><li>段落作用一律用"三步走"</li><li>开放题统一用"立场+原文理由+案例/经历+感悟/总结"结构</li><li>A/B组交叉训练</li><li>重点练习：观点评价、论证组织、个人经历结合</li></ul></div>
+                </div>
+                <div class="method-box">
+                    <h4>训练效果检测标准</h4>
+                    <p><strong>第1周达标：</strong>能准确标注5组同义改写，3组指代关系，写出逻辑清晰的2句概括。</p>
+                    <p><strong>第2周达标：</strong>推理判断题能写出完整的"依据—逻辑—结论"链条，反证句逻辑成立。</p>
+                    <p><strong>第3周达标：</strong>语鉴题能按三义公式写满3行，修辞分析术语运用准确。</p>
+                    <p><strong>第4周达标：</strong>开放题结构完整，观点明确，案例贴切，总结回扣主题。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 答题模板 -->
+        <div class="content-section" id="templates">
+            <div class="inner-content">
+                <h2 class="section-title">直接可用答题模板</h2>
+                <div class="template-box"><div class="template-title">事实信息题模板</div><div class="template-content">从第___段中可以看出，______（主要信息点1），______（主要信息点2）。<br>具体表现为：①______；②______；③______。<br>因此，______（概括总结）。</div></div>
+                <div class="template-box"><div class="template-title">推理判断题模板</div><div class="template-content">依据：文中______（具体描写/对话/情节）<br>推理链条：因为______，所以______，进而______<br>结论：这表明/说明______（人物特点/作者意图/主旨道理）</div></div>
+                <div class="template-box"><div class="template-title">语言鉴赏题模板（三义公式）</div><div class="template-content">①本义：这句话的字面意思是______<br>②语境义：结合上下文语境，这里实际是指______<br>③情感/主旨义：进一步表达了______的情感/揭示了______的主旨道理</div></div>
+                <div class="template-box"><div class="template-title">修辞手法分析模板（黄金公式）</div><div class="template-content">明手法：运用了______修辞手法<br>释运用：把______比作/拟作______，形象地写出了______<br>答三表：①表内容（写出了什么）②表情感（表达了什么情感）③表效果（产生了什么表达效果）</div></div>
+                <div class="template-box"><div class="template-title">结构作用题模板（三步走）</div><div class="template-content">向上看：与前文______相照应/总领下文______内容/点明了______<br>向下看：为后文______作铺垫/承接上文______/埋下______伏笔<br>全文看：是全文的______线索/与开头形成对比呼应/使结构更加严谨</div></div>
+                <div class="template-box"><div class="template-title">开放性评鉴题模板</div><div class="template-content">立场：我（同意/不同意/辩证看待）这个观点。<br>原文理由：因为文中______（引用原文具体内容作论据）<br>个人/社会案例：在现实生活中，______（举具体例子，详细展开）<br>感悟总结：因此，我认为______（升华观点，回扣主题）</div></div>
+                <div class="method-box">
+                    <h4>模板使用注意事项</h4>
+                    <p><strong>灵活运用：</strong>模板是框架，不是死板套用，要根据具体题目内容灵活调整。</p>
+                    <p><strong>内容为王：</strong>模板只是形式，关键在于填入准确、充实的具体内容。</p>
+                    <p><strong>逐步内化：</strong>先依赖模板，后逐渐内化为自己的答题习惯和思路。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 标签页切换功能
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // 筛选功能
+        function selectAll() {
+            document.querySelectorAll('#database .filter-checkbox').forEach(cb => cb.checked = true);
+            applyFilter();
+        }
+
+        function clearAll() {
+            document.querySelectorAll('#database .filter-checkbox').forEach(cb => cb.checked = false);
+            applyFilter();
+        }
+
+        function applyFilter() {
+            const statsPanel = document.getElementById('statsPanel');
+            if (!statsPanel) return; // 如果找不到元素，则不执行后续代码
+
+            const selectedYears = Array.from(document.querySelectorAll('#database input[id^="y"]:checked')).map(cb => cb.id.replace('y', ''));
+            const selectedTypes = Array.from(document.querySelectorAll('#database input[id^="t"]:checked')).map(cb => cb.id.replace('t', '').replace('infer', 'inference').replace('lang', 'language').replace('fact', 'fact').replace('open', 'open'));
+            const selectedModules = Array.from(document.querySelectorAll('#database input[id^="m"]:checked')).map(cb => cb.id);
+
+            const rows = document.querySelectorAll('#dataTable tr');
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const year = row.dataset.year;
+                const type = row.dataset.type;
+                const module = row.dataset.module;
+                if (!year) return;
+
+                const showRow = selectedYears.includes(year) && selectedTypes.includes(type) && selectedModules.includes(module);
+                row.style.display = showRow ? '' : 'none';
+                if(showRow) visibleCount++;
+            });
+
+            statsPanel.textContent = `当前显示：${visibleCount}个题目 | ${selectedYears.length}年数据 | ${selectedTypes.length}种题型 | ${selectedModules.length}个模块`;
+        }
+        
+        // 技法宝典专属JS
+        function toggleCategory(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.expand-icon');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+
+        function toggleSub(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.expand-icon');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+
+        function expandAll() {
+            document.querySelectorAll('#baodian .category-content, #baodian .sub-content').forEach(content => content.classList.add('expanded'));
+            document.querySelectorAll('#baodian .expand-icon').forEach(icon => icon.classList.add('expanded'));
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('#baodian .category-content, #baodian .sub-content').forEach(content => content.classList.remove('expanded'));
+            document.querySelectorAll('#baodian .expand-icon').forEach(icon => icon.classList.remove('expanded'));
+        }
+
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            applyFilter();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level L1-R5 深度学习解析平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .overview {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .overview h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #64b5f6;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .learning-journey {
+            margin-bottom: 40px;
+        }
+        
+        .learning-journey h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .learning-journey p {
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 40px;
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .subject-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-decoration: none;
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .card-header {
+            padding: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .card-body {
+            padding: 25px;
+            color: #333;
+        }
+        
+        .subject-topics {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .subject-topics li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95rem;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .subject-topics li:last-child {
+            border-bottom: none;
+        }
+        
+        .subject-topics li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #64b5f6;
+            font-size: 0.8rem;
+        }
+        
+        /* Subject-specific colors */
+        .english { background: linear-gradient(135deg, #ff6b6b, #ee5a52); }
+        .chinese { background: linear-gradient(135deg, #4ecdc4, #44a08d); }
+        .emath { background: linear-gradient(135deg, #45b7d1, #3498db); }
+        .amath { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .geography { background: linear-gradient(135deg, #27ae60, #229954); }
+        .science { background: linear-gradient(135deg, #8e44ad, #9b59b6); }
+        .poa { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .history { background: linear-gradient(135deg, #795548, #6d4c41); }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .start-learning {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .start-learning:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
+        }
+        
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-circle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .floating-circle:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        
+        .floating-circle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1>O-Level L1-R5 深度学习解析平台</h1>
+            <p>全面掌握考试结构，精准提升各项能力</p>
+        </header>
+
+        <section class="overview">
+            <h2>考试总览</h2>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">核心科目</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">L1-R5</div>
+                    <div class="stat-label">评分体系</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2</div>
+                    <div class="stat-label">考试年度</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">通过保障</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="learning-journey">
+            <h2>O-Level学习之旅</h2>
+            <p>系统化训练，逐步提升各项核心能力</p>
+            
+            <div class="subjects-grid">
+                
+                <a href="english/" class="subject-card">
+                    <div class="card-header english">
+                        <h3>English Language</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Paper 1: Writing (Functional & Situational)</li>
+                            <li>Paper 2: Language Use & Comprehension</li>
+                            <li>Paper 3: Listening Comprehension</li>
+                            <li>Paper 4: Oral Communication</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="h-chinese/" class="subject-card">
+                    <div class="card-header chinese">
+                        <h3>Higher Chinese</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>试卷一: 作文 (记叙文、议论文、说明文)</li>
+                            <li>试卷二: 语文应用与理解</li>
+                            <li>试卷三: 口语交际</li>
+                            <li>试卷四: 听力理解</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="e-math/" class="subject-card">
+                    <div class="card-header emath">
+                        <h3>Elementary Mathematics</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Numbers & Algebra</li>
+                            <li>Geometry & Measurement</li>
+                            <li>Statistics & Probability</li>
+                            <li>Problem Solving Techniques</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="additional-math/" class="subject-card">
+                    <div class="card-header amath">
+                        <h3>Additional Mathematics</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Algebraic Methods & Quadratic Functions</li>
+                            <li>Binomial Theorem & Logarithmic Functions</li>
+                            <li>Trigonometry & Coordinate Geometry</li>
+                            <li>Calculus & Applications</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="geography/" class="subject-card">
+                    <div class="card-header geography">
+                        <h3>Geography</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Plate Tectonics & Tropical Environments</li>
+                            <li>Weather & Climate</li>
+                            <li>Population & Settlement</li>
+                            <li>Tourism & Development</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="combined-science/" class="subject-card">
+                    <div class="card-header science">
+                        <h3>Combined Science (Physics+Chemistry)</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Physics: Forces, Energy & Waves</li>
+                            <li>Physics: Electricity & Magnetism</li>
+                            <li>Chemistry: Atomic Structure & Bonding</li>
+                            <li>Chemistry: Acids, Bases & Salts</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="poa/" class="subject-card">
+                    <div class="card-header poa">
+                        <h3>Principles of Accounts</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>Double Entry System</li>
+                            <li>Financial Statements</li>
+                            <li>Cash Flow & Working Capital</li>
+                            <li>Partnership & Company Accounts</li>
+                        </ul>
+                    </div>
+                </a>
+
+                <a href="history/" class="subject-card">
+                    <div class="card-header history">
+                        <h3>History</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="subject-topics">
+                            <li>World War I & II</li>
+                            <li>Cold War & Decolonisation</li>
+                            <li>Southeast Asian History</li>
+                            <li>Source-Based Case Study</li>
+                        </ul>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <a href="#" class="start-learning" onclick="startLearning()">开始学习之旅</a>
+        </section>
+    </div>
+
+    <div id="notification" class="notification">
+        正在跳转到学习页面...
+    </div>
+
+    <script>
+        function startLearning() {
+            const notification = document.getElementById('notification');
+            notification.textContent = '欢迎来到 O-Level 学习平台！请选择一个科目开始。';
+            notification.style.background = 'rgba(33, 150, 243, 0.9)';
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.style.background = 'rgba(76, 175, 80, 0.9)'; // Reset color after hiding
+                }, 300);
+            }, 3000);
+        }
+
+        // Add some interactive animations
+        document.querySelectorAll('.subject-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add floating animation to stats
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach((stat, index) => {
+            setTimeout(() => {
+                stat.style.animation = `float 3s ease-in-out infinite`;
+                stat.style.animationDelay = `${index * 0.5}s`;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

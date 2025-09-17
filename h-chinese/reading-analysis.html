@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技法宝典技能调用趋势分析 (2019-2023)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .analysis-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .skill-tier {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .tier-foundation {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .tier-advanced {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-left: 5px solid #4ecdc4;
+        }
+
+        .tier-excellence {
+            background: linear-gradient(135deg, #d299c2, #fef9d7);
+            border-left: 5px solid #9b59b6;
+        }
+
+        .skill-tier h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .skill-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skill-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .frequency-bar {
+            display: inline-block;
+            height: 6px;
+            border-radius: 3px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .freq-high { width: 80px; background: #e74c3c; }
+        .freq-medium { width: 50px; background: #f39c12; }
+        .freq-stable { width: 60px; background: #27ae60; }
+
+        .interactive-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.05);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .recommendation h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header fade-in">
+            <h1>技法宝典技能调用趋势分析</h1>
+            <p>深度解析2019-2023年O-Level阅读理解核心技能演变</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="card fade-in">
+                <h3>核心技能调用频率</h3>
+                <div class="chart-container">
+                    <canvas id="frequencyChart"></canvas>
+                </div>
+                <div class="interactive-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>极高频率</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>高频率</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #27ae60;"></div>
+                        <span>稳定频率</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3>技能演变趋势 (2019-2023)</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card fade-in">
+                <h3>技能重要性评估</h3>
+                <div class="chart-container">
+                    <canvas id="importanceChart"></canvas>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">3</span>
+                        <span class="stat-label">核心技能</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">6</span>
+                        <span class="stat-label">总技能数</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">95%</span>
+                        <span class="stat-label">覆盖率</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="analysis-section fade-in">
+            <h2>一、不变的"铁三角"：核心技能分析</h2>
+            
+            <div class="skill-tier tier-foundation">
+                <h3>🏛️ 第一层 (塔基)：基础保障 - 必须100%掌握</h3>
+                <ul class="skill-list">
+                    <li>
+                        <strong>情节批注 → 事件概括</strong>
+                        <div class="frequency-bar freq-high"></div>
+                        <span style="color: #e74c3c; font-weight: bold;">极高频率</span>
+                        <p style="margin-top: 5px; color: #666;">所有题型的"数据输入端"，从简单单点提取到复杂多段整合</p>
+                    </li>
+                    <li>
+                        <strong>人物批注 → 形象/情感概括</strong>
+                        <div class="frequency-bar freq-high"></div>
+                        <span style="color: #e74c3c; font-weight: bold;">极高频率</span>
+                        <p style="margin-top: 5px; color: #666;">记叙文和散文的核心，涵盖性格、情感、动机分析</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-tier tier-advanced">
+                <h3>🚀 第二层 (塔身)：拉开分差 - 必须熟练运用</h3>
+                <ul class="skill-list">
+                    <li>
+                        <strong>语句理解 → 深层含义</strong>
+                        <div class="frequency-bar freq-medium"></div>
+                        <span style="color: #f39c12; font-weight: bold;">高频率</span>
+                        <p style="margin-top: 5px; color: #666;">使用"三义公式"，区分阅读层次的关键技能</p>
+                    </li>
+                    <li>
+                        <strong>修辞赏析</strong>
+                        <div class="frequency-bar freq-stable"></div>
+                        <span style="color: #27ae60; font-weight: bold;">稳定频率</span>
+                        <p style="margin-top: 5px; color: #666;">从识别型向效果分析型转变，重视情绪价值</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-tier tier-excellence">
+                <h3>⭐ 第三层 (塔尖)：冲击卓越 - 需要灵活迁移</h3>
+                <ul class="skill-list">
+                    <li>
+                        <strong>标题批注 & 主旨探究</strong>
+                        <div class="frequency-bar freq-stable"></div>
+                        <span style="color: #27ae60; font-weight: bold;">隐性调用</span>
+                        <p style="margin-top: 5px; color: #666;">从显性到隐性，溶解到其他题型中</p>
+                    </li>
+                    <li>
+                        <strong>文体专项技法</strong>
+                        <div class="frequency-bar freq-stable"></div>
+                        <span style="color: #27ae60; font-weight: bold;">界限模糊</span>
+                        <p style="margin-top: 5px; color: #666;">跨文体技能调用，灵活应对复合文体</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="analysis-section fade-in">
+            <h2>二、变化趋势洞察</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="padding: 20px; background: #f8f9ff; border-radius: 10px; border-left: 4px solid #667eea;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">📈 修辞赏析深化</h4>
+                    <p>从"识别型"向"效果分析型"转变，更注重情感氛围分析</p>
+                </div>
+                <div style="padding: 20px; background: #fff8f0; border-radius: 10px; border-left: 4px solid #f39c12;">
+                    <h4 style="color: #f39c12; margin-bottom: 10px;">🔄 主旨探究隐性化</h4>
+                    <p>直接设问减少，但技能溶解到开放性评鉴题中</p>
+                </div>
+                <div style="padding: 20px; background: #f0fff8; border-radius: 10px; border-left: 4px solid #27ae60;">
+                    <h4 style="color: #27ae60; margin-bottom: 10px;">🌐 文体界限模糊</h4>
+                    <p>出现议论性散文，需要跨文体技能灵活调用</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="recommendation fade-in">
+            <h3>💡 终极学习策略建议</h3>
+            <p><strong>金字塔式学习法：</strong></p>
+            <p>• <strong>基础层：</strong>刻意练习定位整合，建立情感词汇库</p>
+            <p>• <strong>进阶层：</strong>模板内化，结构固化，重点练习表达效果分析</p>
+            <p>• <strong>卓越层：</strong>养成"问主旨"习惯，打破文体壁垒</p>
+            <p style="margin-top: 15px; font-style: italic;">💯 遵循"先保基础，再求拔高"原则，将复习精力投入到得分回报率最高的技能点上</p>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载动画
+        window.addEventListener('load', function() {
+            const elements = document.querySelectorAll('.fade-in');
+            elements.forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        // 技能调用频率图表
+        const frequencyCtx = document.getElementById('frequencyChart').getContext('2d');
+        new Chart(frequencyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['情节批注→事件概括', '人物批注→形象概括', '语句理解→深层含义', '修辞赏析', '标题&主旨探究', '文体专项技法'],
+                datasets: [{
+                    data: [95, 93, 85, 75, 65, 70],
+                    backgroundColor: [
+                        '#e74c3c',
+                        '#e74c3c',
+                        '#f39c12',
+                        '#27ae60',
+                        '#3498db',
+                        '#9b59b6'
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // 趋势变化图表
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023'],
+                datasets: [
+                    {
+                        label: '情节批注',
+                        data: [92, 94, 96, 95, 95],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: '人物批注',
+                        data: [90, 91, 94, 93, 93],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: '修辞赏析',
+                        data: [70, 72, 76, 77, 75],
+                        borderColor: '#27ae60',
+                        backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: '主旨探究',
+                        data: [80, 75, 68, 62, 65],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // 重要性评估雷达图
+        const importanceCtx = document.getElementById('importanceChart').getContext('2d');
+        new Chart(importanceCtx, {
+            type: 'radar',
+            data: {
+                labels: ['基础性', '应用频率', '得分影响', '学习难度', '未来趋势', '迁移价值'],
+                datasets: [{
+                    label: '铁三角技能',
+                    data: [95, 95, 90, 70, 85, 90],
+                    backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                    borderColor: '#e74c3c',
+                    pointBackgroundColor: '#e74c3c',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#e74c3c'
+                }, {
+                    label: '进阶技能',
+                    data: [75, 80, 85, 85, 90, 80],
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    borderColor: '#3498db',
+                    pointBackgroundColor: '#3498db',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#3498db'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

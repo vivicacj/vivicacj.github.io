@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level华文作文趋势分析系统</title>
+    <style>
+        /* --- 基础与布局 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; line-height: 1.6; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; color: white; margin-bottom: 40px; }
+        .header h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 10px; }
+        .header p { font-size: 1.2rem; opacity: 0.9; }
+        .card { background: rgba(255, 255, 255, 0.98); border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); backdrop-filter: blur(10px); transition: all 0.3s ease; position: relative; overflow: hidden; margin-bottom: 25px;}
+        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #2ecc71, #e67e22, #9b59b6); }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 30px 60px rgba(0,0,0,0.15); }
+        .card h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 15px; color: #2c3e50; }
+        .card h4 { margin-top: 20px; margin-bottom:10px; color: #2c3e50; font-size: 1.2rem; }
+        .wizard-step-divider { margin: 40px 0; border: 0; height: 1px; background: #e0e0e0; }
+
+        /* --- Tab 样式 --- */
+        .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; justify-content: center; }
+        .tab { padding: 12px 24px; background: rgba(255, 255, 255, 0.2); color: white; border: none; border-radius: 25px; cursor: pointer; transition: all 0.3s ease; font-weight: 500; }
+        .tab.active { background: white; color: #667eea; transform: scale(1.05); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- 交互式组件通用样式 --- */
+        .interactive-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; background: #f8f9fa; padding: 20px; border-radius: 15px; }
+        .interactive-form label { font-weight: 500; color: #34495e; }
+        .interactive-form select, .interactive-form input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-size: 1rem; }
+        .btn-primary { padding: 10px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-weight: 500; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .result-card { background: #f8f9fa; border-left: 5px solid; margin-top: 20px; padding: 20px; border-radius: 8px; animation: fadeIn 0.5s; }
+        .result-card-green { border-color: #2ecc71; } .result-card-purple { border-color: #9b59b6; } .result-card-orange { border-color: #e67e22; }
+
+        /* --- 数据分析模块样式 --- */
+        .insight-list { list-style: none; padding-left: 0; }
+        .insight-list li { background: #f8f9fa; border-left: 4px solid; margin-bottom: 15px; padding: 15px; border-radius: 5px; }
+        .insight-list strong { color: #333; }
+        .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 15px; }
+        .filters select { padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.9); font-size: 1rem; }
+        .chart-container { padding: 20px 15px; border-radius: 15px; margin-bottom: 20px; background: #fff; min-height: 100px; }
+        .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top: 20px; }
+        .data-table th { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        .data-table td { padding: 12px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+        .data-table tr:hover { background: #f8f9fa; }
+        .bar-item { display: flex; align-items: center; margin-bottom: 8px; }
+        .bar-label { display: flex; align-items: center; justify-content: space-between; width: 40%; font-weight: 500; color: #34495e; font-size: 0.95em; padding-right: 10px; }
+        .bar-graph { flex-grow: 1; height: 26px; background-color: #ecf0f1; border-radius: 6px; padding: 3px; }
+        .bar { height: 100%; border-radius: 4px; transition: width 0.5s ease-out; color: white; display: flex; align-items: center; justify-content: flex-end; font-size: 0.85em; padding-right: 8px; }
+        .main-theme-color-1 { background-color: #2ecc71; } .main-theme-color-2 { background-color: #e67e22; } .main-theme-color-3 { background-color: #9b59b6; }
+        .trend-indicator { font-size: 0.8em; padding: 2px 8px; border-radius: 10px; color: white; white-space: nowrap; }
+        .trend-up { background-color: #27ae60; } .trend-stable { background-color: #f39c12; } .trend-deep { background-color: #8e44ad; }
+        
+        /* --- 数据可视化布局与甜甜圈图样式 --- */
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; align-items: flex-start; }
+        .donut-chart-wrapper { background: #fff; padding: 20px 15px; border-radius: 15px; text-align: center; height: 100%; }
+        .donut-chart { position: relative; width: 180px; height: 180px; margin: 15px auto; border-radius: 50%; background: #f0f0f0; display: flex; justify-content: center; align-items: center; transition: background 0.5s ease; }
+        .donut-chart::before { content: ''; position: absolute; width: 90px; height: 90px; background: white; border-radius: 50%; }
+        .donut-legend { list-style: none; padding: 0; margin-top: 20px; text-align: left; display: inline-block; }
+        .legend-item { display: flex; align-items: center; font-size: 0.9em; margin-bottom: 8px; cursor: help; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; margin-right: 8px; }
+        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+
+        /* --- 智能备考向导模块样式 --- */
+        .trend-tags, .suggestion-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .trend-tag, .suggestion-tag { padding: 8px 16px; background: #e9ecef; border-radius: 20px; cursor: pointer; transition: all 0.3s ease; }
+        .trend-tag.active { background: #667eea; color: white; transform: scale(1.05); }
+        .suggestion-tag:hover { background: #667eea; color: white; transform: translateY(-2px); }
+        .hub-search-bar { width: 100%; padding: 12px; font-size: 1rem; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 20px; }
+        .hub-content-area { max-height: 600px; overflow-y: auto; padding-right: 15px; }
+        .sub-theme-card { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .sub-theme-card h4 { display: inline-block; padding: 5px 12px; border-radius: 8px; color: white; margin-bottom: 15px; }
+        .sub-theme-card table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+        .sub-theme-card th, .sub-theme-card td { text-align: left; padding: 8px; border-bottom: 1px solid #f0f0f0; }
+        .sub-theme-card th { color: #34495e; width: 100px; }
+        .material-cards-container { margin-top: 20px; padding-top: 15px; border-top: 1px dashed #ccc; }
+        .material-card { background: #f8f9fa; border-radius: 10px; padding: 15px; border-left: 4px solid #667eea; margin-bottom: 10px; }
+        
+        /* --- 8周挑战与P.A.R.C.生成器样式 --- */
+        .week-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .week-btn { padding: 8px 16px; background: rgba(255, 255, 255, 0.3); color: white; border: 1px solid rgba(255,255,255,0.5); border-radius: 20px; cursor: pointer; transition: all 0.3s ease; }
+        .week-btn.active, .week-btn:hover { background: white; color: #764ba2; transform: scale(1.05); font-weight: 600; }
+        #parc-output { white-space: pre-wrap; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #eee; font-size: 0.95em; text-align: left; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER AND TABS -->
+        <div class="header"><h1>O-Level华文作文趋势分析系统</h1><p>融合十年真题数据与2026考纲趋势分析平台</p></div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('data', this)">📊 数据洞察与趋势</button>
+            <button class="tab" onclick="showTab('wizard', this)">🚀 智能备考向导</button>
+        </div>
+        
+        <!-- MODULE 1: 数据分析 -->
+        <div id="data" class="tab-content active">
+            <div class="card">
+                <h3>💡 核心洞察 (源自2014-2023报告)</h3>
+                <ul class="insight-list">
+                    <li style="border-color: #2ecc71;"><strong>记叙文的“铁王座” (Q1)</strong> - 报告显示，过去十年Q1题目 <strong>100%</strong> 为记叙文，为擅长形象思维和情感表达的考生提供了稳定的高分选择。</li>
+                    <li style="border-color: #e67e22;"><strong>议论主题的转向 (Q2/Q3)</strong> - 【社会参与与公民意识】已成为议论性质题目的 <strong>第一大主题 (占比46.7%)</strong>，且近五年呈 <strong>显著上升</strong> 趋势，反映了教育对培养负责任公民的高度重视。</li>
+                    <li style="border-color: #9b59b6;"><strong>材料评论的崛起 (Q3)</strong> - 材料评论题已成为与记叙文并重的核心题型 (占比33.3%)，是近年最显著的趋势，完美结合了考纲中“理解与分析”及“表达看法”两大目标。</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>📊 动态交互式仪表盘</h3>
+                <div class="filters"><select id="year-filter" onchange="updateDashboard()"></select><select id="type-filter" onchange="updateDashboard()"></select><select id="main-theme-filter" onchange="updateDashboard()"></select><select id="sub-theme-filter" onchange="updateDashboard()"></select></div>
+                
+                <div class="dashboard-grid">
+                    <div class="charts-column">
+                        <h4>核心主题频率与趋势</h4>
+                        <div id="main-theme-chart-container" class="chart-container"></div>
+                        <h4>主题子类频率</h4>
+                        <div id="sub-theme-chart-container" class="chart-container"></div>
+                    </div>
+                    <div class="donut-chart-column">
+                        <div class="donut-chart-wrapper">
+                             <h4 id="donut-chart-title">文体分布</h4>
+                             <div id="donut-chart" class="donut-chart"></div>
+                             <ul id="donut-legend" class="donut-legend"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="data-table" id="examDataTable">
+                    <thead><tr><th>年份</th><th>题号</th><th>题型</th><th>核心主题</th><th>主题子类</th><th>题目关键词/核心任务</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- MODULE 2: 智能备考向导 -->
+        <div id="wizard" class="tab-content">
+            <div class="card">
+                <h3>① 制定个人战略</h3>
+                <div class="interactive-form">
+                    <div><label for="goal-grade">你的目标等级是？</label><select id="goal-grade"><option>A1</option><option>A2</option><option>B3</option></select></div>
+                    <div><label for="strength">你更擅长的文体是？</label><select id="strength"><option>记叙文</option><option>论说文</option><option>比较均衡</option></select></div>
+                    <div><label for="weakness">你最大的短板是？</label><select id="weakness"><option>思维深度</option><option>素材积累</option><option>语言表达</option></select></div>
+                </div>
+                <button class="btn-primary" onclick="generateStrategy()">生成我的备考路径</button>
+                <div id="strategy-result" class="result-card result-card-green" style="display: none;"></div>
+                <hr class="wizard-step-divider">
+
+                <h3>② 探索未来趋势</h3>
+                <div class="trend-tags" id="prediction-tags">
+                    <div class="trend-tag" data-trend="cross_dimension">跨维度母题融合</div><div class="trend-tag" data-trend="situational">情境代入式记叙文</div><div class="trend-tag" data-trend="solution_oriented">解决方案导向论说文</div>
+                </div>
+                <div id="prediction-result" class="result-card result-card-purple" style="display: none;"></div>
+                <hr class="wizard-step-divider">
+                
+                <h3>③ 8周热点挑战 (学练结合)</h3>
+                <p>根据报告中的高效备考策略，选择一个本周热点，系统将为你推送模拟题并筛选相关核心素材。</p>
+                <div id="week-buttons" class="week-buttons"></div>
+                <div id="weekly-challenge-result" class="result-card result-card-orange" style="display:none;"></div>
+                <hr class="wizard-step-divider">
+
+                <h3>④ 查询核心素材库</h3>
+                <input type="text" id="keyword-search" class="hub-search-bar" placeholder="🔍 在此输入关键词 (如: AI, 环保, 凝聚力)..." onkeyup="searchKeywords()">
+                <div id="hub-suggestion-tags" class="suggestion-tags"></div>
+                <div id="hub-content-area" class="hub-content-area"></div>
+                <hr class="wizard-step-divider">
+
+                <h3>⑤ 演讲稿结构生成器 (P.A.R.C.)</h3>
+                <p>根据报告提供的P.A.R.C.万能模板，快速搭建一篇结构清晰的演讲稿。</p>
+                <div class="interactive-form">
+                    <input type="text" id="parc-audience" placeholder="听众 (如: 同学们)">
+                    <input type="text" id="parc-theme" placeholder="核心主题 (如: 保护环境)">
+                    <input type="text" id="parc-position" placeholder="核心观点 (如: 环保应从我做起)">
+                    <input type="text" id="parc-action" placeholder="具体的小事 (如: 随手关灯)">
+                </div>
+                <button class="btn-primary" onclick="generateParcOutline()">一键生成演讲稿框架</button>
+                <div id="parc-result" class="result-card result-card-purple" style="display: none;">
+                    <h4>你的P.A.R.C.演讲稿框架：</h4>
+                    <pre id="parc-output"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 全局数据库与配置 ---
+        const mainThemeColors = { '个人修养与价值观': 1, '社会参与与公民意识': 2, '时代挑战与未来思辨': 3 };
+        const knowledgeDB = { "个人修养与价值观": [ { id: "1.1", title: "1.1 坚毅诚信", keywords: "坚持不懈、持之以恒、信守承诺、诚信、言而有信, AI, 人工智能, 教育", examples: "2015「承诺坚持」；2021「诚信与影响」", hotspots: "青年在 AI/数字时代如何保持诚信；心理健康与坚毅", materials: [ { title: '苏炳添：逆天改命的亚洲飞人', summary: '在29岁"高龄"时，他毅然改变起跑技术，忍受状态下滑的阵痛，最终在32岁成为首位跑进奥运百米决赛的亚洲人。', context: '在"怕输"文化背景下，苏炳添的坚持是对"精英主义"和"年龄焦虑"的有力反思。', angles: '论证坚毅的重要性、面对质疑和年龄的挑战、诚信对待自己的事业', keywords: '坚毅、诚信、挑战' } ] }, { id: "1.2", title: "1.2 反思成长", keywords: "反思、自省、觉悟、成熟、从失败中学习, 心理健康, 压力, 韧性, 吃苦", examples: "2016「嫉妒使人不快乐」；2017「偏见后果」", hotspots: "网络舆论与自我反思；青少年在挫折中如何成长", materials: [] }, { id: "1.3", title: "1.3 感恩同理", keywords: "感恩、回馈、同理心、体谅、互助, 取消文化, 网络霸凌", examples: "2014「霸位事件」；2015「帮助别人获益」；2023「与人同住双赢」", hotspots: "同理心在网络暴力中的价值；感恩与社区凝聚", materials: [] } ], "社会参与与公民意识": [ { id: "2.1", title: "2.1 国家认同与社会凝聚", keywords: "凝聚力、团结、同舟共济、多元和谐、国家自豪感", examples: "2017「国家自豪感」；2023「危机同舟共济」", hotspots: "社交媒体是否削弱社会凝聚；移民与多元社会和谐", materials: [ { title: '疫情期间的邻里互助', summary: '在疫情封锁期间，新加坡各社区涌现出许多居民自发的互助小组，分享物资、互相鼓励，体现了强大的社会凝聚力。', context: '这呼应了新加坡政府长期倡导的"同舟共济"精神，是多元社会和谐共存的生动案例。', angles: '社会凝聚力的价值、危机中的公民责任、多元和谐', keywords: '凝聚力、互助、同舟共济' } ] }, { id: "2.2", title: "2.2 公民责任与规则", keywords: "公德心、责任感、规则意识、法律意识、文明社会, 假新闻, 媒体素养", examples: "2014「罚款有效性」；2020「规则与积极变化」", hotspots: "网络诈骗治理；公共行为规范；青年守法意识", materials: [ { title: '托盘归还运动', summary: '新加坡政府大力推行在食阁和小贩中心归还托盘的规定，起初遭遇阻力，后通过教育和罚款逐渐成为社会共识。', context: '此举反映了新加坡社会从"劝导"到"规则"的治理思路变迁，是培养公民责任感的具体实践。', angles: '规则与社会文明、个人责任与集体利益、教育与惩罚', keywords: '公民责任、规则意识、公德心' } ] }, { id: "2.3", title: "2.3 文化传承", keywords: "传承、创新、文化自信、怕输文化、饮食文化、语言传承", examples: "2020「小贩文化申遗」；2021「语言与文化」；2022「怕输价值观」", hotspots: "全球化下的文化自信；年轻人如何守护本土语言文化", materials: [ { title: 'Singlish的地位变迁', summary: '从早期被官方视为"不标准英语"到如今被部分年轻一代视为本土身份认同的象征，Singlish的争议反映了文化传承中的复杂性。', context: '在强调双语精英教育的新加坡，Singlish的讨论触及了语言纯洁性与本土文化认同的核心矛盾。', angles: '文化传承与身份认同、语言的演变、官方与民间的文化角力', keywords: '文化传承、语言、身份认同' } ] } ], "时代挑战与未来思辨": [ { id: "3.1", title: "3.1 科技伦理", keywords: "科技、AI、隐私、数据安全、科技滥用、伦理, 人工智能, 教育", examples: "2015「监控隐私」；2016「手机守则」；2018「共享单车」", hotspots: "AI取代工作；教育中AI使用；个人隐私与数据安全", materials: [ { title: 'AI换脸技术的滥用', summary: '深度伪造（Deepfake）技术被用于制造假新闻、诈骗甚至色情影片，引发了公众对科技伦理和信息安全的担忧。', context: '新加坡政府已出台相关法律（如POFMA）来应对虚假信息，但AI技术的发展带来了新的挑战。', angles: '科技发展的双刃剑、科技伦理的重要性、立法监管的必要性', keywords: '科技伦理、AI、隐私、安全' } ] }, { id: "3.2", title: "3.2 可持续发展", keywords: "环保、绿色发展、生态平衡、气候变化、碳税, 一次性文化, 社会责任", examples: "2023「经济增长与环保」", hotspots: "环保与经济博弈；绿色能源转型；碳排放政策", materials: [] }, { id: "3.3", title: "3.3 教育与未来", keywords: "教育改革、终身学习、技能培训、学习态度, AI, 人工智能", examples: "2019「外展训练营」", hotspots: "AI教育工具；未来职业技能；终身学习的重要性", materials: [] } ] };
+        const fullExamData = [ { year: 2014, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.3 感恩同理', keywords: '描述因"霸位"引发的不愉快事件' }, { year: 2014, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '论述"罚款是一种有效的惩罚形式"' }, { year: 2014, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '评论"成功不仅指个人成就，也看能为国家和不幸的人做什么"' }, { year: 2015, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述"动机激励你开始，承诺推动你坚持"的经历' }, { year: 2015, q: 'Q2', type: '论说文', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '论述"公共场所装监控是否侵犯隐私"' }, { year: 2015, q: 'Q3', type: '材料评论', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '评论"帮助别人也能让自己获益"' }, { year: 2016, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述"嫉妒使人感到不快乐"的经历' }, { year: 2016, q: 'Q2', type: '演讲稿', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '演讲："我们应该制定公共场所使用手机的守则"' }, { year: 2016, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论"国人追求舒适生活导致开销变大"的现象' }, { year: 2017, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述"偏见带来不良后果"的经历' }, { year: 2017, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述"新加坡人都有强烈的国家自豪感"' }, { year: 2017, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论"政府号召国人为国家安全负责"' }, { year: 2018, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述"调查捐赠品戒指"的经历（体现诚信与人间温情）' }, { year: 2018, q: 'Q2', type: '演讲稿', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '演讲："新加坡社会日益多元化，如何加强凝聚力"' }, { year: 2018, q: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '评论"共享单车被滥用"的现象' }, { year: 2019, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述"贪图小利造成更大损失"的经历' }, { year: 2019, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述"政府越有效率，人民要求越难满足"' }, { year: 2019, q: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.3 教育与未来', keywords: '评论"中三学生参加外展训练营的必要性"' }, { year: 2020, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述"接触不幸的人，体会生命意义"的经历' }, { year: 2020, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '论述"只有通过规则和条例，社会才能产生积极变化"' }, { year: 2020, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '评论"新加坡小贩文化申遗"' }, { year: 2021, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述"做决定时需考虑诚信和影响"的经历' }, { year: 2021, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '论述"要充分了解一个文化，必须先掌握其语言"' }, { year: 2021, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论"为乐龄人士设计综合设施建筑"的意义' }, { year: 2022, q: 'Q1', type: '记叙文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '描述"参与社区服务改变看法"的经历' }, { year: 2022, q: 'Q2', type: '演讲稿', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '演讲："国家的未来掌握在青年手中"' }, { year: 2022, q: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '评论"怕输是新加坡普遍的社会价值观"' }, { year: 2023, q: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.3 感恩同理', keywords: '描述"因姨妈家变故而同住，双方获益"的经历' }, { year: 2023, q: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述"国家遇危机时，人民和政府要同舟共济"' }, { year: 2023, q: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.2 可持续发展', keywords: '评论"经济增长与环境保护的抉择"' }];
+        
+        const weeklyChallenges = [ { week: 1, title: 'AI与教育', keywords: 'AI, 人工智能, 教育, 诚信', q2: '【议论文】有人认为，人工智能 (AI) 工具会使学生变得懒惰，并丧失独立思考能力。你同意这种看法吗？试加以论证。', q3: '【材料评论】材料：新加坡教育部宣布，将在课程中教导学生如何正确并负责任地使用ChatGPT等AI工具，将其视为学习的辅助。(题目)：针对教育部将AI工具纳入课程的做法，谈谈你的看法。' }, { week: 2, title: '青年心理健康', keywords: '心理健康, 压力, 韧性, 吃苦', q2: '【演讲稿】俗话说“吃得苦中苦，方为人上人”。但现代社会也有人提倡“身心健康比成功更重要”。请以《我如何看待“吃苦”》为题，发表演讲。', q3: '【材料评论】材料：近年调查显示，寻求心理健康咨询服务的新加坡青年人数逐年上升。(题目)：你认为造成这个现象的原因是什么？你对同龄人有什么建议？' }, { week: 3, title: '媒体素养', keywords: '假新闻, 媒体素养, 公民责任', q2: '【议论文】你认为，在杜绝假新闻的传播上，政府的立法管制和个人的媒体素养，哪一个更重要？试加以说明。', q3: '【材料评论】材料：一项调查显示，超过半数的受访者承认，自己曾在不经意间分享过未经证实的消息。(题目)：针对这个现象，谈谈你的看法，并提出至少两项建议。' }, { week: 4, title: '可持续生活', keywords: '环保, 一次性文化, 社会责任', q2: '【议论文】有人说：“环保是政府和企业的事，个人力量微不足道。”你同意吗？试谈谈你的看法。', q3: '【材料评论】材料：为了减少塑料垃圾，许多商家不再主动提供塑料袋和一次性餐具，但有些顾客认为这给生活带来了不便。(题目)：请评论“个人便利”与“社会环保责任”之间的冲突。' }, { week: 5, title: '取消文化', keywords: '取消文化, 网络霸凌, 公民责任', q2: '【议论文】你认为网络“取消文化”是一种伸张正义的方式，还是一种网络霸凌？试论证你的观点。', q3: '【材料评论】材料：“人非圣贤，孰能无过。”(题目)：结合当今的网络“取消文化”现象，谈谈你对这句话的理解。' }, { week: 6, title: '文化传承', keywords: '文化传承, 身份认同, 小贩文化', q2: '【演讲稿】你是学校“华族文化学会”的主席。请准备一篇演讲稿，说服同学们踊跃参加文化传承活动，并说明其对年轻一代的意义。', q3: '【材料评论】材料：新加坡旅游局近年在海外大力推广“小贩文化”，将其作为国家名片。但在国内，许多年轻人却不愿投身小贩行业。(题目)：针对这个现象，谈谈你的看法。'}, { week: 7, title: '人口老龄化', keywords: '老龄化, 活跃乐龄, 孝', q2: '【议论文】传统观念认为“孝”就是赡养父母。你认为，在现代社会，“孝”的定义是否应该有所改变？试加以论证。', q3: '【材料评论】材料：近年来，政府和社区推出了许多“乐龄义工”和“乐龄就业”计划，鼓励身体健康的乐龄人士重返社会服务或工作。(题目)：评论“活跃乐龄”计划对乐龄人士和整个社会所带来的意义。'}, { week: 8, title: '零工经济', keywords: '零工经济, gig economy, 自由, 保障', q2: '【议论文】有人认为，零工经济为社会创造了更多机会和自由；也有人认为，它让许多人陷入了不稳定的困境。你更同意哪种看法？试加以论证。', q3: '【材料评论】材料：一份调查显示，超过六成的零工经济从业者表示，如果能找到一份工时稳定、福利待遇相当的全职工作，他们愿意放弃目前的“自由”。(题目)：这份调查结果反映了什么问题？谈谈你的看法。'} ];
+
+        // --- Master Controller ---
+        document.addEventListener('DOMContentLoaded', function() {
+            populateFilters();
+            updateDashboard();
+            
+            document.querySelectorAll('#prediction-tags .trend-tag').forEach(tag => { 
+                tag.addEventListener('click', () => { 
+                    tag.classList.toggle('active'); 
+                    generatePrediction(); 
+                }); 
+            });
+            populateSuggestionTags();
+            populateWeeklyChallenges();
+            document.getElementById('hub-content-area').innerHTML = '<p style="text-align: center; color: #777;">输入关键词开始搜索，或点击上方推荐标签与热点挑战...</p>';
+        });
+        
+        function showTab(tabId, clickedTab) { 
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); 
+            document.getElementById(tabId).classList.add('active');
+            clickedTab.classList.add('active');
+        }
+        
+        // --- MODULE 1: Data Analysis Functions ---
+        function updateDashboard() { 
+            const filters = { 
+                year: document.getElementById('year-filter').value, 
+                type: document.getElementById('type-filter').value, 
+                mainTheme: document.getElementById('main-theme-filter').value, 
+                subTheme: document.getElementById('sub-theme-filter').value 
+            }; 
+            const filteredData = fullExamData.filter(item => 
+                (filters.year === 'all' || item.year == filters.year) && 
+                (filters.type === 'all' || item.type === filters.type) && 
+                (filters.mainTheme === 'all' || item.main_category === filters.mainTheme) && 
+                (filters.subTheme === 'all' || item.sub_theme === filters.subTheme)
+            ); 
+            renderCharts(filteredData); 
+            renderTable(filteredData);
+            renderDonutChart(filteredData, filters); // [新增] 调用甜甜圈图更新
+        }
+        
+        function renderDonutChart(data, filters) {
+            const donutChart = document.getElementById('donut-chart');
+            const legend = document.getElementById('donut-legend');
+            const title = document.getElementById('donut-chart-title');
+            legend.innerHTML = '';
+
+            const typeCounts = { '记叙文': 0, '论说文': 0, '材料评论': 0, '演讲稿': 0 };
+            const typeColors = { '记叙文': '#2ecc71', '论说文': '#e67e22', '材料评论': '#9b59b6', '演讲稿': '#3498db' };
+            const typeTips = { '记叙文': '核心考查能力：记叙见闻、介绍事物、表达感受看法', '论说文': '核心考查能力：针对话题表达看法、交流情感、传达信息', '材料评论': '核心考查能力：理解与分析阅读语料，并表达看法', '演讲稿': '核心考查能力：结合情境，清楚流利地发表见解' };
+            
+            data.forEach(item => {
+                if (typeCounts.hasOwnProperty(item.type)) {
+                    typeCounts[item.type]++;
+                }
+            });
+
+            const total = data.length;
+            if (total === 0) {
+                donutChart.style.background = '#f0f0f0';
+                legend.innerHTML = '<li>无符合条件的数据</li>';
+                title.textContent = '文体分布';
+                return;
+            }
+
+            let gradientString = 'conic-gradient(';
+            let currentPercentage = 0;
+            const sortedTypes = Object.entries(typeCounts).filter(([, count]) => count > 0).sort(([,a],[,b]) => b-a);
+            
+            sortedTypes.forEach(([type, count]) => {
+                const percentage = (count / total) * 100;
+                gradientString += `${typeColors[type]} ${currentPercentage}% ${currentPercentage + percentage}%, `;
+                currentPercentage += percentage;
+
+                const legendItem = document.createElement('li');
+                legendItem.className = 'legend-item';
+                legendItem.title = typeTips[type];
+                legendItem.innerHTML = `<span class="legend-color" style="background:${typeColors[type]};"></span>${type} (${count}, ${percentage.toFixed(1)}%)`;
+                legend.appendChild(legendItem);
+            });
+            
+            donutChart.style.background = gradientString.slice(0, -2) + ')';
+
+            // Update title
+            let titleText = "文体分布";
+            if(filters.year !== 'all') {
+                titleText += ` (${filters.year})`;
+            } else if (filters.mainTheme !== 'all') {
+                 titleText += ` (${filters.mainTheme})`;
+            } else {
+                 titleText += ` (总览)`;
+            }
+            title.textContent = titleText;
+        }
+
+        function renderCharts(data) { 
+            const mainThemeCounts = {}, subThemeCounts = {}; 
+            data.forEach(item => { 
+                mainThemeCounts[item.main_category] = (mainThemeCounts[item.main_category] || 0) + 1; 
+                subThemeCounts[item.sub_theme] = (subThemeCounts[item.sub_theme] || 0) + 1; 
+            }); 
+            const mainContainer = document.getElementById('main-theme-chart-container'), 
+                  subContainer = document.getElementById('sub-theme-chart-container');
+            mainContainer.innerHTML = ''; 
+            subContainer.innerHTML = ''; 
+            const sortedMain = Object.entries(mainThemeCounts).sort(([,a],[,b]) => b - a), 
+                  maxMain = sortedMain.length > 0 ? sortedMain[0][1] : 0; 
+            const trendMap = { 
+                '社会参与与公民意识': {text: '▲ 显著上升', class: 'trend-up'}, 
+                '个人修养与价值观': {text: '▬ 保持平稳', class: 'trend-stable'}, 
+                '时代挑战与未来思辨': {text: '▶︎ 更具深度', class: 'trend-deep'} 
+            }; 
+            sortedMain.forEach(([label, count]) => { 
+                const trend = trendMap[label]; 
+                const colorId = mainThemeColors[label], 
+                      barWidth = maxMain > 0 ? (count / maxMain) * 100 : 0; 
+                const item = document.createElement('div'); 
+                item.className = 'bar-item'; 
+                item.innerHTML = `<div class="bar-label"><span>${label}</span> ${trend ? `<span class="trend-indicator ${trend.class}">${trend.text}</span>` : ''}</div><div class="bar-graph"><div class="bar main-theme-color-${colorId}" style="width: ${barWidth}%;">${count}</div></div>`; 
+                mainContainer.appendChild(item); 
+            }); 
+            const sortedSub = Object.entries(subThemeCounts).sort(([,a],[,b]) => b - a), 
+                  maxSub = sortedSub.length > 0 ? sortedSub[0][1] : 0; 
+            sortedSub.forEach(([label, count]) => { 
+                const parent = fullExamData.find(d => d.sub_theme === label)?.main_category; 
+                if(!parent) return; 
+                const colorId = mainThemeColors[parent], 
+                      barWidth = maxSub > 0 ? (count / maxSub) * 100 : 0; 
+                const item = document.createElement('div'); 
+                item.className = 'bar-item'; 
+                item.innerHTML = `<div class="bar-label"><span>${label}</span></div><div class="bar-graph"><div class="bar main-theme-color-${colorId}" style="width: ${barWidth}%;">${count}</div></div>`; 
+                subContainer.appendChild(item); 
+            }); 
+        }
+        function renderTable(data) { 
+            const tableBody = document.querySelector('#examDataTable tbody'); 
+            tableBody.innerHTML = ''; 
+            if (data.length === 0) { 
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align: center;">没有找到符合条件的数据</td></tr>`; 
+                return; 
+            } 
+            data.forEach(item => { 
+                tableBody.innerHTML += `<tr><td>${item.year}</td><td>${item.q}</td><td>${item.type}</td><td>${item.main_category}</td><td>${item.sub_theme}</td><td>${item.keywords}</td></tr>`; 
+            }); 
+        }
+        function populateFilters() { 
+            const yF=document.getElementById('year-filter'), 
+                  tF=document.getElementById('type-filter'), 
+                  mF=document.getElementById('main-theme-filter'), 
+                  sF=document.getElementById('sub-theme-filter'); 
+            const years=[...new Set(fullExamData.map(i => i.year))].sort((a,b) => b-a), 
+                  types=[...new Set(fullExamData.map(i => i.type))], 
+                  mainThemes=[...new Set(fullExamData.map(i => i.main_category))], 
+                  subThemes=[...new Set(fullExamData.map(i => i.sub_theme))].sort(); 
+            yF.innerHTML='<option value="all">所有年份</option>' + years.map(y => `<option value="${y}">${y}</option>`).join(''); 
+            tF.innerHTML='<option value="all">所有题型</option>' + types.map(t => `<option value="${t}">${t}</option>`).join(''); 
+            mF.innerHTML='<option value="all">所有核心主题</option>' + mainThemes.map(t => `<option value="${t}">${t}</option>`).join(''); 
+            sF.innerHTML='<option value="all">所有主题子类</option>' + subThemes.map(t => `<option value="${t}">${t}</option>`).join(''); 
+        }
+
+        // --- MODULE 2: Wizard Functions ---
+        function generateStrategy() { 
+            const goal=document.getElementById('goal-grade').value, 
+                  strength=document.getElementById('strength').value, 
+                  weakness=document.getElementById('weakness').value; 
+            let result=`<h4>为你量身定制的备考路径：</h4>`; 
+            if (goal==='A1'&&strength==='论说文') { 
+                result+=`<p><strong>主攻方向：【冲刺型】</strong> 鉴于你目标A1且擅长论说文，建议将 <strong>60%</strong> 的精力投入【时代挑战与未来思辨】主题，用思维深度建立绝对优势。</p>`; 
+            } else { 
+                result+=`<p><strong>主攻方向：【稳健平衡型】</strong> 鉴于你的目标和特长，建议将 <strong>50%</strong> 的精力投入【社会参与与公民意识】主题，这是得分的基本盘。</p>`; 
+            } 
+            if (weakness==='素材积累') { 
+                result+=`<p><strong>强化重点：</strong> 你的短板是素材积累。请在下方的"8周热点挑战"和"查询核心素材"部分，重点搜索你主攻方向的关键词，并学习其中的案例。</p>`; 
+            } else { 
+                result+=`<p><strong>强化重点：</strong> 你的短板是${weakness}。建议每周增加一次针对性的专项训练。</p>`; 
+            } 
+            const resultCard=document.getElementById('strategy-result'); 
+            resultCard.innerHTML=result; 
+            resultCard.style.display='block'; 
+        }
+        function generatePrediction() { 
+            const activeTags = Array.from(document.querySelectorAll('#prediction-tags .trend-tag.active')).map(t => t.dataset.trend); 
+            const output = document.getElementById('prediction-result'); 
+            let content = ''; 
+            if (activeTags.length === 0) { 
+                output.style.display = 'none'; 
+                return; 
+            } 
+            const parts = { 
+                situational: { title:"情境代入式记叙文", question: "你的好友在社交媒体上发布了一张篡改过的照片并获得了大量点赞，你无意中发现了真相。你会如何处理这次友情与诚信的危机？", analysis:"本题考察学生在现代社交情境下的价值观冲突与抉择能力。", angles:"<li><strong>破题点一：</strong>聚焦内心挣扎，详细描绘友谊与诚信两大价值观在内心的博弈过程。</li><li><strong>破题点二：</strong>展现沟通智慧，结局不应是简单的告发或沉默，而应体现出成熟的、有同理心的处理方式。</li>" }, 
+                solution_oriented: { title:"解决方案导向论说文", question: "我国社会正面临日益严重网络诈骗问题。试分析其背后的原因，并为政府、社区和个人三个层面提出具体可行的应对措施。", analysis:"本题要求学生超越单纯的现象评述，展现出作为社会一员的建设性思维和解决问题的能力。", angles:"<li><strong>破题点一：</strong>分析原因时要有层次感，可从技术漏洞、心理弱点、监管缺失三方面展开。</li><li><strong>破题点二：</strong>解决方案要具体、可行，避免空谈。例如，为个人层面提出信息核实三步法，为社区层面提出邻里防诈骗宣讲会等。</li>" }, 
+                cross_dimension: { title:"跨维度母题融合", question: "随着人工智能（AI）绘画技术的普及（科技伦理），传统艺术家面临失业风险。你认为社会应该如何应对，以平衡科技发展与保护传统文化（文化传承）？", analysis:"本题是典型的高阶思辨题，融合了【时代挑战】与【社会参与】两大核心主题，要求学生具备跨界思考能力。", angles:"<li><strong>破题点一：</strong>避免二元对立，论证科技与文化并非你死我活，而是可以融合共生。</li><li><strong>破题点二：</strong>展现前瞻性思维，提出创新性观点，如设立人机协作艺术基金，鼓励艺术家利用AI进行创作等。</li>" } 
+            }; 
+            if (activeTags.length === 1) { 
+                const data = parts[activeTags[0]]; 
+                content = `<h4>${data.title}</h4><p><strong>模拟题：</strong>${data.question}</p><p><strong>命题思路解析：</strong>${data.analysis}</p><strong>高分切入点建议：</strong><ul>${data.angles}</ul>`; 
+            } else { 
+                content = `<h4>[复合型题目]</h4><p><strong>模拟题：</strong>近期，有学生利用AI聊天工具（科技伦理）完成作业，引发了关于诚信（坚毅诚信）的激烈讨论。有人认为这是善用科技，有人则认为是学术不端。请就此情境，探讨科技发展对个人诚信价值观带来的冲击，并提出你认为学校和家庭应该如何引导学生树立正确的科技使用观念。</p><p><strong>命题思路解析：</strong>本题是极有可能出现的复合型难题，融合了【时代挑战】的科技伦理与【个人修养】的诚信价值观，要求学生在全新的情境下辨析传统美德。</p><strong>高分切入点建议：</strong><ul><li><strong>定义边界：</strong>首先要清晰界定AI辅助与学术欺诈的边界，这是论证的基础。</li><li><strong>多方视角：</strong>分别从学生（效率与惰性）、教师（评估方式的挑战）、社会（未来人才需求）等多个角度进行论证，体现思辨的复杂性。</li></ul>`; 
+            } 
+            output.innerHTML = content; 
+            output.style.display = 'block'; 
+        }
+        function populateWeeklyChallenges() { 
+            const container = document.getElementById('week-buttons'); 
+            if (!container) return;
+            container.innerHTML = ''; 
+            weeklyChallenges.forEach(c => { 
+                const btn = document.createElement('button'); 
+                btn.className = 'week-btn'; 
+                btn.textContent = `第${c.week}周: ${c.title}`; 
+                btn.onclick = () => handleWeekButtonClick(c.week - 1, btn); 
+                container.appendChild(btn); 
+            }); 
+        }
+        function handleWeekButtonClick(weekIndex, btn) { 
+            document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active')); 
+            btn.classList.add('active'); 
+            const challenge = weeklyChallenges[weekIndex]; 
+            const resultCard = document.getElementById('weekly-challenge-result'); 
+            resultCard.innerHTML = `<h4>第${challenge.week}周模拟题：${challenge.title}</h4><p><strong>Q2: </strong>${challenge.q2}</p><p><strong>Q3: </strong>${challenge.q3}</p>`; 
+            resultCard.style.display = 'block'; 
+            document.getElementById('keyword-search').value = challenge.keywords; 
+            searchKeywords(); 
+        }
+        function populateSuggestionTags() { 
+            const container = document.getElementById('hub-suggestion-tags');
+            if (!container) return;
+            const tags = ['个人修养', '社会参与', '时代挑战', '坚毅诚信', '国家认同', '科技伦理', '环保', '文化传承', '公民责任']; 
+            container.innerHTML = '<strong>试试搜索：</strong> '; 
+            tags.forEach(tagText => { 
+                const tagElement = document.createElement('span'); 
+                tagElement.className = 'suggestion-tag'; 
+                tagElement.textContent = tagText; 
+                tagElement.onclick = () => { 
+                    document.getElementById('keyword-search').value = tagText; 
+                    searchKeywords(); 
+                }; 
+                container.appendChild(tagElement); 
+            }); 
+        }
+        function searchKeywords() { 
+            const term = document.getElementById('keyword-search').value.toLowerCase(); 
+            const contentArea = document.getElementById('hub-content-area'); 
+            contentArea.innerHTML = ''; 
+            if (!term) { 
+                contentArea.innerHTML = '<p style="text-align: center; color: #777;">输入关键词开始搜索，或点击上方推荐标签与热点挑战...</p>'; 
+                return; 
+            } 
+            let resultsFound = false; 
+            Object.keys(knowledgeDB).forEach(mainTheme => { 
+                knowledgeDB[mainTheme].forEach(sub => { 
+                    const isVisible = mainTheme.toLowerCase().includes(term) || 
+                                      sub.title.toLowerCase().includes(term) || 
+                                      sub.keywords.toLowerCase().includes(term) || 
+                                      sub.examples.toLowerCase().includes(term) || 
+                                      sub.hotspots.toLowerCase().includes(term) || 
+                                      (sub.materials && sub.materials.some(m => 
+                                          m.title.toLowerCase().includes(term) || 
+                                          m.summary.toLowerCase().includes(term) || 
+                                          m.keywords.toLowerCase().includes(term)
+                                      )); 
+                    if(isVisible) { 
+                        resultsFound = true; 
+                        const colorId = mainThemeColors[mainTheme]; 
+                        let cardHTML = `<div class="sub-theme-card"><h4 class="main-theme-color-${colorId}">${mainTheme} > ${sub.title}</h4><table><tr><th>关键词索引</th><td>${sub.keywords}</td></tr><tr><th>历年例子</th><td>${sub.examples}</td></tr><tr><th>预测热点</th><td>${sub.hotspots}</td></tr></table>`; 
+                        if (sub.materials && sub.materials.length > 0) { 
+                            cardHTML += `<div class="material-cards-container">` + sub.materials.map(mat => `<div class="material-card"><h5>${mat.title}</h5><p><strong>摘要：</strong>${mat.summary}</p><p><strong>新加坡视角：</strong>${mat.context}</p><p><strong>切入点：</strong>${mat.angles}</p></div>`).join('') + `</div>`; 
+                        } 
+                        cardHTML += `</div>`; 
+                        contentArea.innerHTML += cardHTML; 
+                    } 
+                }); 
+            }); 
+            if (!resultsFound) { 
+                contentArea.innerHTML = `<p style="text-align: center; color: #777;">没有找到与"${term}"相关的素材。</p>`; 
+            } 
+        }
+        function generateParcOutline() { 
+            const audience = document.getElementById('parc-audience').value || '【听众】'; 
+            const theme = document.getElementById('parc-theme').value || '【核心主题】'; 
+            const position = document.getElementById('parc-position').value || '【核心观点】'; 
+            const action = document.getElementById('parc-action').value || '【一件具体的小事】'; 
+            const output = `P = Position (立场确立)
+-------------------------
+各位${audience}，大家好！今天，我想和大家探讨一个与我们息息相关的主题——「${theme}」。在我看来，「${theme}」不仅关乎个人成长，更影响社会与国家的发展。因此，我的立场非常明确：「${position}」。
+
+A = Argument (论证展开)
+-------------------------
+首先，「${theme}」的重要性在于它直接关系到我们的【个人层面】，例如......
+其次，它同样深刻地影响着【社会层面】，比如......
+最后，从【国家/未来层面】来看，如果忽视了这一点，我们可能会面临......
+
+R = Response (情感共鸣)
+-------------------------
+我知道，很多人可能会产生这样的疑问：“这真的与我有关吗？”
+但请大家想一想：如果我们继续忽视「${theme}」，未来会怎样？这不仅仅是一个选择，而是一份责任。我们每个人都需要扪心自问：「【提出一个发人深省的反问句】」。
+
+C = Call to Action (呼吁行动)
+-------------------------
+总而言之，「${theme}」并不是一句口号，而是一种行动。
+让我们从${action}做起，比如......
+从今天开始，带动身边的人，一起实践【核心价值/态度】。只有这样，我们才能共同迎来一个【美好的愿景】。`; 
+            document.getElementById('parc-output').textContent = output; 
+            document.getElementById('parc-result').style.display = 'block'; 
+        }
+    </script>
+</body>
+</html>

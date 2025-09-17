@@ -1,0 +1,1556 @@
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level 高级华文「作文」智能写作模板库</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --hover-bg: #e3f2fd;
+            --border-emphasis: #3498db;
+            --text-title: #2c3e50;
+            --text-subtitle: #34495e;
+            --text-body: #333;
+            --text-muted: #666;
+            --header-gradient: var(--primary-gradient);
+            --border-color: #dee2e6;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'PingFang SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.7;
+            color: var(--text-body);
+            background: var(--bg-gradient);
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-top: 5px solid;
+            border-image: var(--primary-gradient) 1;
+        }
+        
+        .header h1 { font-size: 2.5rem; font-weight: 700; color: var(--text-title); }
+        .header p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0.5rem auto 0; }
+        
+        .main-navigation { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        
+        .nav-btn {
+            padding: 0.8rem 1.8rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-subtitle);
+        }
+        
+        .nav-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); background: var(--hover-bg); }
+        .nav-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .content-section { display: none; animation: fadeIn 0.5s ease-in; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .sub-navigation { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; flex-wrap: wrap; }
+        .sub-nav-btn { padding: 0.6rem 1.2rem; background: rgba(255,255,255,0.7); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; color: var(--text-subtitle); }
+        .sub-nav-btn:hover { background: white; }
+        .sub-nav-btn.active { background: var(--header-gradient); color: white; border-color: transparent; }
+        .sub-content { display: none; }
+        .sub-content.active { display: block; }
+
+        .template-section { background: var(--card-bg); backdrop-filter: blur(10px); border-radius: 15px; padding: 2.5rem; margin-bottom: 2rem; box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .template-section h2 { font-size: 2rem; margin-bottom: 2rem; padding-bottom: 1rem; text-align: center; color: var(--text-title); border-bottom: 2px solid; border-image: var(--primary-gradient) 1; }
+
+        .overview-container { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+        .overview-card { flex: 1; min-width: 280px; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 10px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #667eea; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .overview-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+        .overview-card h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text-title); }
+        .overview-card p { font-weight: 600; color: #764ba2; margin-bottom: 1rem; font-size: 0.9rem; }
+        .overview-card ul { list-style-type: none; padding-left: 0; }
+        .overview-card li { padding: 0.4rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .overview-card li:last-child { border-bottom: none; }
+        .universal-modules-section { margin-top: 2rem; padding: 1.5rem; background: rgba(102, 126, 234, 0.05); border-radius: 8px; text-align: center; }
+        .universal-modules-section h4 { margin-bottom: 0.5rem; color: var(--text-subtitle); }
+
+        .structure-block { background-color: white; border: 1px solid var(--border-color); border-radius: 15px; padding: 0; margin-bottom: 2rem; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.05);}
+        .structure-block h3.collapsible { font-size: 1.8rem; color: var(--text-title); margin: 0; padding: 1.5rem 2rem; cursor: pointer; background-color: #f7f9fc; display: flex; justify-content: space-between; transition: background-color 0.2s; border-bottom: 1px solid var(--border-color); }
+        .structure-block h3.collapsible:hover { background-color: #eff5fc; }
+        .structure-block h3.collapsible::after { content: '▼'; font-size: 1rem; transition: transform 0.3s ease; align-self: center; }
+        .structure-block h3.collapsible.active::after { transform: rotate(180deg); }
+        .structure-block .content { padding: 2rem; max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; background-color: white; }
+        
+        .structure-part-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .structure-part-block h4 {
+            font-size: 1.3rem;
+            color: var(--text-subtitle);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .strategy-option-block {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .strategy-option-block h5 {
+            font-size: 1.2rem;
+            color: var(--text-subtitle);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .analysis-container {
+            border: 1px dashed var(--border-emphasis);
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            background-color: #f7f9fc;
+        }
+        .analysis-trigger {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-title);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .analysis-trigger:hover {
+            background-color: #eff5fc;
+        }
+        .analysis-trigger::after {
+            content: '▶';
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+        .analysis-trigger.active::after {
+            transform: rotate(90deg);
+        }
+        .analysis-content {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            background-color: white;
+            border-top: 1px solid var(--border-color);
+        }
+        .analysis-content h1, .analysis-content h2, .analysis-content h3, .analysis-content h4 {
+            margin-top: 1.5rem; color: var(--text-subtitle);
+        }
+        .analysis-content h1 { font-size: 1.6rem; }
+        .analysis-content h2 { font-size: 1.4rem; }
+        .analysis-content h3 { font-size: 1.2rem; border-left: 3px solid #667eea; padding-left: 0.8rem; }
+        .analysis-content ul { padding-left: 20px; margin-top: 0.5rem; }
+        .analysis-content hr { border: 0; height: 1px; background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.1), rgba(0,0,0,0)); margin: 2rem 0; }
+        .analysis-content .summary-box { background: var(--hover-bg); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 3px solid var(--border-emphasis); }
+        .analysis-content .icon-tick { color: #28a745; margin-right: 0.5rem; }
+        .analysis-content .icon-list { color: #17a2b8; margin-right: 0.5rem; }
+
+        .tab-navigation {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover {
+            background-color: var(--hover-bg);
+            color: var(--text-title);
+        }
+        .tab-btn.active {
+            color: var(--text-title);
+            font-weight: 600;
+            border-bottom: 3px solid var(--border-emphasis);
+        }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.active { display: block; }
+
+        .model-comparison-container { display: flex; flex-wrap: wrap; gap: 2rem; }
+        .model-card { flex: 1; min-width: 300px; background: #f8f9fa; border-radius: 10px; padding: 1.5rem; border: 1px solid var(--border-color); }
+        .model-card h3 { font-size: 1.4rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--border-color); }
+        .model-card ul { list-style-type: none; padding-left: 0; }
+        .model-card li { margin-bottom: 0.75rem; }
+        
+        .suitability-notice { background-color: var(--hover-bg); border-left: 4px solid var(--border-emphasis); padding: 0.75rem 1.25rem; margin-bottom: 2rem; border-radius: 8px; color: var(--text-subtitle); }
+        
+        .placeholder-highlight { background-color: rgba(255, 223, 226, 0.8); color: #721c24; padding: 0.2rem 0.4rem; border-radius: 5px; font-weight: 600; }
+        
+        .reference-table { width: 100%; border-collapse: collapse; margin: 2rem 0; }
+        .reference-table th, .reference-table td { padding: 1rem; text-align: left; border: 1px solid #dee2e6; }
+        .reference-table th { background: var(--header-gradient); color: white; }
+        .reference-table tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+        
+        .reverse-index-container h4 { margin-top: 2rem; color: var(--text-subtitle); }
+        .past-paper-list { list-style-type: none; padding-left: 0; margin-top: 1rem; }
+        .past-paper-list li { padding: 0.75rem; border-radius: 6px; margin-bottom: 0.5rem; background-color: rgba(102, 126, 234, 0.05); border-left: 3px solid #667eea; cursor: pointer; transition: background-color 0.2s ease, transform 0.2s ease; }
+        .past-paper-list li:hover { background-color: var(--hover-bg); transform: translateX(5px); }
+
+        .exam-table { width: 100%; border-collapse: collapse; }
+        .exam-table th, .exam-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); word-wrap: break-word; }
+        .exam-table th { background: var(--header-gradient); color: white; }
+        .exam-table tbody tr { cursor: pointer; transition: background-color 0.2s; }
+        .exam-table tbody tr:hover { background: var(--hover-bg); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg); padding: 2.5rem; border-radius: 15px; max-width: 600px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2); position: relative; }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; border: none; background: none; }
+        .tool-card { background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--border-color); padding: 2rem; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); text-align: center; }
+        .tool-btn { background: var(--primary-gradient); color: white; border: none; padding: 0.8rem 2rem; border-radius: 25px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; margin-top: 1rem; }
+        .strategy-card { background: #f7f9fc; border-left: 5px solid; border-image: linear-gradient(to bottom, #667eea, #764ba2) 1 100%; border-image-slice: 1; padding: 1.5rem 2rem; border-radius: 10px; margin-bottom: 2rem; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .strategy-card h4 { font-size: 1.4rem; margin-bottom: 1rem; display: flex; align-items: center; flex-wrap: wrap; color: var(--text-title); }
+        .strategy-num { font-size: 2rem; font-weight: 700; color: #667eea; margin-right: 0.75rem; }
+        .strategy-tag { font-size: 1rem; font-weight: 500; color: #fff; background: #764ba2; padding: 0.2rem 0.6rem; border-radius: 15px; margin-left: 0.75rem; }
+        .strategy-card ul { list-style-position: inside; padding-left: 0.5rem; margin-bottom: 1rem; }
+        .strategy-card li { margin-bottom: 0.5rem; }
+        .strategy-highlight { background-color: rgba(255, 243, 205, 1); color: #856404; padding: 0.1rem 0.5rem; border-radius: 4px; font-weight: bold; }
+        .strategy-highlight-strong { color: #d9534f; font-weight: bold; }
+        .strategy-goal { background: var(--hover-bg); padding: 1rem; border-radius: 8px; margin-top: 1rem; border-left: 3px solid var(--border-emphasis); }
+        .strategy-conclusion { margin-top: 2rem; padding: 1.5rem; background: var(--card-bg); border-radius: 10px; text-align: center; border-top: 4px solid; border-image: var(--primary-gradient) 1; }
+        .strategy-conclusion h4 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-title); }
+        .strategy-conclusion p { font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: 0.5rem auto; }
+        .template-example { background: linear-gradient(135deg, #d4edda, #c3e6cb); padding: 1.5rem; border-radius: 8px; margin-top: 1rem; border-left: 4px solid #28a745; }
+        .word-count-info { background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 0.8rem; border-radius: 6px; margin: 1rem 0; font-size: 0.9rem; color: #856404; border: 1px solid #ffeeba;}
+        .interactive-tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+        .tool-input, .tool-textarea { width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); font-family: inherit; font-size: 1rem; margin-top: 1rem; }
+        .exam-db-filters {display:flex; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;}
+        .exam-db-filters .tool-input { margin-top:0; flex:1; min-width: 150px;}
+        .exam-db-filters .tool-btn { margin-top:0; }
+
+        .parc-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .parc-card {
+            background: #fdfcff;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            border-top: 4px solid;
+            border-image: var(--primary-gradient) 1;
+        }
+        .parc-card::before {
+            content: attr(data-letter);
+            position: absolute;
+            top: 0px;
+            right: 10px;
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(102, 126, 234, 0.08);
+            z-index: 1;
+        }
+        .parc-card > * { position: relative; z-index: 2; }
+        .parc-card h4 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--text-subtitle); }
+        .parc-card p, .parc-card ul { font-size: 1rem; margin-bottom: 1rem; }
+        .parc-card ul { padding-left: 1.2rem; }
+        .parc-card .card-section { margin-bottom: 1rem; }
+        .parc-card .card-section h5 { font-size: 1rem; color: var(--text-title); font-weight: 600; margin-bottom: 0.3rem; }
+        .parc-card .card-section p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+        .week-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        .week-btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background-color: white;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .week-btn:hover { background-color: var(--hover-bg); }
+        .week-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border-color: transparent;
+        }
+        .week-content { display: none; }
+        .week-content.active { display: block; animation: fadeIn 0.5s; }
+        .week-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        .week-card h3 { font-size: 1.5rem; color: var(--text-title); }
+        .week-card h4 { font-size: 1.2rem; color: #764ba2; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>O-Level 高级华文「作文」智能写作模板库</h1>
+            <p>融合历年真题数据与三大核心文体，提供从理论到实战的一站式解决方案</p>
+        </header>
+        
+        <nav class="main-navigation">
+            <button class="nav-btn active" onclick="showMainSection('writing-system')">写作体系</button>
+            <button class="nav-btn" onclick="showMainSection('practice-plan')">热点练习</button>
+            <button class="nav-btn" onclick="showMainSection('practical-application')">真题数据库</button>
+            <button class="nav-btn" onclick="showMainSection('learning-tools')">学习工具</button>
+            <button class="nav-btn" onclick="showMainSection('strategy')">应试战略</button>
+        </nav>
+
+        <div id="writing-system" class="content-section active">
+            <div class="sub-navigation">
+                <button class="sub-nav-btn active" onclick="showSubSection(this, 'overview')">总览映射</button>
+                <button class="sub-nav-btn" onclick="showSubSection(this, 'structures')">四大结构 (议论文)</button>
+                <button class="sub-nav-btn" onclick="showSubSection(this, 'modules')">四大模块 (议论文)</button>
+                <button class="sub-nav-btn" onclick="showSubSection(this, 'specific-types')">其他文体</button>
+            </div>
+
+            <div id="overview" class="sub-content active">
+                 <div class="template-section">
+                    <h2>写作体系总览</h2>
+                    <div class="overview-container">
+                        <div class="overview-card"><h3>议论文 (逻辑严谨，论证为王)</h3><p>核心方法：四大结构体系</p><ul><li>• 传统型结构 (并列/递进式)</li><li>• 双核类结构 (辩证/比较式)</li><li>• 任务驱动型结构 (问题解决式)</li><li>• 家国情怀型结构 (价值升华式)</li></ul></div>
+                        <div class="overview-card"><h3>演讲稿 (情感共鸣，呼吁行动)</h3><p>核心方法：P.A.R.C. 说服力模型</p><ul><li>• <strong>P</strong>osition (立场确立)</li><li>• <strong>A</strong>rgument (论证展开)</li><li>• <strong>R</strong>esponse (情感共鸣)</li><li>• <strong>C</strong>all to Action (呼吁行动)</li></ul></div>
+                        <div class="overview-card"><h3>材料评论 (深度对话，链接现实)</h3><p>核心方法：I.A.L.C. 深度对话模型</p><ul><li>• <strong>I</strong>ntroduction (引入)</li><li>• <strong>A</strong>nalysis (分析)</li><li>• <strong>L</strong>inkage (联结)</li><li>• <strong>C</strong>onclusion (结论)</li></ul></div>
+                    </div>
+                    <div class="universal-modules-section"><h4>通用写作模块 (贯穿议论文)</h4><p>模块一 (开头) · 模块二 (主体) · 模块三 (例证) · 模块四 (结尾)</p></div>
+                </div>
+            </div>
+
+            <div id="structures" class="sub-content">
+                <div class="template-section">
+                    <h2 style="text-align:left; border:none; padding-bottom: 0;">议论文四大核心结构</h2>
+                    <p style="margin-top:-1.5rem; margin-bottom: 2rem; color: var(--text-muted);">议论文的宏观布局框架，决定文章的逻辑走向。</p>
+                    <h3 style="font-size: 1.5rem; color: var(--text-subtitle);">四大结构与四大模块映射总表</h3>
+                    <table class="reference-table">
+                        <thead><tr><th>四大结构（整体布局）</th><th>模块一（开头段）</th><th>模块二（主体段）</th><th>模块三（例证）</th><th>模块四（结尾段）</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>传统型</strong></td><td>现象/名言引入 → 总论点</td><td>三段:个人→社会→国家 或是 什么→为什么→怎么办</td><td>各段插入古代/当代/个人例子</td><td>总结+哲理升华+回扣</td></tr>
+                            <tr><td><strong>双核型</strong></td><td>矛盾/关系引入 → 总论点</td><td>三段:肯定A→ 转折 B → 融合</td><td>段内举例分别支撑A、B、融合</td><td>平衡统一收束</td></tr>
+                            <tr><td><strong>任务驱动型</strong></td><td>材料/现象引入 → 总论点</td><td>三段:What 现状 → Why 根源 → How 对策</td><td>各段用当代/个人例子说明</td><td>对策总结 + 展望未来</td></tr>
+                            <tr><td><strong>家国情怀型</strong></td><td>信念/历史引入 → 总论点</td><td>三段:个人→社会→国家</td><td>各段穿插当代/历史/个人例子</td><td>排比升华+青年号召</td></tr>
+                        </tbody>
+                    </table>
+
+                    <div id="structure-traditional" class="structure-block">
+                        <h3 class="collapsible active">一、传统型结构 (并列/递进式)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适合：</strong>诚信、环保、责任、坚毅、文化传承等普世价值</div>
+                            
+                            <div class="analysis-container">
+                                <div class="analysis-trigger" onclick="toggleAnalysis(this, 'analysis-content-traditional')">
+                                    <span>💡 <b>真题辨析：</b>点击查看如何从题目中识别【传统型结构】</span>
+                                </div>
+                                <div class="analysis-content" id="analysis-content-traditional">
+                                    <div style="padding: 1.5rem 0;">
+                                        <h1>📖 什么是传统型结构？</h1>
+                                        <ul>
+                                            <li><strong>定义</strong>：传统型议论文结构是一种最常见的“单核立论”模式，强调<strong>一个中心论点 + 三个分论点 + 升华结尾</strong>。</li>
+                                            <li><strong>适用题目特征</strong>：
+                                                <ol>
+                                                    <li>题目只涉及一个核心价值/概念（没有对立关系、没有任务导向）。</li>
+                                                    <li>要求考生从不同层面（个人 / 社会 / 国家，或修养 / 道德 / 文化）来论证其意义。</li>
+                                                    <li>没有“如何做”的明显任务要求，也没有“两难抉择”的双核结构。</li>
+                                                </ol>
+                                            </li>
+                                        </ul>
+                                        <hr>
+                                        <h2>📌 例子解析（O-Level 1116 真题）</h2>
+                                        <h3>🔹 2015 Q1《动机激励你开始，承诺推动你坚持》</h3>
+                                        <ul>
+                                            <li><strong>题干特点</strong>：核心主题只有“动机与承诺”。</li>
+                                            <li><strong>写作方式</strong>：通过“个人经历 → 社会案例 → 历史人物”来论证。</li>
+                                            <li>👉 属于 <strong>传统型</strong>，因为没有对立关系，也没有措施导向。</li>
+                                        </ul>
+                                        <h3>🔹 2016 Q1《嫉妒使人感到不快乐》</h3>
+                                        <ul>
+                                            <li><strong>题干特点</strong>：核心概念 = 嫉妒。</li>
+                                            <li><strong>写作方式</strong>：围绕嫉妒的危害 → 个人心理 → 社会关系 → 人生成长。</li>
+                                            <li>👉 单一论点，传统型结构。</li>
+                                        </ul>
+                                        <h3>🔹 2021 Q1《做决定时需考虑诚信和影响》</h3>
+                                        <ul>
+                                            <li><strong>题干特点</strong>：核心价值 = 诚信。</li>
+                                            <li><strong>写作方式</strong>：诚信对个人 → 社会 → 国家层面的意义。</li>
+                                            <li>👉 传统型。</li>
+                                        </ul>
+                                        <h3>🔹 2022 Q1《参与社区服务改变看法》</h3>
+                                        <ul>
+                                            <li><strong>题干特点</strong>：核心概念 = 社区服务 → 成长。</li>
+                                            <li><strong>写作方式</strong>：个人感悟 → 社会意义 → 国家责任。</li>
+                                            <li>👉 仍是传统型，只是记叙文形式。</li>
+                                        </ul>
+                                        <hr>
+                                        <div class="summary-box">
+                                            <h2>✅ 总结（传统型识别公式）</h2>
+                                            <p><strong>若题目：</strong></p>
+                                            <ol>
+                                                <li>只有一个中心概念（如“诚信”“嫉妒”“承诺”“感恩”）。</li>
+                                                <li>不涉及对立选项（非双核）。</li>
+                                                <li>不要求提出具体措施（非任务驱动）。</li>
+                                                <li>主题本身容易分解为“个人—社会—国家”三个维度。</li>
+                                            </ol>
+                                            <p>👉 就属于 <strong>传统型结构</strong>。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="structure-part-block">
+                                <h4>1）开头段（80–100字）</h4>
+                                <h5>任选其一引入方式 (40-50字)</h5>
+                                <ul><li><strong>现象引入式:</strong> 在当今这个<span class="placeholder-highlight">[瞬息万变/日益复杂]</span>的时代,<span class="placeholder-highlight">[主题]</span>已成为一个我们无法回避的核心议题。</li><li><strong>名言引入式:</strong> 古人云:“<span class="placeholder-highlight">[名言]</span>”,这句古老的智慧至今仍对我们理解<span class="placeholder-highlight">[主题]</span>有深刻启示。</li></ul>
+                                <h5>核心论点 (30-40字)</h5><p>因此,我认为,<span class="placeholder-highlight">[主题]</span>不仅关乎个人品格,更是社会与国家发展的基石。</p>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>2）主体段（三段，共 300–360字）</h4>
+                                <div class="strategy-option-block">
+                                    <h5>A. 个人 → 社会 → 国家</h5>
+                                    <ul>
+                                        <li><strong>个人层面:</strong><br>① 分论点: 首先,在个人层面,<span class="placeholder-highlight">[主题]</span>是我们安身立命的道德准则。<br>② 例证组件（任选其一）：<ul><li>当代：`近年来，[事件/人物]在[情境]中的表现，生动体现了[主题]的价值。`</li><li>个人：`或许宏大的叙事遥远，但我在[学习/生活经历]中，也切身体会到[主题]的重要。`</li></ul>③ 分析（任选其一）:<ul><li>`这说明，[例子]揭示了[主题]的深层意义——没有它，必然导致[负面后果]。`</li><li>`由此可见，[例子]不仅仅是个案，而是折射出社会普遍的[主题相关现象]。`</li></ul>④ 扣题: 因此,<span class="placeholder-highlight">[主题]</span>是个人成长的根本保障。</li>
+                                        <li><strong>社会层面:</strong><br>① 分论点: 其次,放眼社会,<span class="placeholder-highlight">[主题]</span>是维系人际信任、促进社群和谐的黏合剂。<br><p>同上格式：② → ③ → ④</p></li>
+                                        <li><strong>国家层面:</strong><br>① 分论点: 最后,上升到国家民族的高度,<span class="placeholder-highlight">[主题]</span>更是驱动文明进步的精神动力。<br><p>同上格式：② → ③ → ④</p></li>
+                                    </ul>
+                                </div>
+                                <div class="strategy-option-block">
+                                    <h5>B. 是什么 → 为什么 → 怎么办</h5>
+                                    <ul>
+                                        <li><strong>定义段（是什么）</strong><br>① 分论点：`所谓[主题]，并不仅仅是指[表层定义]，更是一种[深层价值]。`<br>② 例证组件（任选其一）：<ul><li>古代：`当[朝代][人物]在[处境]中展现[事迹]时，正是[主题]精神的真实写照。`</li><li>当代：`近年来，[事件/人物]在[场景]中的表现，充分诠释了[主题]的深刻内涵。`</li></ul>③ 分析：`这说明，[例子]不仅展现了[主题]的表层含义，更揭示了它所承载的长远价值。`<br>④ 扣题：`因此，[主题]并非抽象的口号，而是具体而深刻的价值准则。`</li>
+                                        <li><strong>理由段（为什么）</strong><br>① 分论点：`为什么当下强调[主题]？其根本原因在于它直接关系到[社会/国家]的长远发展。`<br>② 例证组件（任选其一）：<ul><li>当代：`例如，[社会事件]提醒我们，如果缺乏[主题]，将导致[严重后果]。`</li><li>数据：`调查显示，[比例/数字]反映出社会对[主题]的迫切需求。`</li></ul>③ 分析：`这表明，[主题]的价值不仅体现在个体层面，更关乎社会稳定与发展方向。`<br>④ 扣题：`可见，在时代变革中，[主题]的重要性愈发凸显。`</li>
+                                        <li><strong>对策段（怎么办）</strong><br>① 分论点：`为了更好地发扬[主题]，我们应当从个人、社会和国家三个层面共同努力。`<br>② 例证组件（任选其一）：<ul><li>个人：`例如，个人可以通过[具体行动]来践行[主题]。`</li><li>社会：`社会团体也可通过[举措]来强化[主题]的氛围。`</li></ul>③ 分析：`这说明，只有多方合力，[主题]才能从理念化为实践。`<br>④ 扣题：`因此，发扬[主题]需要全社会的共同参与。`</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>3）结尾段（80–120字）</h4>
+                                <blockquote><p>功能：① 总结观点 + ②哲理升华 + ③回扣主题<br>位置：文章最后一段</p></blockquote>
+                                <ul>
+                                    <li>① 总结（任选其一）:<ul><li>`综上所述，[主题]不仅关乎[个人/社会/国家]，更决定了我们能否行稳致远。`</li><li>`回顾前文，我们不难发现，[主题]在层层递进中展现了不可替代的价值。`</li></ul></li>
+                                    <li>② 升华（任选其一）:<ul><li>`它功在当下，利在千秋，宛如社会发展的压舱石。`</li><li>`在纷繁复杂的世界里，[主题]仿佛一面明镜，映照出人类追求的方向。`</li></ul></li>
+                                    <li>③ 扣题（任选其一）:<ul><li>`因此，让我们从[具体行动]做起，共同践行[主题]的精神。`</li><li>`回到开篇的问题，我们不难得出结论：唯有坚守[主题]，社会才能进步。`</li></ul></li>
+                                </ul>
+                            </div>
+                            <div class="reverse-index-container"><h4>适用此结构的历年真题</h4><div id="reverse-index-traditional"></div></div>
+                        </div>
+                    </div>
+                    
+                    <div id="structure-dual" class="structure-block">
+                        <h3 class="collapsible">二、双核类结构 (辩证/比较式)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适合：</strong>自由 vs 规则、经济 vs 环保、个人 vs 集体等对立矛盾</div>
+                            
+                            <div class="analysis-container">
+                                <div class="analysis-trigger" onclick="toggleAnalysis(this, 'analysis-content-dual')">
+                                    <span>💡 <b>真题辨析：</b>点击查看如何从题目中识别【双核类结构】</span>
+                                </div>
+                                <div class="analysis-content" id="analysis-content-dual">
+                                    <div style="padding: 1.5rem 0;">
+                                        <h1>📖 如何从题目确认「双核类」写作结构？</h1>
+                                        <h2>判断逻辑</h2>
+                                        <ol>
+                                            <li><strong>题目中出现两个对立或可比较的概念</strong>
+                                                <ul>
+                                                    <li>常见标志词：<strong>是否、越…越…、与、还是、抉择、对比</strong>。</li>
+                                                    <li>提示考生必须在两个面向中<strong>进行比较、取舍或平衡</strong>。</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>题目本质是“辩证”而不是单向阐述</strong>
+                                                <ul>
+                                                    <li>单核题目：只要求你说明“为什么重要”。</li>
+                                                    <li>双核题目：要求你<strong>处理两个要素之间的关系</strong>。</li>
+                                                </ul>
+                                            </li>
+                                        </ol>
+                                        <hr>
+                                        <h2>例子解析（对应图片中的题目）</h2>
+                                        <h3>🔹 2015 Q2《公共场所装监控是否侵犯隐私》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：是否 → A（安全/秩序） vs B（隐私）</li>
+                                            <li><strong>写作思路</strong>：必须权衡 <strong>监控的正当性</strong> 与 <strong>隐私权的保护</strong>。</li>
+                                            <li>👉 属于 <strong>双核类</strong>，结构是「论点 A → 论点 B → 平衡/融合」。</li>
+                                        </ul>
+                                        <h3>🔹 2019 Q2《政府越有效率，人民要求越难满足》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：越…越… → A（效率提升） vs B（人民要求增加）</li>
+                                            <li><strong>写作思路</strong>：探讨二者之间的矛盾和互动。</li>
+                                            <li>👉 明显是 <strong>双核类</strong>（效率与要求是矛盾体）。</li>
+                                        </ul>
+                                        <h3>🔹 2022 Q3《“怕输”是新加坡普遍的社会价值观》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：价值观双面性 → A（怕输带来进取） vs B（怕输带来负担/焦虑）</li>
+                                            <li><strong>写作思路</strong>：正反分析，最后提出辩证结论。</li>
+                                            <li>👉 属于 <strong>双核类</strong>。</li>
+                                        </ul>
+                                        <h3>🔹 2023 Q3《经济增长与环境保护的抉择》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：抉择 → A（经济增长） vs B（环境保护）</li>
+                                            <li><strong>写作思路</strong>：对比经济与环保的冲突 → 论证如何平衡。</li>
+                                            <li>👉 标准 <strong>双核类</strong>题目。</li>
+                                        </ul>
+                                        <hr>
+                                        <div class="summary-box">
+                                            <h2>✅ 总结「双核类识别公式」</h2>
+                                            <p><strong>若题目中：</strong></p>
+                                            <ul>
+                                                <li>出现「是否」「抉择」「越…越…」「与…对比」 → 必然是 <strong>双核类</strong>；</li>
+                                                <li>涉及两个价值/现象/选择 → 需要 <strong>比较、权衡、平衡</strong>；</li>
+                                                <li>最后必须得出「融合 / 优先顺序 / 平衡结论」。</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="structure-part-block">
+                                <h4>1）开头段（80–100字）</h4>
+                                <h5>任选其一引入方式 (40-50字)</h5><ul><li><strong>矛盾引入式:</strong> 在探讨<span class="placeholder-highlight">[领域]</span>时,我们常常面临一个两难抉择:是优先追求<span class="placeholder-highlight">[核心A]</span>,还是坚守<span class="placeholder-highlight">[核心B]</span>?</li><li><strong>关系引入式:</strong> <span class="placeholder-highlight">[核心A]</span>与<span class="placeholder-highlight">[核心B]</span>并非对立,而是一种复杂的共生关系。</li></ul>
+                                <h5>核心论点 (30-40字)</h5><p>我认为,唯有在<span class="placeholder-highlight">[A]</span>与<span class="placeholder-highlight">[B]</span>之间找到动态平衡,社会才能实现长远可持续的发展。</p>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>2）主体段（三段，共 300–360字）</h4>
+                                <ul>
+                                    <li><strong>段一（肯定A）</strong><br>① 分论点：`诚然，[A]为社会带来了[好处/成就]，其价值不容否认。`<br>② 例证组件：<ul><li>当代：`例如，[事件/案例]展现了[A]如何促进社会繁荣。`</li><li>数据：`调查显示，[数据]印证了[A]的积极作用。`</li></ul>③ 分析：`这说明，[A]在推动社会进步的过程中发挥了不可替代的作用。`<br>④ 扣题：`因此，我们必须承认[A]的现实意义。`</li>
+                                    <li><strong>段二（转折强调B）</strong><br>① 分论点：`然而，若缺乏[B]的支撑，[A]的成果往往难以长久。`<br>② 例证组件：<ul><li>当代：`例如，[事件/案例]揭示了忽视[B]带来的严重后果。`</li><li>个人：`在我的生活中，也曾见证因缺乏[B]而导致的挫折。`</li></ul>③ 分析：`这表明，[B]才是保障社会持续发展的根本条件。`<br>④ 扣题：`可见，[B]的重要性更不容忽视。`</li>
+                                    <li><strong>段三（融合共生）</strong><br>① 分论点：`最理想的状态并非二元对立，而是[A]与[B]的相辅相成。`<br>② 例证组件：`例如，在[国家/领域]的实践中，[A]与[B]相互配合，共同推动进步。`<br>③ 分析：`这说明，平衡与协调才是应对复杂社会问题的最佳路径。`<br>④ 扣题：`因此，社会的发展必须在[A]与[B]的融合中前行。`</li>
+                                </ul>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>3）结尾段（80–120字）</h4>
+                                <blockquote><p>功能：① 总结观点 + ②哲理升华 + ③回扣主题<br>位置：文章最后一段</p></blockquote>
+                                <ul>
+                                    <li>① 总结: `综上所述，[A]与[B]各有价值，缺一不可。`</li>
+                                    <li>② 升华: `真正的智慧，不是在两极之间做极端选择，而是找到动态的平衡点。`</li>
+                                    <li>③ 扣题: `因此，让我们在实践中学会兼顾[A]与[B]，以实现社会的长远繁荣。`</li>
+                                </ul>
+                            </div>
+                            <div class="reverse-index-container"><h4>适用此结构的历年真题</h4><div id="reverse-index-dual"></div></div>
+                        </div>
+                    </div>
+
+                    <div id="structure-task" class="structure-block">
+                        <h3 class="collapsible">三、任务驱动型结构 (问题解决式)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适合：</strong>网络暴力、青少年课业压力、社会凝聚力、环保困境</div>
+                            
+                            <div class="analysis-container">
+                                <div class="analysis-trigger" onclick="toggleAnalysis(this, 'analysis-content-task')">
+                                    <span>💡 <b>真题辨析：</b>点击查看如何从题目中识别【任务驱动型结构】</span>
+                                </div>
+                                <div class="analysis-content" id="analysis-content-task">
+                                    <div style="padding: 1.5rem 0;">
+                                        <h1>📖 如何从题目确认「任务驱动型」写作结构？</h1>
+                                        <h2>核心判定逻辑</h2>
+                                        <ol>
+                                            <li><strong>题干中出现“问题/现象/守则/必要性/如何”</strong>
+                                                <ul>
+                                                    <li>要求考生先说明现象，再分析原因，最后提出<strong>措施与对策</strong>。</li>
+                                                    <li>关键词：<strong>“如何…？”、“必要性”、“守则”、“导致”、“现象”</strong>。</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>答题路径必须是 “What → Why → How”</strong>
+                                                <ul>
+                                                    <li>What：现象是什么</li>
+                                                    <li>Why：为什么产生/意义何在</li>
+                                                    <li>How：该如何解决（措施/对策）</li>
+                                                </ul>
+                                            </li>
+                                        </ol>
+                                        <p>👉 这与传统议论文的“立论+分论点”不同，也不同于双核类的“权衡对立”。它是<strong>问题解决导向</strong>，所以叫任务驱动型。</p>
+                                        <hr>
+                                        <h2>题目解析（基于图片中的题目）</h2>
+                                        <h3>🔹 2016 Q2 演讲稿《我们应该制定公共场所使用手机的守则》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：守则 → 明确要求“提出措施”。</li>
+                                            <li><strong>写作思路</strong>：说明现象（手机使用乱象）→ 为什么需要守则 → 应该如何制定守则。</li>
+                                            <li>👉 典型任务驱动型。</li>
+                                        </ul>
+                                        <h3>🔹 2016 Q3 材料评论《国人追求舒适生活导致开销变大》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：导致 → 现象+原因 → 必须提出解决方法。</li>
+                                            <li><strong>写作思路</strong>：现象（消费攀升）→ 原因（追求舒适）→ 对策（理性消费、社会倡导、国家政策）。</li>
+                                            <li>👉 属于任务驱动型。</li>
+                                        </ul>
+                                        <h3>🔹 2018 Q2 演讲稿《新加坡社会日益多元化，如何加强凝聚力》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：如何 → 必须回答“怎么做”。</li>
+                                            <li><strong>写作思路</strong>：现象（多元化）→ 意义（凝聚力的重要性）→ 措施（个人/社会/国家）。</li>
+                                            <li>👉 明显任务驱动型。</li>
+                                        </ul>
+                                        <h3>🔹 2018 Q3 材料评论《共享单车被滥用》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：现象 → 要说明“问题+解决”。</li>
+                                            <li><strong>写作思路</strong>：问题（滥用）→ 原因（规则意识不足）→ 对策（监管/教育/立法）。</li>
+                                            <li>👉 属于任务驱动型。</li>
+                                        </ul>
+                                        <h3>🔹 2019 Q3 材料评论《中三学生参加外展训练营的必要性》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：必要性 → 必须说明“为什么有必要”+“如何发挥作用”。</li>
+                                            <li><strong>写作思路</strong>：现象（外展活动）→ 意义（锻炼心志、培养团队精神）→ 措施（推广/优化）。</li>
+                                            <li>👉 属于任务驱动型。</li>
+                                        </ul>
+                                        <h3>🔹 2021 Q3 材料评论《为乐龄人士设计综合设施建筑》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：意义 → 必须解释“为什么重要”+“如何改善社会”。</li>
+                                            <li><strong>写作思路</strong>：现象（乐龄设施）→ 意义（关怀老人、社会责任）→ 措施（推广、设计优化、公共政策）。</li>
+                                            <li>👉 属于任务驱动型。</li>
+                                        </ul>
+                                        <hr>
+                                        <div class="summary-box">
+                                            <h2>✅ 总结（任务驱动型识别公式）</h2>
+                                            <p><strong>若题干中出现</strong>：</p>
+                                            <ul>
+                                                <li><strong>现象/问题</strong> → “导致…现象”、“滥用…”</li>
+                                                <li><strong>措施要求</strong> → “如何…”、“制定守则”、“必要性”</li>
+                                                <li><strong>社会意义</strong> → “意义”、“重要性”</li>
+                                            </ul>
+                                            <p><strong>那么它要求学生用三步走</strong>：</p>
+                                            <ol>
+                                                <li>说明现象 (What)</li>
+                                                <li>分析原因/意义 (Why)</li>
+                                                <li>提出措施 (How)</li>
+                                            </ol>
+                                            <p>这就是为什么它们被统一归入 <strong>任务驱动型结构</strong>。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-part-block">
+                                <h4>1）开头段（80–100字）</h4>
+                                <p><strong>现象/材料引入式 (40-50字):</strong> 近年来,<span class="placeholder-highlight">[现象]</span>频频引发社会热议,这提醒我们必须正视<span class="placeholder-highlight">[深层主题]</span>。</p><p><strong>核心论点 (30-40字):</strong> 我认为,唯有多管齐下、系统治理,才能有效解决这一问题。</p>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>2）主体段（三段，共 300–360字）</h4>
+                                <ul>
+                                    <li><strong>段一（What：现状）</strong><br>① 分论点：`首先，我们必须直面[现象]的严重性。`<br>② 例证组件：`例如，[案例]屡见不鲜，已对社会/个人造成负面影响。`<br>③ 分析：`这说明，问题已经威胁到社会的健康运行。`<br>④ 扣题：`因此，现状不容忽视。`</li>
+                                    <li><strong>段二（Why：根源）</strong><br>① 分论点：`其次，导致这一问题的根源是多方面的。`<br>② 例证组件：`从[案例/数据]可见，问题往往源自[个人/社会/制度]。`<br>③ 分析：`这表明，问题不是偶然，而是结构性矛盾的结果。`<br>④ 扣题：`可见，若不解决根源，问题难以消弭。`</li>
+                                    <li><strong>段三（How：对策）</strong><br>① 分论点：`最后，为有效解决这一问题，我们必须多管齐下。`<br>② 例证组件：<ul><li>个人：`个人应[具体行动]，以承担应有责任。`</li><li>社会：`社会团体可通过[举措]加强引导。`</li><li>国家：`政府应以[政策/制度]作保障。`</li></ul>③ 分析：`这说明，唯有多方合力，问题才能迎刃-解。`<br>④ 扣题：`因此，全社会必须协同合作。`</li>
+                                </ul>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>3）结尾段（80–120字）</h4>
+                                 <blockquote><p>功能：① 总结观点 + ②哲理升华 + ③回扣主题<br>位置：文章最后一段</p></blockquote>
+                                <ul>
+                                    <li>① 总结: `综上所述，[问题]已对社会造成深远影响。`</li>
+                                    <li>② 升华: `唯有对症下药，才能化挑战为机遇。`</li>
+                                    <li>③ 扣题: `因此，让我们携手并肩，共同应对这一挑战。`</li>
+                                </ul>
+                            </div>
+                            <div class="reverse-index-container"><h4>适用此结构的历年真题</h4><div id="reverse-index-task"></div></div>
+                        </div>
+                    </div>
+
+                    <div id="structure-patriotic" class="structure-block">
+                        <h3 class="collapsible">四、家国情怀型结构 (价值升华式)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适合：</strong>民族精神、同舟共济、青年责任、国家认同</div>
+
+                            <div class="analysis-container">
+                                <div class="analysis-trigger" onclick="toggleAnalysis(this, 'analysis-content-patriotic')">
+                                    <span>💡 <b>真题辨析：</b>点击查看如何从题目中识别【家国情怀型结构】</span>
+                                </div>
+                                <div class="analysis-content" id="analysis-content-patriotic">
+                                    <div style="padding: 1.5rem 0;">
+                                        <h1>📖 如何从题目确认「家国情怀型」写作结构？</h1>
+                                        <h2>判定逻辑</h2>
+                                        <ol>
+                                            <li><strong>题干直接涉及国家、民族、社会凝聚力</strong>
+                                                <ul>
+                                                    <li>常见关键词：<strong>国家、民族、文化、传承、责任、凝聚力、安全、未来</strong>。</li>
+                                                    <li>这类题目天然要求从<strong>个人 → 社会 → 国家</strong>三个层次升华。</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>题目强调价值观/精神层面的意义</strong>
+                                                <ul>
+                                                    <li>不只是“现象+对策”，而是“精神+责任”。</li>
+                                                    <li>本质考查：学生能否把个人经历、社会现象提升到<strong>国家认同与民族价值</strong>。</li>
+                                                </ul>
+                                            </li>
+                                            <li><strong>写作必然走「价值升华」路径</strong>
+                                                <ul>
+                                                    <li>开头：点明家国主题</li>
+                                                    <li>主体：分论点（个人/社会/国家）</li>
+                                                    <li>升华：上升到民族精神/国家未来</li>
+                                                </ul>
+                                            </li>
+                                        </ol>
+                                        <p>👉 这就是为什么被叫做 <strong>家国情怀型（价值升华式）</strong>。</p>
+                                        <hr>
+                                        <h2>题目解析（图片中的案例）</h2>
+                                        <h3>🔹 2014 Q3 材料评论《成功不仅看个人成就，也看能为国家和他人做什么》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：国家、他人 → 明显不是个人成长，而是社会责任。</li>
+                                            <li><strong>写作思路</strong>：成功的个人价值 → 成功的社会意义 → 成功的国家责任</li>
+                                            <li>👉 属于家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2017 Q2 论说文《新加坡人都有强烈的国家自豪感》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：国家自豪感 → 家国情怀直接主题。</li>
+                                            <li><strong>写作思路</strong>：个人：自豪感增强归属感 → 社会：自豪感增强凝聚力 → 国家：自豪感增强责任与团结</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2017 Q3 材料评论《政府号召国人为国家安全负责》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：政府、国家安全 → 明确涉及国家。</li>
+                                            <li><strong>写作思路</strong>：个人：自觉守法 → 社会：共建安全文化 → 国家：全民责任感</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2020 Q3 材料评论《新加坡小贩文化申遗》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：文化传承 + 国家身份。</li>
+                                            <li><strong>写作思路</strong>：个人：守护文化 → 社会：认同归属 → 国家：民族自信</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2021 Q2 论说文《要充分了解一个文化，必须先掌握其语言》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：文化、语言 → 国家认同的基石。</li>
+                                            <li><strong>写作思路</strong>：个人：语言是文化认同的起点 → 社会：语言是沟通的桥梁 → 国家：语言是民族身份的象征</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2022 Q2 演讲稿《国家的未来掌握在青年手中》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：国家未来、青年 → 青年责任与国家命运。</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <h3>🔹 2023 Q2 论说文《国家遇危机时，人民和政府要同舟共济》</h3>
+                                        <ul>
+                                            <li><strong>关键词</strong>：国家、危机、政府、人民 → 国家团结主题。</li>
+                                            <li>👉 家国情怀型。</li>
+                                        </ul>
+                                        <hr>
+                                        <div class="summary-box">
+                                            <h2>✅ 总结（家国情怀型识别公式）</h2>
+                                            <p><strong>若题目中：</strong></p>
+                                            <ul>
+                                                <li>出现「国家/民族/文化/安全/未来」</li>
+                                                <li>要求学生从「个人-社会-国家」层面思考</li>
+                                                <li>必须在结尾升华到「国家认同、民族精神、社会责任」</li>
+                                            </ul>
+                                            <p>👉 就属于 <strong>家国情怀型（价值升华式）结构</strong>。</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="structure-part-block">
+                                <h4>1）开头段（80–100字）</h4>
+                                <h5>任选其一引入方式 (40-50字)</h5><ul><li><strong>信念引入式:</strong> 有人说:“一种信念,成就一个民族。”<span class="placeholder-highlight">[主题]</span>正是这种力量的体现。</li><li><strong>历史引入式:</strong> 纵观历史,从<span class="placeholder-highlight">[事件A]</span>到<span class="placeholder-highlight">[事件B]</span>,一条清晰的精神脉络贯穿始终,那便是<span class="placeholder-highlight">[主题]</span>。</li></ul>
+                                <h5>核心论点 (30-40字)</h5><p>我认为,<span class="placeholder-highlight">[主题]</span>不仅是民族精神的写照,更是国家发展的长远动力。</p>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>2）主体段（三段，共 300–360字）</h4>
+                                <ul>
+                                    <li><strong>个人层面</strong><br>① 分论点：`对个人而言，[主题]是检验公民品格的试金石。`<br>② 例证组件：`作为青年，我在[校园/社区]的经历中体会到[主题]的重要。`<br>③ 分析：`这表明，[主题]能够塑造个人责任感与使命感。`<br>④ 扣题：`因此，[主题]是青年一代不可或缺的信念。`</li>
+                                    <li><strong>社会层面</strong><br>① 分论点：`对社会而言，[主题]是促进多元和谐的关键齿轮。`<br>② 例证组件：`例如，[群体/事件]展现了[主题]如何凝聚社会力量。`<br>③ 分析：`这说明，[主题]能够化解矛盾，激发社会创造力。`<br>④ 扣题：`因此，[主题]是多元社会得以团结的核心纽带。`</li>
+                                    <li><strong>国家层面</strong><br>① 分论点：`对国家而言，[主题]是新加坡在全球立足的核心动力。`<br>② 例证组件：<ul><li>历史：`纵观建国初期的艰辛奋斗，[主题]精神正是支撑国家前行的力量。`</li><li>当代：`抗疫时期，[群体/医护人员]展现的担当，正是[主题]精神的生动诠释。`</li></ul>③ 分析：`这说明，[主题]是国家抵御风浪、实现长远发展的战略支撑。`<br>④ 扣题：`因此，[主题]是国家屹立不倒的精神内核。`</li>
+                                </ul>
+                            </div>
+                            <div class="structure-part-block">
+                                <h4>3）结尾段（80–120字）</h4>
+                                <blockquote><p>功能：① 总结观点 + ②哲理升华 + ③回扣主题<br>位置：文章最后一段</p></blockquote>
+                                <ul>
+                                    <li>① 总结: `综上所述，[主题]既关乎个人成长，也关乎社会团结，更是国家发展的命脉。`</li>
+                                    <li>② 升华: `这种精神早已沉淀为民族的集体记忆，升华为国家的精神图腾。`</li>
+                                    <li>③ 扣题: `作为新一代，我们不仅是继承者，更应是发扬者。`</li>
+                                </ul>
+                            </div>
+                            <div class="reverse-index-container"><h4>适用此结构的历年真题</h4><div id="reverse-index-patriotic"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="modules" class="sub-content">
+                <div class="template-section">
+                    <h2 style="text-align:left; border:none; padding-bottom: 0;">议论文四大通用模块</h2>
+                    <p style="margin-top:-1.5rem; margin-bottom: 2rem; color: var(--text-muted);">构成议论文篇章的微观组件，确保每个段落论证有力。</p>
+
+                    <div class="structure-block">
+                        <h3 class="collapsible active">模块一：【开头段】-(引入+总论点)</h3>
+                        <div class="content">
+                            <div class="suitability-notice">
+                                - <strong>破题引入（现象/名言/材料）</strong>：40字<br>
+                                - <strong>点明主题 + 提出核心观点</strong>：50字<br>
+                                👉 开头总字数：<strong>80–100字</strong>
+                            </div>
+                            <div class="timeline-container">
+                                <div class="timeline-step"><div class="timeline-step-number">1</div><div class="timeline-step-content"><h4>“现象引入”式 (适用于所有类型)</h4><p><strong>模板:</strong> 在当今这个<span class="placeholder-highlight">[形容词]</span>的时代,<span class="placeholder-highlight">[概括社会现象]</span>的现象,引发了人们的深刻反思。这实际上探讨的是<span class="placeholder-highlight">[提炼核心议题]</span>。对此,我认为,<span class="placeholder-highlight">[亮明核心观点]</span>。</p>
+                                <div class="template-example"><h5>【实例化 - 文化传承主题】</h5><p>在当今这个**全球化浪潮席卷而来**的时代，**许多年轻人对“小贩文化”等本土传统不以为然**的现象，引发了人们对于**文化传承与身份认同**的广泛关注。这实际上探讨的是，在拥抱现代化的同时，我们应如何安放我们民族的“根”。对此，我认为，小贩文化不仅是美食的载体，更是维系社会情感、彰显国家身份的宝贵文化遗产。</p></div>
+                                <div class="template-example"><h5>【实例化-科技伦理主题】</h5><p>在当今这个<strong>数码科技高速迭代</strong>的时代,<strong>“共享单车被滥用”</strong>的现象,引发了人们对于<strong>国民素养与科技便利性</strong>的深刻反思。这实际上探讨的是,当科技为社会带来便利时,我们应如何以相应的公民责任感去承接这份“礼物”。对此,我认为,技术本身是中立的,问题的根源在于人性的贪婪与社会规则的滞后。</p></div>
+                                <div class="template-example"><h5>真题应用 (2019 Q2 - 政府效率与人民要求)</h5><p>在当今这个高效运转的现代社会，“政府越有效率，人民要求越难满足”的现象，引发了人们的广泛关注与深刻反思。这实际上探讨的是公民期望与社会发展之间的动态关系这一深刻命题。对此，我认为，这种现象确实存在，但其根源并非效率本身，而在于人性的复杂和社会沟通的机制。</p></div>
+                                </div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">2</div><div class="timeline-step-content"><h4>“名言/古训引入”式 (适用于传统价值观/个人修养类)</h4><p><strong>模板:</strong> 古人云:“<span class="placeholder-highlight">[引用名言]</span>。”这句古老的智慧,在<span class="placeholder-highlight">[当今时代背景]</span>下,不仅没有过时,反而更具现实意义。它引导我们去思考<span class="placeholder-highlight">[点明主题]</span>的真正价值。在我看来,<span class="placeholder-highlight">[亮明核心观点]</span>。</p><div class="template-example"><h5>真题应用(2021 Q1 - 诚信):</h5><p>古人云:“人无信不立,国无信不威。”这句古老的智慧,在充满机遇与挑战的现代社会中,不仅没有过时,反而更具现实意义。它引导我们去思考“诚信”在一个决定中所扮演的关键角色。在我看来,诚信不仅是个人的道德底线,更是社会良性运作的基石。</p></div></div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">3</div><div class="timeline-step-content"><h4>“材料引述”式 (材料评论专用)</h4><p><strong>模板:</strong> 最近,一则关于<span class="placeholder-highlight">[概括材料核心事件]</span>的报道,引发了社会热议。材料中<span class="placeholder-highlight">[引用核心观点]</span>,这实际上触及了<span class="placeholder-highlight">[提炼核心议题]</span>。对此,我深有感触,并认为<span class="placeholder-highlight">[亮明核心观点]</span>。</p><div class="template-example"><h5>真题应用 (2023 Q3 - 环保与经济):</h5><p>最近,一份关于“经济增长与环境保护”的调查报道,引发了社会热议。材料中超过六成国人认为“即便经济放缓,也应以环保为优先”,这实际上触及了社会发展中“鱼与熊掌”如何兼得的核心困境。对此,我深有同感,并认为这种价值选择,体现了我们社会日趋成熟的公民意识。</p></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="structure-block">
+                        <h3 class="collapsible">模块二：【主体段】-(三段展开,分论点+例证+分析+扣题)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适配：</strong> 诚信、责任、同理心、国家认同等抽象价值观。<br><strong>转移：</strong> 将抽象主题进行“由浅入深”或“由内向外”的定义。<br>- **每段 SOP**：① 分论点（20–30字）② 例证（40–50字）③ 分析（40–50字）④ 扣题（1 句，10–20字）<br>- **每段 100–120 字**，合计 ≈ 330 字</div>
+                            <div class="timeline-container">
+                                <div class="timeline-step"><div class="timeline-step-number">1</div><div class="timeline-step-content"><h4>“个人-社会-国家”递进式 (适用于宏大议题)</h4><ul><li><strong>分论点一(个人层面):</strong> 首先,<span class="placeholder-highlight">[主题]</span>是个人安身立命的道德基石。</li><li><strong>分论点二(社会层面):</strong> 其次,从更广阔的社会层面来看,<span class="placeholder-highlight">[主题]</span>是维系社会和谐与信任的黏合剂。</li><li><strong>分论点三(国家/民族层面):</strong> 最后,上升到国家与民族的高度,<span class="placeholder-highlight">[主题]</span>更是驱动国家长远发展的精神内核。</li></ul>
+                                <div class="template-example"><h5>【实例化 - 环保主题】</h5><p><strong>个人：</strong> 首先，环保意识是个体现代公民素养的**基本体现**。对个人而言，随手关灯、垃圾分类等微小举动，不仅是节约资源，更是对自己和他人未来负责的**品格塑造**。</p><p><strong>社会：</strong> 其次，从更广阔的社会层面来看，环保是维系社会可持续发展的**必要前提**。一个任由污染蔓延的社会，其公共健康和经济发展终将付出沉重的代价。</p><p><strong>国家：</strong> 最后，上升到国家的高度，积极应对环保挑战，是新加坡在国际舞台上展现**责任与担当**、提升**国家软实力**的关键一环。</p></div>
+                                <div class="template-example"><h5>真题应用 (2023 Q2 - 同舟共济)</h5><p>首先，同舟共济是个人在危机中获得安全感与归属感的情感基石...其次，从社会层面来看，同舟共济是维系多元社会凝聚力的不二法门...最后，上升到国家的高度，同舟共济是新加坡作为一个资源有限的小国，得以在风浪中屹立不倒的核心战略。</p></div>
+                                </div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">2</div><div class="timeline-step-content"><h4>“是什么-为什么-怎么办”推进式 (适用于任务驱动/解决问题类)</h4><ul><li><strong>分论点一(是什么):</strong> 首先,我们必须清晰地界定<span class="placeholder-highlight">[主题]</span>的内涵。它不仅仅是...,更是一种...</li><li><strong>分论点二(为什么):</strong> 那么,为什么在当下强调<span class="placeholder-highlight">[主题]</span>显得如此重要?其根本原因在于...</li><li><strong>分论点三(怎么办):</strong> 面对这一挑战/为了发扬这一精神,我们应该从以下几点入手...</li></ul>
+                                <div class="template-example"><h5>【实例化 - 终身学习主题】</h5><p><strong>是什么：</strong> 首先，我们必须清晰地界定“终身学习”的内涵。它不仅仅是考取文凭或参加培训，更是一种**主动拥抱变化、持续进行认知迭代**的生存状态。</p><p><strong>为什么：</strong> 那么，为什么在当下强调“终身学习”显得如此重要？其根本原因在于，**人工智能的崛起正以前所未有的速度颠覆着传统的职业技能**，不学习就意味着被时代淘汰。</p><p><strong>怎么办：</strong> 为了践行终身学习，我们个人应**主动走出舒适区**，涉猎不同领域的知识；而社会和政府则应**构建更灵活、更多元的教育体系**，为国民提供便捷的学习渠道。</p></div>
+                                <div class="template-example"><h5>真题应用 (2018 Q2 - 社会凝聚力)</h5><p>`首先，我们必须清晰地界定多元社会下“凝聚力”的内涵...那么，为什么在当下强调“凝聚力”如此重要？其根本原因在于全球化带来的文化冲击...为了加强社会凝聚力，我们可以从教育、社区和个人三个层面入手...`</p></div>
+                                </div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">3</div><div class="timeline-step-content"><h4>“承认-转折”辩证式 (适用于双核/争议性议题)</h4><p><strong>模板:</strong> 诚然,我们必须承认<span class="placeholder-highlight">[对立观点]</span>中存在的合理性。例如,...(简要分析其合理之处)。然而,这种观点却忽略了问题的另一面。实际上,<span class="placeholder-highlight">[阐述你的核心观点]</span>,因为...</p><div class="template-example"><h5>【实例化 - 规则与自由主题】</h5><p>诚然,我们必须承认,过多的规则可能会在一定程度上限制个人的自由,让社会显得刻板而缺乏活力。然而,这种观点却忽略了问题的另一面:规则恰恰是保障大多数人自由的必要前提。在一个没有交通规则的社会里,每个人看似都拥有“自由”驾驶的权利,但最终的结果必然是交通瘫痪和事故频发,所有人的“通行自由”都将化为乌有。</p></div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="structure-block">
+                        <h3 class="collapsible">模块三：【举例论证】- 并非独立段,而是主体段中的例证组件</h3>
+                        <div class="content">
+                             <div class="suitability-notice">不单独写，而是贯穿在每个主体段里「模块二」。</div>
+                            <div class="timeline-container">
+                                <div class="timeline-step"><div class="timeline-step-number">1</div><div class="timeline-step-content"><h4>古代事例</h4><p>当<span class="placeholder-highlight">[朝代]</span>的风烟穿越千年而来,<span class="placeholder-highlight">[人物]</span>在<span class="placeholder-highlight">[地点/情境]</span>的<span class="placeholder-highlight">[事迹]</span>,其所彰显的<span class="placeholder-highlight">[主题]</span>精神,至今依然萦绕于我们耳畔,给予我们深刻的启迪。</p><div class="template-example"><h5>【实例化 - 坚毅主题】</h5><p>当**宋代的风雨**穿越千年而来，**苏轼在被贬黄州**的**人生低谷中，写下《赤壁赋》**的旷达与坚韧，其所彰显的**直面逆境、超越苦难**的精神，至今依然萦绕于我们耳畔，给予我们深刻的启迪。</p></div></div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">2</div><div class="timeline-step-content"><h4>当代事例</h4><p>将目光投向我们身处的这个时代,从<span class="placeholder-highlight">[人物/事件A]</span>的<span class="placeholder-highlight">[事迹]</span>,到<span class="placeholder-highlight">[人物/事件B]</span>的<span class="placeholder-highlight">[事迹]</span>,我们无不看到<span class="placeholder-highlight">[主题]</span>精神的闪光。这并非偶然,它深刻地反映了...</p></div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">3</div><div class="timeline-step-content"><h4>个人事例</h4><p>或许宏大的叙事离我们遥远,但在我的亲身经历中,也曾深刻体会到<span class="placeholder-highlight">[主题]</span>的重要性。记得有一次...</p></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="structure-block">
+                        <h3 class="collapsible">模块四：【结尾段】-(总结+升华+扣题)</h3>
+                        <div class="content">
+                            <div class="suitability-notice"><strong>适配：</strong> 所有正向价值观主题。<br><strong>转移：</strong> 将具体的主题，拔高到“未来”、“希望”、“精神”等更宏观的层面。<br>① 总结观点（30–40字） ② 升华拔高（40–50字） ③ 回扣/呼吁（20–30字）<br>👉 结尾总字数：<strong>80–120字</strong></div>
+                            <div class="timeline-container">
+                                <div class="timeline-step"><div class="timeline-step-number">1</div><div class="timeline-step-content"><h4>总结呼吁式</h4><p>综上所述,<span class="placeholder-highlight">[主题]</span>不仅关乎<span class="placeholder-highlight">[层面A]</span>,更影响着<span class="placeholder-highlight">[层面B]</span>。它并非一句空洞的口号,而是需要我们每个人在日常生活中去践行的准则。让我们从<span class="placeholder-highlight">[具体的小事]</span>做起,共同为一个更<span class="placeholder-highlight">[美好的愿景]</span>的社会贡献一份力量。</p></div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">2</div><div class="timeline-step-content"><h4>哲理升华式</h4><p>总而言之,<span class="placeholder-highlight">[主题]</span>仿佛一面棱镜,它折射出的不仅是<span class="placeholder-highlight">[事物A]</span>的光芒,更是<span class="placeholder-highlight">[事物B]</span>的色彩。在人生的漫漫长路上,唯有怀揣着<span class="placeholder-highlight">[主题]</span>这份信念,我们才能在纷繁复杂的世界中,找到前行的方向,并最终抵达精神的彼岸。</p></div></div>
+                                <div class="timeline-step"><div class="timeline-step-number">3</div><div class="timeline-step-content"><h4>回应开头式</h4><p>回到开篇时提到的那个问题,我们不难发现,<span class="placeholder-highlight">[重申你的核心观点]</span>。正如<span class="placeholder-highlight">[再次引用/化用开头的名言]</span>,<span class="placeholder-highlight">[主题]</span>是我们这个时代最宝贵的财富。</p></div></div>
+                            </div>
+                            <div class="template-example" style="margin-top: 2rem;"><h5>【实例化-社会凝聚力主题 (总结呼吁式应用)】</h5><p>综上所述,社会凝聚力不仅关乎国家的稳定与繁荣,更深刻地影响着我们每一个人的归属感与幸福感。它并非一句空洞的口号,而是需要我们通过对他人的尊重、对社区的参与、对国家的热爱,在日常生活中去共同编织的纽带。让我们从一次友善的邻里问候做起,共同为一个更包容、更温暖的新加坡贡献一份力量。</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="specific-types" class="sub-content">
+                <div class="template-section">
+                     <h2 style="text-align:left; border:none; padding-bottom: 0;">高级文体解析：演讲稿与材料评论</h2>
+                     <p style="margin-top:-1.5rem; margin-bottom: 2rem; color: var(--text-muted);">掌握不同文体的特定结构，应对多样化的考题。</p>
+                     
+                     <div id="structure-speech" class="structure-block">
+                        <h3 class="collapsible active">🎤 文体二：【演讲稿】- P.A.R.C.说服力模型</h3>
+                        <div class="content">
+                            <h4>演讲稿 P.A.R.C. 段落字数分配与通用模版</h4>
+                            <div class="parc-grid-container">
+                                <div class="parc-card" data-letter="P">
+                                    <h4>1. Position (立场确立)</h4>
+                                    <div class="card-section">
+                                        <h5>功能:</h5>
+                                        <p>称呼听众 + 提出主题 + 明确观点</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>字数:</h5>
+                                        <p>80-100</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>通用模板:</h5>
+                                        <p>各位【<span class="placeholder-highlight">听众</span>】, 大家好! 今天, 我想和大家探讨一个与我们息息相关的主题——「<span class="placeholder-highlight">核心主题</span>」。在我看来, 「<span class="placeholder-highlight">核心主题</span>」不仅关乎个人成长, 更影响社会与国家的发展。因此, 我的立场非常明确:「<span class="placeholder-highlight">核心观点</span>」。</p>
+                                    </div>
+                                </div>
+                                <div class="parc-card" data-letter="A">
+                                    <h4>2. Argument (论证展开)</h4>
+                                     <div class="card-section">
+                                        <h5>功能:</h5>
+                                        <p>分析主题的重要性, 提出2-3个理由</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>字数:</h5>
+                                        <p>180-220</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>通用模板:</h5>
+                                        <p>首先, **「<span class="placeholder-highlight">核心主题</span>」**的重要性在于它直接关系到我们的【<span class="placeholder-highlight">个人层面</span>】, 例如......</p>
+                                        <p>其次, 它同样深刻地影响着【<span class="placeholder-highlight">社会层面</span>】, 比如......</p>
+                                        <p>最后, 从【<span class="placeholder-highlight">国家/未来层面</span>】来看, 如果忽视了这一点, 我们可能会面临...... 所以, 我们必须正视这个问题。</p>
+                                    </div>
+                                </div>
+                                <div class="parc-card" data-letter="R">
+                                    <h4>3. Response (情感共鸣)</h4>
+                                    <div class="card-section">
+                                        <h5>功能:</h5>
+                                        <p>承认听众疑虑, 设置反问, 引发思考</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>字数:</h5>
+                                        <p>120-150</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>通用模板:</h5>
+                                        <p>我知道, 很多人可能会产生这样的疑问: “【<span class="placeholder-highlight">一个普通的疑虑, 如: 这真的与我有关吗?</span>】”</p>
+                                        <p>但请大家想一想: 如果我们继续忽视/漠视【<span class="placeholder-highlight">引用关键信息点</span>】, 未来会怎样? 这不仅仅是一个选择, 而是一份责任。换句话说, 我们每个人都需要扪心自问: 「<span class="placeholder-highlight">提出一个发人深省的反问句</span>」。</p>
+                                    </div>
+                                </div>
+                                <div class="parc-card" data-letter="C">
+                                    <h4>4. Call to Action (呼吁行动)</h4>
+                                    <div class="card-section">
+                                        <h5>功能:</h5>
+                                        <p>总结主题 + 呼吁听众采取实际行动</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>字数:</h5>
+                                        <p>120-150</p>
+                                    </div>
+                                    <div class="card-section">
+                                        <h5>通用模板:</h5>
+                                        <p>总而言之, **「<span class="placeholder-highlight">核心主题</span>」**并不是一句口号, 而是一种行动。</p>
+                                        <p>让我们从【<span class="placeholder-highlight">一件具体的小事</span>】做起: 比如......</p>
+                                        <p>从今天开始, 带动身边的人, 一起实践【<span class="placeholder-highlight">核心价值/态度</span>】。只有这样, 我们才能共同迎来一个【<span class="placeholder-highlight">美好的愿景: 更团结的社会、更负责任的公民、更光明的未来</span>】。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="strategy-card">
+                                <h4><span class="strategy-num">⭐</span>特点总结</h4>
+                                <ul>
+                                    <li><b>与普通议论文不同:</b> 增加了【称呼、情感共鸣、呼吁行动】等元素，更贴近演讲口吻。</li>
+                                    <li><b>高迁移性:</b> 无论是2016《手机守则》、2018《凝聚力》、还是2022《青年与未来》, 都可以用这套模版。</li>
+                                </ul>
+                            </div>
+                        </div>
+                     </div>
+                     
+                     <div id="structure-material" class="structure-block">
+                        <h3 class="collapsible">📰 文体三：【材料评论】- 深度解析模型</h3>
+                        <div class="content">
+                            <div class="tab-navigation">
+                                <button class="tab-btn active" onclick="showTab(1, this)">核心模型</button>
+                                <button class="tab-btn" onclick="showTab(2, this)">用法与主题</button>
+                                <button class="tab-btn" onclick="showTab(3, this)">规律总结</button>
+                                <button class="tab-btn" onclick="showTab(4, this)">历年真题提炼</button>
+                            </div>
+
+                            <div id="tab-content-1" class="tab-content active">
+                                <h3>两大核心结构模版</h3>
+                                <div class="model-comparison-container">
+                                    <div class="model-card">
+                                        <h3>一、I.A.A.L.C. (双分析版)</h3>
+                                        <ul>
+                                            <li><strong>I - Introduction 引入 (100-120字)</strong>
+                                                <ul><li>最近,一则关于【材料核心事件】的报道,引发社会热议。</li><li>这看似一个孤立的事件,却深刻地反映了【核心议题】。</li><li>对此,我认为,【亮明核心观点】。</li></ul>
+                                            </li>
+                                            <li><strong>A1 - Analysis 1 现象分析 (120-150字)</strong>
+                                                <ul><li>材料中提到的【关键词】,值得我们警醒。</li><li>这一现象的出现,表面原因在于......(如:社会需求/个人心态)。</li><li>这看似简单的现象,其背后揭示了......的隐患。</li></ul>
+                                            </li>
+                                            <li><strong>A2 - Analysis 2 深度分析 (120-150字)</strong>
+                                                <ul><li>更深层次地看,这一现象并非偶然,而是【更广泛的矛盾/趋势】的缩影。</li><li>它反映了......(如:价值观扭曲、制度漏洞、社会心态转变)。</li><li>这提醒我们,【核心议题】不仅是表面问题,而是关系到......的根本性挑战。</li></ul>
+                                            </li>
+                                            <li><strong>L - Linkage 联结 (100-150字)</strong>
+                                                <ul><li>其实,材料中折射出的道理,并不局限于此。</li><li>放眼更广阔的社会现实,在【另一个领域/现象】中,我们同样可以看到类似逻辑的体现。</li><li>例如,【举一个平行案例】。</li></ul>
+                                            </li>
+                                            <li><strong>C - Conclusion 结论 (80–100字)</strong>
+                                                <ul><li>总而言之,无论是材料中的案例,还是现实社会的现象,都清晰地指出:【重申并升华核心观点】。</li><li>只有这样,我们的社会才能真正迈向【价值升华目标】。</li></ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="model-card">
+                                        <h3>二、I.A.L.E.C. (措施版)</h3>
+                                         <ul>
+                                            <li><strong>I - Introduction 引入 (100-120字)</strong>
+                                                <ul><li>最近,一则关于【材料核心事件】的新闻报道,引发广泛关注。</li><li>这一现象背后,凸显了【核心议题】的迫切性。</li><li>对此,我的看法是,【亮明观点】。</li></ul>
+                                            </li>
+                                            <li><strong>A - Analysis 分析 (150-180字)</strong>
+                                                <ul><li>材料中提到的【关键词】,发人深省。</li><li>这一现象表面上是......,但深层次原因在于......。</li><li>它不仅带来【负面影响】,更揭示了【社会/个人/国家】在这一方面的不足。</li></ul>
+                                            </li>
+                                            <li><strong>L - Linkage 联结 (100-150字)</strong>
+                                                <ul><li>其实,这种问题并非个案,而是普遍存在于当下的【领域/社会现象】之中。</li><li>在【另一领域/相似现象】中,我们也能看到同样的逻辑。</li><li>例如,【举例说明】,说明了这一问题的普遍性与严重性。</li></ul>
+                                            </li>
+                                            <li><strong>E - Evaluation/Measures 对策措施 (120–150字)</strong>
+                                                <ul><li>要真正解决这一问题,我们必须从多方面着手:</li><li>在个人层面,应当......(自律/学习/反思)。</li><li>在社会层面,需要......(倡导/监督/引导)。</li><li>在国家层面,更要......(立法/政策/长远规划)。</li><li>只有多方合力,才能有效缓解这一问题。</li></ul>
+                                            </li>
+                                            <li><strong>C - Conclusion 结论 (80-100字)</strong>
+                                                <ul><li>因此,无论从个人还是社会的角度来看,【核心议题】都至关重要。</li><li>【重申立场】,并强调【升华目标】。</li><li>只有如此,我们才能迈向一个更加【价值导向的未来】。</li></ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-content-2" class="tab-content">
+                                <h3><span class="icon-tick">✔</span> 使用建议</h3>
+                                <ul>
+                                    <li><b>I.A.A.L.C.</b> → 适合分析型材料题 (如“怕输价值观”)。</li>
+                                    <li><b>I.A.L.E.C.</b> → 适合任务驱动型材料题 (如“共享单车被滥用”“制定守则”)。</li>
+                                    <li>字数总量控制在 <b>550-700字</b>, 完全符合 1116 作文要求。</li>
+                                </ul>
+                                <hr>
+                                <h3><span class="icon-list">📖</span> 两种扩展结构与适配主题</h3>
+                                <div class="model-comparison-container">
+                                    <div class="model-card">
+                                        <h4>1. I.A.A.L.C. (双分析型结构)</h4>
+                                        <p><b>适合：</b>“价值辨析、现象反思”类题目</p>
+                                        <p><b>特点：</b>深度挖掘一个现象的多层含义,从表层到深层,逻辑递进。</p>
+                                        <p><b>适配主题：</b></p>
+                                        <ul>
+                                            <li><b>个人成长与价值观：</b>怕输、嫉妒、诚信、助人 (→表层个人体验+深层社会价值)</li>
+                                            <li><b>社会价值观辨析：</b>成功标准、文化认同、国家自豪感</li>
+                                            <li><b>社会心理/文化心态类：</b>怕输价值观、消费主义、个人主义与集体主义</li>
+                                        </ul>
+                                        <p><b>示例：</b></p>
+                                        <ul>
+                                            <li>2014《成功不仅看个人成就,也看能为国家和他人做什么》</li>
+                                            <li>2016《追求舒适生活导致开销变大》</li>
+                                            <li>2022《怕输价值观》</li>
+                                        </ul>
+                                        <div class="summary-box"><p>👉 这些题目更注重<b>“是什么 & 为什么”</b>, 适合用双分析展开。</p></div>
+                                    </div>
+                                    <div class="model-card">
+                                        <h4>2. I.A.L.E.C. (措施对策型结构)</h4>
+                                        <p><b>适合：</b>“任务驱动/问题解决”类题目</p>
+                                        <p><b>特点：</b>提出现象问题 → 分析 → 联系现实 → 给出措施/对策。</p>
+                                        <p><b>适配主题：</b></p>
+                                        <ul>
+                                            <li><b>社会责任与公民意识：</b>规则意识、安全责任、乐龄关怀 (→ 必须提出如何解决/改善)</li>
+                                            <li><b>时代挑战与社会问题：</b>共享单车滥用、网络安全、网络霸凌</li>
+                                            <li><b>双核矛盾类(How to balance)：</b>经济 vs 环保、效率 vs 要求 (→ 必须给出如何兼顾)</li>
+                                        </ul>
+                                         <p><b>示例：</b></p>
+                                        <ul>
+                                            <li>2017《政府号召国人为国家安全负责》</li>
+                                            <li>2018《共享单车被滥用》</li>
+                                            <li>2021《乐龄人士综合设施》</li>
+                                            <li>2023《经济增长与环保抉择》</li>
+                                        </ul>
+                                        <div class="summary-box"><p>👉 这些题目更强调<b>“怎么办”</b>, 所以必须有措施段来收束。</p></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="tab-content-3" class="tab-content">
+                                <h3>总览表</h3>
+                                <table class="reference-table">
+                                    <thead>
+                                        <tr><th>结构</th><th>适配主题</th><th>典型真题</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><b>I.A.A.L.C. (双分析)</b></td>
+                                            <td>个人成长与价值观 / 社会文化心态类</td>
+                                            <td>2014 成功标准 / 2016 消费与舒适 / 2022 怕输</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>I.A.L.E.C. (措施)</b></td>
+                                            <td>社会责任与公民意识 / 任务驱动类 / 双核矛盾类</td>
+                                            <td>2017 国家安全 / 2018 共享单车 / 2021 乐龄设施 / 2023 经济 vs 环保</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                                <h3>规律总结</h3>
+                                <div class="summary-box">
+                                    <ul>
+                                        <li>如果题目是<b>“现象/价值观”</b> → 用 <b>I.A.A.L.C. (双分析)</b>。</li>
+                                        <li>如果题目是<b>“如何/必要性/矛盾抉择”</b> → 用 <b>I.A.L.E.C. (措施型)</b>。</li>
+                                    </ul>
+                                </div>
+                                <div class="suitability-notice" style="margin-top: 1.5rem;">
+                                    <p><b>适配建议：</b>将 2014–2023 所有材料评论题，逐一分配到 I.A.A.L.C. 或 I.A.L.E.C.，并写一个「最优适配建议」清单，这样学生可以直接按年份对号入座。</p>
+                                </div>
+                            </div>
+                            
+                            <div id="tab-content-4" class="tab-content">
+                                <h3>O-Level高级华文【材料评论】真题数据提炼(2014-2023)</h3>
+                                <p><b>能力考察:</b> 引用材料、分析观点、建立联系、提出对策/总结。</p>
+                                <div style="overflow-x: auto;">
+                                    <table class="exam-table">
+                                        <thead>
+                                            <tr>
+                                                <th>年份/题号</th>
+                                                <th>题目</th>
+                                                <th>引用核心观点 (=题干关键信息点)</th>
+                                                <th>提炼核心议题 (=背后考察主题)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="materialAnalysisTableBody">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== 全新热点练习模块开始 ========== -->
+        <div id="practice-plan" class="content-section">
+            <div class="template-section">
+                <h2>高级华文作文备考：8周社会热点练习计划</h2>
+                <div class="strategy-card">
+                    <h4><span class="strategy-num">💡</span>如何使用本计划？</h4>
+                    <ol>
+                        <li><b>每周输入 (Input):</b> 花时间阅读和搜索本周热点的相关新闻与评论（建议使用新加坡本地新闻源）。</li>
+                        <li><b>每周输出 (Output):</b> 从提供的两个模拟题中任选一题，进行一次完整的500字以上写作练习。</li>
+                        <li><b>建立素材库 (Build Database):</b> 将练习中用到的好词好句、名人名言、社会实例和个人观点，整理到你的“思想与素材库”中。</li>
+                    </ol>
+                </div>
+                <div class="week-navigation" id="week-navigation-container">
+                    <!-- JS will populate this -->
+                </div>
+                <div id="week-content-container">
+                    <!-- JS will populate this -->
+                </div>
+            </div>
+        </div>
+        <!-- ========== 全新热点练习模块结束 ========== -->
+        
+        <div id="practical-application" class="content-section">
+             <div class="template-section">
+                <h2>📊 2014-2023 O-Level 历年真题智能数据库</h2>
+                <div class="exam-db-filters"><select id="yearFilter" class="tool-input"><option value="">所有年份</option></select><select id="typeFilter" class="tool-input"><option value="">所有题型</option></select><select id="mainCategoryFilter" class="tool-input"><option value="">所有核心主题</option></select><select id="subThemeFilter" class="tool-input"><option value="">所有主题子类</option></select><select id="structureFilter" class="tool-input"><option value="">所有推荐结构</option></select><button id="resetFilters" class="tool-btn">重置筛选</button></div>
+                <div style="overflow-x: auto;"><table class="exam-table"><thead><tr><th>年份</th><th>题号</th><th>题型</th><th>核心主题</th><th>主题子类</th><th>推荐结构 (命名)</th><th>题目关键词/核心任务</th></tr></thead><tbody id="examTableBody"></tbody></table></div>
+            </div>
+        </div>
+
+        <div id="learning-tools" class="content-section">
+            <div class="template-section">
+                <h2>🛠️ 学习与写作辅助工具</h2>
+                <div class="interactive-tools">
+                    <div class="tool-card"><h3>🎯 结构选择器</h3><p>根据题目类型，快速确定最适合的作文结构。</p><select id="topicType" class="tool-input"><option value="">选择题目类型...</option><option value="traditional">价值观类题目</option><option value="dual">对立矛盾类题目</option><option value="task">任务驱动类题目</option><option value="patriotic">家国情怀类题目</option></select><button class="tool-btn" onclick="recommendStructure()">获取推荐结构</button><div id="structureRecommendation" style="margin-top: 1rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; display: none; text-align: left;"></div></div>
+                    <div class="tool-card"><h3>📝 句式生成器</h3><p>输入主题关键词，生成对应的开头句式。</p><input type="text" id="topicKeyword" placeholder="输入主题关键词（如：诚信）" class="tool-input"><button class="tool-btn" onclick="generateSentence()">生成开头句式</button><div id="generatedSentence" style="margin-top: 1rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; display: none; text-align: left;"></div></div>
+                    <div class="tool-card"><h3>⏱️ 字数计算器</h3><p>检查各段落字数是否符合标准。</p><textarea id="contentInput" placeholder="在此处粘贴您的段落内容..." class="tool-textarea" rows="4"></textarea><button class="tool-btn" onclick="countWords()">计算字数</button><div id="wordCount" style="margin-top: 1rem; padding: 1rem; background: var(--hover-bg); border-radius: 8px; display: none; text-align: left;"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="strategy" class="content-section">
+            <div class="template-section">
+                <h2>应试战略：掌握多少模板才能从容应对？</h2>
+                <div class="strategy-core">
+                    <h3 style="color: var(--text-title);"><strong>核心战略：掌握 “3 + 1 + N” 模板体系</strong></h3>
+                    <div class="strategy-card"><h4><span class="strategy-num">3</span>大核心结构模板 <span class="strategy-tag">(必须精通)</span></h4><ul><li><strong>“个人-社会-国家”递进式：</strong> 应对宏大议题的<span class="strategy-highlight">“万能钥匙”</span>。</li><li><strong>“是什么-为什么-怎么办”推进式：</strong> 应对任务驱动题的<span class="strategy-highlight">“安全框架”</span>。</li><li><strong>“承认-转折”辩证式：</strong> 提升文章深度的<span class="strategy-highlight">“A1助推器”</span>。</li></ul><div class="strategy-goal"><strong>战略目标：</strong> 学生必须能够<span class="strategy-highlight-strong">不假思索地</span>写出这三种结构的段落框架。</div></div>
+                    <div class="strategy-card"><h4><span class="strategy-num">1</span>个万能开头模板 <span class="strategy-tag">(必须熟练)</span></h4><ul><li><strong>“现象引入”式开头：</strong> 适用于超过80%的题目，是<span class="strategy-highlight">最安全、最实用的开头方式</span>。</li></ul><div class="strategy-goal"><strong>战略目标：</strong> 学生应能将任何一个作文题，都快速地转化为一个“社会现象”，并套用此模板。</div></div>
+                    <div class="strategy-card"><h4><span class="strategy-num">N</span>个素材与金句 <span class="strategy-tag">(持续积累)</span></h4><ul><li><strong>“N”代表学生围绕“九大子类母题”和“三大未来预测方向”所积累的个性化素材库</strong>（名言、实例、亮点词句）。</li></ul><div class="strategy-goal"><strong>战略目标：</strong> 这是将<span class="strategy-highlight-strong">“模板的骨架”</span>填充为<span class="strategy-highlight-strong">“有血有肉的高分文章”</span>的关键。</div></div>
+                    <div class="strategy-conclusion"><h4>结论：</h4><p>学生并不需要背诵海量的模板。他们只需要<strong>精通3个核心论证结构</strong>，<strong>熟练运用1个万能开头</strong>，并拥有一个<strong>持续更新的“N”素材库</strong>。</p><p>当这套“<strong>3 + 1 + N</strong>”的体系内化为学生的写作本能时，他们就具备了<strong>以不变应万变</strong>的强大能力，足以从容地解构和应对O-Level考场上任何一篇议论文。</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="analysis-modal" class="modal-overlay">
+        <div class="modal-content" onclick="event.stopPropagation()"><button class="modal-close" onclick="closeModal()">×</button><h3 id="modal-title">题目诊断分析</h3><div class="diagnosis-item"><strong>题型:</strong> <span id="modal-type" class="tag"></span></div><div class="diagnosis-item"><strong>核心主题:</strong> <span id="modal-main-category"></span></div><div class="diagnosis-item"><strong>主题子类:</strong> <span id="modal-sub-theme"></span></div><div class="diagnosis-item"><strong>推荐结构:</strong> <span id="modal-structure-name" style="font-weight: bold; color: #d9534f;"></span></div><div class="modal-action"><button id="modal-jump-btn" class="jump-btn">一键跳转至该结构模板</button></div></div>
+    </div>
+
+    <script>
+        const examData = [
+            { year: 2014, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.3 感恩同理', keywords: '描述因“霸位”引发的不愉快事件', recommended_structure: '——', structure_name: '——' },
+            { year: 2014, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '论述“罚款是一种有效的惩罚形式”', recommended_structure: '传统型', structure_name: '问题解析式' },
+            { year: 2014, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '评论“成功不仅指个人成就，也看能为国家和不幸的人做什么”', recommended_structure: '家国情怀型', structure_name: '价值升华式', material_core_point: '成功不仅看个人成就,还要看能否为国家和他人作贡献', material_core_issue: '成功的多维标准 → 国家认同与社会责任' },
+            { year: 2015, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述“动机激励你开始，承诺推动你坚持”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2015, q_no: 'Q2', type: '论说文', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '论述“公共场所装监控是否侵犯隐私”', recommended_structure: '双核类', structure_name: '辩证比较式' },
+            { year: 2015, q_no: 'Q3', type: '材料评论', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '评论“帮助别人也能让自己获益”', recommended_structure: '传统型', structure_name: '层层递进式', material_core_point: '帮助别人也能让自己获益', material_core_issue: '利他与利己的统一 → 感恩与反思成长' },
+            { year: 2016, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述“嫉妒使人感到不快乐”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2016, q_no: 'Q2', type: '演讲稿', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '演讲：“我们应该制定公共场所使用手机的守则”', recommended_structure: '任务驱动型', structure_name: '问题解决式' },
+            { year: 2016, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论“国人追求舒适生活导致开销变大”的现象', recommended_structure: '任务驱动型', structure_name: '问题解决式', material_core_point: '追求舒适生活 → 开销增大', material_core_issue: '消费主义与责任 → 公民自律与理性消费' },
+            { year: 2017, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述“偏见带来不良后果”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2017, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述“新加坡人都有强烈的国家自豪感”', recommended_structure: '家国情怀型', structure_name: '价值升华式' },
+            { year: 2017, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论“政府号召国人为国家安全负责”', recommended_structure: '家国情怀型', structure_name: '价值升华式', material_core_point: '政府号召国人为国家安全负责', material_core_issue: '国家安全责任 → 公民责任与规则意识' },
+            { year: 2018, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述“调查捐赠品戒指”的经历（体现诚信与人间温情）', recommended_structure: '——', structure_name: '——' },
+            { year: 2018, q_no: 'Q2', type: '演讲稿', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '演讲：“新加坡社会日益多元化，如何加强凝聚力”', recommended_structure: '任务驱动型', structure_name: '问题解决式' },
+            { year: 2018, q_no: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.1 科技伦理', keywords: '评论“共享单车被滥用”的现象', recommended_structure: '任务驱动型', structure_name: '问题解决式', material_core_point: '共享单车被滥用', material_core_issue: '科技便利与社会公德的矛盾 → 科技伦理' },
+            { year: 2019, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述“贪图小利造成更大损失”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2019, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述“政府越有效率，人民要求越难满足”', recommended_structure: '双核类', structure_name: '辩证比较式' },
+            { year: 2019, q_no: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.3 教育与发展', keywords: '评论“中三学生参加外展训练营的必要性”', recommended_structure: '任务驱动型', structure_name: '问题解决式', material_core_point: '学生参加外展训练营的必要性', material_core_issue: '体验式学习与人格培养 → 教育与发展' },
+            { year: 2020, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.2 反思成长', keywords: '描述“接触不幸的人，体会生命意义”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2020, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '论述“只有通过规则和条例，社会才能产生积极变化”', recommended_structure: '传统型', structure_name: '问题解析式' },
+            { year: 2020, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '评论“新加坡小贩文化申遗”', recommended_structure: '家国情怀型', structure_name: '价值升华式', material_core_point: '小贩文化申遗', material_core_issue: '文化遗产与民族认同 → 文化传承' },
+            { year: 2021, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.1 坚毅诚信', keywords: '描述“做决定时需考虑诚信和影响”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2021, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '论述“要充分了解一个文化，必须先掌握其语言”', recommended_structure: '家国情怀型', structure_name: '价值升华式' },
+            { year: 2021, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '评论“为乐龄人士设计综合设施建筑”的意义', recommended_structure: '任务驱动型', structure_name: '问题解决式', material_core_point: '乐龄人士设施建设的意义', material_core_issue: '人口老龄化与社会关怀 → 公民责任与社会保障' },
+            { year: 2022, q_no: 'Q1', type: '记叙文', main_category: '社会参与与公民意识', sub_theme: '2.2 公民责任与规则', keywords: '描述“参与社区服务改变看法”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2022, q_no: 'Q2', type: '演讲稿', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '演讲：“国家的未来掌握在青年手中”', recommended_structure: '家国情怀型', structure_name: '价值升华式' },
+            { year: 2022, q_no: 'Q3', type: '材料评论', main_category: '社会参与与公民意识', sub_theme: '2.3 文化传承', keywords: '评论“‘怕输’是新加坡普遍的社会价值观”', recommended_structure: '双核类', structure_name: '辩证比较式', material_core_point: '“怕输”价值观', material_core_issue: '竞争心理与社会价值观 → 文化心态与社会风气' },
+            { year: 2023, q_no: 'Q1', type: '记叙文', main_category: '个人修养与价值观', sub_theme: '1.3 感恩同理', keywords: '描述“因姨妈家变故而同住，双方获益”的经历', recommended_structure: '——', structure_name: '——' },
+            { year: 2023, q_no: 'Q2', type: '论说文', main_category: '社会参与与公民意识', sub_theme: '2.1 国家认同与社会凝聚', keywords: '论述“国家遇危机时，人民和政府要同舟共济”', recommended_structure: '家国情怀型', structure_name: '价值升华式' },
+            { year: 2023, q_no: 'Q3', type: '材料评论', main_category: '时代挑战与未来思辨', sub_theme: '3.2 可持续发展', keywords: '评论“经济增长与环境保护的抉择”', recommended_structure: '双核类', structure_name: '辩证比较式', material_core_point: '经济增长 vs 环境保护的矛盾', material_core_issue: '发展与可持续性的平衡 → 可持续发展' }
+        ];
+
+        const structureIdMap = {'传统型': 'traditional', '双核类': 'dual', '任务驱动型': 'task', '家国情怀型': 'patriotic'};
+        const processedExamData = examData.map(item => ({...item, structure_id: structureIdMap[item.recommended_structure] || null }));
+
+        const practicePlanData = [
+            { week: 1, theme: "时代挑战与未来思辨", hotspot: "人工智能(AI)在教育领域的应用", background: "随着ChatGPT等生成式AI工具的普及,许多学校和学生开始在教学和功课中使用它们。这引发了关于“学习的本质”与“学术诚信”的大讨论。", q2: "有人认为,人工智能(AI)工具会使学生变得懒惰,并丧失独立思考能力。你同意这种看法吗?试加以论证。", q3_material: "新加坡教育部宣布,将在课程中教导学生如何正确并负责任地使用ChatGPT等AI工具,将其视为学习的辅助。", q3_prompt: "针对教育部将AI工具纳入课程的做法,谈谈你的看法。" },
+            { week: 2, theme: "个人修养与价值观", hotspot: "青少年的心理健康与抗压能力", background: "现代社会竞争激烈,青少年在学业、社交媒体、家庭期望等多方面承受压力。“躺平”、“内卷”等词汇流行,青少年的心理韧性(Resilience)备受关注。", q2_speech: { title: "我如何看待“吃苦”", prompt: "俗话说“吃得苦中苦,方为人上人”。但现代社会也有人提倡“身心健康比成功更重要”。请以《我如何看待“吃苦”》为题,发表演讲。" }, q3_material: "近年调查显示,寻求心理健康咨询服务的新加坡青年人数逐年上升。", q3_prompt: "你认为造成这个现象的原因是什么?你对同龄人有什么建议?" },
+            { week: 3, theme: "社会参与与公民意识", hotspot: "假新闻与媒体素养 (Media Literacy)", background: "在社交媒体时代,信息真假难辨。一个谣言或一则假新闻可能引发社会恐慌或加剧社会对立。", q2: "你认为,在杜绝假新闻的传播上,政府的立法管制和个人的媒体素养,哪一个更重要?试加以说明。", q3_material: "一项调查显示,超过半数的受访者承认,自己曾在不经意间分享过未经证实的消息。", q3_prompt: "针对这个现象,谈谈你的看法,并提出至少两项建议。" },
+            { week: 4, theme: "时代挑战与未来思辨", hotspot: "可持续生活与“一次性文化”", background: "(对应2023年Q3真题)全球暖化问题日益严重。外卖、快递和快时尚带来的“一次性”便利文化,正对环境造成巨大负担。", q2: "有人说:“环保是政府和企业的事,个人力量微不足道。”你同意吗?试谈谈你的看法。", q3_material: "为了减少塑料垃圾,许多商家不再主动提供塑料袋和一次性餐具,但有些顾客认为这给生活带来了不便。", q3_prompt: "请评论“个人便利”与“社会环保责任”之间的冲突。" },
+            { week: 5, theme: "个人修养与价值观", hotspot: "网络“取消文化” (Cancel Culture)", background: "当公众人物(或普通人)发表了不当言论或被挖出“黑历史”时,网民会群起而攻之,进行抵制,甚至使其社会性死亡。", q2: "你认为网络“取消文化”是一种伸张正义的方式,还是一种网络霸凌?试论证你的观点。", q3_material: "“人非圣贤,孰能无过。”", q3_prompt: "结合当今的网络“取消文化”现象,谈谈你对这句话的理解。" },
+            { week: 6, theme: "社会参与与公民意识", hotspot: "文化传承与身份认同", background: "在全球化的浪潮下,新加坡的许多传统行业(如老字号小贩)、方言或习俗正面临消失的危机。", q2_speech: { title: "文化传承,你我共行", prompt: "你是学校“华族文化学会”的主席。请准备一篇演讲稿,说服同学们踊跃参加文化传承活动,并说明其对年轻一代的意义。" }, q3_material: "新加坡旅游局近年在海外大力推广“小贩文化”,将其作为国家名片。但在国内,许多年轻人却不愿投身小贩行业。", q3_prompt: "针对这个现象,谈谈你的看法。" },
+            { week: 7, theme: "社会参与与公民意识", hotspot: "人口老龄化与“活跃乐龄”", background: "新加坡是全球老龄化速度最快的国家之一。如何照顾乐龄人士,以及如何让乐龄人士继续为社会做出贡献(“活跃乐龄”),是国家的重要议题。", q2: "传统观念认为“孝”就是赡养父母。你认为,在现代社会,“孝”的定义是否应该有所改变?试加以论证。", q3_material: "近年来,政府和社区推出了许多“乐龄义工”和“乐龄就业”计划,鼓励身体健康的乐龄人士重返社会服务或工作。", q3_prompt: "评论“活跃乐龄”计划对乐龄人士和整个社会所带来的意义。" },
+            { week: 8, theme: "时代挑战与未来思辨", hotspot: "零工经济 (Gig Economy) 的利弊", background: "越来越多的人(包括年轻人)选择成为送餐员、私召车司机等零工经济从业者。这种工作模式提供了自由,但也带来了保障不足(如没有公积金、病假)的问题。", q2: "有人认为,零工经济为社会创造了更多机会和自由;也有人认为,它让许多人陷入了不稳定的困境。你更同意哪种看法?试加以论证。", q3_material: "一份调查显示,超过六成的零工经济从业者表示,如果能找到一份工时稳定、福利待遇相当的全职工作,他们愿意放弃目前的“自由”。", q3_prompt: "这份调查结果反映了什么问题?谈谈你的看法。" }
+        ];
+
+        function showTab(tabNumber, buttonElement) {
+            const contentWrapper = buttonElement.closest('.content');
+            contentWrapper.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            
+            contentWrapper.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            contentWrapper.querySelector('#tab-content-' + tabNumber).classList.add('active');
+        }
+
+        function populateMaterialAnalysisTable() {
+            const tableBody = document.getElementById('materialAnalysisTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            
+            const materialCommentaryData = processedExamData.filter(item => item.type === '材料评论' && item.material_core_point);
+            
+            materialCommentaryData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.year} ${item.q_no}</td>
+                    <td>${item.keywords}</td>
+                    <td>${item.material_core_point}</td>
+                    <td>${item.material_core_issue}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function populatePracticePlan() {
+            const weekNavContainer = document.getElementById('week-navigation-container');
+            const weekContentContainer = document.getElementById('week-content-container');
+            if (!weekNavContainer || !weekContentContainer) return;
+
+            practicePlanData.forEach((weekData, index) => {
+                const week = index + 1;
+                const button = document.createElement('button');
+                button.className = `week-btn ${week === 1 ? 'active' : ''}`;
+                button.innerText = `第${week}周`;
+                button.onclick = () => showWeek(week, button);
+                weekNavContainer.appendChild(button);
+
+                const content = document.createElement('div');
+                content.id = `week-content-${week}`;
+                content.className = `week-content ${week === 1 ? 'active' : ''}`;
+                
+                let q2_html = weekData.q2_speech 
+                    ? `<h5>Q2 (演讲稿):</h5><p><strong>题目:</strong> ${weekData.q2_speech.title}</p><p>${weekData.q2_speech.prompt}</p>`
+                    : `<h5>Q2 (议论文):</h5><p>${weekData.q2}</p>`;
+                
+                content.innerHTML = `
+                    <div class="week-card">
+                        <h3>核心主题：${weekData.theme}</h3>
+                        <h4>本周热点：${weekData.hotspot}</h4>
+                        <div class="analysis-container" style="margin-bottom: 1rem;">
+                            <div class="analysis-trigger" onclick="toggleAnalysis(this, 'week-${week}-bg')"><span>背景简介</span></div>
+                            <div class="analysis-content" id="week-${week}-bg"><div style="padding: 1rem 0;"><p>${weekData.background}</p></div></div>
+                        </div>
+                        <div class="analysis-container">
+                            <div class="analysis-trigger" onclick="toggleAnalysis(this, 'week-${week}-q')"><span>模拟题库</span></div>
+                            <div class="analysis-content" id="week-${week}-q">
+                                <div style="padding: 1rem 0;">
+                                    ${q2_html}
+                                    <hr style="margin: 1rem 0;">
+                                    <h5>Q3 (材料评论):</h5>
+                                    <p><b>材料:</b> ${weekData.q3_material}</p>
+                                    <p><b>题目:</b> ${weekData.q3_prompt}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                weekContentContainer.appendChild(content);
+            });
+        }
+        
+        function showWeek(weekNumber, buttonElement) {
+            document.querySelectorAll('.week-btn').forEach(btn => btn.classList.remove('active'));
+            buttonElement.classList.add('active');
+            document.querySelectorAll('.week-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`week-content-${weekNumber}`).classList.add('active');
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            populateFilters();
+            renderExamTable(processedExamData);
+            populateReverseIndexes();
+            populateMaterialAnalysisTable();
+            populatePracticePlan();
+            
+            document.querySelectorAll('.collapsible').forEach(collapsible => {
+                collapsible.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } 
+                });
+                if (collapsible.classList.contains('active')) {
+                    const content = collapsible.nextElementSibling;
+                     setTimeout(() => { content.style.maxHeight = content.scrollHeight + "px"; }, 100);
+                }
+            });
+
+            const filters = ['yearFilter', 'typeFilter', 'mainCategoryFilter', 'subThemeFilter', 'structureFilter'];
+            filters.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', filterExams);
+            });
+            const resetBtn = document.getElementById('resetFilters');
+            if(resetBtn) resetBtn.addEventListener('click', resetAndFilter);
+            
+            const modal = document.querySelector('.modal-overlay');
+            if(modal) modal.addEventListener('click', closeModal);
+        });
+
+        function populateFilters() {
+            const allYears = [...new Set(processedExamData.map(item => item.year))].sort((a, b) => b - a);
+            const allTypes = [...new Set(processedExamData.map(item => item.type))];
+            const allMainCategories = [...new Set(processedExamData.map(item => item.main_category))].filter(Boolean);
+            const allSubThemes = [...new Set(processedExamData.map(item => item.sub_theme))].filter(Boolean);
+            const allStructures = [...new Set(processedExamData.map(item => item.recommended_structure))].filter(s => s && s !== '——');
+
+            const yearSelect = document.getElementById('yearFilter');
+            const typeSelect = document.getElementById('typeFilter');
+            const mainCategorySelect = document.getElementById('mainCategoryFilter');
+            const subThemeSelect = document.getElementById('subThemeFilter');
+            const structureSelect = document.getElementById('structureFilter');
+
+            yearSelect.innerHTML = '<option value="">所有年份</option>';
+            allYears.forEach(value => yearSelect.innerHTML += `<option value="${value}">${value}</option>`);
+            
+            typeSelect.innerHTML = '<option value="">所有题型</option>';
+            allTypes.forEach(value => typeSelect.innerHTML += `<option value="${value}">${value}</option>`);
+
+            mainCategorySelect.innerHTML = '<option value="">所有核心主题</option>';
+            allMainCategories.forEach(value => mainCategorySelect.innerHTML += `<option value="${value}">${value}</option>`);
+
+            subThemeSelect.innerHTML = '<option value="">所有主题子类</option>';
+            allSubThemes.forEach(value => subThemeSelect.innerHTML += `<option value="${value}">${value}</option>`);
+
+            structureSelect.innerHTML = '<option value="">所有推荐结构</option>';
+            allStructures.forEach(value => structureSelect.innerHTML += `<option value="${value}">${value}</option>`);
+        }
+
+        function renderExamTable(data) {
+            const tableBody = document.getElementById('examTableBody');
+            if (!tableBody) return;
+            tableBody.innerHTML = '';
+            data.forEach(item => {
+                let structureDisplay = item.recommended_structure || '——';
+                if (item.structure_name && item.structure_name !== '——') { structureDisplay += ` (${item.structure_name})`; }
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.year}</td><td>${item.q_no}</td><td>${item.type}</td><td>${item.main_category || 'N/A'}</td><td>${item.sub_theme || 'N/A'}</td><td>${structureDisplay}</td><td>${item.keywords || 'N/A'}</td>`;
+                row.addEventListener('click', () => showAnalysisModal(item));
+                tableBody.appendChild(row);
+            });
+        }
+        
+        function filterExams() {
+            const year = document.getElementById('yearFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const mainCategory = document.getElementById('mainCategoryFilter').value;
+            const subTheme = document.getElementById('subThemeFilter').value;
+            const structure = document.getElementById('structureFilter').value;
+            let filteredData = processedExamData;
+            if (year) filteredData = filteredData.filter(item => item.year == year);
+            if (type) filteredData = filteredData.filter(item => item.type == type);
+            if (mainCategory) filteredData = filteredData.filter(item => item.main_category == mainCategory);
+            if (subTheme) filteredData = filteredData.filter(item => item.sub_theme == subTheme);
+            if (structure) filteredData = filteredData.filter(item => item.recommended_structure == structure);
+            renderExamTable(filteredData);
+        }
+
+        function resetAndFilter() {
+            ['yearFilter', 'typeFilter', 'mainCategoryFilter', 'subThemeFilter', 'structureFilter'].forEach(id => document.getElementById(id).value = '');
+            filterExams();
+        }
+
+        function showAnalysisModal(item) {
+            document.getElementById('modal-title').innerText = `${item.year} ${item.q_no} 题目诊断分析`;
+            document.getElementById('modal-type').innerText = item.type;
+            document.getElementById('modal-main-category').innerText = item.main_category || 'N/A';
+            document.getElementById('modal-sub-theme').innerText = item.sub_theme || 'N/A';
+            let structureDisplay = item.recommended_structure || '——';
+            if (item.structure_name && item.structure_name !== '——') { structureDisplay += ` (${item.structure_name})`; }
+            document.getElementById('modal-structure-name').innerText = structureDisplay;
+            
+            const jumpBtn = document.getElementById('modal-jump-btn');
+            jumpBtn.disabled = true;
+            jumpBtn.onclick = null;
+            jumpBtn.innerHTML = '一键跳转至该结构模板';
+
+            if (item.type === '材料评论') {
+                jumpBtn.disabled = false;
+                jumpBtn.onclick = () => jumpToSection('writing-system', 'specific-types', 'structure-material');
+            } else if (item.type === '演讲稿') {
+                jumpBtn.disabled = false;
+                jumpBtn.onclick = () => jumpToSection('writing-system', 'specific-types', 'structure-speech');
+            } else if (item.type === '论说文' && item.structure_id) {
+                jumpBtn.disabled = false;
+                jumpBtn.onclick = () => jumpToSection('writing-system', 'structures', `structure-${item.structure_id}`);
+            } else {
+                jumpBtn.innerHTML = '无适用结构模板';
+            }
+            
+            document.getElementById('analysis-modal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('analysis-modal').style.display = 'none'; }
+
+        function showMainSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`.nav-btn[onclick*="'${sectionId}'"]`).classList.add('active');
+        }
+
+        function showSubSection(button, subSectionId) {
+            const parentSection = button.closest('.content-section');
+            parentSection.querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+            parentSection.querySelectorAll('.sub-content').forEach(content => content.classList.remove('active'));
+            button.classList.add('active');
+            parentSection.querySelector('#' + subSectionId).classList.add('active');
+        }
+
+        function populateReverseIndexes() {
+            const structureMap = { traditional: [], dual: [], task: [], patriotic: [] };
+            processedExamData.forEach(item => {
+                if (item.structure_id && structureMap[item.structure_id]) {
+                    structureMap[item.structure_id].push(item);
+                }
+            });
+            for (const structureId in structureMap) {
+                const container = document.getElementById(`reverse-index-${structureId}`);
+                if (container) {
+                    container.innerHTML = ''; 
+                    if (structureMap[structureId].length > 0) {
+                        const list = document.createElement('ul');
+                        list.className = 'past-paper-list';
+                        structureMap[structureId].forEach(item => {
+                            const listItem = document.createElement('li');
+                            listItem.innerHTML = `<strong>${item.year} ${item.q_no}:</strong> ${item.keywords}`;
+                            listItem.onclick = () => showAnalysisModal(item);
+                            list.appendChild(listItem);
+                        });
+                        container.appendChild(list);
+                    } else {
+                        container.innerHTML = '<p>暂无匹配的历年真题。</p>';
+                    }
+                }
+            }
+        }
+        
+        function toggleAnalysis(trigger, contentId) {
+            trigger.classList.toggle('active');
+            const content = document.getElementById(contentId);
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+            } 
+        }
+
+        function jumpToSection(mainSectionId, subSectionId, elementId) {
+            closeModal();
+            showMainSection(mainSectionId);
+
+            const subNavButton = document.querySelector(`#${mainSectionId} .sub-nav-btn[onclick*="'${subSectionId}'"]`);
+            if (subNavButton) {
+                showSubSection(subNavButton, subSectionId);
+            }
+
+            const element = document.getElementById(elementId);
+            if (element) {
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    element.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.5)';
+                    setTimeout(() => { element.style.boxShadow = 'none'; }, 2000);
+
+                    const collapsible = element.querySelector('.collapsible');
+                    if (collapsible && !collapsible.classList.contains('active')) {
+                        collapsible.click();
+                    }
+                }, 100);
+            }
+        }
+        
+        function recommendStructure() {
+            const topicType = document.getElementById('topicType').value;
+            const recommendation = document.getElementById('structureRecommendation');
+            let content = '';
+            const structures = { traditional: '<h4>推荐：传统型结构</h4><p>适配价值观类题目，采用“个人→社会→国家”递进或“是什么→为什么→怎么办”逻辑。</p>', dual: '<h4>推荐：双核类结构</h4><p>适配对立矛盾类题目，采用“肯定A→转折B→融合”的辩证逻辑。</p>', task: '<h4>推荐：任务驱动型结构</h4><p>适配社会现象或材料评论，采用“现状→根源→对策”的问题解决逻辑。</p>', patriotic: '<h4>推荐：家国情怀型结构</h4><p>适配宏大命题，采用“个人→社会→国家”的价值升华逻辑。</p>' };
+            content = structures[topicType] || '<p style="color: #d9534f;">请先选择题目类型</p>';
+            recommendation.innerHTML = content;
+            recommendation.style.display = 'block';
+        }
+        
+        function generateSentence() {
+            const keyword = document.getElementById('topicKeyword').value.trim();
+            const result = document.getElementById('generatedSentence');
+            if (!keyword) { result.innerHTML = '<p style="color: #d9534f;">请输入主题关键词</p>'; } else {
+                const templates = [ `在当今这个瞬息万变的时代，<strong>${keyword}</strong>已成为一个我们无法回避的核心议题。`, `古人云：“人无信不立”，这句古老的智慧，至今仍对我们理解<strong>${keyword}</strong>有深刻启示。`, `近年来，关于<strong>${keyword}</strong>的讨论不绝于耳，这提醒我们必须正视其深层价值。` ];
+                result.innerHTML = `<h4>生成的开头句式：</h4><p>${templates[Math.floor(Math.random() * templates.length)]}</p>`;
+            }
+            result.style.display = 'block';
+        }
+        
+        function countWords() {
+            const content = document.getElementById('contentInput').value;
+            const result = document.getElementById('wordCount');
+            const wordCount = content.length;
+            let feedback = '';
+            if (wordCount >= 80 && wordCount <= 120) feedback = '字数符合标准！';
+            else if (wordCount < 80) feedback = '字数偏少，建议增加内容。';
+            else feedback = '字数偏多，建议精简。';
+            result.innerHTML = `<h4>字数统计：</h4><p>总字数：<strong>${wordCount}</strong> 字</p><p>评估：${feedback}</p>`;
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+```

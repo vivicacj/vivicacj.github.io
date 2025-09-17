@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level华文实用文完整备考系统</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 顶部导航 */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* 主体内容 */
+        .main-content {
+            margin-top: 80px;
+            padding-top: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Section 样式 - 统一布局 */
+        .section {
+            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 趋势分析样式 */
+        .section-trend { border-left: 6px solid #1e3a8a; }
+        .section-maco { border-left: 6px solid #7c3aed; }
+        .section-framework { border-left: 6px solid #059669; }
+        .section-tools { border-left: 6px solid #dc2626; }
+        .section-resources { border-left: 6px solid #6b7280; }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .trend-icon { background: #1e3a8a; }
+        .maco-icon { background: #7c3aed; }
+        .framework-icon { background: #059669; }
+        .tools-icon { background: #dc2626; }
+        .resources-icon { background: #6b7280; }
+
+        /* 趋势分析特定样式 */
+        .trend-overview {
+            background: #f0f4ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid #1e3a8a;
+        }
+
+        .trend-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .trend-table th,
+        .trend-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .trend-table th {
+            background: #1e3a8a;
+            color: white;
+            font-weight: bold;
+        }
+
+        .trend-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .trend-highlight {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #f59e0b;
+            margin: 20px 0;
+        }
+
+        /* MACO手风琴样式 */
+        .maco-intro {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .maco-accordion {
+            margin: 30px 0;
+        }
+
+        .maco-section {
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .maco-section:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .maco-header {
+            display: flex;
+            align-items: center;
+            padding: 25px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .maco-header:hover {
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        }
+
+        .maco-icon-large {
+            font-size: 2.5rem;
+            margin-right: 20px;
+            min-width: 60px;
+        }
+
+        .maco-title {
+            flex: 1;
+        }
+
+        .maco-title h3 {
+            margin: 0 0 5px 0;
+            color: #1e293b;
+            font-size: 1.3rem;
+        }
+
+        .maco-subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .maco-toggle {
+            font-size: 1.5rem;
+            color: #7c3aed;
+            font-weight: bold;
+            transition: transform 0.3s ease;
+        }
+
+        .maco-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .maco-content {
+            padding: 30px;
+            border-top: 2px solid #e2e8f0;
+            background: #fafbfc;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .maco-goal {
+            background: linear-gradient(135deg, #ddd6fe, #e0e7ff);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-left: 4px solid #7c3aed;
+        }
+
+        .maco-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 25px 0;
+        }
+
+        .maco-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .maco-table th,
+        .maco-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .maco-table th {
+            background: #1e293b;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .maco-table tr:nth-child(even) {
+            background: #f8fafc;
+        }
+
+        .model-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .model-card {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .model-card.private {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+        }
+
+        .model-card.public {
+            background: #dcfce7;
+            border-left-color: #22c55e;
+        }
+
+        .model-card.report {
+            background: #dbeafe;
+            border-left-color: #3b82f6;
+        }
+
+        .model-card h5 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .model-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #4b5563;
+        }
+
+        /* Attack部分标签页样式 */
+        .attack-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .attack-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #64748b;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .attack-tab.active {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .attack-tab:hover:not(.active) {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .attack-content-area {
+            background: white;
+            border-radius: 0 15px 15px 15px;
+            padding: 25px;
+            margin-top: -2px;
+        }
+
+        .attack-content {
+            display: none;
+        }
+
+        .attack-content.active {
+            display: block;
+        }
+
+        .ability-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .ability-target,
+        .ability-score {
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .ability-target {
+            background: #f0f9ff;
+            border-left-color: #0ea5e9;
+        }
+
+        .ability-score {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+        }
+
+        .training-methods {
+            display: grid;
+            gap: 20px;
+        }
+
+        .method-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .method-card h5 {
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .method-example {
+            background: #e0f2fe;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .sentence-groups {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .sentence-group {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #7c3aed;
+        }
+
+        .sentence-group h5 {
+            color: #7c3aed;
+            margin-bottom: 15px;
+        }
+
+        .sentence-group ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sentence-group li {
+            background: white;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #a855f7;
+            font-size: 0.9rem;
+        }
+
+        .structure-training {
+            display: grid;
+            gap: 25px;
+        }
+
+        .structure-method {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .paragraph-flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .para-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 2px solid #059669;
+        }
+
+        .para-num {
+            background: #059669;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .para-desc {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .para-arrow {
+            color: #059669;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Construct模板系统样式 */
+        .template-systems {
+            display: grid;
+            gap: 25px;
+        }
+
+        .template-system {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .template-system h4 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .template-structure {
+            display: grid;
+            gap: 12px;
+        }
+
+        .template-step {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 15px;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #6366f1;
+        }
+
+        .step-name {
+            font-weight: 600;
+            color: #4338ca;
+            text-align: center;
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .step-template {
+            color: #4b5563;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        /* Optimize训练计划样式 */
+        .training-schedule {
+            display: grid;
+            gap: 30px;
+        }
+
+        .training-level {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .training-level h4 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .daily-tasks {
+            display: grid;
+            gap: 15px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .task-icon {
+            font-size: 1.5rem;
+            min-width: 40px;
+        }
+
+        .task-content h5 {
+            margin: 0 0 5px 0;
+            color: #1e293b;
+        }
+
+        .task-content p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .weekly-tasks {
+            display: grid;
+            gap: 10px;
+        }
+
+        .task-row {
+            display: grid;
+            grid-template-columns: 1fr 80px 2fr;
+            gap: 15px;
+            align-items: center;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #10b981;
+        }
+
+        .task-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .task-freq {
+            background: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .task-desc {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .sprint-plan {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .sprint-phase {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #ef4444;
+        }
+
+        .sprint-phase h5 {
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+
+        .sprint-phase ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .sprint-phase li {
+            color: #4b5563;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #fef3c7, #fed7aa);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        /* 框架详细样式 */
+        .framework-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-radius: 10px 10px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: #059669;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 四段式框架样式 */
+        .step-cards {
+            display: grid;
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid #e5e7eb;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .step-card:hover {
+            border-color: #059669;
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.15);
+        }
+
+        .step-card.step-1 { border-left-color: #4f46e5; }
+        .step-card.step-2 { border-left-color: #059669; }
+        .step-card.step-3 { border-left-color: #dc2626; }
+        .step-card.step-4 { border-left-color: #7c3aed; }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-1 .step-number { background: #4f46e5; }
+        .step-2 .step-number { background: #059669; }
+        .step-3 .step-number { background: #dc2626; }
+        .step-4 .step-number { background: #7c3aed; }
+
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .step-goal {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .template-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .template-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .template-list li:before {
+            content: "📝";
+            margin-right: 10px;
+        }
+
+        .example-box {
+            background: #f0fdf4;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #bbf7d0;
+            line-height: 1.8;
+        }
+
+        .example-box h4 {
+            color: #059669;
+            margin-bottom: 10px;
+        }
+
+        .expand-btn {
+            background: linear-gradient(45deg, #059669, #10b981);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content-expanded {
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .content-expanded.show {
+            display: block;
+        }
+
+        /* 工具箱样式 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .tool-card {
+            background: #fef2f2;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #fecaca;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-3px);
+            border-color: #dc2626;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.15);
+        }
+
+        .tool-card h4 {
+            color: #dc2626;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .summary-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .highlight-text {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        /* 四步流程图样式 */
+        .proc-container * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .proc-container {
+            font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+            background: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .proc-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .proc-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .proc-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .proc-process-overview {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .proc-overview-step {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 220px;
+            border: 3px solid #e5e7eb;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .proc-overview-step:nth-child(1) { border-color: #3b82f6; }
+        .proc-overview-step:nth-child(2) { border-color: #10b981; }
+        .proc-overview-step:nth-child(3) { border-color: #f59e0b; }
+        .proc-overview-step:nth-child(4) { border-color: #ef4444; }
+
+        .proc-overview-step::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .proc-overview-step:nth-child(1)::before { background: #3b82f6; content: '1'; }
+        .proc-overview-step:nth-child(2)::before { background: #10b981; content: '2'; }
+        .proc-overview-step:nth-child(3)::before { background: #f59e0b; content: '3'; }
+        .proc-overview-step:nth-child(4)::before { background: #ef4444; content: '4'; }
+
+        .proc-overview-step h3 {
+            margin: 15px 0 10px 0;
+            color: #1e293b;
+            font-size: 1.1rem;
+        }
+
+        .proc-overview-step .proc-time {
+            background: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #475569;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .proc-overview-step p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .proc-time-allocation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .proc-time-block {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 30px;
+            border-left: 6px solid;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .proc-time-block.proc-thinking { border-left-color: #3b82f6; }
+        .proc-time-block.proc-writing { border-left-color: #10b981; }
+        .proc-time-block strong { display: block; margin-bottom: 8px; font-size: 1.1rem; }
+
+        .proc-steps-container {
+            display: grid;
+            gap: 30px;
+        }
+
+        .proc-step-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid;
+            transition: all 0.3s ease;
+        }
+
+        .proc-step-card:nth-child(1) { border-color: #3b82f6; }
+        .proc-step-card:nth-child(2) { border-color: #10b981; }
+        .proc-step-card:nth-child(3) { border-color: #f59e0b; }
+        .proc-step-card:nth-child(4) { border-color: #ef4444; }
+
+        .proc-step-header {
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .proc-step-card:nth-child(1) .proc-step-header { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+        .proc-step-card:nth-child(2) .proc-step-header { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+        .proc-step-card:nth-child(3) .proc-step-header { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+        .proc-step-card:nth-child(4) .proc-step-header { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+
+        .proc-step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .proc-step-card:nth-child(1) .proc-step-number { background: #3b82f6; }
+        .proc-step-card:nth-child(2) .proc-step-number { background: #10b981; }
+        .proc-step-card:nth-child(3) .proc-step-number { background: #f59e0b; }
+        .proc-step-card:nth-child(4) .proc-step-number { background: #ef4444; }
+
+        .proc-step-title h3 { margin: 0 0 5px 0; color: #1e293b; font-size: 1.4rem; }
+        .proc-step-subtitle { color: #64748b; font-size: 1rem; margin: 0; }
+        .proc-step-time {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #475569;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        .proc-step-content { padding: 30px; background: #fafbfc; }
+        .proc-content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; }
+
+        .proc-main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid;
+        }
+
+        .proc-step-card:nth-child(1) .proc-main-content { border-left-color: #3b82f6; }
+        .proc-step-card:nth-child(2) .proc-main-content { border-left-color: #10b981; }
+        .proc-step-card:nth-child(3) .proc-main-content { border-left-color: #f59e0b; }
+        .proc-step-card:nth-child(4) .proc-main-content { border-left-color: #ef4444; }
+        .proc-main-content h4 { color: #1e293b; margin-bottom: 20px; font-size: 1.2rem; }
+        .proc-action-list { list-style: none; margin: 0; }
+
+        .proc-action-list li {
+            background: #f8fafc;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border-left: 4px solid;
+            position: relative;
+        }
+
+        .proc-step-card:nth-child(1) .proc-action-list li { border-left-color: #3b82f6; }
+        .proc-step-card:nth-child(2) .proc-action-list li { border-left-color: #10b981; }
+        .proc-step-card:nth-child(3) .proc-action-list li { border-left-color: #f59e0b; }
+        .proc-step-card:nth-child(4) .proc-action-list li { border-left-color: #ef4444; }
+
+        .proc-action-list li:before {
+            content: "→";
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .proc-step-card:nth-child(1) .proc-action-list li:before { color: #3b82f6; }
+        .proc-step-card:nth-child(2) .proc-action-list li:before { color: #10b981; }
+        .proc-step-card:nth-child(3) .proc-action-list li:before { color: #f59e0b; }
+        .proc-step-card:nth-child(4) .proc-action-list li:before { color: #ef4444; }
+        
+        .proc-side-panel { display: flex; flex-direction: column; gap: 20px; }
+        .proc-info-box { border-radius: 15px; padding: 20px; border: 2px solid; }
+        .proc-checkpoint { background: #f0fdf4; border-color: #bbf7d0; }
+        .proc-checkpoint h4 { color: #059669; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+        .proc-warning-box { background: #fef3c7; border-color: #fcd34d; }
+        .proc-warning-box h4 { color: #d97706; margin-bottom: 10px; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+        .proc-info-box p { color: #374151; font-size: 0.9rem; line-height: 1.5; }
+
+        .proc-overview-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 25px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .maco-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .maco-header {
+                padding: 20px;
+            }
+            
+            .ability-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .sentence-groups {
+                grid-template-columns: 1fr;
+            }
+            
+            .paragraph-flow {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .para-arrow {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+            
+            .sprint-plan {
+                grid-template-columns: 1fr;
+            }
+            
+            .task-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .proc-content-grid { grid-template-columns: 1fr; }
+            .proc-step-header { flex-direction: column; text-align: center; gap: 15px; }
+            .proc-step-time { margin-left: 0; }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <div class="nav-logo">🎓 O-Level华文实用文备考系统</div>
+            <ul class="nav-links">
+                <li><a href="#trend-analysis" onclick="scrollToSection('trend-analysis', event)">趋势分析</a></li>
+                <li><a href="#maco-system" onclick="scrollToSection('maco-system', event)">MACO战略</a></li>
+                <li><a href="#frameworks" onclick="scrollToSection('frameworks', event)">详细框架</a></li>
+                <li><a href="#tools" onclick="scrollToSection('tools', event)">工具箱</a></li>
+                <li><a href="#resources" onclick="scrollToSection('resources', event)">资源库</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="header">
+            <h1>O-Level华文实用文完整备考系统</h1>
+            <p>基于10年真题趋势 · 科学备考 · 系统提升</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Section 1: 趋势分析 -->
+            <section id="trend-analysis" class="section section-trend fade-in">
+                <h2 class="section-title">
+                    <span class="section-icon trend-icon">📈</span>
+                    命题趋势洞察
+                </h2>
+                
+                <div class="trend-overview">
+                    <h3>📊【2014–2023 实用文题型变化趋势分析报告】</h3>
+                    
+                    <h4>🧭 一、整体趋势总览</h4>
+                    <table class="trend-table">
+                        <thead>
+                            <tr>
+                                <th>年份</th>
+                                <th>主要出题类型</th>
+                                <th>特点总结</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2014–2017</td>
+                                <td><strong>私人沟通型题目</strong>为主</td>
+                                <td>情感取向、一对一电邮沟通、表达建议</td>
+                            </tr>
+                            <tr>
+                                <td>2018–2023</td>
+                                <td><strong>公共发言型题目</strong>为主</td>
+                                <td>立场表达、观点劝说、一对多陈述</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="trend-highlight">
+                        <strong>✅ 关键变化点：2018年起全面转向「公共型沟通」</strong>，强调对社会议题的立场表达与劝说逻辑。
+                    </div>
+                </div>
+
+                <h4>📅 二、年度题型与核心任务列表</h4>
+                <table class="trend-table">
+                    <thead>
+                        <tr>
+                            <th>年份</th>
+                            <th>类型</th>
+                            <th>文体名义</th>
+                            <th>实际任务属性</th>
+                            <th>代表身份</th>
+                            <th>主题关键词</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr> <td>2014</td> <td>私人沟通</td> <td>私人电邮</td> <td>提出建议、安慰鼓励</td> <td>姐姐</td> <td>升学烦恼、亲情</td> </tr>
+                        <tr> <td>2015</td> <td>公共发言</td> <td>公务电邮</td> <td>提议措施、说明理由</td> <td>动物保护组织成员</td> <td>动物保护</td> </tr>
+                        <tr> <td>2016</td> <td>私人沟通</td> <td>私人电邮</td> <td>提供建议、调解矛盾</td> <td>朋友</td> <td>邻里矛盾</td> </tr>
+                        <tr> <td>2016</td> <td>公共发言</td> <td>论坛</td> <td>呼吁大众参与</td> <td>青年体育代表</td> <td>体育运动（体育愿景）</td> </tr>
+                        <tr> <td>2017</td> <td>私人沟通</td> <td>私人电邮</td> <td>提建议、缓和矛盾</td> <td>班长</td> <td>班级矛盾</td> </tr>
+                        <tr> <td>2017</td> <td>公共发言</td> <td>博客</td> <td>说明立场、回应争议</td> <td>学生/环保志愿者</td> <td>塑料袋收费政策</td> </tr>
+                        <tr> <td>2018</td> <td>公共发言</td> <td>博客</td> <td>鼓励参与、说明益处</td> <td>培训中心负责人</td> <td>终身学习</td> </tr>
+                        <tr> <td>2019</td> <td>私人沟通</td> <td>私人电邮</td> <td>提出对策、表达理解</td> <td>居民</td> <td>邻居囤积症</td> </tr>
+                        <tr> <td>2020</td> <td>公共发言</td> <td>论坛</td> <td>说明理由、回应质疑</td> <td>活动组织者</td> <td>节庆亮灯</td> </tr>
+                        <tr> <td>2021</td> <td>公共发言</td> <td>论坛</td> <td>说明好处、回应问题</td> <td>公司发言人</td> <td>外卖服务</td> </tr>
+                        <tr> <td>2021</td> <td>私人沟通</td> <td>私人电邮</td> <td>劝说长辈</td> <td>孙子/孙女</td> <td>使用电子产品问题</td> </tr>
+                        <tr> <td>2022</td> <td>公共发言</td> <td>论坛</td> <td>说明图书馆功能</td> <td>学会会长</td> <td>图书馆的社会价值</td> </tr>
+                        <tr> <td>2023</td> <td>公共发言</td> <td>论坛</td> <td>说明重要性、呼吁</td> <td>公众代表/环保人士</td> <td>旧衣回收（环保）</td> </tr>
+                    </tbody>
+                </table>
+
+                <h4>🔍 三、大趋势解读</h4>
+                
+                <div class="trend-highlight">
+                    <strong>1️⃣ 从"私人情感"转向"公共议题"</strong><br>
+                    • <strong>2014–2017：</strong> 情感导向题占多数，强调「亲情」、「邻里」、「同学间」的问题与沟通。<br>
+                    • <strong>2018 起：</strong> 命题重心明显转向<strong>社会公共话题</strong>，如环保、教育、城市治理等。<br>
+                    • <strong>✅ 应试建议：</strong> 训练必须向「社会类议题 + 理性论证」方向倾斜。
+                </div>
+
+                <div class="trend-highlight">
+                    <strong>2️⃣ 任务重心从"建议"走向"立场表达 + 公众回应"</strong><br>
+                    • 早期任务多为："给对方建议"、"分享经验"、"劝说某人"<br>
+                    • 后期任务更复杂，要求："说明立场 + 回复公众质疑 + 呼吁行动"<br>
+                    • <strong>✅ 应试建议：</strong> 考生需具备 "回应负面声音 + 强化正面立场" 的双向能力。
+                </div>
+
+                <div class="trend-highlight">
+                    <strong>3️⃣ 身份设定从"个体"走向"组织/代表"</strong><br>
+                    • 早期常用身份：朋友、家人、班长<br>
+                    • 后期多数设定为：协会负责人、公司发言人、环保志愿者、活动筹委会代表<br>
+                    • <strong>✅ 应试建议：</strong> 熟练掌握"代表语气"的写作技巧（理性、中立、有说服力）
+                </div>
+
+                <div class="summary-box">
+                    <h4>✅ 总结：三句话记住命题趋势</h4>
+                    <div class="summary-text">
+                        1. <strong>从"你跟我说" → "你对大家说"</strong>（私人到公共）<br>
+                        2. <strong>从"劝一个人" → "回应大众质疑 + 提出立场"</strong>（建议到劝说）<br>
+                        3. <strong>从"写一封信" → "写一份发言稿"</strong>（格式向内容逻辑靠拢）
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: MACO战略系统 -->
+            <section id="maco-system" class="section section-maco fade-in">
+                <h2 class="section-title">
+                    <span class="section-icon maco-icon">🧭</span>
+                    MACO战略系统
+                </h2>
+                
+                <div class="trend-overview">
+                    <h3>🧭【实用文战略备考路径：MACO 模型】</h3>
+                    <p><strong>MACO = Map 分类 → Attack 核心能力 → Construct 模板系统 → Optimize 战术训练</strong></p>
+                    <p class="maco-intro">点击下方任意部分深入学习 | 建议按顺序逐步掌握</p>
+                </div>
+
+                <!-- MACO 手风琴结构 -->
+                <div class="maco-accordion">
+                    <!-- Map 分类 -->
+                    <div class="maco-section" id="maco-map">
+                        <div class="maco-header" onclick="toggleMacoSection('map', event)">
+                            <div class="maco-icon-large">🧩</div>
+                            <div class="maco-title">
+                                <h3>一、Map 分类（战场地图）</h3>
+                                <p class="maco-subtitle">识别所有实用文题型的底层逻辑结构</p>
+                            </div>
+                            <div class="maco-toggle" id="toggle-map">▼</div>
+                        </div>
+                        
+                        <div class="maco-content" id="content-map">
+                            <div class="maco-goal">
+                                <strong>🎯 战略目标：</strong>快速识别题型，选择对应写作模型
+                            </div>
+                            
+                            <div class="maco-layout">
+                                <div class="maco-left">
+                                    <h4>📊 题型分类表</h4>
+                                    <table class="maco-table">
+                                        <thead> <tr> <th>类别</th> <th>代表题型</th> <th>核心特征</th> </tr> </thead>
+                                        <tbody>
+                                            <tr> <td><strong>私人沟通</strong></td> <td>私人电邮</td> <td>一对一 / 情感导向</td> </tr>
+                                            <tr> <td><strong>公共发言</strong></td> <td>论坛/博客/网页</td> <td>一对多 / 观点导向</td> </tr>
+                                            <tr> <td><strong>汇报表达</strong></td> <td>"分享"类发言</td> <td>一对群体 / 结果导向</td> </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="maco-right">
+                                    <h4>🎯 对应写作模型</h4>
+                                    <div class="model-cards">
+                                        <div class="model-card private"> <h5>私人电邮模型</h5> <p>共情 → 分析 → 建议 → 鼓励</p> </div>
+                                        <div class="model-card public"> <h5>公共发言 P.A.R.C</h5> <p>Point → Acknowledge → Reason → Call</p> </div>
+                                        <div class="model-card report"> <h5>汇报陈述模型</h5> <p>总述 → 分点 → 总结</p> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="key-insight">
+                                <strong>💡 关键洞察：</strong>识别题型不看"表面名词"，看任务逻辑！每种逻辑对应一套写作模型。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attack 核心能力 -->
+                    <div class="maco-section" id="maco-attack">
+                        <div class="maco-header" onclick="toggleMacoSection('attack', event)">
+                            <div class="maco-icon-large">🧠</div>
+                            <div class="maco-title">
+                                <h3>二、Attack 核心能力（核心备考项目）</h3>
+                                <p class="maco-subtitle">根据评分标准，精练三大核心能力</p>
+                            </div>
+                            <div class="maco-toggle" id="toggle-attack">▶</div>
+                        </div>
+                        
+                        <div class="maco-content" id="content-attack" style="display: none;">
+                            <div class="maco-goal">
+                                <strong>🎯 战术目标：</strong>对准评分标准，强化得分关键能力
+                            </div>
+                            
+                            <!-- Attack 内部标签页 -->
+                            <div class="attack-tabs">
+                                <button class="attack-tab active" onclick="switchAttackTab('viewpoint', event)">观点构建力</button>
+                                <button class="attack-tab" onclick="switchAttackTab('expression', event)">句式表达力</button>
+                                <button class="attack-tab" onclick="switchAttackTab('structure', event)">结构组织力</button>
+                            </div>
+                            
+                            <div class="attack-content-area">
+                                <!-- 观点构建力 -->
+                                <div class="attack-content active" id="attack-viewpoint">
+                                    <h4>🎯 观点构建力训练</h4>
+                                    <div class="ability-overview">
+                                        <div class="ability-target"> <strong>目标：</strong>识别有效论点、拆解负面意见、构建回应 </div>
+                                        <div class="ability-score"> <strong>对应评分：</strong>内容层次、有条理、说明详尽 </div>
+                                    </div>
+                                    
+                                    <div class="training-methods">
+                                        <div class="method-card">
+                                            <h5>📋 2正1反观点模型</h5>
+                                            <p>从论坛留言中提取：2个正面观点 + 1个负面回应</p>
+                                            <div class="method-example"> <strong>例：</strong>外卖服务 → 正面1：节省时间，正面2：就业机会，负面回应：环保问题→改善中 </div>
+                                        </div>
+                                        
+                                        <div class="method-card"> <h5>🌟 万能角度法</h5> <p>任何议题都可从三个角度分析：对个人、对社会、长远意义</p> </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 句式表达力 -->
+                                <div class="attack-content" id="attack-expression" style="display: none;">
+                                    <h4>📝 句式表达力训练</h4>
+                                    <div class="ability-overview">
+                                        <div class="ability-target"> <strong>目标：</strong>多样表达方式、准确语法、用词准确 </div>
+                                        <div class="ability-score"> <strong>对应评分：</strong>语句通顺、词语准确、语法正确 </div>
+                                    </div>
+                                    
+                                    <div class="sentence-groups">
+                                        <div class="sentence-group"> <h5>承认问题句型</h5> <ul> <li>有人担心...，的确...</li> <li>诚然...，但是...</li> <li>我们必须承认...，然而...</li> </ul> </div>
+                                        <div class="sentence-group"> <h5>转折回应句型</h5> <ul> <li>然而，随着...，这些问题正逐渐改善</li> <li>不过，从另一个角度来看...</li> <li>话说回来...</li> </ul> </div>
+                                        <div class="sentence-group"> <h5>呼吁行动句型</h5> <ul> <li>让我们...，共同...</li> <li>希望大家能够...</li> <li>我呼吁...</li> </ul> </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 结构组织力 -->
+                                <div class="attack-content" id="attack-structure" style="display: none;">
+                                    <h4>🏗 结构组织力训练</h4>
+                                    <div class="ability-overview">
+                                        <div class="ability-target"> <strong>目标：</strong>四段式稳固展开、段与段逻辑紧密 </div>
+                                        <div class="ability-score"> <strong>对应评分：</strong>段落清晰、衔接自然、结构合理 </div>
+                                    </div>
+                                    
+                                    <div class="structure-training">
+                                        <div class="structure-method">
+                                            <h5>🎯 万能四段式</h5>
+                                            <div class="paragraph-flow">
+                                                <div class="para-step"> <span class="para-num">1</span> <span class="para-desc">身份+立场</span> </div>
+                                                <div class="para-arrow">→</div>
+                                                <div class="para-step"> <span class="para-num">2</span> <span class="para-desc">正面观点1</span> </div>
+                                                <div class="para-arrow">→</div>
+                                                <div class="para-step"> <span class="para-num">3</span> <span class="para-desc">正面观点2+回应</span> </div>
+                                                <div class="para-arrow">→</div>
+                                                <div class="para-step"> <span class="para-num">4</span> <span class="para-desc">总结+呼吁</span> </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="structure-method"> <h5>🔗 骨架练习法</h5> <p>日常训练：只写4段的主题句，练习逻辑衔接和过渡词选择</p> </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Construct 模板系统 -->
+                    <div class="maco-section" id="maco-construct">
+                        <div class="maco-header" onclick="toggleMacoSection('construct', event)">
+                            <div class="maco-icon-large">🏗</div>
+                            <div class="maco-title">
+                                <h3>三、Construct 模板系统（模板搭建）</h3>
+                                <p class="maco-subtitle">模块化表达，快速成文不跑题</p>
+                            </div>
+                            <div class="maco-toggle" id="toggle-construct">▶</div>
+                        </div>
+                        
+                        <div class="maco-content" id="content-construct" style="display: none;">
+                            <div class="maco-goal"> <strong>🎯 战术目标：</strong>建立句型模板库，实现快速组装成文 </div>
+                            
+                            <div class="template-systems">
+                                <div class="template-system">
+                                    <h4>📧 私人电邮模板</h4>
+                                    <div class="template-structure">
+                                        <div class="template-step"> <span class="step-name">共情</span> <span class="step-template">收到你的来信，我能理解...</span> </div>
+                                        <div class="template-step"> <span class="step-name">分析</span> <span class="step-template">从你的描述来看...</span> </div>
+                                        <div class="template-step"> <span class="step-name">建议</span> <span class="step-template">我建议你可以尝试...</span> </div>
+                                        <div class="template-step"> <span class="step-name">鼓励</span> <span class="step-template">相信你一定能...</span> </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-system">
+                                    <h4>🗣 公共发言 P.A.R.C 模板</h4>
+                                    <div class="template-structure">
+                                        <div class="template-step"> <span class="step-name">Point</span> <span class="step-template">我认为...非常重要</span> </div>
+                                        <div class="template-step"> <span class="step-name">Acknowledge</span> <span class="step-template">有人担心...，的确...</span> </div>
+                                        <div class="template-step"> <span class="step-name">Reason</span> <span class="step-template">然而，从...角度来看...</span> </div>
+                                        <div class="template-step"> <span class="step-name">Call</span> <span class="step-template">让我们...，共同...</span> </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="template-system">
+                                    <h4>📊 汇报陈述模板</h4>
+                                    <div class="template-structure">
+                                        <div class="template-step"> <span class="step-name">总述</span> <span class="step-template">今天我想分享关于...</span> </div>
+                                        <div class="template-step"> <span class="step-name">分点</span> <span class="step-template">首先...其次...最后...</span> </div>
+                                        <div class="template-step"> <span class="step-name">总结</span> <span class="step-template">通过这次...，我深深体会到...</span> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="key-insight"> <strong>💡 核心理念：</strong>每题"变的只是话题"，不变的是句式 + 逻辑模型 </div>
+                        </div>
+                    </div>
+
+                    <!-- Optimize 战术训练 -->
+                    <div class="maco-section" id="maco-optimize">
+                        <div class="maco-header" onclick="toggleMacoSection('optimize', event)">
+                            <div class="maco-icon-large">🔁</div>
+                            <div class="maco-title">
+                                <h3>四、Optimize 战术训练（备考节奏设计）</h3>
+                                <p class="maco-subtitle">将核心能力固化为练习模式</p>
+                            </div>
+                            <div class="maco-toggle" id="toggle-optimize">▶</div>
+                        </div>
+                        
+                        <div class="maco-content" id="content-optimize" style="display: none;">
+                            <div class="maco-goal"> <strong>🎯 战术目标：</strong>建立系统性训练计划，循序渐进提升能力 </div>
+                            
+                            <div class="training-schedule">
+                                <div class="training-level">
+                                    <h4>📅 每日训练（15-20分钟）</h4>
+                                    <div class="daily-tasks">
+                                        <div class="task-item"> <span class="task-icon">🎯</span> <div class="task-content"> <h5>题型识别练习</h5> <p>快速判断【私人/公共/汇报】+ R.A.F.T分析</p> </div> </div>
+                                        <div class="task-item"> <span class="task-icon">🏗</span> <div class="task-content"> <h5>骨架快速练习</h5> <p>4段框架搭建（不写全文，重点练逻辑）</p> </div> </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="training-level">
+                                    <h4>🗓 每周训练</h4>
+                                    <div class="weekly-tasks">
+                                        <div class="task-row"> <div class="task-name">观点提取训练</div> <div class="task-freq">2题/周</div> <div class="task-desc">从论坛留言整理2正1反观点</div> </div>
+                                        <div class="task-row"> <div class="task-name">句型替换练习</div> <div class="task-freq">2段/周</div> <div class="task-desc">同一内容用不同句式表达</div> </div>
+                                        <div class="task-row"> <div class="task-name">完整写作</div> <div class="task-freq">1-2篇/周</div> <div class="task-desc">限时25-30分钟全文写作</div> </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="training-level">
+                                    <h4>🚀 考前冲刺（最后2周）</h4>
+                                    <div class="sprint-plan">
+                                        <div class="sprint-phase"> <h5>第1周：强化巩固</h5> <ul> <li>每日1篇限时写作</li> <li>模板句型熟练背诵</li> <li>错题类型重点突破</li> </ul> </div>
+                                        <div class="sprint-phase"> <h5>第2周：模拟实战</h5> <ul> <li>完整模拟考试环境</li> <li>时间控制训练</li> <li>心态调整准备</li> </ul> </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="key-insight"> <strong>💡 训练原则：</strong>不追求完美，追求稳定。每天小步前进，形成肌肉记忆。 </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <h4>📌 MACO系统总结</h4>
+                    <div class="summary-text">
+                        <strong>Map</strong> 快速识题 → <strong>Attack</strong> 能力建设 → <strong>Construct</strong> 模板组装 → <strong>Optimize</strong> 系统训练<br><br>
+                        这不是死记模板，而是一套完整的写作思维系统，让你面对任何实用文题目都有章可循。
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: 详细框架 -->
+            <section id="frameworks" class="section section-framework fade-in">
+                <h2 class="section-title">
+                    <span class="section-icon framework-icon">🎯</span>
+                    分题型详细框架
+                </h2>
+
+                <div class="framework-tabs">
+                    <button class="tab-button active" onclick="switchTab('public-speaking', event)">🗣️ 公共发言类</button>
+                    <button class="tab-button" onclick="switchTab('private-email', event)">💌 私人沟通类</button>
+                    <button class="tab-button" onclick="switchTab('report-sharing', event)">📊 汇报表达类</button>
+                </div>
+
+                <!-- 公共发言类内容 -->
+                <div id="public-speaking" class="tab-content active">
+                    <h3>🗣️ 公共发言类（论坛/博客/网页）</h3>
+                    <p><strong>基于趋势分析：</strong>2018年起成为主流题型，重点掌握！</p>
+
+                    <div class="framework-tabs" style="margin-top: 20px;">
+                        <button class="tab-button active" onclick="switchSubTab('four-paragraph', event)">📋 四段式写作框架</button>
+                        <button class="tab-button" onclick="switchSubTab('four-step-process', event)">🔄 四步流程图</button>
+                    </div>
+
+                    <!-- 四段式框架 -->
+                    <div id="four-paragraph" class="tab-content active">
+                        <h4>🏗 四段式详细框架（适合所有论坛题Q1–Q7）</h4>
+                        
+                        <div class="trend-overview">
+                            <h4>📊 框架可视化表</h4>
+                            <table class="trend-table">
+                                <thead> <tr> <th>段落</th> <th>内容目标</th> <th>核心要素</th> </tr> </thead>
+                                <tbody>
+                                    <tr> <td><strong>第1段</strong></td> <td>开头</td> <td><strong>身份 + 感谢 + 立场</strong></td> </tr>
+                                    <tr> <td><strong>第2段</strong></td> <td>正面观点 1</td> <td><strong>最大好处 + 例子 + 结论</strong></td> </tr>
+                                    <tr> <td><strong>第3段</strong></td> <td>正面观点 2 + 回应</td> <td><strong>另一个好处 + 承认问题 + 转折回应</strong></td> </tr>
+                                    <tr> <td><strong>第4段</strong></td> <td>结论</td> <td><strong>重申立场 + 呼吁</strong></td> </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 详细框架说明 -->
+                        <div class="step-cards">
+                            <!-- 第1段 -->
+                            <div class="step-card step-1" onclick="toggleContent('section1', event)">
+                                <div class="step-header">
+                                    <div class="step-number">1</div>
+                                    <div class="step-title">🔵 第 1 段：开头（表明身份 + 主题 + 立场）</div>
+                                </div>
+                                <div class="step-goal"> <strong>✅ 写作目标：</strong>让读者一开始就知道<strong>你是谁、为什么写、你的态度</strong>。 </div>
+                                <button class="expand-btn" onclick="toggleContent('section1', event)">点击查看详细模板 ▼</button>
+                                <div class="content-expanded" id="section1">
+                                    <h4>✅ 模板句型</h4>
+                                    <ul class="template-list">
+                                        <li><strong>身份 + 感谢 + 任务</strong>「大家好，我是________（身份）。感谢大家抽空参与讨论，也感谢大家提出宝贵意见。」</li>
+                                        <li><strong>点题 + 立场</strong>「针对________（主题），我认为这个议题非常重要。以下是我的一些看法。」</li>
+                                    </ul>
+                                    <div class="example-box">
+                                        <h4>✅ 示范（以 Q6 外卖送餐为例）</h4>
+                                        <p>大家好，我是佳好外卖送餐公司的发言人赵明恩。感谢大家提出宝贵的意见。外卖服务已经成为许多新加坡人日常生活的一部分，有些人担心它会带来负面影响，我认为它的好处远远大于坏处。以下是我的看法。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 第2段 -->
+                            <div class="step-card step-2" onclick="toggleContent('section2', event)">
+                                <div class="step-header">
+                                    <div class="step-number">2</div>
+                                    <div class="step-title">🔵 第 2 段：正面论点 1（社会层面）</div>
+                                </div>
+                                <div class="step-goal"> <strong>✅ 写作目标：</strong>先写出一个<strong>最大、最有说服力的好处</strong>（例如：节省时间、推动经济、文化传承等）。 </div>
+                                <button class="expand-btn" onclick="toggleContent('section2', event)">点击查看详细模板 ▼</button>
+                                <div class="content-expanded" id="section2">
+                                    <h4>✅ 内容结构</h4>
+                                    <ul class="template-list">
+                                        <li>1️⃣ <strong>主题句（直接写好处）</strong> 👉 「首先，<strong>（主题好处）</strong>。」</li>
+                                        <li>2️⃣ 解释说明（为什么） 👉 「这对<strong>（对象）</strong>很有帮助，因为________。」</li>
+                                        <li>3️⃣ <strong>举例/细化（例如谁/什么情况）</strong> 👉 「例如，________。」</li>
+                                        <li>4️⃣ <strong>总结句（收回到主题）</strong> 👉 「可见，这项服务的确对社会有积极作用。」</li>
+                                    </ul>
+                                    <div class="example-box">
+                                        <h4>✅ 示范（Q6 外卖送餐）</h4>
+                                        <p>首先，外卖送餐服务节省了现代人的时间。许多上班族下班后没有时间准备三餐，有了外卖服务，他们可以更好地安排生活与工作。例如，只要用手机下单，热腾腾的饭菜就能送到家中，方便了无数家庭。可见，外卖服务极大提升了人们的生活效率。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 第3段 -->
+                            <div class="step-card step-3" onclick="toggleContent('section3', event)">
+                                <div class="step-header">
+                                    <div class="step-number">3</div>
+                                    <div class="step-title">🔵 第 3 段：正面论点 2（个人/长远价值） + 回应反对意见</div>
+                                </div>
+                                <div class="step-goal"> <strong>✅ 写作目标：</strong><strong>补充另一个好处</strong>（如：就业机会、教育价值、环保意识）<br> <strong>顺带承认问题 → 转折回应</strong> </div>
+                                <button class="expand-btn" onclick="toggleContent('section3', event)">点击查看详细模板 ▼</button>
+                                <div class="content-expanded" id="section3">
+                                    <h4>✅ 内容结构</h4>
+                                    <ul class="template-list">
+                                        <li>1️⃣ <strong>主题句（另一个好处）</strong> 👉 「其次，<strong>**</strong>。」</li>
+                                        <li>2️⃣ 承认问题（引用网友疑虑） 👉 「有人担心<strong>**</strong>，的确________。」</li>
+                                        <li>3️⃣ <strong>转折回应（强调改进/好处更多）</strong> 👉 「然而，随着________，这些问题正逐渐改善。」</li>
+                                        <li>4️⃣ <strong>总结句（呼应正面立场）</strong> 👉 「因此，我们不能因为小问题而忽略它带来的大好处。」</li>
+                                    </ul>
+                                    <div class="example-box">
+                                        <h4>✅ 示范（Q6 外卖送餐）</h4>
+                                        <p>其次，外卖送餐为社会创造了大量就业机会。许多学生和兼职人士因为灵活的时间安排选择外卖送餐工作，有了收入来源。有人担心外卖增加了塑料垃圾，对环境不利，的确需要注意环保。然而，越来越多公司开始改用环保包装，推出回收计划，问题正在逐步改善。因此，我们不能因为包装问题就否定外卖服务的整体价值。</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 第4段 -->
+                            <div class="step-card step-4" onclick="toggleContent('section4', event)">
+                                <div class="step-header">
+                                    <div class="step-number">4</div>
+                                    <div class="step-title">🔵 第 4 段：结论（总结 + 呼吁）</div>
+                                </div>
+                                <div class="step-goal"> <strong>✅ 写作目标：</strong><strong>重申立场、呼吁大家行动</strong>（或理解支持）。 </div>
+                                <button class="expand-btn" onclick="toggleContent('section4', event)">点击查看详细模板 ▼</button>
+                                <div class="content-expanded" id="section4">
+                                    <h4>✅ 模板句型</h4>
+                                    <ul class="template-list">
+                                        <li><strong>重申立场</strong> 👉 「总的来说，________（主题）为社会带来的好处大于坏处。」</li>
+                                        <li><strong>呼吁行动</strong> 👉 「让我们________，共同________。」</li>
+                                    </ul>
+                                    <div class="example-box">
+                                        <h4>✅ 示范（Q6 外卖送餐）</h4>
+                                        <p>总的来说，外卖送餐服务为现代生活带来了许多便利，也促进了社会经济的发展。让我们理性看待外卖服务，在支持它的同时，也积极寻找改进方法，让它发挥最大的正面作用。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 四步流程图 -->
+                    <div id="four-step-process" class="tab-content">
+                        <div class="proc-container">
+                            <div class="proc-header">
+                                <h1>四步写作流程图</h1>
+                                <p>从【论坛信息】到【完整成文】的系统化操作流程</p>
+                            </div>
+
+                            <div class="proc-process-overview">
+                                <div class="proc-overview-step">
+                                    <div class="proc-time">2-3分钟</div>
+                                    <h3>信息吸收</h3>
+                                    <p>快速识别关键信息，避免写偏写乱</p>
+                                </div>
+                                <div class="proc-overview-step">
+                                    <div class="proc-time">2-3分钟</div>
+                                    <h3>逻辑整理</h3>
+                                    <p>建立文章架构，确保逻辑清晰</p>
+                                </div>
+                                <div class="proc-overview-step">
+                                    <div class="proc-time">15-18分钟</div>
+                                    <h3>语言组合</h3>
+                                    <p>运用模板句型，确保表达准确流畅</p>
+                                </div>
+                                <div class="proc-overview-step">
+                                    <div class="proc-time">2-3分钟</div>
+                                    <h3>整合检查</h3>
+                                    <p>最终检查，确保逻辑完整</p>
+                                </div>
+                            </div>
+
+                            <div class="proc-time-allocation">
+                                <div class="proc-time-block proc-thinking">
+                                    <strong>思考阶段</strong>
+                                    5-8分钟 (步骤1-2)
+                                </div>
+                                <div class="proc-time-block proc-writing">
+                                    <strong>写作阶段</strong>
+                                    20-22分钟 (步骤3-4)
+                                </div>
+                            </div>
+
+                            <div class="proc-steps-container">
+                                <!-- 步骤1 -->
+                                <div class="proc-step-card">
+                                    <div class="proc-step-header">
+                                        <div class="proc-step-number">1</div>
+                                        <div class="proc-step-title">
+                                            <h3>信息吸收 → 核心抽取</h3>
+                                            <p class="proc-step-subtitle">快速识别关键信息，避免写偏写乱</p>
+                                        </div>
+                                        <div class="proc-step-time">2-3分钟</div>
+                                    </div>
+                                    <div class="proc-step-content">
+                                        <div class="proc-content-grid">
+                                            <div class="proc-main-content">
+                                                <h4>具体操作步骤</h4>
+                                                <ul class="proc-action-list">
+                                                    <li><strong>读题：</strong>圈出身份、任务、主题</li>
+                                                    <li><strong>扫描：</strong>正面观点（支持/好处）、负面担忧（质疑/问题）</li>
+                                                    <li><strong>抽取：</strong>挑出2-3个最重要的信息点</li>
+                                                </ul>
+                                            </div>
+                                            <div class="proc-side-panel">
+                                                <div class="proc-info-box proc-checkpoint">
+                                                    <h4>✅ 检查点</h4>
+                                                    <p>是否明确了身份和写作任务？<br>是否找到2-3个核心论点？</p>
+                                                </div>
+                                                <div class="proc-info-box proc-warning-box">
+                                                    <h4>⚠️ 常见错误</h4>
+                                                    <p>信息点过多导致主题分散<br>忽略身份要求<br>遗漏重要争议点</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 步骤2 -->
+                                <div class="proc-step-card">
+                                    <div class="proc-step-header">
+                                        <div class="proc-step-number">2</div>
+                                        <div class="proc-step-title">
+                                            <h3>逻辑整理 → 框架重构</h3>
+                                            <p class="proc-step-subtitle">建立文章架构，确保逻辑清晰</p>
+                                        </div>
+                                        <div class="proc-step-time">2-3分钟</div>
+                                    </div>
+                                    <div class="proc-step-content">
+                                        <div class="proc-content-grid">
+                                            <div class="proc-main-content">
+                                                <h4>四段式框架搭建</h4>
+                                                <ul class="proc-action-list">
+                                                    <li><strong>第1段：</strong>身份表明 + 立场声明</li>
+                                                    <li><strong>第2段：</strong>最重要的正面观点</li>
+                                                    <li><strong>第3段：</strong>次要观点 + 负面问题回应</li>
+                                                    <li><strong>第4段：</strong>总结立场 + 行动呼吁</li>
+                                                </ul>
+                                            </div>
+                                            <div class="proc-side-panel">
+                                                <div class="proc-info-box proc-checkpoint">
+                                                    <h4>✅ 检查点</h4>
+                                                    <p>四个段落目标是否明确？<br>论点排序是否合理？</p>
+                                                </div>
+                                                <div class="proc-info-box proc-warning-box">
+                                                    <h4>⚠️ 常见错误</h4>
+                                                    <p>段落功能混乱<br>论点重复<br>缺少过渡逻辑</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 步骤3 -->
+                                <div class="proc-step-card">
+                                    <div class="proc-step-header">
+                                        <div class="proc-step-number">3</div>
+                                        <div class="proc-step-title">
+                                            <h3>语言组合 → 句式运用</h3>
+                                            <p class="proc-step-subtitle">运用模板句型，确保表达准确流畅</p>
+                                        </div>
+                                        <div class="proc-step-time">15-18分钟</div>
+                                    </div>
+                                    <div class="proc-step-content">
+                                        <div class="proc-content-grid">
+                                            <div class="proc-main-content">
+                                                <h4>句型模板运用</h4>
+                                                <ul class="proc-action-list">
+                                                    <li><strong>开头句：</strong>"大家好，我是...感谢大家..."</li>
+                                                    <li><strong>观点句：</strong>"首先/其次..."</li>
+                                                    <li><strong>承认句：</strong>"有人担心...，的确..."</li>
+                                                    <li><strong>转折句：</strong>"然而，随着..."</li>
+                                                    <li><strong>呼吁句：</strong>"让我们...，共同..."</li>
+                                                </ul>
+                                            </div>
+                                            <div class="proc-side-panel">
+                                                <div class="proc-info-box proc-checkpoint">
+                                                    <h4>✅ 检查点</h4>
+                                                    <p>句式是否多样化？<br>用词是否准确正式？</p>
+                                                </div>
+                                                <div class="proc-info-box proc-warning-box">
+                                                    <h4>⚠️ 常见错误</h4>
+                                                    <p>句式单调重复<br>口语化表达<br>语法错误</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 步骤4 -->
+                                <div class="proc-step-card">
+                                    <div class="proc-step-header">
+                                        <div class="proc-step-number">4</div>
+                                        <div class="proc-step-title">
+                                            <h3>整合检查 → 完善成文</h3>
+                                            <p class="proc-step-subtitle">最终检查，确保逻辑完整</p>
+                                        </div>
+                                        <div class="proc-step-time">2-3分钟</div>
+                                    </div>
+                                    <div class="proc-step-content">
+                                        <div class="proc-content-grid">
+                                            <div class="proc-main-content">
+                                                <h4>系统性检查清单</h4>
+                                                <ul class="proc-action-list">
+                                                    <li><strong>身份检查：</strong>身份是否有体现？语气是否符合身份？</li>
+                                                    <li><strong>内容检查：</strong>正负面都回应了吗？观点是否有说服力？</li>
+                                                    <li><strong>结构检查：</strong>段落清晰吗？有没有呼吁/总结？</li>
+                                                    <li><strong>语言检查：</strong>有无语法错误？用词是否准确？</li>
+                                                </ul>
+                                            </div>
+                                            <div class="proc-side-panel">
+                                                <div class="proc-info-box proc-checkpoint">
+                                                    <h4>✅ 完成标准</h4>
+                                                    <p>四个方面都检查无误<br>字数符合要求<br>整体逻辑流畅</p>
+                                                </div>
+                                                <div class="proc-info-box proc-warning-box">
+                                                    <h4>⚠️ 最后提醒</h4>
+                                                    <p>不要大幅修改结构<br>重点检查错别字<br>确认时间充足</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 私人沟通类内容 -->
+                <div id="private-email" class="tab-content">
+                    <h3>💌 私人沟通类（私人电邮）</h3>
+                    <p><strong>基于趋势分析：</strong>早期主流，现在偶有出现，需要掌握基本框架。</p>
+                    
+                    <div class="trend-overview">
+                        <h4>📋 共情-分析-建议-鼓励 四段式</h4>
+                        <table class="trend-table">
+                            <thead> <tr> <th>段落</th> <th>内容目标</th> <th>核心要素</th> </tr> </thead>
+                            <tbody>
+                                <tr> <td><strong>第1段</strong></td> <td>共情开头</td> <td><strong>理解对方 + 表达关心</strong></td> </tr>
+                                <tr> <td><strong>第2段</strong></td> <td>分析问题</td> <td><strong>客观分析 + 原因探讨</strong></td> </tr>
+                                <tr> <td><strong>第3段</strong></td> <td>具体建议</td> <td><strong>实用方案 + 操作步骤</strong></td> </tr>
+                                <tr> <td><strong>第4段</strong></td> <td>鼓励结尾</td> <td><strong>信心支持 + 后续关怀</strong></td> </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>✅ 模板句型示例</h4>
+                        <p><strong>共情开头：</strong>「收到你的来信，我能理解你现在的心情...」</p>
+                        <p><strong>分析问题：</strong>「从你的描述来看，这个问题的根源可能在于...」</p>
+                        <p><strong>具体建议：</strong>「我建议你可以尝试以下几个方法...」</p>
+                        <p><strong>鼓励结尾：</strong>「相信你一定能克服这个困难，如果还有什么需要帮助的...」</p>
+                    </div>
+                </div>
+
+                <!-- 汇报表达类内容 -->
+                <div id="report-sharing" class="tab-content">
+                    <h3>📊 汇报表达类（"分享"类发言）</h3>
+                    <p><strong>基于趋势分析：</strong>新兴题型，注重条理性和结果导向。</p>
+                    
+                    <div class="trend-overview">
+                        <h4>📋 总-分-总 三段式</h4>
+                        <table class="trend-table">
+                            <thead> <tr> <th>段落</th> <th>内容目标</th> <th>核心要素</th> </tr> </thead>
+                            <tbody>
+                                <tr> <td><strong>第1段</strong></td> <td>引入主题</td> <td><strong>背景介绍 + 汇报目的</strong></td> </tr>
+                                <tr> <td><strong>第2段</strong></td> <td>三分要点</td> <td><strong>要点一 + 要点二 + 要点三</strong></td> </tr>
+                                <tr> <td><strong>第3段</strong></td> <td>总结展望</td> <td><strong>成果总结 + 未来计划</strong></td> </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>✅ 模板句型示例</h4>
+                        <p><strong>引入主题：</strong>「今天我想和大家分享关于...的一些心得体会」</p>
+                        <p><strong>三分要点：</strong>「首先...其次...最后...」</p>
+                        <p><strong>总结展望：</strong>「通过这次经历，我深深体会到...希望未来能够...」</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: 实战工具箱 -->
+            <section id="tools" class="section section-tools fade-in">
+                <h2 class="section-title">
+                    <span class="section-icon tools-icon">🔧</span>
+                    实战工具箱
+                </h2>
+
+                <div class="tools-grid">
+                    <div class="tool-card"> 
+                        <h4>📝 模板句型库</h4> 
+                        <h5>开头句型模板</h5> 
+                        <ul> 
+                            <li>「大家好，我是________（身份）。」</li> 
+                            <li>「感谢大家抽空参与讨论。」</li> 
+                            <li>「针对________（主题），我认为...」</li> 
+                        </ul> 
+                        <h5>过渡句模板</h5> 
+                        <ul> 
+                            <li>「首先，________。」</li> 
+                            <li>「其次，________。」</li> 
+                            <li>「有人担心________，的确________。」</li> 
+                            <li>「然而，随着________。」</li> 
+                        </ul> 
+                        <h5>结尾句型</h5> 
+                        <ul> 
+                            <li>「总的来说，________。」</li> 
+                            <li>「让我们________，共同________。」</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>🏃 训练计划表</h4> 
+                        <h5>每日训练（15-20分钟）</h5> 
+                        <ul> 
+                            <li>骨架练习：快速搭建四段框架</li> 
+                            <li>句型替换：用不同方式表达同一意思</li> 
+                        </ul> 
+                        <h5>每周训练</h5> 
+                        <ul> 
+                            <li>题型识别练习：3题</li> 
+                            <li>观点提取训练：2题</li> 
+                            <li>完整写作：1-2篇</li> 
+                        </ul> 
+                        <h5>考前冲刺</h5> 
+                        <ul> 
+                            <li>模板句型背诵</li> 
+                            <li>框架结构回顾</li> 
+                            <li>限时写作练习</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>🎯 题型识别练习</h4> 
+                        <h5>R.A.F.T分析法</h5> 
+                        <ul> 
+                            <li><strong>R</strong>ole（身份）：我是谁？</li> 
+                            <li><strong>A</strong>udience（对象）：写给谁？</li> 
+                            <li><strong>F</strong>ormat（格式）：什么文体？</li> 
+                            <li><strong>T</strong>opic（主题）：讨论什么？</li> 
+                        </ul> 
+                        <h5>快速判断法</h5> 
+                        <ul> 
+                            <li>看身份：个人 vs 代表</li> 
+                            <li>看对象：一对一 vs 一对多</li> 
+                            <li>看任务：建议 vs 立场表达</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>✅ 自测检查表</h4> 
+                        <h5>内容检查</h5> 
+                        <ul> 
+                            <li>身份是否体现？</li> 
+                            <li>正负面都回应了吗？</li> 
+                            <li>观点是否有说服力？</li> 
+                        </ul> 
+                        <h5>结构检查</h5> 
+                        <ul> 
+                            <li>段落是否清晰？</li> 
+                            <li>逻辑是否连贯？</li> 
+                            <li>过渡是否自然？</li> 
+                        </ul> 
+                        <h5>语言检查</h5> 
+                        <ul> 
+                            <li>语法是否正确？</li> 
+                            <li>用词是否准确？</li> 
+                            <li>语气是否合适？</li> 
+                        </ul> 
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: 资源库 -->
+            <section id="resources" class="section section-resources fade-in">
+                <h2 class="section-title">
+                    <span class="section-icon resources-icon">📚</span>
+                    资源库
+                </h2>
+
+                <div class="tools-grid">
+                    <div class="tool-card"> 
+                        <h4>📊 评分标准详解</h4> 
+                        <h5>内容（40分）</h5> 
+                        <ul> 
+                            <li>内容切题、充实</li> 
+                            <li>有条理、有层次</li> 
+                            <li>说明详尽、具体</li> 
+                        </ul> 
+                        <h5>语文与结构（35分）</h5> 
+                        <ul> 
+                            <li>语句通顺流畅</li> 
+                            <li>词语准确恰当</li> 
+                            <li>语法正确无误</li> 
+                            <li>段落清晰、衔接自然</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>📖 G9核心词汇库</h4> 
+                        <h5>社会议题相关</h5> 
+                        <ul> 
+                            <li>环保：可持续发展、循环利用、节能减排</li> 
+                            <li>科技：数字化、智能化、便民服务</li> 
+                            <li>教育：终身学习、素质教育、全面发展</li> 
+                        </ul> 
+                        <h5>表达连接词</h5> 
+                        <ul> 
+                            <li>递进：不仅...而且、更重要的是</li> 
+                            <li>转折：然而、尽管如此、话说回来</li> 
+                            <li>总结：综上所述、总而言之、由此可见</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>📈 历年真题统计</h4> 
+                        <h5>高频主题</h5> 
+                        <ul> 
+                            <li>环保议题：30%</li> 
+                            <li>科技生活：25%</li> 
+                            <li>教育发展：20%</li> 
+                            <li>社会服务：15%</li> 
+                            <li>其他：10%</li> 
+                        </ul> 
+                        <h5>常见身份</h5> 
+                        <ul> 
+                            <li>公司发言人</li> 
+                            <li>组织代表</li> 
+                            <li>活动负责人</li> 
+                            <li>学会会长</li> 
+                        </ul> 
+                    </div>
+                    
+                    <div class="tool-card"> 
+                        <h4>🔗 延伸学习资源</h4> 
+                        <h5>推荐练习</h5> 
+                        <ul> 
+                            <li>每日新闻关注社会议题</li> 
+                            <li>参与网络论坛讨论</li> 
+                            <li>观察不同观点表达方式</li> 
+                        </ul> 
+                        <h5>语言提升</h5> 
+                        <ul> 
+                            <li>阅读官方文件学习正式语气</li> 
+                            <li>关注新闻评论的论证结构</li> 
+                            <li>积累同义词替换</li> 
+                        </ul> 
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // 导航滚动函数
+        function scrollToSection(sectionId, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            
+            // 更新导航状态
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            const targetLink = document.querySelector(`[href="#${sectionId}"]`);
+            if (targetLink) {
+                targetLink.classList.add('active');
+            }
+        }
+
+        // 监听滚动更新导航
+        window.addEventListener('scroll', function() {
+            const sections = ['trend-analysis', 'maco-system', 'frameworks', 'tools', 'resources'];
+            const scrollPos = window.scrollY + 100;
+            
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section && section.offsetTop <= scrollPos && section.offsetTop + section.offsetHeight > scrollPos) {
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    const activeLink = document.querySelector(`[href="#${sectionId}"]`);
+                    if (activeLink) activeLink.classList.add('active');
+                }
+            });
+        });
+
+        // MACO手风琴控制函数
+        function toggleMacoSection(sectionName, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const content = document.getElementById(`content-${sectionName}`);
+            const toggle = document.getElementById(`toggle-${sectionName}`);
+            
+            if (!content || !toggle) return;
+            
+            const isVisible = content.style.display !== 'none';
+            
+            // 关闭所有其他section
+            ['map', 'attack', 'construct', 'optimize'].forEach(name => {
+                if (name !== sectionName) {
+                    const otherContent = document.getElementById(`content-${name}`);
+                    const otherToggle = document.getElementById(`toggle-${name}`);
+                    if (otherContent && otherToggle) {
+                        otherContent.style.display = 'none';
+                        otherToggle.textContent = '▶';
+                        otherToggle.classList.remove('expanded');
+                    }
+                }
+            });
+            
+            // 切换当前section
+            if (isVisible) {
+                content.style.display = 'none';
+                toggle.textContent = '▶';
+                toggle.classList.remove('expanded');
+            } else {
+                content.style.display = 'block';
+                toggle.textContent = '▼';
+                toggle.classList.add('expanded');
+                
+                // 平滑滚动到展开的内容
+                setTimeout(() => {
+                    content.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                }, 100);
+            }
+        }
+
+        // Attack部分标签页切换
+        function switchAttackTab(tabName, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            // 隐藏所有attack内容
+            document.querySelectorAll('.attack-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            // 移除所有tab的active状态
+            document.querySelectorAll('.attack-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示目标内容
+            const targetContent = document.getElementById(`attack-${tabName}`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                targetContent.style.display = 'block';
+            }
+            
+            // 激活对应tab
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        // Tab切换功能
+        function switchTab(tabId, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const parentContainer = event.target.closest('.section-framework');
+            
+            // 隐藏所有tab内容
+            parentContainer.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有tab按钮的active状态
+            parentContainer.querySelectorAll('.framework-tabs .tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // 显示目标tab内容
+            const targetTab = document.getElementById(tabId);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // 激活对应按钮
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        // 子Tab切换功能
+        function switchSubTab(tabId, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const parentTab = event.target.closest('#public-speaking');
+            
+            if (parentTab) {
+                // 隐藏父级tab内的所有子tab内容
+                parentTab.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 移除父级tab内所有子tab按钮的active状态
+                parentTab.querySelectorAll('.framework-tabs .tab-button').forEach(button => {
+                    button.classList.remove('active');
+                });
+            }
+            
+            // 显示目标子tab内容
+            const targetSubTab = document.getElementById(tabId);
+            if (targetSubTab) {
+                targetSubTab.classList.add('active');
+            }
+            
+            // 激活对应按钮
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+        }
+
+        // 内容展开/收起功能
+        function toggleContent(sectionId, event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            const content = document.getElementById(sectionId);
+            if (!content) return;
+            
+            const button = event.target.closest('.expand-btn');
+            
+            content.classList.toggle('show');
+
+            if (content.classList.contains('show')) {
+                button.innerHTML = '收起详细内容 ▲';
+            } else {
+                button.innerHTML = '点击查看详细模板 ▼';
+            }
+        }
+
+        // 滚动动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstNavLink = document.querySelector('.nav-links a');
+            if (firstNavLink) {
+                firstNavLink.classList.add('active');
+            }
+            
+            const mapContent = document.getElementById('content-map');
+            const mapToggle = document.getElementById('toggle-map');
+            if (mapContent && mapToggle) {
+                mapContent.style.display = 'block';
+                mapToggle.textContent = '▼';
+                mapToggle.classList.add('expanded');
+            }
+        });
+    </script>
+</body>
+</html>

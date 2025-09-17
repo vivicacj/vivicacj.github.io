@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level华文病句修改深度分析报告 (Pro版 V3.4 - 最终版)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.0/echarts.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #2c3e50;
+            --light-gray: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', 'PingFang SC', -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .section {
+            background: rgba(255, 255, 255, 0.98);
+            margin-bottom: 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+        }
+        .section-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white; padding: 25px 30px; font-size: 1.4em; font-weight: bold;
+        }
+        .section-content { padding: 30px; }
+        .header {
+            text-align: center; margin-bottom: 40px; background: rgba(255, 255, 255, 0.98);
+            padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        .header h1 {
+            font-size: 2.8em; margin-bottom: 10px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .metric-card { background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); cursor: pointer; }
+        .metric-value { font-size: 2.5em; font-weight: bold; }
+        .metric-label { color: #7f8c8d; font-size: 0.9em; }
+        .chart-container { width: 100%; height: 500px; }
+        
+        /* Etiology Tree styles */
+        .etiology-tree { padding-left: 20px; text-align: center; }
+        .etiology-tree ul { padding-top: 20px; position: relative; }
+        .etiology-tree li { float: left; text-align: center; list-style-type: none; position: relative; padding: 20px 5px 0 5px; }
+        .etiology-tree li::before, .etiology-tree li::after { content: ''; position: absolute; top: 0; right: 50%; border-top: 2px solid #ccc; width: 50%; height: 20px; }
+        .etiology-tree li::after { right: auto; left: 50%; border-left: 2px solid #ccc; }
+        .etiology-tree li:only-child::after, .etiology-tree li:only-child::before { display: none; }
+        .etiology-tree li:first-child::before, .etiology-tree li:last-child::after { border: 0 none; }
+        .etiology-tree ul ul::before { content: ''; position: absolute; top: 0; left: 50%; border-left: 2px solid #ccc; width: 0; height: 20px; }
+        .etiology-tree li div { border: 2px solid var(--border-color); padding: 10px; color: var(--text-color); background-color: white; display: inline-block; border-radius: 8px; min-width: 120px; }
+        .etiology-tree .root { background: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+        .etiology-tree .level-1 { background: #e8eaf6; border-color: var(--primary-color); }
+        .etiology-tree .level-2 { background: #f1f8e9; border-color: #7cb342; }
+
+        /* Bubble Chart Controls */
+        .bubble-chart-controls { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; padding: 15px; background-color: var(--light-gray); border-radius: 10px; }
+        .bubble-chart-controls label { font-size: 1.1em; font-weight: bold; margin-bottom: 10px; }
+        #year-slider { width: 80%; cursor: pointer; }
+        #current-year-label { font-size: 1.5em; font-weight: bold; color: var(--primary-color); margin-top: 5px; }
+
+        /* Data Table Controls */
+        .table-controls { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 20px; }
+        .table-controls select, .toggle-button { padding: 8px 15px; border-radius: 25px; border: 2px solid var(--border-color); font-size: 1em; background-color: white; cursor: pointer; }
+        .toggle-button { background: var(--secondary-color); color: white; border-color: transparent; transition: all 0.3s ease; }
+        .toggle-button:hover { background: var(--primary-color); transform: scale(1.05); }
+        .data-table-container { max-height: 0; overflow: hidden; transition: max-height 0.8s ease-in-out; }
+        .data-table-container.show { max-height: 1200px; overflow-y: auto; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .data-table th, .data-table td { padding: 12px 15px; border: 1px solid var(--border-color); text-align: left; }
+        .data-table thead tr { background-color: var(--light-gray); }
+        .data-table thead th { font-weight: bold; cursor: pointer; position: relative; }
+        .data-table thead th::after { content: ' ↕'; opacity: 0.4; }
+        .data-table thead th.sort-asc::after { content: ' ▲'; opacity: 1; }
+        .data-table thead th.sort-desc::after { content: ' ▼'; opacity: 1; }
+
+        /* Mutation Matrix Section */
+        .mutation-matrix-controls { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .mutation-matrix-controls label { font-weight: bold; }
+        .mutation-matrix-controls select { padding: 8px 12px; border-radius: 8px; border: 2px solid var(--border-color); font-size: 1em; }
+        .mutation-matrix-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .matrix-card { background: var(--light-gray); border-radius: 12px; padding: 20px; border-left: 5px solid var(--primary-color); }
+        .matrix-card h4 { color: var(--primary-color); margin-bottom: 10px; }
+        .matrix-card p { margin-bottom: 5px; }
+        .matrix-card .example { font-style: italic; color: #e74c3c; }
+        .matrix-card .correction { color: #27ae60; }
+
+        /* Future Prediction Cards */
+        .prediction-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .prediction-card-container { perspective: 1000px; }
+        .prediction-card { background: linear-gradient(135deg, #fd79a8, #e84393); color: white; padding: 25px; border-radius: 15px; min-height: 200px; position: relative; transform-style: preserve-3d; transition: transform 0.7s; }
+        .prediction-card-container:hover .prediction-card { transform: rotateY(180deg); }
+        .prediction-card-front, .prediction-card-back { position: absolute; top: 0; left: 0; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; padding: 25px; }
+        .prediction-card-back { background: linear-gradient(135deg, #0984e3, #74b9ff); transform: rotateY(180deg); border-radius: 15px; }
+        .prediction-card h3 { margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>O-Level华文病句修改深度分析报告 (Pro版)</h1>
+            <div class="subtitle">基于RIMMLO编码体系的八年真题数据分析与未来趋势预测 (2016-2023)</div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard">
+             <div class="metric-card" onclick="document.getElementById('gene-analysis').scrollIntoView({ behavior: 'smooth' });"><div class="metric-value">3</div><div class="metric-label">核心基因簇</div></div>
+             <div class="metric-card" onclick="document.getElementById('data-table-section').scrollIntoView({ behavior: 'smooth' }); document.getElementById('table-toggle').click();"><div class="metric-value">40</div><div class="metric-label">总错误频次</div></div>
+             <div class="metric-card" onclick="document.getElementById('spl-analysis').scrollIntoView({ behavior: 'smooth' });"><div class="metric-value">3.5</div><div class="metric-label">平均复杂度</div></div>
+             <div class="metric-card" onclick="document.getElementById('heatmap-analysis').scrollIntoView({ behavior: 'smooth' });"><div class="metric-value">78%</div><div class="metric-label">核心考点占比</div></div>
+        </div>
+        
+        <!-- Error Etiology Tree -->
+        <div class="section" id="etiology-tree-section">
+            <div class="section-header">🌳 语言病因诊断树 (Error Etiology Tree)</div>
+            <div class="section-content" style="display: flex; justify-content: center;">
+                <div class="etiology-tree">
+                    <ul><li><div class="root">语言症状</div><ul><li><div class="level-1">搭配冲突</div><ul><li><div class="level-2">M - 搭配不当</div></li><li><div class="level-2">L - 关联词错误</div></li></ul></li><li><div class="level-1">结构缺陷</div><ul><li><div class="level-2">O - 成分残缺</div></li><li><div class="level-2">R - 用词重复</div></li></ul></li><li><div class="level-1">逻辑失衡</div><ul><li><div class="level-2">M - 语序不当</div></li><li><div class="level-2">I - 用词不当</div></li></ul></li></ul></li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stacked Bar Chart -->
+        <div class="section" id="gene-analysis">
+            <div class="section-header">🧬 病句基因图谱分析 (八年考点构成)</div>
+            <div class="section-content">
+                <div id="stacked-bar-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- Evolving Bubble Chart -->
+        <div class="section" id="spl-analysis">
+            <div class="section-header">📊 题目难度与复杂度分析 (难度-复杂度四象限演化图)</div>
+            <div class="section-content">
+                 <div class="bubble-chart-controls">
+                    <label for="year-slider">拖动滑块，观察历年考题进化趋势</label>
+                    <input type="range" id="year-slider" min="2016" max="2023" value="2016" step="1">
+                    <div id="current-year-label">2016</div>
+                </div>
+                <div id="bubble-chart" class="chart-container"></div>
+            </div>
+        </div>
+        
+        <!-- Interactive Heatmap -->
+        <div class="section" id="heatmap-analysis">
+            <div class="section-header">🔥 八年考点热力图 (考点-年份交互式热力矩阵)</div>
+            <div class="section-content">
+                 <div id="heatmap-chart" class="chart-container"></div>
+            </div>
+        </div>
+
+        <!-- Data Table Section with Filter Controls -->
+        <div class="section" id="data-table-section">
+            <div class="section-header">📋 八年真题详细数据 (可筛选排序)</div>
+            <div class="section-content">
+                <div class="table-controls">
+                    <button id="table-toggle" class="toggle-button">显示/隐藏详细数据表</button>
+                    <select id="year-filter"><option value="all">显示全部年份</option></select>
+                    <select id="type-filter"><option value="all">显示全部错误类型</option></select>
+                </div>
+                <div class="data-table-container" id="table-container">
+                    <table class="data-table" id="full-data-table">
+                        <thead>
+                            <tr>
+                                <th data-column="0" data-type="number">年份</th><th data-column="1" data-type="text">错误类型</th><th data-column="2" data-type="text">Code</th>
+                                <th data-column="3" data-type="number">次数</th><th data-column="4" data-type="text">难度</th><th data-column="5" data-type="text">复杂度</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mutation Matrix -->
+        <div class="section" id="mutation-matrix-section">
+            <div class="section-header">🔬 病句变异矩阵 (Mutation Matrix)</div>
+            <div class="section-content">
+                <div class="mutation-matrix-controls">
+                    <label for="error-selector">选择一个高频考点进行深度分析:</label>
+                    <select id="error-selector">
+                        <option value="M1-Mismatch">M1 - 搭配不当</option>
+                        <option value="R-Redundancy">R - 用词重复</option>
+                        <option value="M2-Misordering">M2 - 语序不当</option>
+                        <option value="O-Omission">O - 成分残缺</option>
+                    </select>
+                </div>
+                <div class="mutation-matrix-grid" id="mutation-matrix-display"></div>
+            </div>
+        </div>
+
+        <!-- Future Predictions -->
+        <div class="section">
+            <div class="section-header">🔮 未来进化路径预测</div>
+            <div class="section-content">
+                <div class="prediction-cards">
+                    <div class="prediction-card-container"><div class="prediction-card"><div class="prediction-card-front"><h3>预测一：基因重组</h3><p>将出现"一句话，两个病"的复合题型。</p></div><div class="prediction-card-back"><h4>核心挑战</h4><p>要求学生具备全面的诊断能力。</p></div></div></div>
+                    <div class="prediction-card-container"><div class="prediction-card"><div class="prediction-card-front"><h3>预测二：隐性基因显性化</h3><p>"语序不当"将变得更复杂。</p></div><div class="prediction-card-back"><h4>核心挑战</h4><p>考验学生深层次的逻辑思维。</p></div></div></div>
+                    <div class="prediction-card-container"><div class="prediction-card"><div class="prediction-card-front"><h3>预测三：环境适应性</h3><p>出现特定语境句子。</p></div><div class="prediction-card-back"><h4>核心挑战</h4><p>要求学生具备高级语体判断能力。</p></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const fullData = [
+        { year: 2016, type: "搭配不当", code: "M", freq: 2, diff: "★★☆", comp: 3 },
+        { year: 2016, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 2 },
+        { year: 2016, type: "成分残缺", code: "O", freq: 1, diff: "★★☆", comp: 4 },
+        { year: 2016, type: "语序不当", code: "M", freq: 1, diff: "★★☆", comp: 4 },
+        { year: 2017, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 3 },
+        { year: 2017, type: "成分残缺", code: "O", freq: 2, diff: "★★☆", comp: 4 },
+        { year: 2017, type: "语序不当", code: "M", freq: 1, diff: "★★★", comp: 5 },
+        { year: 2017, type: "用词不当", code: "I", freq: 1, diff: "★★☆", comp: 3 },
+        { year: 2018, type: "语序不当", code: "M", freq: 1, diff: "★★☆", comp: 5 },
+        { year: 2018, type: "用词重复", code: "R", freq: 1, diff: "★★☆", comp: 3 },
+        { year: 2018, type: "用词不当", code: "I", freq: 2, diff: "★☆☆ & ★★☆", comp: "2 & 3" },
+        { year: 2018, type: "成分残缺", code: "O", freq: 1, diff: "★★☆", comp: 4 },
+        { year: 2019, type: "语序不当", code: "M", freq: 2, diff: "★★☆", comp: 4 },
+        { year: 2019, type: "关联词错误", code: "L", freq: 1, diff: "★★☆", comp: 5 },
+        { year: 2019, type: "搭配不当", code: "M", freq: 1, diff: "★★☆", comp: 3 },
+        { year: 2019, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 2 },
+        { year: 2020, type: "用词不当", code: "I", freq: 1, diff: "★★☆", comp: 3 },
+        { year: 2020, type: "用词重复", code: "R", freq: 2, diff: "★☆☆", comp: "2 & 3" },
+        { year: 2020, type: "语序不当", code: "M", freq: 1, diff: "★★★", comp: 5 },
+        { year: 2020, type: "成分残缺", code: "O", freq: 1, diff: "★★☆", comp: 4 },
+        { year: 2021, type: "语序不当", code: "M", freq: 2, diff: "★★☆ & ★★★", comp: "4 & 5" },
+        { year: 2021, type: "用词不当", code: "I", freq: 1, diff: "★★☆", comp: 3 },
+        { year: 2021, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 2 },
+        { year: 2021, type: "成分残缺", code: "O", freq: 1, diff: "★★☆", comp: 5 },
+        { year: 2022, type: "语序不当", code: "M", freq: 1, diff: "★★☆", comp: 4 },
+        { year: 2022, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 3 },
+        { year: 2022, type: "用词不当", code: "I", freq: 2, diff: "★★☆", comp: "3 & 4" },
+        { year: 2022, type: "成分残缺", code: "O", freq: 1, diff: "★★☆", comp: 5 },
+        { year: 2023, type: "成分残缺", code: "O", freq: 1, diff: "★☆☆", comp: 3 },
+        { year: 2023, type: "关联词错误", code: "L", freq: 1, diff: "★★☆", comp: 5 },
+        { year: 2023, type: "搭配不当", code: "M", freq: 2, diff: "★★★ & ★★☆", comp: "4 & 4" },
+        { year: 2023, type: "用词重复", code: "R", freq: 1, diff: "★☆☆", comp: 3 }
+    ];
+    
+    // --- DATA TABLE LOGIC WITH FILTERING & SORTING ---
+    const tableBody = document.getElementById('data-table-body');
+    const tableContainer = document.getElementById('table-container');
+    const tableToggleBtn = document.getElementById('table-toggle');
+    const yearFilter = document.getElementById('year-filter');
+    const typeFilter = document.getElementById('type-filter');
+
+    function renderTable(dataToDisplay) {
+        tableBody.innerHTML = '';
+        dataToDisplay.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${item.year}</td><td>${item.type}</td><td>${item.code}</td><td>${item.freq}</td><td>${item.diff}</td><td>${item.comp}</td>`;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function populateFilters() {
+        const years = [...new Set(fullData.map(d => d.year))].sort();
+        const types = [...new Set(fullData.map(d => d.type))];
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year; option.textContent = `${year}年`; yearFilter.appendChild(option);
+        });
+        types.forEach(type => {
+            const option = document.createElement('option');
+            option.value = type; option.textContent = type; typeFilter.appendChild(option);
+        });
+    }
+
+    function filterAndRenderTable() {
+        let filteredData = fullData;
+        if (yearFilter.value !== 'all') filteredData = filteredData.filter(d => d.year == yearFilter.value);
+        if (typeFilter.value !== 'all') filteredData = filteredData.filter(d => d.type === typeFilter.value);
+        renderTable(filteredData);
+    }
+    
+    tableToggleBtn.addEventListener('click', () => tableContainer.classList.toggle('show'));
+    
+    document.querySelectorAll('#full-data-table thead th').forEach(headerCell => {
+        headerCell.addEventListener('click', () => {
+            const table = headerCell.closest('table');
+            const columnIndex = headerCell.cellIndex;
+            const isAsc = headerCell.classList.contains('sort-asc');
+            const type = headerCell.dataset.type;
+            sortTableByColumn(table, columnIndex, !isAsc, type);
+            table.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
+            headerCell.classList.toggle('sort-asc', !isAsc);
+            headerCell.classList.toggle('sort-desc', isAsc);
+        });
+    });
+
+    function sortTableByColumn(table, column, asc = true, type = 'text') {
+        const dirModifier = asc ? 1 : -1;
+        const tBody = table.tBodies[0];
+        const rows = Array.from(tBody.querySelectorAll('tr'));
+        const sortedRows = rows.sort((a, b) => {
+            let aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+            let bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+            if (type === 'number') return (parseFloat(aColText) - parseFloat(bColText)) * dirModifier;
+            return aColText.localeCompare(bColText, 'zh-Hans-CN') * dirModifier;
+        });
+        while (tBody.firstChild) tBody.removeChild(tBody.firstChild);
+        tBody.append(...sortedRows);
+    }
+    
+    populateFilters();
+    filterAndRenderTable();
+    yearFilter.addEventListener('change', filterAndRenderTable);
+    typeFilter.addEventListener('change', filterAndRenderTable);
+
+    // --- MUTATION MATRIX LOGIC ---
+    const mutationData = {
+        'M1-Mismatch': [
+            { title: "动宾搭配", example: "加深了国际竞争力", correction: "应为提升/加强" },
+            { title: "修饰语搭配", example: "总会周密地沟通", correction: "应为充分地" },
+            { title: "主谓搭配", example: "意识有待增强", correction: "意识有待提高或能力有待增强" },
+            { title: "领域错位", example: "科技语境下呈现症状", correction: "应为表现出...问题" }
+        ],
+        'R-Redundancy': [
+            { title: "语义重复", example: "所有每个人都应该", correction: "删除所有或每个" },
+            { title: "结构赘余", example: "以全新的形式进行举办", correction: "删除进行或举办" },
+            { title: "词缀重复", example: "民众们都很欢迎", correction: "删除们" },
+            { title: "范围重叠", example: "大约估计有五百人", correction: "删除大约或估计" }
+        ],
+        'M2-Misordering': [
+            { title: "修饰语错位", example: "我们的活动热烈引起反响", correction: "应为引起了热烈反响" },
+            { title: "多重定语排序", example: "一件中国红色丝绸的旗袍", correction: "应为一件红色丝绸的中国旗袍" },
+            { title: "关联词位置", example: "他不但成绩好", correction: "关联词在主语后" },
+            { title: "逻辑顺序颠倒", example: "我们全面地、深入地分析", correction: "一般先全面，再深入" }
+        ],
+        'O-Omission': [
+            { title: "缺少主语", example: "让年长者都安心养老，将帮助他们", correction: "(这项措施)将帮助他们" },
+            { title: "缺少宾语", example: "在任何阶段都能把握", correction: "应为把握学习的机会" },
+            { title: "缺少介词", example: "在全球化的影响", correction: "补充介词下" },
+            { title: "滥用介词致残缺", example: "通过这次活动，使我学到很多", correction: "删除通过或使" }
+        ]
+    };
+    const errorSelector = document.getElementById('error-selector');
+    const matrixDisplay = document.getElementById('mutation-matrix-display');
+    function updateMatrix(errorType) {
+        matrixDisplay.innerHTML = '';
+        const data = mutationData[errorType] || [];
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'matrix-card';
+            card.innerHTML = `<h4>${item.title}</h4><p><b>示例:</b> <span class="example">${item.example}</span></p><p><b>建议:</b> <span class="correction">${item.correction}</span></p>`;
+            matrixDisplay.appendChild(card);
+        });
+    }
+    errorSelector.addEventListener('change', (e) => updateMatrix(e.target.value));
+    updateMatrix('M1-Mismatch');
+
+    // --- ECHARTS IMPLEMENTATION ---
+    const themeColors = ['#8ECFC9', '#FFBE7A', '#82B0D2', '#BEB8DC', '#E79796', '#7A6F6F', '#95DEE3'];
+    const difficultyMap = { '★☆☆': 1, '★★☆': 2, '★★★': 3 };
+    const processedData = fullData.map(d => {
+        let specificType = d.code === 'M' ? (d.type === '搭配不当' ? 'M1-搭配不当' : 'M2-语序不当') : `${d.code}-${d.type}`;
+        const complexity = typeof d.comp === 'string' ? parseFloat(d.comp.split('&')[0]) : d.comp;
+        const difficulty = typeof d.diff === 'string' && d.diff.includes('&') ? difficultyMap[d.diff.split('&')[0].trim()] : difficultyMap[d.diff];
+        return { ...d, specificType, difficultyNum: difficulty, complexityNum: complexity };
+    });
+    const years = [...new Set(processedData.map(d => d.year))].sort();
+    const errorTypes = [...new Set(processedData.map(d => d.specificType))].sort();
+
+    function renderStackedBarChart() {
+        const myChart = echarts.init(document.getElementById('stacked-bar-chart'));
+        const seriesData = errorTypes.map(type => ({
+            name: type, type: 'bar', stack: 'total', emphasis: { focus: 'series' },
+            data: years.map(year => processedData.filter(d => d.year === year && d.specificType === type).reduce((sum, item) => sum + item.freq, 0))
+        }));
+        myChart.setOption({
+            tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+            legend: { data: errorTypes, top: 10, textStyle: { color: '#333' } },
+            grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+            xAxis: { type: 'category', data: years }, yAxis: { type: 'value' },
+            series: seriesData, color: themeColors
+        });
+        return myChart;
+    }
+
+    function renderBubbleChart() {
+        const myChart = echarts.init(document.getElementById('bubble-chart'));
+        const slider = document.getElementById('year-slider');
+        const yearLabel = document.getElementById('current-year-label');
+        const dataByYear = years.reduce((acc, year) => {
+            acc[year] = processedData.filter(d => d.year === year).map(d => [d.complexityNum, d.difficultyNum, d.freq, d.specificType, d.example || '']);
+            return acc;
+        }, {});
+        function updateChart(year) {
+            yearLabel.textContent = year;
+            myChart.setOption({
+                title: { text: `${year}年 考题难度-复杂度分布`, left: 'center' },
+                xAxis: { name: '句子复杂度', nameLocation: 'middle', nameGap: 30, type: 'value', min: 1, max: 5, interval: 1, splitLine: { lineStyle: { type: 'dashed' } } },
+                yAxis: { name: '题目难度', nameLocation: 'middle', nameGap: 30, type: 'value', min: 0, max: 3, interval: 1, axisLabel: { formatter: (v) => ['','★☆☆','★★☆','★★★'][v] || '' }, splitLine: { lineStyle: { type: 'dashed' } } },
+                tooltip: { formatter: (p) => `<b>${p.data[3]}</b><br/>复杂度: ${p.data[0]}<br/>难度: ${['','★☆☆','★★☆','★★★'][p.data[1]]}<br/>频次: ${p.data[2]}` },
+                series: [{ type: 'scatter', data: dataByYear[year], symbolSize: p => p[2] * 25, itemStyle: { opacity: 0.7 }, label: { show: true, formatter: '{@[3]}', fontSize: 9 } }],
+                color: themeColors
+            }, true);
+        }
+        slider.addEventListener('input', (e) => updateChart(e.target.value));
+        updateChart(slider.value);
+        return myChart;
+    }
+
+    function renderHeatmap() {
+        const myChart = echarts.init(document.getElementById('heatmap-chart'));
+        const data = errorTypes.flatMap((type, typeIndex) => years.map((year, yearIndex) => [yearIndex, typeIndex, processedData.filter(d => d.year === year && d.specificType === type).reduce((sum, item) => sum + item.freq, 0)])).filter(item => item[2] > 0);
+        myChart.setOption({
+            tooltip: { position: 'top' }, grid: { height: '70%', top: '10%' },
+            xAxis: { type: 'category', data: years, splitArea: { show: true } },
+            yAxis: { type: 'category', data: errorTypes, splitArea: { show: true } },
+            visualMap: { min: 0, max: 3, calculable: true, orient: 'horizontal', left: 'center', bottom: '5%', inRange: { color: ['#d1c4e9', '#764ba2'] } },
+            series: [{ name: '出现频次', type: 'heatmap', data: data, label: { show: true }, emphasis: { itemStyle: { shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' } } }]
+        });
+        return myChart;
+    }
+
+    const charts = [renderStackedBarChart(), renderBubbleChart(), renderHeatmap()];
+    window.addEventListener('resize', () => charts.forEach(chart => chart.resize()));
+});
+</script>
+</body>
+</html>

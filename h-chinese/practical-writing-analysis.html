@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level实用文十年演变全景分析</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            margin: 0 5px;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .nav-tab.active, .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        /* 表格和筛选样式 */
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .filter-controls select, .filter-controls button {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            font-size: 1em;
+        }
+        .filter-controls button {
+            background-color: #667eea;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .filter-controls button:hover {
+            background-color: #5a67d8;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #edf2f7;
+            font-weight: bold;
+            color: #4a5568;
+        }
+        tbody tr:hover {
+            background-color: #f7fafc;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #667eea, #764ba2);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            width: 45%;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .timeline-year {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #667eea;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            border: 4px solid white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .prediction-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+
+        .prediction-card h4 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .strategy-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 2px;
+        }
+
+        .frequency-bar {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+
+        .frequency-label {
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .frequency-visual {
+            flex: 1;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin: 0 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frequency-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease-in-out;
+        }
+
+        .env-fill { background: linear-gradient(90deg, #48bb78, #38a169); }
+        .edu-fill { background: linear-gradient(90deg, #ed8936, #dd6b20); }
+        .social-fill { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .policy-fill { background: linear-gradient(90deg, #4299e1, #3182ce); }
+        .other-fill { background: linear-gradient(90deg, #a0aec0, #718096); }
+
+        .evolution-path {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .evolution-stage {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1;
+            margin: 0 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .evolution-arrow {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .evolution-stage:last-child .evolution-arrow {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            .timeline-item {
+                flex-direction: column;
+                margin-left: 40px;
+            }
+            .timeline-content {
+                width: 100%;
+            }
+            .timeline-year {
+                left: 20px;
+            }
+            .evolution-path {
+                flex-direction: column;
+            }
+            .evolution-arrow {
+                display: none;
+            }
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>O-Level实用文十年演变全景分析</h1>
+            <p>基于2014-2023年真题的深度解构与未来趋势预测</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('overview', this)">数据概览</button>
+            <button class="nav-tab" onclick="showSection('timeline', this)">演变全景图</button>
+            <button class="nav-tab" onclick="showSection('analysis', this)">趋势分析</button>
+            <button class="nav-tab" onclick="showSection('prediction', this)">未来预测</button>
+            <button class="nav-tab" onclick="showSection('strategy', this)">备战策略</button>
+        </div>
+
+        <!-- 数据概览 -->
+        <div id="overview" class="content-section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">13</div>
+                    <div class="stat-label">题目总数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">考试年份</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">主要领域</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">主要题型</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>主题频率分析 (可随下方表格筛选动态变化)</h2>
+                <div class="frequency-bar">
+                    <div class="frequency-label">环保类</div>
+                    <div class="frequency-visual">
+                        <div id="env-fill" class="frequency-fill env-fill"></div>
+                    </div>
+                    <div id="env-count"></div>
+                </div>
+                <div class="frequency-bar">
+                    <div class="frequency-label">教育类</div>
+                    <div class="frequency-visual">
+                        <div id="edu-fill" class="frequency-fill edu-fill"></div>
+                    </div>
+                    <div id="edu-count"></div>
+                </div>
+                <div class="frequency-bar">
+                    <div class="frequency-label">社区治理类</div>
+                    <div class="frequency-visual">
+                        <div id="social-fill" class="frequency-fill social-fill"></div>
+                    </div>
+                    <div id="social-count"></div>
+                </div>
+                 <div class="frequency-bar">
+                    <div class="frequency-label">国家政策类</div>
+                    <div class="frequency-visual">
+                        <div id="policy-fill" class="frequency-fill policy-fill"></div>
+                    </div>
+                    <div id="policy-count"></div>
+                </div>
+                <div class="frequency-bar">
+                    <div class="frequency-label">其他类</div>
+                    <div class="frequency-visual">
+                        <div id="other-fill" class="frequency-fill other-fill"></div>
+                    </div>
+                    <div id="other-count"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>题型分布图表 (可随下方表格筛选动态变化)</h2>
+                <div class="chart-container">
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>2014-2023 O-level 实用文真题数据总表</h2>
+                <div class="filter-controls">
+                    <select id="yearFilter" onchange="filterTable()">
+                        <option value="">所有年份</option>
+                    </select>
+                    <select id="typeFilter" onchange="filterTable()">
+                        <option value="">所有题型</option>
+                    </select>
+                    <select id="domainFilter" onchange="filterTable()">
+                        <option value="">所有领域</option>
+                    </select>
+                    <button onclick="resetFilters()">重置筛选</button>
+                    <div id="filterResult" style="margin-left: auto; font-weight: bold;"></div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>年份</th>
+                                <th>真题主题</th>
+                                <th>题型</th>
+                                <th>所属领域</th>
+                                <th>命题对应逻辑</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr data-year="2014" data-type="私人电邮" data-domain="个人成长">
+                                <td>2014</td><td>升学烦恼</td><td>私人电邮</td><td>个人成长</td><td>借题引导学生表达选择困惑，呼应国家教育方针。</td>
+                            </tr>
+                            <tr data-year="2015" data-type="公务电邮" data-domain="环保">
+                                <td>2015</td><td>动物保护</td><td>公务电邮</td><td>环保</td><td>借动物保护培养学生环保意识与社会责任。</td>
+                            </tr>
+                            <tr data-year="2016" data-type="私人电邮" data-domain="社区治理">
+                                <td>2016</td><td>邻里问题</td><td>私人电邮</td><td>社区治理</td><td>借题训练人际沟通、冲突调解能力。</td>
+                            </tr>
+                            <tr data-year="2016" data-type="论坛" data-domain="国家政策">
+                                <td>2016</td><td>Vision 2030 体育愿景</td><td>论坛</td><td>国家政策</td><td>考查学生能否联系运动与国家发展。</td>
+                            </tr>
+                            <tr data-year="2017" data-type="私人电邮" data-domain="校园关系">
+                                <td>2017</td><td>班级冲突</td><td>私人电邮</td><td>校园关系</td><td>借题检测学生沟通调解能力。</td>
+                            </tr>
+                            <tr data-year="2017" data-type="博客" data-domain="环保">
+                                <td>2017</td><td>塑料袋收费</td><td>博客</td><td>环保</td><td>考查学生能否平衡便利与环保。</td>
+                            </tr>
+                            <tr data-year="2018" data-type="博客" data-domain="教育">
+                                <td>2018</td><td>终身学习</td><td>博客</td><td>教育</td><td>借题让学生反思教育不止于校园。</td>
+                            </tr>
+                            <tr data-year="2019" data-type="私人电邮" data-domain="社区健康">
+                                <td>2019</td><td>邻居囤积</td><td>私人电邮</td><td>社区健康</td><td>借题考查理性表达 + 同理心。</td>
+                            </tr>
+                            <tr data-year="2020" data-type="论坛" data-domain="文化">
+                                <td>2020</td><td>节庆亮灯</td><td>论坛</td><td>文化</td><td>借题训练"文化意义 vs 成本争议"的平衡思维。</td>
+                            </tr>
+                            <tr data-year="2021" data-type="论坛" data-domain="生活方式">
+                                <td>2021</td><td>外卖服务</td><td>论坛</td><td>生活方式</td><td>命题紧扣疫情生活方式变化。</td>
+                            </tr>
+                             <tr data-year="2021" data-type="私人电邮" data-domain="家庭沟通">
+                                <td>2021</td><td>劝说长辈别沉迷手机</td><td>私人电邮</td><td>家庭沟通</td><td>训练学生代际沟通与劝说技巧。</td>
+                            </tr>
+                            <tr data-year="2022" data-type="论坛" data-domain="教育">
+                                <td>2022</td><td>图书馆功能</td><td>论坛</td><td>教育</td><td>命题呼应"传统 + 数码化"的教育转型。</td>
+                            </tr>
+                            <tr data-year="2023" data-type="论坛" data-domain="环保">
+                                <td>2023</td><td>旧衣回收</td><td>论坛</td><td>环保</td><td>命题引导学生关注"循环经济"。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 演变全景图 -->
+        <div id="timeline" class="content-section">
+            <div class="card">
+                <h2>实用文主题演变全景图</h2>
+                <div class="evolution-path">
+                    <div class="evolution-stage">
+                        <h3>2014-2016</h3>
+                        <p><strong>个人化阶段</strong></p>
+                        <p>升学烦恼、邻里问题、人际冲突</p>
+                        <div class="evolution-arrow">→</div>
+                    </div>
+                    <div class="evolution-stage">
+                        <h3>2017-2019</h3>
+                        <p><strong>过渡阶段</strong></p>
+                        <p>环保意识、终身学习、社区责任</p>
+                        <div class="evolution-arrow">→</div>
+                    </div>
+                    <div class="evolution-stage">
+                        <h3>2020-2023</h3>
+                        <p><strong>公共化阶段</strong></p>
+                        <p>政策议题、社会系统、公民素养</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>年度题目时间轴</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">2014</div>
+                        <div class="timeline-content">
+                            <h4>升学烦恼 (私人电邮)</h4>
+                            <p><strong>主题领域：</strong>个人成长 / 教育选择</p>
+                            <p><strong>社会背景：</strong>教育部推动多元升学路径</p>
+                            <div class="tag">个人困扰</div><div class="tag">情感共鸣</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2015</div>
+                        <div class="timeline-content">
+                            <h4>动物保护 (公务电邮)</h4>
+                            <p><strong>主题领域：</strong>环保 / 公共责任</p>
+                            <p><strong>社会背景：</strong>动物福利政策出台，全球反象牙贸易</p>
+                            <div class="tag">环保意识</div><div class="tag">社会责任</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2016</div>
+                        <div class="timeline-content">
+                            <h4>邻里问题 + 体育愿景</h4>
+                            <p><strong>主题领域：</strong>社区治理 + 国家政策</p>
+                            <p><strong>社会背景：</strong>HDB生活摩擦 + Vision 2030体育蓝图</p>
+                            <div class="tag">社区治理</div><div class="tag">全民健康</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2017</div>
+                        <div class="timeline-content">
+                            <h4>班级冲突 + 塑料袋收费</h4>
+                            <p><strong>主题领域：</strong>校园关系 + 环保政策</p>
+                            <p><strong>社会背景：</strong>CCE品格教育 + 塑料袋收费讨论</p>
+                            <div class="tag">人际沟通</div><div class="tag">环保政策</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2018</div>
+                        <div class="timeline-content">
+                            <h4>终身学习 (博客)</h4>
+                            <p><strong>主题领域：</strong>教育 / 自我提升</p>
+                            <p><strong>社会背景：</strong>SkillsFuture终身学习计划</p>
+                            <div class="tag">终身学习</div><div class="tag">国家政策</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2019</div>
+                        <div class="timeline-content">
+                            <h4>邻居囤积 (私人电邮)</h4>
+                            <p><strong>主题领域：</strong>社区健康 / 公共治理</p>
+                            <p><strong>社会背景：</strong>囤积症邻居事件频见报端</p>
+                            <div class="tag">理性表达</div><div class="tag">同理心</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020</div>
+                        <div class="timeline-content">
+                            <h4>节庆亮灯 (论坛)</h4>
+                            <p><strong>主题领域：</strong>文化 / 经济发展</p>
+                            <p><strong>社会背景：</strong>牛车水、乌节路亮灯公众热议</p>
+                            <div class="tag">文化传承</div><div class="tag">成本争议</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2021</div>
+                        <div class="timeline-content">
+                            <h4>外卖服务 + 劝说长辈</h4>
+                            <p><strong>主题领域：</strong>生活方式 + 家庭沟通</p>
+                            <p><strong>社会背景：</strong>COVID-19疫情 + 数码沉迷担忧</p>
+                            <div class="tag">疫情影响</div><div class="tag">代际沟通</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2022</div>
+                        <div class="timeline-content">
+                            <h4>图书馆功能 (论坛)</h4>
+                            <p><strong>主题领域：</strong>教育 / 数码化</p>
+                            <p><strong>社会背景：</strong>NLB Mobile数码借阅平台推出</p>
+                            <div class="tag">传统与现代</div><div class="tag">数码化转型</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-year">2023</div>
+                        <div class="timeline-content">
+                            <h4>旧衣回收 (论坛)</h4>
+                            <p><strong>主题领域：</strong>环保 / 循环经济</p>
+                            <p><strong>社会背景：</strong>Zero Waste SG零废弃目标推广</p>
+                            <div class="tag">循环经济</div><div class="tag">可持续发展</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 趋势分析 -->
+        <div id="analysis" class="content-section">
+            <div class="card">
+                <h2>四大核心趋势</h2>
+                
+                <h3>趋势一：从"个人与人际" → "公共议题与社会系统"</h3>
+                <div class="chart-container">
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <p>早期题目多以"贴近学生生活的情感困扰"为出发点，后期转为"理性分析型"的社会议题，更加聚焦公共利益、政策理解、环境责任等宏观主题。</p>
+                
+                <h3>趋势二：从"静态描述" → "动态立场与回应"</h3>
+                <p>近年题目更常以论坛形式出现，设置「他人留言」与「社会意见」，要求考生作为代表回应。对立意见越明显，写作的结构复杂度越高。</p>
+                
+                <h3>趋势三：环保 & 教育类主题出现频率最高</h3>
+                <p>环保类题目在5年中考了至少4次，教育类题目常见于公共讨论与私人劝导，成为命题热点。</p>
+                
+                <h3>趋势四：语气倾向从"亲情劝说"转向"公共论述 + 理性评估"</h3>
+                <p>近年题目更加看重"中立+多角度"论证，不只是表达立场，而是能"先理解，再说服"。</p>
+            </div>
+
+            <div class="card">
+                <h2>命题逻辑分析</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>紧扣社会热点</h4>
+                        <p>出题几乎都和当年的政策、媒体热点一致（SkillsFuture、2030体育愿景、塑料袋收费、疫情外卖等）</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>回应国家教育目标</h4>
+                        <p>强调CCE（品格与公民教育）：同理心、社会责任、环保意识、代际理解</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>从私人到公共，逐步升级</h4>
+                        <p>早期更多个人/邻里层面，后期全面转向公共议题，要求学生具备"公民论述力"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 未来预测 -->
+        <div id="prediction" class="content-section">
+            <div class="card">
+                <h2>2024-2026年命题预测</h2>
+                
+                <div class="prediction-card">
+                    <h4>预测一：环保2.0 - 从"回收"到"绿色系统"</h4>
+                    <p>不再只问"塑料袋/旧衣"，而是会问共享经济、循环利用、低碳生活。考生要能理解环保与生活方式/经济模式的结合。</p>
+                </div>
+
+                <div class="prediction-card">
+                    <h4>预测二：教育2.0 - 从"学习"到"数码+AI学习"</h4>
+                    <p>终身学习之后，极可能进入AI辅助教育、个性化学习、媒体素养。学生需分析"效率 vs 人性化"的矛盾。</p>
+                </div>
+
+                <div class="prediction-card">
+                    <h4>预测三：社会责任2.0 - 从"社区活动"到"老龄化挑战"</h4>
+                    <p>新加坡快速老龄化，命题可能进入长者关怀、代际和谐、数码鸿沟。学生需学会写"尊重+同理心+具体行动"。</p>
+                </div>
+
+                <div class="prediction-card">
+                    <h4>预测四：科技与媒体2.0 - 从"便利"到"治理"</h4>
+                    <p>下一步是假信息、AI生成内容、数码安全。学生需提出"普通人层面的应对方案"。</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>可能持续出现的热门领域</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>环保</h4><p>水电节约、碳中和、共享经济、绿色消费</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>教育</h4><p>AI学习平台、虚拟图书馆、自主学习</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>社会责任</h4><p>志愿活动、社区参与、长者关怀</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>科技与社交媒体</h4><p>社交平台利弊、假信息传播、科技礼仪</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 备战策略 -->
+        <div id="strategy" class="content-section">
+            <div class="card">
+                <h2>四层备考系统</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>主题层</h4><p>外卖服务、图书馆功能、旧衣回收等热门主题</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>观点层</h4><p>正面2个 + 负面1个（回应）的结构</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>词汇层</h4><p>"塑料污染""全民参与""图书资源"等主题词汇</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>句型层</h4><p>"虽然……但……"、"让我们一起……"等表达句型</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>高频主题训练包</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>环保类（共享经济/低碳生活）</h4>
+                        <p><strong>训练能力：</strong>环保价值 + 社区凝聚力 + 回应卫生与管理担忧</p>
+                        <p><strong>词汇池：</strong>物尽其用、循环经济、邻里关系、监管、可持续</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>教育类（AI辅助学习）</h4>
+                        <p><strong>训练能力：</strong>汇报表达 + 提案能力 + 平衡矛盾</p>
+                        <p><strong>词汇池：</strong>个性化学习、扬长避短、人机交互、依赖性、批判性思维</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>社会责任类（长者关怀与代际和谐）</h4>
+                        <p><strong>训练能力：</strong>记叙+议论结合 + 同理心表达</p>
+                        <p><strong>词汇池：</strong>数码鸿沟、代际和谐、耐心、尊重、融入</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>科技媒体类（假信息/网络谣言）</h4>
+                        <p><strong>训练能力：</strong>原因分析 + 实用建议 + 论证逻辑</p>
+                        <p><strong>词汇池：</strong>辨别、查证、信息来源、媒体素养、以讹传讹</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>HFT-OS系统：跨题型观点迁移</h2>
+                <p>建立"主题—观点—词汇—句型"四层备考系统，一题训练，三科受益（实用文、作文、口试/阅读）</p>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>一题多能原则</h4>
+                        <p>每道题既是实用文训练，也是作文、阅读理解二、口试的观点储备</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>正反兼备设计</h4>
+                        <p>每道题设计正反留言/观点，逼迫学生训练回应与转折能力</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>三层升级训练</h4>
+                        <p>同一题目可以变体 → 电邮版、论坛版、作文版</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>三轮战术模拟</h4>
+                        <p>框架构建 → 观点填充 → 变式重构的递进训练</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>核心备考建议</h2>
+                <div class="strategy-grid">
+                    <div class="strategy-item">
+                        <h4>战略情报 → 战术武器</h4>
+                        <p>将未来热点提前内化为模拟题，避免临场无观点。准备"环保"与"教育"两个话题的观点素材库 + 核心词汇 + 模板句型，考试命中率极高。</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>训练重心转移</h4>
+                        <p>从"写给一个人"的劝说 → "写给大众"的论证；学生需要建立社会观察 + 观点整合 + 回应质疑的能力。</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>掌握关键句型</h4>
+                        <p>强化"承认问题 – 转折回应 – 重申立场"的段落逻辑；掌握"有人担心……，但其实……"、"虽然……，然而……"等句型。</p>
+                    </div>
+                    <div class="strategy-item">
+                        <h4>语气适配训练</h4>
+                        <p>私人电邮：亲切、共情、建议；论坛/博客：理性、中立、说服 + 回应。近年题目更看重"中立+多角度"论证能力。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 在脚本顶部定义全局变量来存储图表实例
+        let typeChartInstance = null;
+        let trendChartInstance = null;
+
+        function showSection(sectionId, clickedTab) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            if(clickedTab) clickedTab.classList.add('active');
+
+            if (sectionId === 'overview') {
+                setTimeout(initCharts, 100);
+            }
+            if (sectionId === 'analysis') {
+                setTimeout(initTrendChart, 100);
+            }
+        }
+
+        function initCharts() {
+            if (typeof Chart === 'undefined') {
+                console.log('Chart.js not loaded yet, retrying...');
+                setTimeout(initCharts, 500);
+                return;
+            }
+            const ctx = document.getElementById('typeChart');
+            if (!ctx) return;
+            if (typeChartInstance) typeChartInstance.destroy();
+            
+            typeChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['私人电邮', '论坛', '博客', '公务电邮'],
+                    datasets: [{
+                        data: [5, 5, 2, 1], // 校准后的初始数据
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true } }
+                    }
+                }
+            });
+        }
+
+        function initTrendChart() {
+            if (typeof Chart === 'undefined') {
+                console.log('Chart.js not loaded yet for trend chart, retrying...');
+                setTimeout(initTrendChart, 500);
+                return;
+            }
+            const ctx = document.getElementById('trendChart');
+            if (!ctx) return;
+            if (trendChartInstance) trendChartInstance.destroy();
+
+            trendChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023'],
+                    datasets: [
+                        {
+                            label: '个人化题目',
+                            data: [1, 0, 1, 1, 0, 1, 0, 1, 0, 0], // 根据表格数据校准
+                            borderColor: '#ff6b6b',
+                            backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '公共化题目', 
+                            data: [0, 1, 1, 1, 1, 0, 1, 1, 1, 1], // 根据表格数据校准
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)', 
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true, max: 2, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        function filterTable() {
+            const yearFilter = document.getElementById('yearFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const domainFilter = document.getElementById('domainFilter').value;
+            
+            const rows = document.querySelectorAll('#tableBody tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const showRow = 
+                    (yearFilter === "" || row.dataset.year === yearFilter) &&
+                    (typeFilter === "" || row.dataset.type === typeFilter) &&
+                    (domainFilter === "" || row.dataset.domain === domainFilter);
+                
+                row.style.display = showRow ? '' : 'none';
+                if (showRow) visibleCount++;
+            });
+            
+            document.getElementById('filterResult').textContent = `显示 ${visibleCount} 条记录 (共 ${rows.length} 条)`;
+            updateFrequencyAnalysis();
+            updateTypeChart();
+        }
+
+        function resetFilters() {
+            document.getElementById('yearFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('domainFilter').value = '';
+            filterTable();
+        }
+
+        function updateFrequencyAnalysis() {
+            const visibleRows = document.querySelectorAll('#tableBody tr:not([style*="display: none"])');
+            const domainCount = {'环保类': 0, '教育类': 0, '社区治理类': 0, '国家政策类': 0, '其他类': 0};
+            
+            visibleRows.forEach(row => {
+                const domain = row.dataset.domain;
+                if (domain === '环保') domainCount['环保类']++;
+                else if (['个人成长', '教育', '校园关系'].includes(domain)) domainCount['教育类']++;
+                else if (['社区治理', '社区健康', '家庭沟通'].includes(domain)) domainCount['社区治理类']++;
+                else if (domain === '国家政策') domainCount['国家政策类']++;
+                else domainCount['其他类']++;
+            });
+
+            const maxCount = Math.max(...Object.values(domainCount), 1);
+            
+            document.getElementById('env-count').textContent = `${domainCount['环保类']}次`;
+            document.getElementById('env-fill').style.width = `${(domainCount['环保类'] / maxCount) * 100}%`;
+            document.getElementById('edu-count').textContent = `${domainCount['教育类']}次`;
+            document.getElementById('edu-fill').style.width = `${(domainCount['教育类'] / maxCount) * 100}%`;
+            document.getElementById('social-count').textContent = `${domainCount['社区治理类']}次`;
+            document.getElementById('social-fill').style.width = `${(domainCount['社区治理类'] / maxCount) * 100}%`;
+            document.getElementById('policy-count').textContent = `${domainCount['国家政策类']}次`;
+            document.getElementById('policy-fill').style.width = `${(domainCount['国家政策类'] / maxCount) * 100}%`;
+            document.getElementById('other-count').textContent = `${domainCount['其他类']}次`;
+            document.getElementById('other-fill').style.width = `${(domainCount['其他类'] / maxCount) * 100}%`;
+        }
+
+        function updateTypeChart() {
+            if (!typeChartInstance) return;
+            const visibleRows = document.querySelectorAll('#tableBody tr:not([style*="display: none"])');
+            const typeCount = {'私人电邮': 0, '论坛': 0, '博客': 0, '公务电邮': 0};
+            
+            visibleRows.forEach(row => {
+                const type = row.dataset.type;
+                if (typeCount.hasOwnProperty(type)) typeCount[type]++;
+            });
+            
+            typeChartInstance.data.datasets[0].data = [
+                typeCount['私人电邮'], typeCount['论坛'], typeCount['博客'], typeCount['公务电邮']
+            ];
+            typeChartInstance.update();
+        }
+
+        function populateFilters() {
+            const rows = document.querySelectorAll('#tableBody tr');
+            const years = new Set(), types = new Set(), domains = new Set();
+            rows.forEach(row => {
+                years.add(row.dataset.year);
+                types.add(row.dataset.type);
+                domains.add(row.dataset.domain);
+            });
+
+            const yearFilter = document.getElementById('yearFilter');
+            Array.from(years).sort().forEach(year => {
+                yearFilter.add(new Option(year, year));
+            });
+            const typeFilter = document.getElementById('typeFilter');
+            types.forEach(type => typeFilter.add(new Option(type, type)));
+            const domainFilter = document.getElementById('domainFilter');
+            domains.forEach(domain => domainFilter.add(new Option(domain, domain)));
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            populateFilters();
+            initCharts();
+            filterTable(); // Initial call to sync charts with full data
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Math 学习复习结构化指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            background: rgba(74, 85, 104, 0.3);
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .main-content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+        }
+
+        .core-section .section-header {
+            border-color: #ff6b6b;
+        }
+
+        .satellite-section .section-header {
+            border-color: #4ecdc4;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 1.5rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .core-section .section-icon {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+        }
+
+        .satellite-section .section-icon {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #666;
+            font-style: italic;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .core-section .topic-card {
+            border-left-color: #ff6b6b;
+        }
+
+        .satellite-section .topic-card {
+            border-left-color: #4ecdc4;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .topic-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .topic-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .core-section .topic-number {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+        }
+
+        .satellite-section .topic-number {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+
+        .topic-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            padding-right: 40px;
+        }
+
+        .topic-subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+
+        .sub-concepts {
+            list-style: none;
+        }
+
+        .sub-concepts li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+            font-size: 0.95rem;
+        }
+
+        .sub-concepts li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #95a5a6;
+            font-weight: bold;
+        }
+
+        .topic-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+            gap: 10px;
+        }
+
+        .study-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .study-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+
+        .progress-indicator {
+            margin-top: 20px;
+            background: #ecf0f1;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .core-section .progress-bar {
+            background: linear-gradient(90deg, #ff6b6b, #ff8e53);
+        }
+
+        .satellite-section .progress-bar {
+            background: linear-gradient(90deg, #4ecdc4, #44a08d);
+        }
+
+        .importance-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .core-badge {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        .satellite-badge {
+            background: rgba(78, 205, 196, 0.1);
+            color: #4ecdc4;
+            border: 1px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .study-tips {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .study-tips h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .tip-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .tip-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>E-Math 学习复习结构化指南</h1>
+            <p class="subtitle">基于2022年终考试试卷分析的科学备考策略</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number">4</span>
+                    <span class="stat-label">核心题型</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">卫星题型</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">75-85%</span>
+                    <span class="stat-label">核心题型分值占比</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Core Topics Section -->
+            <div class="section core-section">
+                <div class="section-header">
+                    <div class="section-icon">核</div>
+                    <div class="section-title">
+                        <h2>核心题型 (Core Topics)</h2>
+                        <p class="section-description">考试的绝对支柱，构成约75%-85%的分值和难度，每个核心题型通常都会作为Paper 2的综合应用大题出现</p>
+                    </div>
+                </div>
+
+                <div class="topics-grid">
+                    <div class="topic-card">
+                        <div class="topic-number">1</div>
+                        <h3 class="topic-title">Trigonometry Application in Context</h3>
+                        <ul class="sub-concepts">
+                            <li>Sine/Cosine Rule</li>
+                            <li>2D Bearings</li>
+                            <li>3D Angles of Elevation/Depression</li>
+                            <li>Area of Triangle (½ ab sinC)</li>
+                            <li>Shortest Distance from a Point to a Line</li>
+                            <li>Integration with SOH-CAH-TOA</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="topic-actions">
+                            <a href="https://docs.google.com/document/d/1TwRfbeJay2WE6QOz0h7QV_8BchRCJnMatkFWmsKErsY/edit?tab=t.143000cfy3xy" target="_blank" class="study-link">
+                                📚 Study Materials
+                            </a>
+                            <span class="importance-badge core-badge">高频大题</span>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">2</div>
+                        <h3 class="topic-title">Quadratic Functions & Graphs</h3>
+                        <ul class="sub-concepts">
+                            <li>Completing the Square & Vertex Form</li>
+                            <li>Graph Sketching including vertex, axis of symmetry, x/y intercepts</li>
+                            <li>Finding Maximum/Minimum Values</li>
+                            <li>Finding Equation from Graph</li>
+                            <li>Relationship between Roots and Graph Position</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="topic-actions">
+                            <a href="https://docs.google.com/document/d/1Ymrl83m7i19gKw1y6rlWgHInnavxciLS5o3_9JvVNTA/edit?usp=drive_link" target="_blank" class="study-link">
+                                📚 Study Materials
+                            </a>
+                            <span class="importance-badge core-badge">必考重点</span>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">3</div>
+                        <h3 class="topic-title">Comprehensive Algebraic Manipulation</h3>
+                        <ul class="sub-concepts">
+                            <li>Operations on Algebraic Fractions</li>
+                            <li>Solving Fractional Equations</li>
+                            <li>Changing the Subject of a Formula</li>
+                            <li>Solving Simultaneous Equations</li>
+                            <li>Factorisation</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="topic-actions">
+                            <a href="https://docs.google.com/document/d/10oF_NRCfwaIEUhs31FRaUU_g0uA2V07UZmBaVqI9lDY/edit?usp=drive_link" target="_blank" class="study-link">
+                                📚 Study Materials
+                            </a>
+                            <span class="importance-badge core-badge">基础核心</span>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">4</div>
+                        <h3 class="topic-title">Geometric Proofs & Similarity/Congruency</h3>
+                        <ul class="sub-concepts">
+                            <li>Proving Similarity (mainly AA)</li>
+                            <li>Proving Congruency (SAS, SSS, ASA, RHS)</li>
+                            <li>Application of Similarity/Congruency Properties</li>
+                            <li>Ratio of Areas vs. Ratio of Lengths</li>
+                            <li>Properties of parallel lines, rhombus, trapezium</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <div class="topic-actions">
+                            <a href="https://docs.google.com/document/d/1ocJs57esGaKZGNjWCo2JSFEYYehNKRKzFzBwotAWJfw/edit?usp=drive_link" target="_blank" class="study-link">
+                                📚 Study Materials
+                            </a>
+                            <span class="importance-badge core-badge">逻辑推理</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Satellite Topics Section -->
+            <div class="section satellite-section">
+                <div class="section-header">
+                    <div class="section-icon">星</div>
+                    <div class="section-title">
+                        <h2>卫星题型 (Satellite Topics)</h2>
+                        <p class="section-description">分值较低但几乎每份试卷都会稳定出现的独立知识点，通常作为Paper 1的选择题或简答题，是确保基础分的关键</p>
+                    </div>
+                </div>
+
+                <div class="topics-grid">
+                    <div class="topic-card">
+                        <div class="topic-number">5</div>
+                        <h3 class="topic-title">Indices & Standard Form</h3>
+                        <ul class="sub-concepts">
+                            <li>Laws of Indices</li>
+                            <li>Solving Exponential Equations</li>
+                            <li>Standard Form representation and operations</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">基础必备</span>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">6</div>
+                        <h3 class="topic-title">Statistics & Probability</h3>
+                        <ul class="sub-concepts">
+                            <li>Mean, Median, Mode from charts</li>
+                            <li>Basic Probability</li>
+                            <li>Data Interpretation & Misleading Graphs</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">稳定得分</span>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">7</div>
+                        <h3 class="topic-title">Ratio & Percentage in Context</h3>
+                        <ul class="sub-concepts">
+                            <li>Map Scale (length and area)</li>
+                            <li>Simple & Compound Interest</li>
+                            <li>Percentage Change, Profit, Discount</li>
+                            <li>Currency Exchange</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">实用计算</span>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">8</div>
+                        <h3 class="topic-title">Coordinate Geometry</h3>
+                        <ul class="sub-concepts">
+                            <li>Distance between two points</li>
+                            <li>Gradient of a line</li>
+                            <li>Equation of a straight line</li>
+                            <li>Gradients of parallel/perpendicular lines</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">计算型</span>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">9</div>
+                        <h3 class="topic-title">Mensuration</h3>
+                        <ul class="sub-concepts">
+                            <li>Circles, Sectors, Arc Length</li>
+                            <li>Surface Area & Volume of Solids</li>
+                            <li>Ratios in Similar Figures/Solids</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">公式应用</span>
+                    </div>
+
+                    <div class="topic-card">
+                        <div class="topic-number">10</div>
+                        <h3 class="topic-title">Inequalities</h3>
+                        <ul class="sub-concepts">
+                            <li>Solving Linear & Compound Inequalities</li>
+                            <li>Representing solution on a Number Line</li>
+                        </ul>
+                        <div class="progress-indicator">
+                            <div class="progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span class="importance-badge satellite-badge">逻辑基础</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study Tips Section -->
+            <div class="study-tips">
+                <h3>📚 科学备考建议</h3>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <h4>🎯 优先级策略</h4>
+                        <p>将80%的复习时间投入核心题型，这些题型构成考试的主要分值。确保在Paper 2的综合大题中能够稳定发挥。</p>
+                    </div>
+                    <div class="tip-item">
+                        <h4>⭐ 基础分保证</h4>
+                        <p>卫星题型虽然分值不高，但出现频率稳定。掌握这些知识点可以确保Paper 1中的基础分不丢失。</p>
+                    </div>
+                    <div class="tip-item">
+                        <h4>🔄 循环复习法</h4>
+                        <p>每周安排2-3个核心题型的深度复习，同时每日快速回顾1-2个卫星题型，保持知识点的活跃度。</p>
+                    </div>
+                    <div class="tip-item">
+                        <h4>📝 模拟练习</h4>
+                        <p>定期进行全真模拟考试，重点关注时间分配和题型组合。核心题型需要更多练习时间和深度思考。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive features
+        document.addEventListener('DOMContentLoaded', function() {
+            const topicCards = document.querySelectorAll('.topic-card');
+            
+            // Add click functionality to track progress
+            topicCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const progressBar = this.querySelector('.progress-bar');
+                    const currentWidth = parseInt(progressBar.style.width) || 0;
+                    
+                    // Cycle through progress levels: 0% -> 33% -> 66% -> 100% -> 0%
+                    let newWidth = 0;
+                    if (currentWidth === 0) newWidth = 33;
+                    else if (currentWidth === 33) newWidth = 66;
+                    else if (currentWidth === 66) newWidth = 100;
+                    else newWidth = 0;
+                    
+                    progressBar.style.width = newWidth + '%';
+                    
+                    // Add visual feedback
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+            // Add floating animation to cards
+            topicCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.style.animation = 'fadeInUp 0.6s ease forwards';
+            });
+        });
+
+        // CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
