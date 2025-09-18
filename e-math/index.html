@@ -242,8 +242,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 15px;
+            margin-top: 20px; /* Increased margin */
             gap: 10px;
+            flex-wrap: wrap; /* Allow wrapping */
         }
 
         .study-link {
@@ -295,7 +296,6 @@
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
-            margin-top: 10px;
         }
 
         .core-badge {
@@ -309,6 +309,77 @@
             color: #4ecdc4;
             border: 1px solid rgba(78, 205, 196, 0.3);
         }
+
+        /* --- STYLES FOR CHECKLIST --- */
+        .checklist-toggle {
+            padding: 8px 16px;
+            border: 1px solid #bdc3c7;
+            background-color: #f8f9fa;
+            color: #34495e;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .checklist-toggle:hover {
+            background-color: #ecf0f1;
+            border-color: #95a5a6;
+        }
+
+        .checklist-toggle::after {
+            content: ' ▼';
+            font-size: 0.7rem;
+        }
+
+        .checklist-toggle.active::after {
+            content: ' ▲';
+        }
+
+        .checklist-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, margin-top 0.5s ease-out;
+            margin-top: 0;
+            border-top: 1px solid #ecf0f1;
+            cursor: default;
+        }
+
+        .checklist-content.show {
+            max-height: 600px; /* Adjust if checklist is very long */
+            margin-top: 20px;
+            padding-top: 15px;
+        }
+        
+        .checklist-content h5 {
+            color: #2c3e50;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        .checklist-content ul {
+            list-style: none;
+            padding-left: 5px;
+        }
+
+        .checklist-content li {
+            padding: 5px 0;
+            font-size: 0.9rem;
+            color: #34495e;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .checklist-content li input[type="checkbox"] {
+            margin-right: 10px;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        /* --- END OF STYLES --- */
+
 
         .study-tips {
             background: linear-gradient(135deg, #a8edea, #fed6e3);
@@ -397,6 +468,7 @@
                 </div>
 
                 <div class="topics-grid">
+                    <!-- Topic 1 -->
                     <div class="topic-card">
                         <div class="topic-number">1</div>
                         <h3 class="topic-title">Trigonometry Application in Context</h3>
@@ -412,13 +484,38 @@
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                         <div class="topic-actions">
-                            <a href="https://docs.google.com/document/d/1TwRfbeJay2WE6QOz0h7QV_8BchRCJnMatkFWmsKErsY/edit?tab=t.143000cfy3xy" target="_blank" class="study-link">
-                                📚 Study Materials
-                            </a>
-                            <span class="importance-badge core-badge">高频大题</span>
+                             <a href="https://docs.google.com/document/d/1TwRfbeJay2WE6QOz0h7QV_8BchRCJnMatkFWmsKErsY/edit?tab=t.143000cfy3xy" target="_blank" class="study-link">📚 Study Materials</a>
+                             <button class="checklist-toggle">Check List</button>
+                             <span class="importance-badge core-badge">高频大题</span>
+                        </div>
+                        <div class="checklist-content">
+                            <h5>P1: 准备 (Preparation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>1.1 生成专项题库</label></li>
+                                <li><input type="checkbox"><label>1.2 <strong>您进行最终核查</strong> (关键质检点)</label></li>
+                            </ul>
+                            <h5>P2: 诊断 (Diagnosis)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>2.1 学生完成诊断性练习</label></li>
+                                <li><input type="checkbox"><label>2.2 AI生成双轨诊断报告</label></li>
+                            </ul>
+                            <h5>P3: 干预 (Intervention)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>3.1 学生执行“时光机”修正指令</label></li>
+                                <li><input type="checkbox"><label>3.2 AI生成M-P-C框架与SOP</label></li>
+                            </ul>
+                            <h5>P4: 提升 (Advancement)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>4.1 AI设计高阶变式训练</label></li>
+                                <li><input type="checkbox"><label>4.2 学生完成变式训练</label></li>
+                            </ul>
+                            <h5>P5: 评估 (Evaluation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>5.1 进行第二轮诊断评估</label></li>
+                            </ul>
                         </div>
                     </div>
-
+                    <!-- Topic 2 -->
                     <div class="topic-card">
                         <div class="topic-number">2</div>
                         <h3 class="topic-title">Quadratic Functions & Graphs</h3>
@@ -433,13 +530,38 @@
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                         <div class="topic-actions">
-                            <a href="https://docs.google.com/document/d/1Ymrl83m7i19gKw1y6rlWgHInnavxciLS5o3_9JvVNTA/edit?usp=drive_link" target="_blank" class="study-link">
-                                📚 Study Materials
-                            </a>
+                            <a href="https://docs.google.com/document/d/1Ymrl83m7i19gKw1y6rlWgHInnavxciLS5o3_9JvVNTA/edit?usp=drive_link" target="_blank" class="study-link">📚 Study Materials</a>
+                            <button class="checklist-toggle">Check List</button>
                             <span class="importance-badge core-badge">必考重点</span>
                         </div>
+                        <div class="checklist-content">
+                            <h5>P1: 准备 (Preparation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>1.1 生成专项题库</label></li>
+                                <li><input type="checkbox"><label>1.2 <strong>您进行最终核查</strong> (关键质检点)</label></li>
+                            </ul>
+                            <h5>P2: 诊断 (Diagnosis)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>2.1 学生完成诊断性练习</label></li>
+                                <li><input type="checkbox"><label>2.2 AI生成双轨诊断报告</label></li>
+                            </ul>
+                            <h5>P3: 干预 (Intervention)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>3.1 学生执行“时光机”修正指令</label></li>
+                                <li><input type="checkbox"><label>3.2 AI生成M-P-C框架与SOP</label></li>
+                            </ul>
+                            <h5>P4: 提升 (Advancement)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>4.1 AI设计高阶变式训练</label></li>
+                                <li><input type="checkbox"><label>4.2 学生完成变式训练</label></li>
+                            </ul>
+                            <h5>P5: 评估 (Evaluation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>5.1 进行第二轮诊断评估</label></li>
+                            </ul>
+                        </div>
                     </div>
-
+                    <!-- Topic 3 -->
                     <div class="topic-card">
                         <div class="topic-number">3</div>
                         <h3 class="topic-title">Comprehensive Algebraic Manipulation</h3>
@@ -454,13 +576,38 @@
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                         <div class="topic-actions">
-                            <a href="https://docs.google.com/document/d/10oF_NRCfwaIEUhs31FRaUU_g0uA2V07UZmBaVqI9lDY/edit?usp=drive_link" target="_blank" class="study-link">
-                                📚 Study Materials
-                            </a>
+                            <a href="https://docs.google.com/document/d/10oF_NRCfwaIEUhs31FRaUU_g0uA2V07UZmBaVqI9lDY/edit?usp=drive_link" target="_blank" class="study-link">📚 Study Materials</a>
+                            <button class="checklist-toggle">Check List</button>
                             <span class="importance-badge core-badge">基础核心</span>
                         </div>
+                        <div class="checklist-content">
+                            <h5>P1: 准备 (Preparation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>1.1 生成专项题库</label></li>
+                                <li><input type="checkbox"><label>1.2 <strong>您进行最终核查</strong> (关键质检点)</label></li>
+                            </ul>
+                            <h5>P2: 诊断 (Diagnosis)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>2.1 学生完成诊断性练习</label></li>
+                                <li><input type="checkbox"><label>2.2 AI生成双轨诊断报告</label></li>
+                            </ul>
+                            <h5>P3: 干预 (Intervention)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>3.1 学生执行“时光机”修正指令</label></li>
+                                <li><input type="checkbox"><label>3.2 AI生成M-P-C框架与SOP</label></li>
+                            </ul>
+                            <h5>P4: 提升 (Advancement)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>4.1 AI设计高阶变式训练</label></li>
+                                <li><input type="checkbox"><label>4.2 学生完成变式训练</label></li>
+                            </ul>
+                            <h5>P5: 评估 (Evaluation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>5.1 进行第二轮诊断评估</label></li>
+                            </ul>
+                        </div>
                     </div>
-
+                    <!-- Topic 4 -->
                     <div class="topic-card">
                         <div class="topic-number">4</div>
                         <h3 class="topic-title">Geometric Proofs & Similarity/Congruency</h3>
@@ -475,10 +622,35 @@
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
                         <div class="topic-actions">
-                            <a href="https://docs.google.com/document/d/1ocJs57esGaKZGNjWCo2JSFEYYehNKRKzFzBwotAWJfw/edit?usp=drive_link" target="_blank" class="study-link">
-                                📚 Study Materials
-                            </a>
+                            <a href="https://docs.google.com/document/d/1ocJs57esGaKZGNjWCo2JSFEYYehNKRKzFzBwotAWJfw/edit?usp=drive_link" target="_blank" class="study-link">📚 Study Materials</a>
+                            <button class="checklist-toggle">Check List</button>
                             <span class="importance-badge core-badge">逻辑推理</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备 (Preparation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>1.1 生成专项题库</label></li>
+                                <li><input type="checkbox"><label>1.2 <strong>您进行最终核查</strong> (关键质检点)</label></li>
+                            </ul>
+                            <h5>P2: 诊断 (Diagnosis)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>2.1 学生完成诊断性练习</label></li>
+                                <li><input type="checkbox"><label>2.2 AI生成双轨诊断报告</label></li>
+                            </ul>
+                            <h5>P3: 干预 (Intervention)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>3.1 学生执行“时光机”修正指令</label></li>
+                                <li><input type="checkbox"><label>3.2 AI生成M-P-C框架与SOP</label></li>
+                            </ul>
+                            <h5>P4: 提升 (Advancement)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>4.1 AI设计高阶变式训练</label></li>
+                                <li><input type="checkbox"><label>4.2 学生完成变式训练</label></li>
+                            </ul>
+                            <h5>P5: 评估 (Evaluation)</h5>
+                            <ul>
+                                <li><input type="checkbox"><label>5.1 进行第二轮诊断评估</label></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -495,6 +667,7 @@
                 </div>
 
                 <div class="topics-grid">
+                    <!-- Topic 5 -->
                     <div class="topic-card">
                         <div class="topic-number">5</div>
                         <h3 class="topic-title">Indices & Standard Form</h3>
@@ -506,9 +679,28 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">基础必备</span>
+                         <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">基础必备</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox" id="t5-1-1"><label for="t5-1-1">1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox" id="t5-1-2"><label for="t5-1-2">1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox" id="t5-2-1"><label for="t5-2-1">2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox" id="t5-2-2"><label for="t5-2-2">2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox" id="t5-3-1"><label for="t5-3-1">3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
-
+                     <!-- Topic 6 -->
                     <div class="topic-card">
                         <div class="topic-number">6</div>
                         <h3 class="topic-title">Statistics & Probability</h3>
@@ -520,9 +712,28 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">稳定得分</span>
+                        <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">稳定得分</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox"><label>1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox"><label>2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
-
+                     <!-- Topic 7 -->
                     <div class="topic-card">
                         <div class="topic-number">7</div>
                         <h3 class="topic-title">Ratio & Percentage in Context</h3>
@@ -535,9 +746,28 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">实用计算</span>
+                        <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">实用计算</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox"><label>1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox"><label>2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
-
+                     <!-- Topic 8 -->
                     <div class="topic-card">
                         <div class="topic-number">8</div>
                         <h3 class="topic-title">Coordinate Geometry</h3>
@@ -550,9 +780,28 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">计算型</span>
+                        <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">计算型</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox"><label>1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox"><label>2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
-
+                     <!-- Topic 9 -->
                     <div class="topic-card">
                         <div class="topic-number">9</div>
                         <h3 class="topic-title">Mensuration</h3>
@@ -564,9 +813,28 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">公式应用</span>
+                        <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">公式应用</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox"><label>1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox"><label>2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
-
+                     <!-- Topic 10 -->
                     <div class="topic-card">
                         <div class="topic-number">10</div>
                         <h3 class="topic-title">Inequalities</h3>
@@ -577,7 +845,26 @@
                         <div class="progress-indicator">
                             <div class="progress-bar" style="width: 0%;"></div>
                         </div>
-                        <span class="importance-badge satellite-badge">逻辑基础</span>
+                        <div class="topic-actions">
+                            <button class="checklist-toggle">Check List</button>
+                            <span class="importance-badge satellite-badge">逻辑基础</span>
+                        </div>
+                        <div class="checklist-content">
+                           <h5>P1: 准备与练习 (Preparation & Drill)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>1.1 AI生成专项题库 (通常可信度较高，因为题型变化少)</label></li>
+                               <li><input type="checkbox"><label>1.2 学生完成专项练习</label></li>
+                           </ul>
+                           <h5>P2: 速览与修正 (Quick Review & Correction)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>2.1 AI生成速览报告 (只报告错题和错误类型)</label></li>
+                               <li><input type="checkbox"><label>2.2 学生根据报告进行自我订正</label></li>
+                           </ul>
+                           <h5>P3: 抽查与确认 (Spot Check & Confirmation)</h5>
+                           <ul>
+                               <li><input type="checkbox"><label>3.1 您进行快速抽查，确认学生已掌握</label></li>
+                           </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -608,26 +895,28 @@
     </div>
 
     <script>
-        // Interactive features
         document.addEventListener('DOMContentLoaded', function() {
             const topicCards = document.querySelectorAll('.topic-card');
             
-            // Add click functionality to track progress
+            // --- Logic for Progress Bar Update ---
             topicCards.forEach(card => {
-                card.addEventListener('click', function() {
+                card.addEventListener('click', function(event) {
+                    // This logic only runs if the click is on the card itself, not on interactive children
+                    if (event.target.closest('.topic-actions') || event.target.closest('.checklist-content')) {
+                        return;
+                    }
+
                     const progressBar = this.querySelector('.progress-bar');
                     const currentWidth = parseInt(progressBar.style.width) || 0;
                     
-                    // Cycle through progress levels: 0% -> 33% -> 66% -> 100% -> 0%
                     let newWidth = 0;
-                    if (currentWidth === 0) newWidth = 33;
-                    else if (currentWidth === 33) newWidth = 66;
-                    else if (currentWidth === 66) newWidth = 100;
+                    if (currentWidth < 33) newWidth = 33;
+                    else if (currentWidth < 66) newWidth = 66;
+                    else if (currentWidth < 100) newWidth = 100;
                     else newWidth = 0;
                     
                     progressBar.style.width = newWidth + '%';
                     
-                    // Add visual feedback
                     this.style.transform = 'scale(0.98)';
                     setTimeout(() => {
                         this.style.transform = '';
@@ -635,14 +924,35 @@
                 });
             });
 
-            // Add floating animation to cards
+            // --- LOGIC FOR CHECKLIST TOGGLE ---
+            const checklistToggles = document.querySelectorAll('.checklist-toggle');
+            checklistToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent card click event
+                    
+                    this.classList.toggle('active');
+                    const content = this.closest('.topic-card').querySelector('.checklist-content');
+                    if (content) {
+                        content.classList.toggle('show');
+                    }
+                });
+            });
+
+            // Prevent checklist content clicks from bubbling up to the card
+            const checklists = document.querySelectorAll('.checklist-content');
+            checklists.forEach(checklist => {
+                checklist.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                });
+            });
+            
+            // Floating animation for cards
             topicCards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.style.animation = 'fadeInUp 0.6s ease forwards';
             });
         });
 
-        // CSS animations
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fadeInUp {
