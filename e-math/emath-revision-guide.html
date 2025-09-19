@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Math A1 Sprint Study Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* --- MODIFIED --- Container gets a top margin for spacing */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto 0 auto; /* Added top margin */
+            padding: 20px;
+        }
+
+        /* --- MODIFIED --- Header styles adjusted to be a "card" */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            /* Position sticky removed */
+            border-radius: 15px; /* Added for card look */
+            margin-bottom: 30px; /* Added for spacing */
+        }
+
+        .title {
+            color: #2c3e50;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        .back-link {
+            display: block;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* --- MODIFIED --- Countdown section margin adjusted */
+        .countdown-section {
+            padding: 30px 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px; /* Replaced margin: 20px */
+        }
+
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .countdown-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .countdown-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+
+        .countdown-card.paper2 {
+            background: linear-gradient(135deg, #4834d4, #686de0);
+        }
+
+        .countdown-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .countdown-display {
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .countdown-unit {
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .progress-overview {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #ecf0f1;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b894, #00cec9);
+            transition: width 0.5s ease;
+            border-radius: 6px;
+        }
+
+        .week-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .week-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .week-header {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .week-header:hover {
+            background: linear-gradient(135deg, #0984e3, #74b9ff);
+        }
+
+        .week-content {
+            display: none;
+            padding: 0;
+        }
+
+        .week-content.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .task-row {
+            border-bottom: 1px solid #ecf0f1;
+            transition: background 0.2s ease;
+        }
+
+        .task-row:hover {
+            background: #f8f9fa;
+        }
+
+        .task-cell {
+            padding: 20px;
+            vertical-align: top;
+            border-right: 1px solid #ecf0f1;
+        }
+
+        .task-cell:last-child {
+            border-right: none;
+        }
+
+        .date-cell {
+            font-weight: 600;
+            color: #2c3e50;
+            background: #f8f9fa;
+            width: 120px;
+            text-align: center;
+        }
+
+        .mission-cell {
+            font-weight: 600;
+            color: #e74c3c;
+            width: 200px;
+        }
+
+        .task-checkbox {
+            margin-right: 10px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .task-completed {
+            text-decoration: line-through;
+            opacity: 0.7;
+            background: #d5f4e6;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-pending {
+            background: #f39c12;
+            animation: pulse 2s infinite;
+        }
+
+        .status-completed {
+            background: #27ae60;
+        }
+
+        .status-overdue {
+            background: #e74c3c;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #ff7675, #d63031);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8em;
+            }
+
+            .countdown-display {
+                font-size: 2em;
+            }
+
+            .task-table {
+                font-size: 0.9em;
+            }
+
+            .task-cell {
+                padding: 15px 10px;
+            }
+
+            .container {
+                padding: 10px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- --- MODIFIED --- All content is now inside the container -->
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎯 E-Math A1 Sprint Study Plan</h1>
+            <p class="subtitle">3-Week Comprehensive Review Plan - Dynamic Tracking System</p>
+            <a href="index.html" class="back-link">❮ 返回学习仪表盘</a>
+        </div>
+
+        <div class="countdown-section">
+            <h2 style="color: white; margin-bottom: 20px; font-size: 1.5em;">⏰ Exam Countdown</h2>
+            <div class="countdown-grid">
+                <div class="countdown-card">
+                    <div class="countdown-title">📝 Paper 1</div>
+                    <div class="countdown-display" id="paper1-countdown">--</div>
+                    <div class="countdown-unit">days to exam</div>
+                </div>
+                <div class="countdown-card paper2">
+                    <div class="countdown-title">📋 Paper 2</div>
+                    <div class="countdown-display" id="paper2-countdown">--</div>
+                    <div class="countdown-unit">days to exam</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-overview">
+            <h3 style="margin-bottom: 20px; color: #2c3e50;">📊 Overall Progress Overview</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-tasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completed-tasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completion-rate">0%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="days-remaining">--</div>
+                    <div class="stat-label">Days Left</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Week 1 -->
+        <div class="week-section">
+            <div class="week-header" onclick="toggleWeek(1)">
+                <span>🔥 Week 1: Clear All Deficits (Sep 22 - Sep 28)</span>
+                <span class="expand-icon" id="icon-1">▼</span>
+            </div>
+            <div class="week-content" id="week-1">
+                <table class="task-table">
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Monday<br>Sep 22
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Algebra Comprehensive (P1)
+                        </td>
+                        <td class="task-cell">
+                            <strong>1.5 hours:</strong> Complete all problems in "Algebra" Golden Question Bank - Practice 1 (Algebraic Fractions) and Practice 2 (Solving Equations)
+                        </td>
+                        <td class="task-cell">
+                            1. One complete answer sheet<br>
+                            2. Mark corrections with red pen<br>
+                            3. Fill out "Error Analysis Card" for each wrong question
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Tuesday<br>Sep 23
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Algebra Comprehensive (P2)
+                        </td>
+                        <td class="task-cell">
+                            <strong>1.5 hours:</strong> Complete all problems in "Algebra" Golden Question Bank - Practice 3 (Formula Transformation) and Practice 4 (Simultaneous Equations)
+                        </td>
+                        <td class="task-cell">
+                            1. Complete answer sheet + red pen corrections<br>
+                            2. Fill out "Error Analysis Cards" for wrong answers
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Wednesday<br>Sep 24
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Quadratic Functions (P1)
+                        </td>
+                        <td class="task-cell">
+                            <strong>1.5 hours:</strong> Complete all problems in "Quadratic Functions" Golden Question Bank - Practice 1 (Completing the Square). Strictly follow SOP writing steps
+                        </td>
+                        <td class="task-cell">
+                            1. Check if steps are completely consistent with SOP<br>
+                            2. Correct all calculation errors
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Thursday<br>Sep 25
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Quadratic Functions (P2)
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> Complete Practice 2 (Graph Drawing) and Practice 3 (Comprehensive Application). Pay special attention to Q20 (CCHY) comprehensive nature
+                        </td>
+                        <td class="task-cell">
+                            1. Ensure all graphs are clearly labeled (vertex, intercepts, axis of symmetry)<br>
+                            2. Be able to verbally explain the solution logic for Q18, Q19
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Friday<br>Sep 26
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Core Topics Review
+                        </td>
+                        <td class="task-cell">
+                            <strong>1.5 hours:</strong> Review all "Error Analysis Cards" from this week. Redo all problems marked as 🔴 high priority (Geometry + Algebra + Quadratic Functions)
+                        </td>
+                        <td class="task-cell">
+                            1. Second attempt accuracy should reach 90% or above<br>
+                            2. Be able to write standard steps independently without looking at SOP
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Saturday<br>Sep 27
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Satellite Topics Marathon
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> Quickly complete Third Batch Satellite Topics (Coordinate Geometry, Mensuration/Spatial Geometry) practice
+                        </td>
+                        <td class="task-cell">
+                            1. Target: 95% accuracy rate<br>
+                            2. Create flashcards containing all Mensuration formulas
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Sunday<br>Sep 28
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Rest & Weekly Summary
+                        </td>
+                        <td class="task-cell">
+                            <strong>30 minutes:</strong> Update Personal Ability Radar Chart. Compare with last week, check if "Algebraic Precision" and "Procedural Execution" have improved
+                        </td>
+                        <td class="task-cell">
+                            An updated radar chart to guide Week 2 training direction
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="week-section">
+            <div class="week-header" onclick="toggleWeek(2)">
+                <span>⚡ Week 2: Core Reinforcement & Speed Training (Sep 29 - Oct 5)</span>
+                <span class="expand-icon" id="icon-2">▼</span>
+            </div>
+            <div class="week-content" id="week-2">
+                <table class="task-table">
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Monday<br>Sep 29
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Trigonometry SOP Reinforcement
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> Timed redo of all even-numbered questions from "Trigonometry" Golden 16 Questions. Strictly apply SOP 1, 2, 3
+                        </td>
+                        <td class="task-cell">
+                            1. Calculate total time spent, analyze which type (2D/3D) takes longest<br>
+                            2. Check if any obtuse angle traps or shortest distance models were forgotten
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Tuesday<br>Sep 30
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Paper 1 Mock Exam
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> (Day before exam) Randomly select one complete Paper 1 from 11 past papers for timed mock exam
+                        </td>
+                        <td class="task-cell">
+                            1. Actual scoring, identify points of failure<br>
+                            2. Analyze if failures come from core topics or satellite topics
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Wednesday<br>Oct 1
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Paper 1 Exam
+                        </td>
+                        <td class="task-cell">
+                            <strong>Exam Day</strong> - Official Exam
+                        </td>
+                        <td class="task-cell">
+                            Stay relaxed, perform normally. Trust your training!
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Thursday<br>Oct 2
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Geometry Proof SOP Reinforcement
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> Timed redo of all odd-numbered questions from "Geometry Proof" Golden 12 Questions
+                        </td>
+                        <td class="task-cell">
+                            1. Check if writing format perfectly replicates SOP<br>
+                            2. Check if Reasons are complete and accurate
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Friday<br>Oct 3
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Quadratic Functions Variation Training
+                        </td>
+                        <td class="task-cell">
+                            <strong>2 hours:</strong> Complete all previously designed "Quadratic Functions Variation Training Questions"
+                        </td>
+                        <td class="task-cell">
+                            1. Focus on analyzing Concept Integration and Reverse Question types, test C-level understanding
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Saturday<br>Oct 4
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Comprehensive Big Questions Timed Training
+                        </td>
+                        <td class="task-cell">
+                            <strong>2.5 hours:</strong> From 11 Paper 2s, select only the last two big questions (usually Trigonometry/Quadratic Functions/Data Analysis) to form a "Final Boss Question Set" for continuous timed attack
+                        </td>
+                        <td class="task-cell">
+                            1. Train stress resistance and time allocation ability under high pressure and complexity
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Sunday<br>Oct 5
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Rest & Weekly Summary
+                        </td>
+                        <td class="task-cell">
+                            <strong>30 minutes:</strong> Final update of radar chart. Comprehensively evaluate all abilities, identify 1-2 key points for final sprint
+                        </td>
+                        <td class="task-cell">
+                            Final version of personal ability radar chart
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="week-section">
+            <div class="week-header" onclick="toggleWeek(3)">
+                <span>🚀 Week 3: Full Simulation & Mental Prep (Oct 6 - Oct 7)</span>
+                <span class="expand-icon" id="icon-3">▼</span>
+            </div>
+            <div class="week-content" id="week-3">
+                <table class="task-table">
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Monday<br>Oct 6
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Paper 2 Mock Exam
+                        </td>
+                        <td class="task-cell">
+                            <strong>2.5 hours:</strong> (Day before exam) Select the most difficult 2023 Paper 2 for complete timed simulation
+                        </td>
+                        <td class="task-cell">
+                            1. Only correct, don't obsess. Goal is to familiarize with procedure and pressure<br>
+                            2. Check if time allocation is reasonable
+                        </td>
+                    </tr>
+                    <tr class="task-row">
+                        <td class="task-cell date-cell">
+                            <span class="status-indicator status-pending"></span>
+                            Tuesday<br>Oct 7
+                        </td>
+                        <td class="task-cell mission-cell">
+                            <input type="checkbox" class="task-checkbox" onchange="updateProgress()">
+                            Paper 2 Exam
+                        </td>
+                        <td class="task-cell">
+                            <strong>Final Battle</strong> - Official Exam
+                        </td>
+                        <td class="task-cell">
+                            <strong>Pre-exam Reminders:</strong><br>
+                            1. Check calculator mode (DEG)<br>
+                            2. Circle keywords when reading questions<br>
+                            3. Skip difficult questions decisively, secure basic points first<br>
+                            4. <strong>Trust your training!</strong> You are ready
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <button class="floating-action" onclick="resetProgress()" title="Reset Progress">
+        🔄
+    </button>
+
+    <script>
+        // Exam date settings (adjust according to actual dates)
+        const paper1Date = new Date('2025-10-01');
+        const paper2Date = new Date('2025-10-07');
+
+        // Update countdown
+        function updateCountdown() {
+            const now = new Date();
+            
+            // Paper 1 countdown
+            const paper1Diff = paper1Date - now;
+            const paper1Days = Math.ceil(paper1Diff / (1000 * 60 * 60 * 24));
+            
+            // Paper 2 countdown
+            const paper2Diff = paper2Date - now;
+            const paper2Days = Math.ceil(paper2Diff / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('paper1-countdown').textContent = 
+                paper1Days > 0 ? `${paper1Days}` : 'Done';
+            document.getElementById('paper2-countdown').textContent = 
+                paper2Days > 0 ? `${paper2Days}` : 'Done';
+            
+            // Update days remaining statistics
+            const minDays = Math.min(paper1Days > 0 ? paper1Days : Infinity, paper2Days > 0 ? paper2Days : Infinity);
+            document.getElementById('days-remaining').textContent = 
+                minDays !== Infinity ? `${minDays}` : '0';
+        }
+
+        // Toggle week content display
+        function toggleWeek(weekNum) {
+            const content = document.getElementById(`week-${weekNum}`);
+            const icon = document.getElementById(`icon-${weekNum}`);
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.classList.remove('rotated');
+            } else {
+                // Optional: Close other weeks when one is opened
+                // document.querySelectorAll('.week-content').forEach(c => c.classList.remove('active'));
+                // document.querySelectorAll('.expand-icon').forEach(i => i.classList.remove('rotated'));
+                
+                content.classList.add('active');
+                icon.classList.add('rotated');
+            }
+        }
+
+        // Update task progress
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const totalTasks = checkboxes.length;
+            let completedTasks = 0;
+
+            checkboxes.forEach((checkbox, index) => {
+                const row = checkbox.closest('.task-row');
+                const statusIndicator = row.querySelector('.status-indicator');
+                
+                if (checkbox.checked) {
+                    completedTasks++;
+                    row.classList.add('task-completed');
+                    statusIndicator.className = 'status-indicator status-completed';
+                } else {
+                    row.classList.remove('task-completed');
+                    statusIndicator.className = 'status-indicator status-pending';
+                }
+            });
+
+            // Update statistics
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            
+            document.getElementById('total-tasks').textContent = totalTasks;
+            document.getElementById('completed-tasks').textContent = completedTasks;
+            document.getElementById('completion-rate').textContent = `${completionRate}%`;
+            document.getElementById('overall-progress').style.width = `${completionRate}%`;
+
+            saveProgress();
+        }
+
+        // Save and Load progress using localStorage for persistence
+        function saveProgress() {
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            const progress = [];
+            checkboxes.forEach(checkbox => {
+                progress.push(checkbox.checked);
+            });
+            localStorage.setItem('emathSprintProgress', JSON.stringify(progress));
+        }
+
+        function loadProgress() {
+            const savedProgress = JSON.parse(localStorage.getItem('emathSprintProgress'));
+            if (savedProgress) {
+                const checkboxes = document.querySelectorAll('.task-checkbox');
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = savedProgress[index] || false;
+                });
+            }
+            updateProgress();
+        }
+
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('emathSprintProgress');
+                document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                updateProgress();
+            }
+        }
+
+        function highlightTodayTasks() {
+            // This function is simplified and may not be perfectly accurate across timezones
+            // It uses the user's local system time.
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const rows = document.querySelectorAll('.task-row');
+            
+            rows.forEach(row => {
+                const dateCell = row.querySelector('.date-cell');
+                const dateText = dateCell.innerText || dateCell.textContent; // e.g., "Monday\nSep 22"
+                
+                // Attempt to parse the date from the cell. This is specific to the format.
+                const monthMatch = dateText.match(/Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec/);
+                const dayMatch = dateText.match(/\d+/);
+                
+                if (monthMatch && dayMatch) {
+                    const monthMap = { 'Jan':0, 'Feb':1, 'Mar':2, 'Apr':3, 'May':4, 'Jun':5, 'Jul':6, 'Aug':7, 'Sep':8, 'Oct':9, 'Nov':10, 'Dec':11 };
+                    const taskDate = new Date(paper1Date.getFullYear(), monthMap[monthMatch[0]], parseInt(dayMatch[0]));
+
+                    if (taskDate.getTime() === today.getTime()) {
+                         row.style.background = 'linear-gradient(90deg, #fff9c4, #fff59d)';
+                         row.style.borderLeft = '4px solid #ff9800';
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Update countdown every minute
+            
+            loadProgress();
+            highlightTodayTasks();
+            
+            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+
+            // Expand first week by default
+            toggleWeek(1);
+        });
+
+    </script>
+</body>
+</html>
