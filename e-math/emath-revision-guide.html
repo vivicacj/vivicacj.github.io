@@ -198,30 +198,26 @@
             background: #f8f9fa;
         }
         
-        .day-cell {
-            width: 8%;
-            font-weight: 700;
-            color: #2c3e50;
-        }
-        
-        .mission-cell {
-            width: 22%;
-            font-weight: 600;
-        }
-
-        .details-cell {
-            width: 60%;
-        }
-
+        .day-cell { width: 8%; font-weight: 700; color: #2c3e50; }
+        .mission-cell { width: 22%; font-weight: 600; }
+        .details-cell { width: 55%; }
         .status-cell {
-            width: 10%;
+            width: 15%; /* Increased width to accommodate button */
             text-align: center;
         }
 
+        /* --- NEW --- Flexbox layout for checkbox and button */
+        .status-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px; /* Space between checkbox and button */
+        }
+        
         .task-checkbox {
-            margin-right: 10px;
             transform: scale(1.3);
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .task-completed {
@@ -238,17 +234,38 @@
             color: #c7254e;
         }
         
-        .ai-task-icon {
-            font-size: 1.5em;
+        .ai-task-icon { font-size: 1.5em; }
+
+        /* --- NEW --- Styles for the link button */
+        .link-btn {
+            padding: 5px 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            border-radius: 20px;
+            border: 1px solid #bdc3c7;
+            background-color: #f4f4f4;
+            color: #34495e;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap; /* Prevent text wrapping */
+        }
+
+        .link-btn:hover {
+            background-color: #ecf0f1;
+            border-color: #7f8c8d;
+        }
+        
+        .link-btn.has-link {
+            background-color: #eaf2f8;
+            border-color: #3498db;
+            color: #2980b9;
         }
 
         .expand-icon {
             transition: transform 0.3s ease;
         }
 
-        .expand-icon.rotated {
-            transform: rotate(180deg);
-        }
+        .expand-icon.rotated { transform: rotate(180deg); }
 
         .stats-grid {
             display: grid;
@@ -266,16 +283,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        .stat-number {
-            font-size: 2em;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
+        .stat-number { font-size: 2em; font-weight: 700; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9em; opacity: 0.9; }
 
         .floating-action {
             position: fixed;
@@ -304,9 +313,7 @@
                 width: 100%;
                 text-align: left !important;
             }
-            .task-table thead {
-                display: none;
-            }
+            .task-table thead { display: none; }
             .task-table tr {
                 margin-bottom: 15px;
                 border: 1px solid #ddd;
@@ -326,10 +333,7 @@
                 font-weight: bold;
                 content: attr(data-label);
             }
-            .status-cell {
-                display: flex;
-                align-items: center;
-            }
+            .status-cell { display: flex; align-items: center; }
         }
     </style>
 </head>
@@ -400,59 +404,111 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- --- MODIFIED HTML STRUCTURE FOR EACH TASK --- -->
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day" rowspan="2"><strong>Mon</strong></td>
                             <td class="mission-cell" data-label="Mission" rowspan="2"><strong>Algebraic Manipulation</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete the <code>G3 EOY|Comprehensive Algebraic Manipulation</code> drill package.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Fill out "Mistake Analysis Cards" for all your errors.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Tue</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Satellite Topics (Batch 1)</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete <code>G3 EOY|Indices & Standard Form</code> and <code>G3 EOY|Inequalities</code> drill packages.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
+                        <!-- Repeat this structure for all other tasks -->
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day" rowspan="2"><strong>Wed</strong></td>
                             <td class="mission-cell" data-label="Mission" rowspan="2"><strong>Quadratic Functions</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete the <code>G3 EOY|Quadratic Functions & Graphs</code> drill package.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Fill out "Mistake Analysis Cards" for all your errors.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Thu</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Satellite Topics (Batch 2)</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete <code>G3 EOY|Ratio & Percentage in Context</code> and <code>G3 EOY|Statistics & Probability</code> drill packages.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day" rowspan="2"><strong>Fri</strong></td>
                             <td class="mission-cell" data-label="Mission" rowspan="2"><strong>Geometric Proofs</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete the <code>G3 EOY|Geometric Proofs & Similarity/Congruency</code> drill package.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Fill out "Mistake Analysis Cards" for all your errors.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Sat</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Satellite Topics (Batch 3)</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete <code>G3 EOY|Coordinate Geometry</code> and <code>G3 EOY|Mensuration</code> drill packages.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Sun</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Weekly Review</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> <strong>Update your personal Competency Radar Chart</strong>. Identify the top 3 weaknesses from this week.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -481,25 +537,45 @@
                             <td class="day-cell" data-label="Day"><strong>Mon</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Trigonometry SOP Reinforcement</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> <strong>Timed Re-do.</strong> Complete all high-mark and incorrect questions from <code>G3 EOY|Trigonometry Application in Context</code>.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Tue</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Paper 1 Simulation</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete a full 2023 Paper 1 under timed conditions.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Wed</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Paper 1 Exam Day</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Sit for the official exam.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                           <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Thu</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Geometry & Quadratics SOP Reinforcement</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> <strong>Timed Re-do.</strong> Complete all incorrect questions from <code>G3 EOY|Geometric Proofs...</code> and <code>G3 EOY|Quadratic Functions...</code>.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day" rowspan="2"><strong>Fri</strong></td>
@@ -509,7 +585,12 @@
                         </tr>
                         <tr class="task-row">
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete the new Variation Drills package.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day" rowspan="2"><strong>Sat</strong></td>
@@ -519,13 +600,23 @@
                         </tr>
                         <tr class="task-row">
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete the Final Boss drill under timed conditions.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Sun</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Weekly Review</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> <strong>Final update</strong> of your Competency Radar Chart. Acknowledge your strengths and final points to watch out for.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -553,13 +644,23 @@
                             <td class="day-cell" data-label="Day"><strong>Mon</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Paper 2 Simulation</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Complete a full 2023 Paper 2 under timed conditions.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                           <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                         <tr class="task-row">
                             <td class="day-cell" data-label="Day"><strong>Tue</strong></td>
                             <td class="mission-cell" data-label="Mission"><strong>Paper 2 Exam Day</strong></td>
                             <td class="details-cell" data-label="Task">👨‍🎓 <strong>Task:</strong> Sit for the official exam.</td>
-                            <td class="status-cell" data-label="Status"><input type="checkbox" class="task-checkbox"></td>
+                            <td class="status-cell" data-label="Status">
+                                <div class="status-content">
+                                    <input type="checkbox" class="task-checkbox">
+                                    <button class="link-btn">➕ Link</button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -575,6 +676,7 @@
         // Exam date settings (adjust according to actual dates)
         const paper1Date = new Date('2025-10-01');
         const paper2Date = new Date('2025-10-07');
+        const STORAGE_KEY = 'emathSprintProgressData';
 
         function updateCountdown() {
             const now = new Date();
@@ -598,96 +700,129 @@
         }
 
         function updateProgress() {
-            const checkboxes = document.querySelectorAll('.task-checkbox');
-            const totalTasks = checkboxes.length;
-            const completedCheckboxes = document.querySelectorAll('.task-checkbox:checked');
-            const completedTasks = completedCheckboxes.length;
+            const taskRows = document.querySelectorAll('.task-row');
+            const totalTasks = taskRows.length;
+            let completedTasks = 0;
 
-            checkboxes.forEach(checkbox => {
-                const row = checkbox.closest('.task-row');
-                if (checkbox.checked) {
+            taskRows.forEach(row => {
+                const checkbox = row.querySelector('.task-checkbox');
+                if (checkbox && checkbox.checked) {
+                    completedTasks++;
                     row.classList.add('task-completed');
                 } else {
                     row.classList.remove('task-completed');
                 }
             });
-
+            
             const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
             
             document.getElementById('total-tasks').textContent = totalTasks;
             document.getElementById('completed-tasks').textContent = completedTasks;
             document.getElementById('completion-rate').textContent = `${completionRate}%`;
             document.getElementById('overall-progress').style.width = `${completionRate}%`;
-
-            // This function now saves the state every time the progress is updated.
-            saveProgress();
-        }
-        
-        // --- NEW/MODIFIED FUNCTIONS FOR LOCALSTORAGE ---
-
-        /**
-         * Saves the current checked state of all checkboxes to the browser's localStorage.
-         */
-        function saveProgress() {
-            // 1. Get all checkboxes and create an array of their true/false states.
-            const progressState = Array.from(document.querySelectorAll('.task-checkbox')).map(cb => cb.checked);
-            
-            // 2. Convert the array to a JSON string and save it with a unique key.
-            localStorage.setItem('emathSprintProgress', JSON.stringify(progressState));
         }
 
-        /**
-         * Loads the checkbox states from localStorage when the page is opened.
-         */
-        function loadProgress() {
-            // 1. Get the saved string from localStorage.
-            const savedProgress = localStorage.getItem('emathSprintProgress');
+        function updateAllLinkButtonsUI(data) {
+            const linkButtons = document.querySelectorAll('.link-btn');
+            linkButtons.forEach((btn, index) => {
+                const link = data[index] ? data[index].link : '';
+                if (link) {
+                    btn.textContent = '🔗 View/Edit';
+                    btn.classList.add('has-link');
+                } else {
+                    btn.textContent = '➕ Link';
+                    btn.classList.remove('has-link');
+                }
+            });
+        }
+
+        function handleLink(button) {
+            const allRows = Array.from(document.querySelectorAll('.task-row'));
+            const row = button.closest('.task-row');
+            const taskIndex = allRows.indexOf(row);
             
-            // 2. If data exists, parse it and apply the states to the checkboxes.
-            if (savedProgress) {
-                const progressState = JSON.parse(savedProgress);
-                document.querySelectorAll('.task-checkbox').forEach((checkbox, index) => {
-                    // Ensure we don't get an error if the number of tasks changes later
-                    if (progressState[index] === true) {
-                        checkbox.checked = true;
-                    }
-                });
+            let data = getProgressData();
+            const currentLink = data[taskIndex] ? data[taskIndex].link : '';
+
+            let newLink;
+            if (currentLink) {
+                 newLink = prompt("View/Edit Link:\nLeave blank to delete, or enter a new URL.", currentLink);
+                 if (newLink === null) return; // User cancelled
+                 window.open(currentLink, '_blank');
+            } else {
+                 newLink = prompt("Enter the Google Doc link for this task:");
+                 if (newLink === null || newLink.trim() === '') return; // User cancelled or entered nothing
             }
-            // 3. IMPORTANT: After loading the states, call updateProgress() to sync the UI.
-            updateProgress();
+
+            data[taskIndex].link = newLink.trim();
+            saveProgressData(data);
+            updateAllLinkButtonsUI(data);
         }
 
-        /**
-         * Resets all progress by clearing localStorage and unchecking all boxes.
-         */
+        function getProgressData() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            // If no data, create a default structure based on the number of tasks
+            const totalTasks = document.querySelectorAll('.task-row').length;
+            return Array(totalTasks).fill().map(() => ({ checked: false, link: '' }));
+        }
+
+        function saveProgressData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function loadProgress() {
+            const data = getProgressData();
+            const taskRows = document.querySelectorAll('.task-row');
+
+            taskRows.forEach((row, index) => {
+                const checkbox = row.querySelector('.task-checkbox');
+                if (checkbox && data[index] && data[index].checked) {
+                    checkbox.checked = true;
+                }
+            });
+            
+            updateAllLinkButtonsUI(data);
+            updateProgress(); // This syncs the visual state (strikethrough, stats)
+        }
+
         function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress? This action cannot be undone.')) {
-                // 1. Remove the key from localStorage.
-                localStorage.removeItem('emathSprintProgress');
-                
-                // 2. Uncheck all boxes visually.
+            if (confirm('Are you sure you want to reset all progress and links? This action cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEY);
                 document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                     checkbox.checked = false;
                 });
-
-                // 3. Update the UI to reflect the reset state.
-                updateProgress();
+                // Reload to ensure a clean state
+                window.location.reload();
             }
         }
 
-        // --- END OF MODIFIED FUNCTIONS ---
-
-
         document.addEventListener('DOMContentLoaded', function() {
+            // Initial setup
             updateCountdown();
-            setInterval(updateCountdown, 60000); // Update every minute is enough
+            setInterval(updateCountdown, 60000);
             
-            // Load progress as soon as the page is ready.
             loadProgress();
             
-            // Add an event listener to each checkbox to update progress on change.
-            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', updateProgress);
+            // Add event listeners to all interactive elements
+            document.querySelectorAll('.task-checkbox').forEach((checkbox) => {
+                checkbox.addEventListener('change', (e) => {
+                    const allRows = Array.from(document.querySelectorAll('.task-row'));
+                    const row = e.target.closest('.task-row');
+                    const taskIndex = allRows.indexOf(row);
+                    
+                    let data = getProgressData();
+                    data[taskIndex].checked = e.target.checked;
+                    
+                    saveProgressData(data);
+                    updateProgress(); // Just update the UI, no need to re-save
+                });
+            });
+
+            document.querySelectorAll('.link-btn').forEach(button => {
+                button.addEventListener('click', () => handleLink(button));
             });
 
             toggleWeek(1); // Expand first week by default
