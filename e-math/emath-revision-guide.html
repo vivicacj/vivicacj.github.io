@@ -679,7 +679,7 @@
             if (target.matches('.task-checkbox')) {
                 taskData.checked = target.checked;
                 saveProgressData(data);
-                // The realtime listener will handle the UI update
+                // Realtime listener will handle the UI update
                 return;
             }
 
@@ -703,16 +703,23 @@
                 
                 const actionResult = prompt(`Link ${linkIndex + 1}:\n\n- To OPEN, click OK.\n- To EDIT, change the URL below.\n- To DELETE, clear the text and click OK.`, currentLink);
 
-                if (actionResult === null) return;
-
+                // If the user clicks "Cancel", the prompt returns null. We do nothing.
+                if (actionResult === null) {
+                    return;
+                }
+                
                 const newLinkValue = actionResult.trim();
 
                 if (newLinkValue === '') {
+                    // USER INTENT: DELETE the link
                     taskData.links.splice(linkIndex, 1);
                 } else {
-                    taskData.links[linkIndex] = newLinkValue;
-                    window.open(newLinkValue, '_blank');
+                    // USER INTENT: OPEN or EDIT the link
+                    taskData.links[linkIndex] = newLinkValue; // Update the link in the data array
+                    window.open(newLinkValue, '_blank');     // Open it in a new tab
                 }
+
+                // Save the modified data back to Firebase
                 saveProgressData(data);
             }
         }
