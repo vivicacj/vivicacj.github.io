@@ -345,15 +345,18 @@
             .status-cell { display: flex; align-items: center; }
         }
     </style>
+    <!-- 引入 Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="container">
+        <!-- Header, Countdown, and Progress Overview sections remain unchanged -->
         <div class="header">
             <h1 class="title">🎯 E-Math A1 Sprint Study Plan</h1>
             <p class="subtitle">3-Week Comprehensive Review Plan - Dynamic Tracking System</p>
             <a href="index.html" class="back-link">❮ 返回学习仪表盘</a>
         </div>
-
         <div class="countdown-section">
             <h2 style="color: white; margin-bottom: 20px; font-size: 1.5em;">⏰ Exam Countdown</h2>
             <div class="countdown-grid">
@@ -369,7 +372,6 @@
                 </div>
             </div>
         </div>
-
         <div class="progress-overview">
             <h3 style="margin-bottom: 20px; color: #2c3e50;">📊 Overall Progress Overview</h3>
             <div class="stats-grid">
@@ -575,31 +577,47 @@
     <button class="floating-action" onclick="resetProgress()" title="Reset Progress">
         🔄
     </button>
-
+    
     <script>
-        // --- CONFIGURATION ---
+        // --- 1. FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+            authDomain: "emath-study-plan.firebaseapp.com",
+            projectId: "emath-study-plan",
+            storageBucket: "emath-study-plan.firebasestorage.app",
+            messagingSenderId: "589299697460",
+            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
+            measurementId: "G-09QVE4GLS0"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const docRef = db.collection("sprintPlan").doc("tasks_v4"); // Use a new doc for the new structure
+
+        // --- 2. LOCAL CONFIGURATION ---
         const paper1Date = new Date('2025-10-01');
         const paper2Date = new Date('2025-10-07');
-        const STORAGE_KEY = 'emathSprintProgressData_v4'; // Incremented version for new structure
         const MAX_LINKS_PER_TASK = 3;
 
-        // --- CORE DATA FUNCTIONS ---
+        // --- 3. CORE DATA FUNCTIONS ---
         function getProgressData() {
-            const savedData = localStorage.getItem(STORAGE_KEY);
+            const savedData = sessionStorage.getItem('localDataCache'); // Use a temporary cache to prevent re-fetching
             if (savedData) {
-                try {
-                    return JSON.parse(savedData);
-                } catch (e) { console.error("Error parsing saved data:", e); }
+                return JSON.parse(savedData);
             }
             const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
             return Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
         }
 
         function saveProgressData(data) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            sessionStorage.setItem('localDataCache', JSON.stringify(data)); // Update cache
+            docRef.set({ allTasks: data }).catch(error => {
+                console.error("Error writing document to Firebase: ", error);
+            });
         }
 
-        // --- UI RENDERING & EVENT HANDLING ---
+        // --- 4. UI RENDERING & EVENT HANDLING ---
         function renderLinksForTask(taskIndex, links) {
             const linkArea = document.querySelector(`.task-row[data-task-index="${taskIndex}"] .link-area`);
             if (!linkArea) return;
@@ -623,14 +641,12 @@
             }
         }
 
-        function loadProgress() {
-            const data = getProgressData();
+        function loadProgress(data) {
             const trackableRows = document.querySelectorAll('.task-row[data-task-index]');
             
             if (data.length !== trackableRows.length) {
-                console.warn("Mismatch between saved data and tasks on page. Progress is being reset.");
-                resetProgress(true);
-                return;
+                console.warn("Mismatch between Firebase data and tasks on page. Resetting might be needed.");
+                // Optionally handle the mismatch, e.g., by forcing a reset
             }
 
             trackableRows.forEach((row) => {
@@ -641,6 +657,7 @@
                 renderLinksForTask(taskIndex, taskData.links);
             });
             
+            sessionStorage.setItem('localDataCache', JSON.stringify(data));
             updateOverallProgress();
         }
 
@@ -661,15 +678,15 @@
             }
 
             if (target.matches('.add-link-btn')) {
-                if (taskData.links.length >= MAX_LINKS_PER_TASK) {
-                    alert(`You can only add a maximum of ${MAX_LINKS_PER_TASK} links.`);
-                    return;
-                }
                 const newLink = prompt("Enter the new link URL (e.g., a Google Doc):");
                 if (newLink && newLink.trim() !== '') {
-                    taskData.links.push(newLink.trim());
-                    saveProgressData(data);
-                    renderLinksForTask(taskIndex, taskData.links);
+                    if (taskData.links.length < MAX_LINKS_PER_TASK) {
+                        taskData.links.push(newLink.trim());
+                        saveProgressData(data);
+                        renderLinksForTask(taskIndex, taskData.links);
+                    } else {
+                        alert(`You can only add a maximum of ${MAX_LINKS_PER_TASK} links.`);
+                    }
                 }
                 return;
             }
@@ -692,8 +709,25 @@
                 if (newLink) window.open(newLink, '_blank');
             }
         }
+        
+        function listenForProgressChanges() {
+            docRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    const data = doc.data().allTasks || [];
+                    loadProgress(data);
+                } else {
+                    console.log("No data in Firebase. Initializing document...");
+                    const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
+                    const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
+                    saveProgressData(initialData); // This will create the doc
+                }
+            }, (error) => {
+                console.error("Error listening to Firebase:", error);
+                alert("Could not connect to the cloud database. Check your connection and Firebase setup.");
+            });
+        }
 
-        // --- UTILITY & UPDATE FUNCTIONS ---
+        // --- 5. UTILITY & UI FUNCTIONS ---
         function updateOverallProgress() {
             const checkableTasks = document.querySelectorAll('.task-checkbox');
             const totalTasks = checkableTasks.length;
@@ -734,19 +768,20 @@
             icon.classList.toggle('rotated');
         }
 
-        function resetProgress(force = false) {
-            if (force || confirm('Are you sure you want to reset all progress and links? This action cannot be undone.')) {
-                localStorage.removeItem(STORAGE_KEY);
-                window.location.reload();
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress and links FOR EVERYONE? This will clear the cloud data.')) {
+                const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
+                const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
+                saveProgressData(initialData); // This will overwrite the cloud data
             }
         }
 
-        // --- INITIALIZATION ---
+        // --- 6. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
             updateCountdown();
             setInterval(updateCountdown, 60000);
             
-            loadProgress();
+            listenForProgressChanges();
             
             const container = document.querySelector('.container');
             if (container) container.addEventListener('click', handleTableClick);
