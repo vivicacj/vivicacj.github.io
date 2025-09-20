@@ -218,11 +218,16 @@
             cursor: pointer;
             flex-shrink: 0;
         }
-
-        .task-completed {
+        
+        .task-completed .details-cell, 
+        .task-completed .mission-cell,
+        .task-completed .day-cell {
             text-decoration: line-through;
             opacity: 0.6;
-            background-color: #e6f9f1;
+        }
+
+        .task-row.task-completed {
+            background-color: #f7fdfb;
         }
         
         .details-cell code {
@@ -351,7 +356,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header, Countdown, and Progress Overview sections remain unchanged -->
         <div class="header">
             <h1 class="title">🎯 E-Math A1 Sprint Study Plan</h1>
             <p class="subtitle">3-Week Comprehensive Review Plan - Dynamic Tracking System</p>
@@ -606,7 +610,7 @@
             if (savedData) {
                 try {
                     return JSON.parse(savedData);
-                } catch(e) { /* ignore parse error, fallback to default */ }
+                } catch(e) { /* Fallback */ }
             }
             const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
             return Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
@@ -647,7 +651,7 @@
             
             if (data && data.length > 0 && data.length !== trackableRows.length) {
                 console.warn("Mismatch between Firebase data and tasks on page. Data will be reset.");
-                resetProgress(true); // Force reset without confirmation
+                resetProgress(true);
                 return;
             }
 
@@ -675,7 +679,7 @@
             if (target.matches('.task-checkbox')) {
                 taskData.checked = target.checked;
                 saveProgressData(data);
-                updateOverallProgress();
+                // The realtime listener will handle the UI update
                 return;
             }
 
@@ -693,31 +697,23 @@
             }
 
             if (target.matches('.link-pill')) {
-                // *** 核心修复点 ***
-                event.preventDefault(); // 始终阻止默认跳转
+                event.preventDefault();
                 const linkIndex = parseInt(target.dataset.linkIndex, 10);
                 const currentLink = taskData.links[linkIndex];
                 
                 const actionResult = prompt(`Link ${linkIndex + 1}:\n\n- To OPEN, click OK.\n- To EDIT, change the URL below.\n- To DELETE, clear the text and click OK.`, currentLink);
 
-                // 如果用户点击 "Cancel"，prompt 返回 null，我们直接退出
-                if (actionResult === null) {
-                    return;
-                }
+                if (actionResult === null) return;
 
                 const newLinkValue = actionResult.trim();
 
                 if (newLinkValue === '') {
-                    // 意图：删除
                     taskData.links.splice(linkIndex, 1);
-                    saveProgressData(data);
                 } else {
-                    // 意图：打开 或 编辑
-                    taskData.links[linkIndex] = newLinkValue; // 更新链接（即使它没变）
-                    saveProgressData(data); // 保存更改
-                    window.open(newLinkValue, '_blank'); // 在新标签页中打开
+                    taskData.links[linkIndex] = newLinkValue;
+                    window.open(newLinkValue, '_blank');
                 }
-                // *** 修复结束 ***
+                saveProgressData(data);
             }
         }
         
@@ -727,7 +723,6 @@
                     const data = doc.data().allTasks || [];
                     loadProgress(data);
                 } else {
-                    console.log("No data in Firebase. Initializing document...");
                     const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
                     const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
                     saveProgressData(initialData);
@@ -746,8 +741,11 @@
 
             document.querySelectorAll('.task-row[data-task-index]').forEach(row => {
                  const checkbox = row.querySelector('.task-checkbox');
-                 if (checkbox && checkbox.checked) row.classList.add('task-completed');
-                 else row.classList.remove('task-completed');
+                 if (checkbox && checkbox.checked) {
+                     row.classList.add('task-completed');
+                 } else {
+                     row.classList.remove('task-completed');
+                 }
             });
             
             const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
@@ -783,7 +781,7 @@
             if (force || confirm('Are you sure you want to reset all progress and links FOR EVERYONE? This will clear the cloud data.')) {
                 const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
                 const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
-                saveProgressData(initialData); // This will overwrite the cloud data and trigger a reload via onSnapshot
+                saveProgressData(initialData);
             }
         }
 
