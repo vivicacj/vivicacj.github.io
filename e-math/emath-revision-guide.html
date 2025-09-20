@@ -162,7 +162,6 @@
             animation: slideDown 0.3s ease;
         }
         
-        /* --- NEW --- Style for the week's core goal */
         .week-goal {
             background-color: #f8f9fa;
             border-left: 4px solid #0984e3;
@@ -199,7 +198,6 @@
             background: #f8f9fa;
         }
         
-        /* --- MODIFIED --- Column widths and styling */
         .day-cell {
             width: 8%;
             font-weight: 700;
@@ -621,40 +619,73 @@
             document.getElementById('completion-rate').textContent = `${completionRate}%`;
             document.getElementById('overall-progress').style.width = `${completionRate}%`;
 
+            // This function now saves the state every time the progress is updated.
             saveProgress();
         }
+        
+        // --- NEW/MODIFIED FUNCTIONS FOR LOCALSTORAGE ---
 
+        /**
+         * Saves the current checked state of all checkboxes to the browser's localStorage.
+         */
         function saveProgress() {
-            const progress = Array.from(document.querySelectorAll('.task-checkbox')).map(cb => cb.checked);
-            localStorage.setItem('emathSprintProgress', JSON.stringify(progress));
+            // 1. Get all checkboxes and create an array of their true/false states.
+            const progressState = Array.from(document.querySelectorAll('.task-checkbox')).map(cb => cb.checked);
+            
+            // 2. Convert the array to a JSON string and save it with a unique key.
+            localStorage.setItem('emathSprintProgress', JSON.stringify(progressState));
         }
 
+        /**
+         * Loads the checkbox states from localStorage when the page is opened.
+         */
         function loadProgress() {
-            const savedProgress = JSON.parse(localStorage.getItem('emathSprintProgress'));
+            // 1. Get the saved string from localStorage.
+            const savedProgress = localStorage.getItem('emathSprintProgress');
+            
+            // 2. If data exists, parse it and apply the states to the checkboxes.
             if (savedProgress) {
+                const progressState = JSON.parse(savedProgress);
                 document.querySelectorAll('.task-checkbox').forEach((checkbox, index) => {
-                    checkbox.checked = savedProgress[index] || false;
+                    // Ensure we don't get an error if the number of tasks changes later
+                    if (progressState[index] === true) {
+                        checkbox.checked = true;
+                    }
                 });
             }
+            // 3. IMPORTANT: After loading the states, call updateProgress() to sync the UI.
             updateProgress();
         }
 
+        /**
+         * Resets all progress by clearing localStorage and unchecking all boxes.
+         */
         function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+            if (confirm('Are you sure you want to reset all progress? This action cannot be undone.')) {
+                // 1. Remove the key from localStorage.
                 localStorage.removeItem('emathSprintProgress');
+                
+                // 2. Uncheck all boxes visually.
                 document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                     checkbox.checked = false;
                 });
+
+                // 3. Update the UI to reflect the reset state.
                 updateProgress();
             }
         }
 
+        // --- END OF MODIFIED FUNCTIONS ---
+
+
         document.addEventListener('DOMContentLoaded', function() {
             updateCountdown();
-            setInterval(updateCountdown, 60000);
+            setInterval(updateCountdown, 60000); // Update every minute is enough
             
+            // Load progress as soon as the page is ready.
             loadProgress();
             
+            // Add an event listener to each checkbox to update progress on change.
             document.querySelectorAll('.task-checkbox').forEach(checkbox => {
                 checkbox.addEventListener('change', updateProgress);
             });
