@@ -618,6 +618,8 @@
 
         function saveProgressData(data) {
             sessionStorage.setItem('localDataCache', JSON.stringify(data));
+            // --- DIAGNOSTIC ALERT 2 ---
+            // alert("SAVING TO FIREBASE:\n" + JSON.stringify(data));
             docRef.set({ allTasks: data }).catch(error => {
                 console.error("Error writing document to Firebase: ", error);
             });
@@ -628,7 +630,6 @@
             const linkArea = document.querySelector(`.task-row[data-task-index="${taskIndex}"] .link-area`);
             if (!linkArea) return;
             linkArea.innerHTML = '';
-
             links.forEach((link, linkIndex) => {
                 const pill = document.createElement('a');
                 pill.className = 'link-pill';
@@ -637,7 +638,6 @@
                 pill.dataset.linkIndex = linkIndex;
                 linkArea.appendChild(pill);
             });
-
             if (links.length < MAX_LINKS_PER_TASK) {
                 const addButton = document.createElement('button');
                 addButton.className = 'add-link-btn';
@@ -648,13 +648,10 @@
 
         function loadProgress(data) {
             const trackableRows = document.querySelectorAll('.task-row[data-task-index]');
-            
             if (data && data.length > 0 && data.length !== trackableRows.length) {
-                console.warn("Mismatch between Firebase data and tasks on page. Data will be reset.");
                 resetProgress(true);
                 return;
             }
-
             trackableRows.forEach((row) => {
                 const taskIndex = parseInt(row.dataset.taskIndex, 10);
                 const taskData = data[taskIndex] || { checked: false, links: [] };
@@ -662,7 +659,6 @@
                 if (checkbox) checkbox.checked = taskData.checked;
                 renderLinksForTask(taskIndex, taskData.links);
             });
-            
             sessionStorage.setItem('localDataCache', JSON.stringify(data));
             updateOverallProgress();
         }
@@ -679,7 +675,6 @@
             if (target.matches('.task-checkbox')) {
                 taskData.checked = target.checked;
                 saveProgressData(data);
-                // Realtime listener will handle the UI update
                 return;
             }
 
@@ -703,23 +698,19 @@
                 
                 const actionResult = prompt(`Link ${linkIndex + 1}:\n\n- To OPEN, click OK.\n- To EDIT, change the URL below.\n- To DELETE, clear the text and click OK.`, currentLink);
 
-                // If the user clicks "Cancel", the prompt returns null. We do nothing.
-                if (actionResult === null) {
-                    return;
-                }
+                // --- DIAGNOSTIC ALERT 1 ---
+                alert("Dialog box returned this text:\n\n'" + actionResult + "'");
+
+                if (actionResult === null) return;
                 
                 const newLinkValue = actionResult.trim();
 
                 if (newLinkValue === '') {
-                    // USER INTENT: DELETE the link
                     taskData.links.splice(linkIndex, 1);
                 } else {
-                    // USER INTENT: OPEN or EDIT the link
-                    taskData.links[linkIndex] = newLinkValue; // Update the link in the data array
-                    window.open(newLinkValue, '_blank');     // Open it in a new tab
+                    taskData.links[linkIndex] = newLinkValue;
+                    window.open(newLinkValue, '_blank');
                 }
-
-                // Save the modified data back to Firebase
                 saveProgressData(data);
             }
         }
@@ -728,6 +719,8 @@
             docRef.onSnapshot((doc) => {
                 if (doc.exists) {
                     const data = doc.data().allTasks || [];
+                    // --- DIAGNOSTIC ALERT 3 ---
+                    // alert("RECEIVED FROM FIREBASE:\n" + JSON.stringify(data));
                     loadProgress(data);
                 } else {
                     const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
@@ -745,7 +738,6 @@
             const checkableTasks = document.querySelectorAll('.task-checkbox');
             const totalTasks = checkableTasks.length;
             const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
-
             document.querySelectorAll('.task-row[data-task-index]').forEach(row => {
                  const checkbox = row.querySelector('.task-checkbox');
                  if (checkbox && checkbox.checked) {
@@ -754,9 +746,7 @@
                      row.classList.remove('task-completed');
                  }
             });
-            
             const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
-            
             document.getElementById('total-tasks').textContent = totalTasks;
             document.getElementById('completed-tasks').textContent = completedTasks;
             document.getElementById('completion-rate').textContent = `${completionRate}%`;
@@ -769,10 +759,8 @@
             const paper1Days = Math.ceil(paper1Diff / (1000 * 60 * 60 * 24));
             const paper2Diff = paper2Date - now;
             const paper2Days = Math.ceil(paper2Diff / (1000 * 60 * 60 * 24));
-            
             document.getElementById('paper1-countdown').textContent = paper1Days > 0 ? `${paper1Days}` : 'Done';
             document.getElementById('paper2-countdown').textContent = paper2Days > 0 ? `${paper2Days}` : 'Done';
-            
             const daysRemaining = Math.max(0, Math.min(paper1Days > 0 ? paper1Days : Infinity, paper2Days > 0 ? paper2Days : Infinity));
             document.getElementById('days-remaining').textContent = daysRemaining === Infinity ? '0' : daysRemaining;
         }
@@ -796,12 +784,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             updateCountdown();
             setInterval(updateCountdown, 60000);
-            
             listenForProgressChanges();
-            
             const container = document.querySelector('.container');
             if (container) container.addEventListener('click', handleTableClick);
-            
             toggleWeek(1);
         });
     </script>
