@@ -593,7 +593,7 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const docRef = db.collection("sprintPlan").doc("tasks_v4"); // Use a new doc for the new structure
+        const docRef = db.collection("sprintPlan").doc("tasks_v4");
 
         // --- 2. LOCAL CONFIGURATION ---
         const paper1Date = new Date('2025-10-01');
@@ -602,16 +602,18 @@
 
         // --- 3. CORE DATA FUNCTIONS ---
         function getProgressData() {
-            const savedData = sessionStorage.getItem('localDataCache'); // Use a temporary cache to prevent re-fetching
+            const savedData = sessionStorage.getItem('localDataCache');
             if (savedData) {
-                return JSON.parse(savedData);
+                try {
+                    return JSON.parse(savedData);
+                } catch(e) { /* ignore parse error, fallback to default */ }
             }
             const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
             return Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
         }
 
         function saveProgressData(data) {
-            sessionStorage.setItem('localDataCache', JSON.stringify(data)); // Update cache
+            sessionStorage.setItem('localDataCache', JSON.stringify(data));
             docRef.set({ allTasks: data }).catch(error => {
                 console.error("Error writing document to Firebase: ", error);
             });
@@ -628,7 +630,6 @@
                 pill.className = 'link-pill';
                 pill.textContent = `Link ${linkIndex + 1}`;
                 pill.href = link;
-                pill.target = '_blank';
                 pill.dataset.linkIndex = linkIndex;
                 linkArea.appendChild(pill);
             });
@@ -644,9 +645,10 @@
         function loadProgress(data) {
             const trackableRows = document.querySelectorAll('.task-row[data-task-index]');
             
-            if (data.length !== trackableRows.length) {
-                console.warn("Mismatch between Firebase data and tasks on page. Resetting might be needed.");
-                // Optionally handle the mismatch, e.g., by forcing a reset
+            if (data && data.length > 0 && data.length !== trackableRows.length) {
+                console.warn("Mismatch between Firebase data and tasks on page. Data will be reset.");
+                resetProgress(true); // Force reset without confirmation
+                return;
             }
 
             trackableRows.forEach((row) => {
@@ -683,7 +685,6 @@
                     if (taskData.links.length < MAX_LINKS_PER_TASK) {
                         taskData.links.push(newLink.trim());
                         saveProgressData(data);
-                        renderLinksForTask(taskIndex, taskData.links);
                     } else {
                         alert(`You can only add a maximum of ${MAX_LINKS_PER_TASK} links.`);
                     }
@@ -692,21 +693,31 @@
             }
 
             if (target.matches('.link-pill')) {
-                event.preventDefault();
+                // *** 核心修复点 ***
+                event.preventDefault(); // 始终阻止默认跳转
                 const linkIndex = parseInt(target.dataset.linkIndex, 10);
                 const currentLink = taskData.links[linkIndex];
-                const action = prompt(`Link ${linkIndex + 1}:\n\n- To OPEN, click OK.\n- To EDIT, change the URL below.\n- To DELETE, clear the text and click OK.`, currentLink);
-
-                if (action === null) return;
-                const newLink = action.trim();
                 
-                if (newLink === '') taskData.links.splice(linkIndex, 1);
-                else if (newLink !== currentLink) taskData.links[linkIndex] = newLink;
-                
-                saveProgressData(data);
-                renderLinksForTask(taskIndex, taskData.links);
+                const actionResult = prompt(`Link ${linkIndex + 1}:\n\n- To OPEN, click OK.\n- To EDIT, change the URL below.\n- To DELETE, clear the text and click OK.`, currentLink);
 
-                if (newLink) window.open(newLink, '_blank');
+                // 如果用户点击 "Cancel"，prompt 返回 null，我们直接退出
+                if (actionResult === null) {
+                    return;
+                }
+
+                const newLinkValue = actionResult.trim();
+
+                if (newLinkValue === '') {
+                    // 意图：删除
+                    taskData.links.splice(linkIndex, 1);
+                    saveProgressData(data);
+                } else {
+                    // 意图：打开 或 编辑
+                    taskData.links[linkIndex] = newLinkValue; // 更新链接（即使它没变）
+                    saveProgressData(data); // 保存更改
+                    window.open(newLinkValue, '_blank'); // 在新标签页中打开
+                }
+                // *** 修复结束 ***
             }
         }
         
@@ -719,7 +730,7 @@
                     console.log("No data in Firebase. Initializing document...");
                     const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
                     const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
-                    saveProgressData(initialData); // This will create the doc
+                    saveProgressData(initialData);
                 }
             }, (error) => {
                 console.error("Error listening to Firebase:", error);
@@ -727,7 +738,7 @@
             });
         }
 
-        // --- 5. UTILITY & UI FUNCTIONS ---
+        // --- UTILITY & UI FUNCTIONS ---
         function updateOverallProgress() {
             const checkableTasks = document.querySelectorAll('.task-checkbox');
             const totalTasks = checkableTasks.length;
@@ -768,15 +779,15 @@
             icon.classList.toggle('rotated');
         }
 
-        function resetProgress() {
-            if (confirm('Are you sure you want to reset all progress and links FOR EVERYONE? This will clear the cloud data.')) {
+        function resetProgress(force = false) {
+            if (force || confirm('Are you sure you want to reset all progress and links FOR EVERYONE? This will clear the cloud data.')) {
                 const totalTasks = document.querySelectorAll('.task-row[data-task-index]').length;
                 const initialData = Array(totalTasks).fill().map(() => ({ checked: false, links: [] }));
-                saveProgressData(initialData); // This will overwrite the cloud data
+                saveProgressData(initialData); // This will overwrite the cloud data and trigger a reload via onSnapshot
             }
         }
 
-        // --- 6. INITIALIZATION ---
+        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
             updateCountdown();
             setInterval(updateCountdown, 60000);
