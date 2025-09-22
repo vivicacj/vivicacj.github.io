@@ -1,76 +1,84 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Math 链接资料库 (云同步)</title>
-    <!-- 只需要 Firestore -->
+    <title>E-Math Link Library (Cloud Sync)</title>
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
-        .container { max-width: 900px; margin: 0 auto; background: rgba(255, 255, 255, 0.95); border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); overflow: hidden; }
-        .header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 30px; text-align: center; position: relative; }
-        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #f4f7f9; min-height: 100vh; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 30px; text-align: center; border-radius: 20px 20px 0 0; position: relative; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; align-items: center; justify-content: center; gap: 15px; }
         .header p { font-size: 1.1em; opacity: 0.9; }
         .sync-status { position: absolute; top: 15px; right: 20px; font-size: 0.9em; font-weight: 600; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; }
-        .content { padding: 40px; }
-        .section-title { font-size: 1.5em; color: #343a40; margin-bottom: 20px; display: flex; align-items: center; }
-        .section-title::before { content: ''; width: 4px; height: 25px; background: linear-gradient(135deg, #4facfe, #00f2fe); margin-right: 15px; border-radius: 2px; }
-        .link-input-group { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .input-field { flex: 1; min-width: 200px; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1em; transition: all 0.3s ease; }
+        .content { padding: 30px; background: white; border-radius: 0 0 20px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); }
+        .section-title { font-size: 1.5em; color: #343a40; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
+        .section-title i { font-style: normal; color: #4facfe; }
+        
+        .add-link-section { background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 30px; }
+        .link-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .input-field { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1em; transition: all 0.3s ease; }
         .input-field:focus { outline: none; border-color: #4facfe; box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1); }
-        .add-btn { padding: 12px 25px; background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; white-space: nowrap; }
+        .notes-field { grid-column: 1 / -1; } /* Make notes field span full width */
+        .add-btn { padding: 12px 25px; background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; white-space: nowrap; grid-column: 1 / -1; }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
+
         .files-list { margin-top: 30px; }
-        .link-item { background: white; border: 1px solid #e9ecef; border-radius: 10px; padding: 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+        .link-item { background: white; border: 1px solid #e9ecef; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
         .link-item:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); }
-        .link-info { display: flex; align-items: center; gap: 15px; overflow: hidden; }
-        .link-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; flex-shrink: 0; }
+        .link-anchor { flex-grow: 1; display: flex; align-items: center; gap: 15px; padding: 20px; text-decoration: none; color: inherit; }
+        .link-icon { width: 45px; height: 45px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; flex-shrink: 0; font-size: 1.2em; }
         .link-details { display: flex; flex-direction: column; min-width: 0; }
-        .link-name { font-weight: 600; color: #343a40; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .link-url { font-size: 0.9em; color: #6c757d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .remove-btn { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 0.9em; transition: all 0.3s ease; flex-shrink: 0; }
-        .remove-btn:hover { background: #c82333; transform: translateY(-1px); }
+        .link-name { font-weight: 600; font-size: 1.1em; color: #343a40; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* NEW: Notes style */
+        .link-notes { font-size: 0.9em; color: #6c757d; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
+        .upload-date { font-size: 0.8em; color: #adb5bd; }
+
+        .remove-btn { background: #e74c3c; color: white; border: none; padding: 10px 18px; border-radius: 0 12px 12px 0; cursor: pointer; font-size: 0.9em; transition: all 0.3s ease; align-self: stretch; border-left: 1px solid #e9ecef; }
+        .remove-btn:hover { background: #c0392b; }
+
         .empty-state { text-align: center; color: #6c757d; font-style: italic; padding: 30px; }
-        .link-type-buttons { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .link-type-btn { padding: 8px 16px; border: 2px solid #e9ecef; background: white; border-radius: 25px; cursor: pointer; font-size: 0.9em; transition: all 0.3s ease; }
-        .link-type-btn.active { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border-color: #4facfe; }
-        .link-type-btn:hover { border-color: #4facfe; transform: translateY(-1px); }
-        .upload-date { font-size: 0.8em; color: #adb5bd; margin-top: 5px; }
+        .link-type-buttons { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .link-type-btn { padding: 8px 18px; border: 2px solid #e9ecef; background: white; border-radius: 25px; cursor: pointer; font-size: 0.9em; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; }
+        .link-type-btn.active { background: #4facfe; color: white; border-color: #4facfe; }
+        .link-type-btn:hover:not(.active) { border-color: #4facfe; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔗 E-Math 链接资料库 (云同步)</h1>
-            <p>实时同步您和 Dennis 的所有学习链接</p>
+            <h1>🔗 E-Math Link Library</h1>
+            <p>Real-time sync for all your learning resources with Dennis</p>
             <div id="syncStatus" class="sync-status">⚪️ Connecting...</div>
         </div>
         
         <div class="content">
-            <div class="links-section">
-                <div class="section-title">🔗 添加新链接</div>
+            <div class="add-link-section">
+                <div class="section-title"><i>🔗</i> Add New Link</div>
                 <div class="link-type-buttons">
                     <button class="link-type-btn active" data-type="notion">📝 Notion</button>
                     <button class="link-type-btn" data-type="google-doc">📄 Google Docs</button>
                     <button class="link-type-btn" data-type="google-sheet">📊 Google Sheets</button>
                     <button class="link-type-btn" data-type="google-slide">📽️ Google Slides</button>
-                    <button class="link-type-btn" data-type="other">🌐 其他链接</button>
+                    <button class="link-type-btn" data-type="other">🌐 Other</button>
                 </div>
                 <div class="link-input-group">
-                    <input type="text" class="input-field" id="linkName" placeholder="链接名称 (例如：二次函数错题集)">
-                    <input type="url" class="input-field" id="linkUrl" placeholder="Notion页面链接 (例如：https://notion.so/...)">
-                    <button class="add-btn" onclick="addLink()">➕ 添加链接</button>
+                    <input type="text" class="input-field" id="linkName" placeholder="Link Name (e.g., Quadratic Functions Cheatsheet)">
+                    <input type="url" class="input-field" id="linkUrl" placeholder="Link URL (e.g., https://notion.so/...)">
+                    <input type="text" class="input-field notes-field" id="linkNotes" placeholder="Notes (Optional, e.g., 'For exam prep')">
                 </div>
+                 <button class="add-btn" onclick="addLink()">+ Add Link</button>
             </div>
 
             <div class="files-list">
-                <div class="section-title">📋 云端链接列表</div>
+                <div class="section-title"><i>📋</i> Cloud Link Library</div>
                 <div id="linksList">
-                    <div class="empty-state">正在从云端加载...</div>
+                    <div class="empty-state">Loading from cloud...</div>
                 </div>
             </div>
         </div>
@@ -82,14 +90,14 @@
             apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
             authDomain: "emath-study-plan.firebaseapp.com",
             projectId: "emath-study-plan",
-            storageBucket: "emath-study-plan.firebasestorage.app", // This is okay to keep, won't be used
+            storageBucket: "emath-study-plan.firebasestorage.app",
             messagingSenderId: "589299697460",
             appId: "1:589299697460:web:df1e0bb0586b3740c04761",
             measurementId: "G-09QVE4GLS0"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const linksRef = db.collection("emath-uploads").doc("links"); // Only need a reference for links
+        const linksRef = db.collection("emath-uploads").doc("links-v2"); // Using a new doc for the new structure
 
         let selectedLinkType = 'notion';
 
@@ -109,20 +117,20 @@
         function renderLinks(links) {
             const listEl = document.getElementById('linksList');
             if (links.length === 0) {
-                listEl.innerHTML = '<div class="empty-state">暂无云端链接</div>';
+                listEl.innerHTML = '<div class="empty-state">No links added yet.</div>';
                 return;
             }
             listEl.innerHTML = links.sort((a, b) => b.uploadDate - a.uploadDate).map(link => `
                 <div class="link-item">
-                    <div class="link-info">
+                    <a class="link-anchor" href="${link.url}" target="_blank" title="${link.url}">
                         <div class="link-icon">${getLinkIcon(link.type)}</div>
                         <div class="link-details">
-                            <a class="link-name" href="${link.url}" target="_blank" title="${link.name}">${link.name}</a>
-                            <div class="link-url" title="${link.url}">${link.url}</div>
+                            <div class="link-name">${link.name}</div>
+                            ${link.notes ? `<div class="link-notes">${link.notes}</div>` : ''}
                             <div class="upload-date">Added on: ${new Date(link.uploadDate).toLocaleDateString()}</div>
                         </div>
-                    </div>
-                    <button class="remove-btn" onclick="removeLink('${link.id}')">删除</button>
+                    </a>
+                    <button class="remove-btn" onclick="removeLink('${link.id}')">Remove</button>
                 </div>
             `).join('');
         }
@@ -131,11 +139,14 @@
         function addLink() {
             const nameInput = document.getElementById('linkName');
             const urlInput = document.getElementById('linkUrl');
+            const notesInput = document.getElementById('linkNotes');
+            
             const name = nameInput.value.trim();
             const url = urlInput.value.trim();
+            const notes = notesInput.value.trim(); // Get notes value
             
             if (!name || !url || !isValidUrl(url)) {
-                alert('请填写有效且完整的链接信息！');
+                alert('Please enter a valid Name and URL.');
                 return;
             }
 
@@ -144,14 +155,13 @@
                 name: name,
                 url: url,
                 type: selectedLinkType,
+                notes: notes, // Add notes to the data object
                 uploadDate: Date.now()
             };
 
-            // 使用 arrayUnion atomically add a new region to the "regions" array field.
             linksRef.update({
                 list: firebase.firestore.FieldValue.arrayUnion(linkData)
             }).catch(err => {
-                // If the document or 'list' field doesn't exist, set it.
                 if (err.code === 'not-found' || err.message.includes("No document to update")) {
                     linksRef.set({ list: [linkData] });
                 }
@@ -159,27 +169,27 @@
 
             nameInput.value = '';
             urlInput.value = '';
+            notesInput.value = ''; // Clear notes input
         }
         
         // --- 4. 删除逻辑 ---
         async function removeLink(linkId) {
-            if (!confirm("确定要从云端删除这个链接吗？")) return;
+            if (!confirm("Are you sure you want to remove this link from the cloud?")) return;
             try {
                 const doc = await linksRef.get();
                 if (doc.exists) {
                     const currentList = doc.data().list || [];
                     const itemToRemove = currentList.find(l => l.id === linkId);
                     if (itemToRemove) {
-                        // Use arrayRemove to atomically remove an instance in an array field.
                         await linksRef.update({
                             list: firebase.firestore.FieldValue.arrayRemove(itemToRemove)
                         });
-                        alert("链接已成功删除！");
+                        alert("Link removed successfully!");
                     }
                 }
             } catch (error) {
                 console.error("Error removing link:", error);
-                alert("删除失败，请检查控制台错误信息。");
+                alert("Failed to remove link. See console for details.");
             }
         }
 
@@ -191,11 +201,11 @@
                 selectedLinkType = this.dataset.type;
                 const urlInput = document.getElementById('linkUrl');
                 const placeholders = {
-                    'notion': 'Notion页面链接 (例如：https://notion.so/...)',
-                    'google-doc': 'Google Docs链接 (例如：https://docs.google.com/document/...)',
-                    'google-sheet': 'Google Sheets链接 (例如：https://docs.google.com/spreadsheets/...)',
-                    'google-slide': 'Google Slides链接 (例如：https://docs.google.com/presentation/...)',
-                    'other': '请输入有效的网址链接'
+                    'notion': 'Notion Page URL (e.g., https://notion.so/...)',
+                    'google-doc': 'Google Docs URL (e.g., https://docs.google.com/document/...)',
+                    'google-sheet': 'Google Sheets URL (e.g., https://docs.google.com/spreadsheets/...)',
+                    'google-slide': 'Google Slides URL (e.g., https://docs.google.com/presentation/...)',
+                    'other': 'Enter any valid URL'
                 };
                 urlInput.placeholder = placeholders[selectedLinkType];
             });
