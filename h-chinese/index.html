@@ -275,7 +275,7 @@
         
         .module-writing { border-left-color: #ff6b6b; }
         .module-reading { border-left-color: #4ecdc4; }
-        .module-oral { border-left-color: #fed6e3; }
+        .module-oral { border-left-color: #a8edea; } /* Changed color for consistency */
 
         .module-highlight-writing {
             border-left-color: #667eea !important;
@@ -560,27 +560,18 @@
                     <div>占总分20%</div>
                 </div>
                 <div class="paper-content">
-                    <div class="module module-oral" onclick="showModuleDetails('口头报告')">
+                    <!-- =========== 修改点 1：将 div 改为 a 标签 =========== -->
+                    <a href="h-chinese-oral.html" class="module module-oral">
                         <div class="module-info">
-                            <h4>口头报告</h4>
-                            <div class="module-skills">考查：口语表达、内容组织</div>
+                            <h4>口头报告与讨论 ⭐</h4>
+                            <div class="module-skills">考查：口语表达、互动沟通</div>
                         </div>
                         <div class="module-score">
-                            <div class="score-number">20分</div>
-                            <div class="score-percentage">10%</div>
+                            <div class="score-number">40分</div>
+                            <div class="score-percentage">20%</div>
                         </div>
-                    </div>
-                    
-                    <div class="module module-oral" onclick="showModuleDetails('讨论')">
-                        <div class="module-info">
-                            <h4>讨论</h4>
-                            <div class="module-skills">考查：互动沟通、思辨能力</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">20分</div>
-                            <div class="score-percentage">10%</div>
-                        </div>
-                    </div>
+                    </a>
+                    <!-- ================================================== -->
                 </div>
             </div>
         </div>
@@ -594,7 +585,9 @@
                 <a href="summary.html" target="_blank" class="cta-button">片段缩写训练</a>
                 <a href="practical-writing.html" target="_blank" class="cta-button">实用文训练</a>
                 <a href="composition.html" target="_blank" class="cta-button">作文训练</a>
-                <a href="#" class="cta-button disabled" onclick="showComingSoon('口试练习')">口试模块（即将开放）</a>
+                <!-- =========== 修改点 2：激活 CTA 按钮 =========== -->
+                <a href="h-chinese-oral.html" class="cta-button">口试模块练习</a>
+                <!-- ============================================== -->
             </div>
         </div>
         
@@ -677,20 +670,13 @@
     </div>
 
     <script>
-        // 为了让卡片也能跳转，我们将所有 onclick 事件改为使用 a 标签，并简化了JS
-        
         function showModuleDetails(moduleName) {
             const details = {
                 '短文填充': '在短文中填入合适的词语\n重点：词汇掌握、语境理解',
-                '口头报告': '根据材料进行3分钟口头报告\n重点：内容组织、表达流畅',
                 '讨论': '与考官就话题进行讨论\n重点：观点表达、互动交流'
             };
             
             alert(`${moduleName}模块详情：\n\n${details[moduleName] || '详情待补充...'}`);
-        }
-        
-        function showComingSoon(moduleName) {
-            alert(`${moduleName}模块即将上线！\n敬请期待...`);
         }
         
         // 添加动画效果
