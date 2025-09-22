@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>O-Level华文考试全览平台</title>
     <style>
-        /* 重置和基础样式 */
+        /* CSS 样式部分保持不变 */
         * {
             margin: 0;
             padding: 0;
@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
         
-        /* 头部样式 */
         .header {
             text-align: center;
             margin-bottom: 40px;
@@ -42,7 +41,6 @@
             font-size: 1.2rem;
         }
         
-        /* 概览卡片样式 */
         .overview-card {
             background: rgba(255,255,255,0.95);
             border-radius: 20px;
@@ -79,7 +77,6 @@
             margin-top: 5px;
         }
         
-        /* 分区标题样式 */
         .section-title {
             text-align: center;
             margin: 50px 0 30px 0;
@@ -110,7 +107,6 @@
             border-radius: 2px;
         }
         
-        /* 试卷网格样式 */
         .papers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -118,7 +114,6 @@
             margin-bottom: 50px;
         }
         
-        /* 分析工具区域样式 */
         .analysis-section {
             margin-top: 60px;
         }
@@ -128,7 +123,7 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-            cursor: default; /* 主卡片不可点击 */
+            cursor: default;
         }
         
         .analysis-header {
@@ -198,7 +193,7 @@
         .feature-link {
             text-decoration: none;
             color: inherit;
-            display: block; /* 使整个区域可点击 */
+            display: block;
         }
         
         .feature-icon {
@@ -211,7 +206,6 @@
             color: #666;
         }
         
-        /* 试卷卡片样式 */
         .paper-card {
             background: white;
             border-radius: 20px;
@@ -264,8 +258,8 @@
             border-left: 4px solid transparent;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none; /* 为 a 标签添加 */
-            color: inherit; /* 为 a 标签添加 */
+            text-decoration: none;
+            color: inherit;
         }
         
         .module:hover {
@@ -275,7 +269,7 @@
         
         .module-writing { border-left-color: #ff6b6b; }
         .module-reading { border-left-color: #4ecdc4; }
-        .module-oral { border-left-color: #a8edea; } /* Changed color for consistency */
+        .module-oral { border-left-color: #a8edea; }
 
         .module-highlight-writing {
             border-left-color: #667eea !important;
@@ -312,7 +306,6 @@
             color: #888;
         }
         
-        /* 技能图例样式 */
         .skills-legend {
             margin-top: 30px;
             padding: 20px;
@@ -354,7 +347,6 @@
         .color-application { background: #ffd93d; }
         .color-communication { background: #a8edea; }
         
-        /* CTA（号召性用语）区域样式 */
         .cta-section {
             text-align: center;
             margin-top: 40px;
@@ -409,27 +401,12 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         
-        /* 响应式设计 */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            
-            .section-title h2 {
-                font-size: 1.8rem;
-            }
-            
-            .papers-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .overview-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .cta-buttons {
-                grid-template-columns: 1fr;
-            }
+            .header h1 { font-size: 2.2rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .papers-grid { grid-template-columns: 1fr; }
+            .overview-stats { grid-template-columns: repeat(2, 1fr); }
+            .cta-buttons { grid-template-columns: 1fr; }
         }
     </style>
     <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "fe5fc51fb53c43148a2adcf389b12fcb"}'></script><!-- End Cloudflare Web Analytics -->
@@ -444,22 +421,10 @@
         <div class="overview-card">
             <h2 style="text-align: center; color: #333; margin-bottom: 20px;">考试总览</h2>
             <div class="overview-stats">
-                <div class="stat-item">
-                    <div class="stat-number">200</div>
-                    <div class="stat-label">总分</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">3</div>
-                    <div class="stat-label">试卷数量</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">2小时</div>
-                    <div class="stat-label">笔试时长</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">10</div>
-                    <div class="stat-label">题型模块</div>
-                </div>
+                <div class="stat-item"> <div class="stat-number">200</div> <div class="stat-label">总分</div> </div>
+                <div class="stat-item"> <div class="stat-number">3</div> <div class="stat-label">试卷数量</div> </div>
+                <div class="stat-item"> <div class="stat-number">2小时</div> <div class="stat-label">笔试时长</div> </div>
+                <div class="stat-item"> <div class="stat-number">10</div> <div class="stat-label">题型模块</div> </div>
             </div>
         </div>
         
@@ -477,25 +442,12 @@
                 </div>
                 <div class="paper-content">
                     <a href="practical-writing.html" class="module module-writing module-highlight-writing">
-                        <div class="module-info">
-                            <h4>实用文 ⭐</h4>
-                            <div class="module-skills">考查：语言表达、应用写作</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">20分</div>
-                            <div class="score-percentage">10%</div>
-                        </div>
+                        <div class="module-info"> <h4>实用文 ⭐</h4> <div class="module-skills">考查：语言表达、应用写作</div> </div>
+                        <div class="module-score"> <div class="score-number">20分</div> <div class="score-percentage">10%</div> </div>
                     </a>
-                    
                     <a href="composition.html" class="module module-writing">
-                        <div class="module-info">
-                            <h4>作文</h4>
-                            <div class="module-skills">考查：创意表达、文字组织</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">60分</div>
-                            <div class="score-percentage">30%</div>
-                        </div>
+                        <div class="module-info"> <h4>作文</h4> <div class="module-skills">考查：创意表达、文字组织</div> </div>
+                        <div class="module-score"> <div class="score-number">60分</div> <div class="score-percentage">30%</div> </div>
                     </a>
                 </div>
             </div>
@@ -507,48 +459,21 @@
                     <div>占总分40%</div>
                 </div>
                 <div class="paper-content">
-                    <div class="module module-reading" onclick="showModuleDetails('短文填充')">
-                        <div class="module-info">
-                            <h4>短文填充</h4>
-                            <div class="module-skills">考查：语文应用、词语理解</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">10分</div>
-                            <div class="score-percentage">5%</div>
-                        </div>
-                    </div>
-                    
+                    <a href="#" class="module module-reading" onclick="showModuleDetails('短文填充')">
+                        <div class="module-info"> <h4>短文填充</h4> <div class="module-skills">考查：语文应用、词语理解</div> </div>
+                        <div class="module-score"> <div class="score-number">10分</div> <div class="score-percentage">5%</div> </div>
+                    </a>
                     <a href="grammar.html" class="module module-reading module-highlight-reading">
-                        <div class="module-info">
-                            <h4>病句改正 ⭐</h4>
-                            <div class="module-skills">考查：语法应用、句法分析</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">10分</div>
-                            <div class="score-percentage">5%</div>
-                        </div>
+                        <div class="module-info"> <h4>病句改正 ⭐</h4> <div class="module-skills">考查：语法应用、句法分析</div> </div>
+                        <div class="module-score"> <div class="score-number">10分</div> <div class="score-percentage">5%</div> </div>
                     </a>
-                    
                     <a href="reading.html" class="module module-reading module-highlight-reading">
-                        <div class="module-info">
-                            <h4>阅读理解一 & 二 ⭐</h4>
-                            <div class="module-skills">考查：文本理解、深度分析</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">48分</div>
-                            <div class="score-percentage">24%</div>
-                        </div>
+                        <div class="module-info"> <h4>阅读理解一 & 二 ⭐</h4> <div class="module-skills">考查：文本理解、深度分析</div> </div>
+                        <div class="module-score"> <div class="score-number">48分</div> <div class="score-percentage">24%</div> </div>
                     </a>
-                    
                     <a href="summary.html" class="module module-reading module-highlight-reading">
-                        <div class="module-info">
-                            <h4>片段缩写 ⭐</h4>
-                            <div class="module-skills">考查：概括能力、文字精炼</div>
-                        </div>
-                        <div class="module-score">
-                            <div class="score-number">12分</div>
-                            <div class="score-percentage">6%</div>
-                        </div>
+                        <div class="module-info"> <h4>片段缩写 ⭐</h4> <div class="module-skills">考查：概括能力、文字精炼</div> </div>
+                        <div class="module-score"> <div class="score-number">12分</div> <div class="score-percentage">6%</div> </div>
                     </a>
                 </div>
             </div>
@@ -560,18 +485,28 @@
                     <div>占总分20%</div>
                 </div>
                 <div class="paper-content">
-                    <!-- =========== 修改点 1：将 div 改为 a 标签 =========== -->
+                    <!-- =========== 核心修改区域开始 =========== -->
                     <a href="h-chinese-oral.html" class="module module-oral">
                         <div class="module-info">
-                            <h4>口头报告与讨论 ⭐</h4>
-                            <div class="module-skills">考查：口语表达、互动沟通</div>
+                            <h4>口头报告</h4>
+                            <div class="module-skills">考查：口语表达、内容组织</div>
                         </div>
                         <div class="module-score">
-                            <div class="score-number">40分</div>
-                            <div class="score-percentage">20%</div>
+                            <div class="score-number">20分</div>
+                            <div class="score-percentage">10%</div>
                         </div>
                     </a>
-                    <!-- ================================================== -->
+                    <a href="h-chinese-oral.html" class="module module-oral">
+                        <div class="module-info">
+                            <h4>讨论</h4>
+                            <div class="module-skills">考查：互动沟通、思辨能力</div>
+                        </div>
+                        <div class="module-score">
+                            <div class="score-number">20分</div>
+                            <div class="score-percentage">10%</div>
+                        </div>
+                    </a>
+                    <!-- =========== 核心修改区域结束 =========== -->
                 </div>
             </div>
         </div>
@@ -585,9 +520,7 @@
                 <a href="summary.html" target="_blank" class="cta-button">片段缩写训练</a>
                 <a href="practical-writing.html" target="_blank" class="cta-button">实用文训练</a>
                 <a href="composition.html" target="_blank" class="cta-button">作文训练</a>
-                <!-- =========== 修改点 2：激活 CTA 按钮 =========== -->
                 <a href="h-chinese-oral.html" class="cta-button">口试模块练习</a>
-                <!-- ============================================== -->
             </div>
         </div>
         
@@ -607,36 +540,11 @@
                         通过先进的数据挖掘技术，深度分析学生在各个模块的学习行为模式，识别知识薄弱点，提供个性化的学习建议和优化方案。
                     </div>
                     <div class="analysis-features">
-                        <div class="feature-item clickable">
-                            <a href="summary-analysis.html" target="_blank" class="feature-link">
-                                <div class="feature-icon">📊</div>
-                                <div class="feature-text">片段缩写趋势洞察</div>
-                            </a>
-                        </div>
-                        <div class="feature-item clickable">
-                            <a href="reading-analysis.html" target="_blank" class="feature-link">
-                                <div class="feature-icon">🎯</div>
-                                <div class="feature-text">阅读理解趋势分析</div>
-                            </a>
-                        </div>
-                        <div class="feature-item clickable">
-                           <a href="grammar-analysis.html" target="_blank" class="feature-link">
-                                <div class="feature-icon">🔧</div>
-                                <div class="feature-text">病句修改趋势洞察</div>
-                            </a>
-                        </div>
-                        <div class="feature-item clickable">
-                            <a href="practical-writing-analysis.html" target="_blank" class="feature-link">
-                                <div class="feature-icon">📝</div>
-                                <div class="feature-text">实用文趋势分析</div>
-                            </a>
-                        </div>
-                        <div class="feature-item clickable">
-                            <a href="composition-analysis.html" target="_blank" class="feature-link">
-                                <div class="feature-icon">✍️</div>
-                                <div class="feature-text">作文趋势分析</div>
-                            </a>
-                        </div>
+                        <div class="feature-item clickable"> <a href="summary-analysis.html" target="_blank" class="feature-link"> <div class="feature-icon">📊</div> <div class="feature-text">片段缩写趋势洞察</div> </a> </div>
+                        <div class="feature-item clickable"> <a href="reading-analysis.html" target="_blank" class="feature-link"> <div class="feature-icon">🎯</div> <div class="feature-text">阅读理解趋势分析</div> </a> </div>
+                        <div class="feature-item clickable"> <a href="grammar-analysis.html" target="_blank" class="feature-link"> <div class="feature-icon">🔧</div> <div class="feature-text">病句修改趋势洞察</div> </a> </div>
+                        <div class="feature-item clickable"> <a href="practical-writing-analysis.html" target="_blank" class="feature-link"> <div class="feature-icon">📝</div> <div class="feature-text">实用文趋势分析</div> </a> </div>
+                        <div class="feature-item clickable"> <a href="composition-analysis.html" target="_blank" class="feature-link"> <div class="feature-icon">✍️</div> <div class="feature-text">作文趋势分析</div> </a> </div>
                     </div>
                 </div>
             </div>
@@ -645,41 +553,20 @@
         <div class="skills-legend">
             <div class="legend-title">考查能力图例</div>
             <div class="legend-items">
-                <div class="legend-item">
-                    <div class="legend-color color-comprehension"></div>
-                    文本理解与分析
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color color-analysis"></div>
-                    语言应用能力
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color color-expression"></div>
-                    表达与写作
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color color-application"></div>
-                    实际应用技能
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color color-communication"></div>
-                    口语沟通能力
-                </div>
+                <div class="legend-item"> <div class="legend-color color-comprehension"></div> 文本理解与分析 </div>
+                <div class="legend-item"> <div class="legend-color color-analysis"></div> 语言应用能力 </div>
+                <div class="legend-item"> <div class="legend-color color-expression"></div> 表达与写作 </div>
+                <div class="legend-item"> <div class="legend-color color-application"></div> 实际应用技能 </div>
+                <div class="legend-item"> <div class="legend-color color-communication"></div> 口语沟通能力 </div>
             </div>
         </div>
     </div>
 
     <script>
         function showModuleDetails(moduleName) {
-            const details = {
-                '短文填充': '在短文中填入合适的词语\n重点：词汇掌握、语境理解',
-                '讨论': '与考官就话题进行讨论\n重点：观点表达、互动交流'
-            };
-            
-            alert(`${moduleName}模块详情：\n\n${details[moduleName] || '详情待补充...'}`);
+            alert(`${moduleName}模块详情：\n\n该模块的独立学习页面正在建设中...`);
         }
         
-        // 添加动画效果
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.paper-card, .analysis-card');
             cards.forEach((card, index) => {
