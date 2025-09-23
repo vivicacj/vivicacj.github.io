@@ -62,7 +62,7 @@
             position: relative;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background-color: white; /* Base color for the card body */
+            background-color: white;
         }
 
         .subject-card:hover {
@@ -73,7 +73,7 @@
         .card-header {
             padding: 20px;
             color: white;
-            display: flex; /* Using flexbox for alignment */
+            display: flex;
             align-items: center;
             gap: 15px;
         }
@@ -87,26 +87,23 @@
             font-weight: 600;
         }
         
-        /* --- 核心修改：内容区域改为段落样式 --- */
         .card-content {
             padding: 20px;
             background-color: white;
-            color: #555; /* Content text is dark grey */
+            color: #555;
             font-size: 0.95rem;
             border-top: 1px solid rgba(0,0,0,0.1);
         }
 
-        /* --- 移植图1的配色方案 (注意E-Math和A-Math颜色对调) --- */
-        .e-math .card-header { background-color: #8f94fb; }       /* E-Math - 紫色 */
-        .h-chinese .card-header { background-color: #a8e063; }    /* 华文 - 绿色 */
-        .english .card-header { background-color: #ff8e53; }      /* 英文 - 橙红色 */
-        .a-math .card-header { background-color: #ffc837; }       /* A-Math - 橙黄色 */
-        .geography .card-header { background-color: #48dbfb; }    /* 地理 - 蓝色 */
-        .science .card-header { background-color: #8e2de2; }      /* 科学 - 深紫色 */
-        .poa .card-header { background-color: #c0392b; }          /* POA - 暗红色 */
-        .history .card-header { background-color: #434343; }      /* 历史 - 黑色 */
+        .e-math .card-header { background-color: #8f94fb; }
+        .h-chinese .card-header { background-color: #a8e063; }
+        .english .card-header { background-color: #ff8e53; }
+        .a-math .card-header { background-color: #ffc837; }
+        .geography .card-header { background-color: #48dbfb; }
+        .science .card-header { background-color: #8e2de2; }
+        .poa .card-header { background-color: #c0392b; }
+        .history .card-header { background-color: #434343; }
 
-        
         .cta-section {
             text-align: center;
             margin-top: 60px;
@@ -152,24 +149,10 @@
         }
         
         #notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #ff6b6b;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
         }
         #notification.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translate(-50%, -20px);
+            opacity: 1; visibility: visible; transform: translate(-50%, -20px);
         }
         
         @media (max-width: 768px) {
@@ -216,12 +199,14 @@
                     <p>Study of physical and human geography, map skills, and case studies.</p>
                 </div>
             </a>
-             <a href="#" class="subject-card science">
+            <!-- =========== 核心修改点：激活链接 =========== -->
+             <a href="combined-science/chem-phys-dashboard.html" class="subject-card science">
                 <div class="card-header"><span class="subject-icon">🔬</span><h3 class="subject-title">Combined Science (Phys/Chem)</h3></div>
                 <div class="card-content">
                     <p>Core principles of Physics and Chemistry for the combined science paper.</p>
                 </div>
             </a>
+            <!-- ============================================== -->
              <a href="#" class="subject-card poa">
                 <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
                 <div class="card-content">
@@ -250,28 +235,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const notification = document.getElementById('notification');
-            const messages = [
-                "Welcome back! Let's make today productive.",
-                "New analysis available for Higher Chinese.",
-                "Remember to check the exam timetable regularly."
-            ];
-            
-            setTimeout(() => {
-                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-                notification.textContent = randomMessage;
-                notification.classList.add('show');
-                setTimeout(() => { notification.classList.remove('show'); }, 5000);
-            }, 2000);
-
+            const messages = [ "Welcome back! Let's make today productive.", "New analysis available for Higher Chinese.", "Remember to check the exam timetable regularly." ];
+            setTimeout(() => { const randomMessage = messages[Math.floor(Math.random() * messages.length)]; notification.textContent = randomMessage; notification.classList.add('show'); setTimeout(() => { notification.classList.remove('show'); }, 5000); }, 2000);
             const learningJourneyButton = document.querySelector('a[href="#subjects"]');
-            if(learningJourneyButton) {
-                const subjectsGrid = document.querySelector('.subjects-grid');
-                if(subjectsGrid && !subjectsGrid.id) { subjectsGrid.id = 'subjects'; }
-                learningJourneyButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-                });
-            }
+            if(learningJourneyButton) { const subjectsGrid = document.querySelector('.subjects-grid'); if(subjectsGrid && !subjectsGrid.id) { subjectsGrid.id = 'subjects'; } learningJourneyButton.addEventListener('click', function(e) { e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); }
         });
     </script>
 </body>
