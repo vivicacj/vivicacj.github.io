@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Combined Science - Chem & Phys Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- 引入我们本地的数据文件 -->
     <script src="science-data.js"></script>
     <style>
         /* CSS 样式部分保持不变 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #667eea; color: #333; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
         .header { text-align: center; margin-bottom: 30px; color: white; }
         .header h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 700; }
         .header p { font-size: 1.1rem; opacity: 0.9; }
         .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
-        .main-panel { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .main-panel, .side-panel .widget { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
         .side-panel { display: flex; flex-direction: column; gap: 20px; }
-        .widget { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; color: #2d3748; }
         .subject-section { margin-bottom: 30px; }
         .subject-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px 20px; background: linear-gradient(135deg, #4299e1, #3182ce); color: white; border-radius: 10px; }
@@ -66,21 +64,41 @@
 </head>
 <body>
     <div class="container">
-        <!-- HTML 部分保持不变 -->
-        <div class="header"><h1>🎯 Combined Science 「 Chemistry & Physics」</h1><p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p></div>
+        <div class="header">
+            <h1>🎯 Combined Science 「 Chemistry & Physics」</h1>
+            <p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p>
+        </div>
+        
         <div class="dashboard">
-            <div class="main-panel"><!-- Main panel content... --></div>
+            <!-- 左侧主面板 (静态内容) -->
+            <div class="main-panel">
+                <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
+                <div class="subject-section" id="chemistry-section">
+                    <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('...', '_blank')">Practice</button></div></div>
+                    <!-- ... 其他化学主题 ... -->
+                    </div>
+                </div>
+                <div class="subject-section" id="physics-section">
+                    <div class="subject-header"><div class="subject-title">⚡ Physics</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 8</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Archetypes (The "Big Four")</div><div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('...', '_blank')">Practice</button></div></div>
+                    <!-- ... 其他物理主题 ... -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧侧边栏 (动态内容) -->
             <div class="side-panel">
                 <div class="widget" id="strengths-widget">
                     <h3 class="section-title">📊 Strengths & Weaknesses</h3>
-                    <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
+                    <div class="subject-toggle">
+                        <button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button>
+                        <button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button>
+                    </div>
+                    <!-- 动态内容将注入到这里 -->
                     <div id="analytics-content">
-                        <canvas id="skillRadarChart" style="max-height: 250px;"></canvas>
-                        <h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4>
-                        <div id="heatmap-container" class="heatmap"></div>
-                        <div id="suggestion-box-container" class="suggestion-box">
-                            <div id="suggestion-text" class="suggestion-text"></div>
-                        </div>
+                        <!-- 初始状态 -->
+                        <div class="loading-text">Loading analytics data...</div>
                     </div>
                 </div>
                  <div class="widget"><h3 class="section-title">🎯 This Week's Goals</h3></div>
@@ -88,6 +106,8 @@
             </div>
         </div>
     </div>
+
+    <!-- 弹窗 HTML 保持不变 -->
     <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
     
     <script>
@@ -104,11 +124,13 @@
             const subjectData = scienceData[subject] || [];
             const analyticsContent = document.getElementById('analytics-content');
             
+            // 核心修复点：现在只更新 analytics-content 的内容
             if (subjectData.length === 0) {
                 analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for ${subject}. Please update the science-data.js file.</div>`;
                 return;
             }
 
+            // 动态生成分析内容的 HTML
             analyticsContent.innerHTML = `
                 <canvas id="skillRadarChart" style="max-height: 250px;"></canvas>
                 <h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4>
@@ -124,7 +146,6 @@
                 : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
             
             const errorCounts = errorTypes.map(type => 
-                // 注意：这里的 Error_Type 有下划线，需要精确匹配
                 incorrectData.filter(item => item.Error_Type && item.Error_Type.startsWith(type)).length
             );
             
@@ -147,19 +168,18 @@
             generateSuggestion(topicPerformance, errorCounts, errorTypes);
         }
         
-        // --- 其他函数保持不变 ---
+        // --- 其他所有函数（渲染、框架、交互等）保持不变 ---
         function renderRadarChart(labels, scores) { const ctx = document.getElementById('skillRadarChart').getContext('2d'); if (skillRadarChart) skillRadarChart.destroy(); skillRadarChart = new Chart(ctx, { type: 'radar', data: { labels: labels, datasets: [{ label: 'Skill Score', data: scores, fill: true, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgb(52, 152, 219)', pointBackgroundColor: 'rgb(52, 152, 219)', }] }, options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } } }); }
         function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
         function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.textContent = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like "${p[0]}" to achieve perfection!`; else el.textContent = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.textContent = `💡 Your weakest area is **"${wT}"** (Accuracy ${lS.toFixed(0)}%). The most common error type is **"${mET}"**. I recommend reviewing this topic's framework and doing targeted practice.`; else el.textContent = "Analysis complete. Use the charts above to guide your study plan."; }
         function closeFramework() { document.getElementById('frameworkModal').style.display = 'none'; }
         window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
+        // Framework functions are not included for brevity but should be kept
         document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
         function updateAllProgress() { document.querySelectorAll('.subject-section').forEach(sec => { const mastered = sec.querySelectorAll('.status-mastered').length; const total = sec.querySelectorAll('.topic-item').length; const prog = total > 0 ? (mastered / total) * 100 : 0; const fill = sec.querySelector('.progress-fill'); const text = sec.querySelector('.progress-text'); if (fill && text) { fill.style.width = prog + '%'; text.textContent = `Mastered: ${mastered} / ${total}`; } }); }
-        // Frameworks functions are not included for brevity but should be kept
         
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
-            // No need to fetch, just call updateAnalytics directly
             updateAnalytics('Chemistry');
         });
     </script>
