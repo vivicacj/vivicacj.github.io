@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <!-- 引入 Chart.js 用于绘制雷达图 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* --- 完整的CSS样式 --- */
+        /* CSS 样式部分保持不变 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #333; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -53,7 +53,8 @@
         .subject-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
         .toggle-btn { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; background-color: #f7fafc; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
         .toggle-btn.active { background-color: #3182ce; color: white; border-color: #3182ce; }
-        .loading-text { text-align: center; color: #718096; padding: 20px; }
+        .loading-text, .error-text { text-align: center; color: #718096; padding: 20px; background: #f7fafc; border-radius: 8px; }
+        .error-text { background: #fed7d7; color: #c53030; }
         .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; }
         .heatmap-cell { padding: 0.5rem; font-size: 0.8rem; text-align: center; border-radius: 5px; color: white; font-weight: 500; }
         .heat-high { background: #48bb78; } .heat-medium { background: #ed8936; } .heat-low { background: #e53e3e; }
@@ -64,233 +65,148 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎯 Combined Science 「 Chemistry & Physics」</h1>
-            <p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p>
-        </div>
-        
+        <!-- HTML 部分保持不变 -->
+        <div class="header"><h1>🎯 Combined Science 「 Chemistry & Physics」</h1><p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p></div>
         <div class="dashboard">
             <div class="main-panel">
                 <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
-                
-                <!-- Chemistry Section -->
                 <div class="subject-section" id="chemistry-section">
-                    <div class="subject-header">
-                        <div class="subject-title">🧪 Chemistry</div>
-                        <div>
-                            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-                            <div class="progress-text">Mastered: 0 / 9</div>
-                        </div>
-                    </div>
-                    
-                    <div class="topic-category">
-                        <div class="category-title">🎯 Core Topics (81% of marks)</div>
-                        <div class="topic-item">
-                            <div>
-                                <div class="topic-name">Acids, Bases & Salts / QA</div>
-                                <div class="topic-description">The most comprehensive and highest-weighted topic</div>
-                            </div>
-                            <div class="topic-controls">
-                                <button class="status-btn status-not-started" title="Not Started"></button>
-                                <button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button>
-                                <button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div>
-                                <div class="topic-name">Stoichiometry & The Mole Concept</div>
-                                <div class="topic-description">The most calculation-intensive and procedural topic</div>
-                            </div>
-                            <div class="topic-controls">
-                                <button class="status-btn status-not-started" title="Not Started"></button>
-                                <button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button>
-                                <button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div>
-                                <div class="topic-name">Chemical Bonding & Structure</div>
-                                <div class="topic-description">A major source of explanation and diagram-based questions</div>
-                            </div>
-                            <div class="topic-controls">
-                                <button class="status-btn status-not-started" title="Not Started"></button>
-                                <button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button>
-                                <button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div>
-                                <div class="topic-name">Redox Reactions & Reactivity of Metals</div>
-                                <div class="topic-description">The core of logical reasoning and prediction questions</div>
-                            </div>
-                            <div class="topic-controls">
-                                <button class="status-btn status-not-started" title="Not Started"></button>
-                                <button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button>
-                                <button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="topic-category">
-                        <div class="category-title">🛰️ Satellite Topics (19% of marks)</div>
-                        <div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    </div>
+                    <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Stoichiometry & The Mole Concept</div><div class="topic-description">The most calculation-intensive and procedural topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Chemical Bonding & Structure</div><div class="topic-description">A major source of explanation and diagram-based questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Redox Reactions & Reactivity of Metals</div><div class="topic-description">The core of logical reasoning and prediction questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Topics (19% of marks)</div><div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
                 </div>
-                
-                <!-- Physics Section -->
                 <div class="subject-section" id="physics-section">
-                    <div class="subject-header">
-                        <div class="subject-title">⚡ Physics</div>
-                        <div>
-                            <div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div>
-                            <div class="progress-text">Mastered: 0 / 8</div>
-                        </div>
-                    </div>
-                    
-                    <div class="topic-category">
-                        <div class="category-title">🎯 Core Archetypes (The "Big Four")</div>
-                        <div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1qDLUzRLwvqSofKnvvQbD2DoKtdX_tkP73-UL4i9BcKY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">The Balancing Act (Moments & Equilibrium)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1Xdh3DoB2UjPHIGpL4vcTRR5AGHxwCocTvN5fsrYtH7U/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">The Energy Conversion Trail</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1hre1cJO-ya60dBkteMFe2quBY8Ac3hRAQP9efveVdbI/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1z7UGZ71aNo57NG5Q-m384KA2_YmLnCPybPTzKipriYQ/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    </div>
-                    
-                    <div class="topic-category">
-                        <div class="category-title">🛰️ Satellite Archetypes</div>
-                        <div class="topic-item"><div><div class="topic-name">Stability (Centre of Gravity & Base Area)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1zUDZD90Lge9KdqCkgA7SPIWc2w0qKgK2puRUvSNzRpY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">Vector Drawing & Dynamics</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1y2e3CKutRQVF8krx5HH_VNgmaPPHYvqKzpi-3srC-bo/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">Density & Pressure Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1c3yPKiqNiW3ayzNwO8jXOaCETFGCEa-9MFQXo85vGws/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                        <div class="topic-item"><div><div class="topic-name">Light Ray Tracing & Optics Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1JbXc39hdg7e0liPzMd0fQMUY92tWn0tmu17wqfEKaPA/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    </div>
+                    <div class="subject-header"><div class="subject-title">⚡ Physics</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 8</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Archetypes (The "Big Four")</div><div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1qDLUzRLwvqSofKnvvQbD2DoKtdX_tkP73-UL4i9BcKY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Balancing Act (Moments & Equilibrium)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1Xdh3DoB2UjPHIGpL4vcTRR5AGHxwCocTvN5fsrYtH7U/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Energy Conversion Trail</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1hre1cJO-ya60dBkteMFe2quBY8Ac3hRAQP9efveVdbI/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1z7UGZ71aNo57NG5Q-m384KA2_YmLnCPybPTzKipriYQ/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Archetypes</div><div class="topic-item"><div><div class="topic-name">Stability (Centre of Gravity & Base Area)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1zUDZD90Lge9KdqCkgA7SPIWc2w0qKgK2puRUvSNzRpY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Vector Drawing & Dynamics</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1y2e3CKutRQVF8krx5HH_VNgmaPPHYvqKzpi-3srC-bo/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Density & Pressure Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1c3yPKiqNiW3ayzNwO8jXOaCETFGCEa-9MFQXo85vGws/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Light Ray Tracing & Optics Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1JbXc39hdg7e0liPzMd0fQMUY92tWn0tmu17wqfEKaPA/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
                 </div>
             </div>
-            
             <div class="side-panel">
                 <div class="widget" id="strengths-widget">
                     <h3 class="section-title">📊 Strengths & Weaknesses</h3>
-                    
-                    <div class="subject-toggle">
-                        <button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button>
-                        <button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button>
-                    </div>
-
+                    <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
                     <div id="analytics-content">
-                        <div id="loading-analytics" class="loading-text">加载分析数据中...</div>
+                        <div id="loading-analytics" class="loading-text">Loading analytics data...</div>
                         <canvas id="skillRadarChart" style="display: none; max-height: 250px;"></canvas>
                         <h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568; display: none;">Knowledge Heatmap</h4>
                         <div id="heatmap-container" class="heatmap"></div>
-                        <div id="suggestion-box-container" class="suggestion-box" style="display: none;">
-                            <div id="suggestion-text" class="suggestion-text"></div>
-                        </div>
+                        <div id="suggestion-box-container" class="suggestion-box" style="display: none;"><div id="suggestion-text" class="suggestion-text"></div></div>
                     </div>
                 </div>
-                 <div class="widget">
-                    <h3 class="section-title">🎯 This Week's Goals</h3>
-                    <!-- Goals would be user-selected -->
-                 </div>
-                 <div class="widget">
-                    <h3 class="section-title">🔄 Today's Review</h3>
-                     <!-- Review items would be algorithmically determined -->
-                 </div>
+                 <div class="widget"><h3 class="section-title">🎯 This Week's Goals</h3></div>
+                 <div class="widget"><h3 class="section-title">🔄 Today's Review</h3></div>
             </div>
         </div>
     </div>
-
-    <!-- Modal for Framework Details -->
-    <div id="frameworkModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeFramework()">&times;</span>
-            <div id="frameworkDetails"></div>
-        </div>
-    </div>
+    <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
     
     <script>
-        // --- ⚙️ 配置区域 (CONFIGURATION AREA) ⚙️ ---
-        const NOTION_PROXY_URL = 'https://notion-api-proxy.deepworks.workers.dev';
-
-        // --- 全局变量 ---
-        let allNotionData = [];
+        // --- ⚙️ CONFIGURATION AREA ⚙️ ---
+        const SPREADSHEET_ID = '14YcMnTWRBG0WIiTNBOZJUNXId4qr9koKOfAxxLJqrSg';
+        const API_ENDPOINT_TEMPLATE = `https://spreadsheets.google.com/feeds/list/${SPREADSHEET_ID}/{SHEET_NAME}/public/values?alt=json`;
+        
+        // --- GLOBAL VARIABLES ---
+        let allData = { Chemistry: [], Physics: [] };
         let skillRadarChart;
 
-        // --- 数据获取与处理 ---
-        async function fetchAnalyticsData() {
+        // --- DATA FETCHING & PARSING ---
+        async function fetchAllData() {
             const loadingDiv = document.getElementById('loading-analytics');
             try {
-                const response = await fetch(NOTION_PROXY_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({}),
-                });
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`Proxy server error: ${response.status} - ${errorText}`);
-                }
-                
-                const notionResponse = await response.json();
-                
-                if (notionResponse.object === 'error') {
-                    throw new Error(`Notion API error: ${notionResponse.message}`);
-                }
+                // Fetch both sheets in parallel for better performance
+                const [chemData, physData] = await Promise.all([
+                    fetchSheetData('Chemistry'),
+                    fetchSheetData('Physics')
+                ]);
 
-                // --- 核心修复点：更新属性名称以匹配您的Notion数据库 ---
-                allNotionData = notionResponse.results.map(item => {
-                    const props = item.properties;
-                    return {
-                        subject: props.Subject?.select?.name || null,
-                        topic: props.Topic?.select?.name || null,
-                        result: props.Result?.select?.name || null,
-                        //  将 'Error Type (C-L-M)' 改为 'Error Type'
-                        errorType: props['Error Type']?.select?.name || null, 
-                    };
-                });
-                // --- 修复结束 ---
-                
+                allData.Chemistry = chemData;
+                allData.Physics = physData;
+
+                // Initial display
                 updateAnalytics('Chemistry');
-                
             } catch (error) {
                 console.error('Failed to fetch analytics data:', error);
-                loadingDiv.textContent = `Failed to load analytics. Check proxy URL and Notion setup. Error: ${error.message}`;
+                const errorDiv = document.getElementById('analytics-content');
+                errorDiv.innerHTML = `<div class="error-text">Failed to load data. Please check if the Google Sheet is 'Published to the web'.<br><small>${error.message}</small></div>`;
             }
         }
 
-        // --- 核心分析与渲染函数 ---
+        async function fetchSheetData(sheetName) {
+            const url = API_ENDPOINT_TEMPLATE.replace('{SHEET_NAME}', sheetName);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Could not fetch sheet: ${sheetName}. Status: ${response.status}`);
+            }
+            const data = await response.json();
+            
+            // The actual data is in `data.feed.entry`
+            if (!data.feed || !data.feed.entry) {
+                return []; // Return empty array if the sheet is empty
+            }
+
+            return data.feed.entry.map(entry => {
+                // Google Sheets JSON format is verbose, we need to extract `gsx$` properties
+                return {
+                    subject: entry['gsx$subject']?.$t || null,
+                    topic: entry['gsx$topic']?.$t || null,
+                    result: entry['gsx$result']?.$t || null,
+                    errorType: entry['gsx$errortype']?.$t || null
+                };
+            }).filter(item => item.subject && item.topic && item.result); // Filter out incomplete rows
+        }
+
+        // --- CORE ANALYTICS & RENDERING ---
         function updateAnalytics(subject) {
             document.querySelectorAll('.toggle-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.textContent.includes(subject));
             });
 
-            const subjectData = allNotionData.filter(item => item.subject === subject && item.topic && item.result);
+            const subjectData = allData[subject];
+            const analyticsContent = document.getElementById('analytics-content');
             
-            // 如果没有该科目的数据，则显示提示信息
-            if (subjectData.length === 0) {
-                 document.getElementById('loading-analytics').style.display = 'none';
-                 document.getElementById('skillRadarChart').style.display = 'none';
-                 document.getElementById('heatmap-title').style.display = 'block';
-                 document.getElementById('heatmap-container').innerHTML = `<div style="grid-column: 1 / -1; text-align: center; background: #667eea; color: white; padding: 20px; border-radius: 10px;">暂无该科目的练习数据。请在Notion中添加一些记录来看看你的分析报告！</div>`;
-                 document.getElementById('suggestion-box-container').style.display = 'none';
-                 return;
+            if (!subjectData || subjectData.length === 0) {
+                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for this subject. Please add some records in the Google Sheet to see your analysis!</div>`;
+                return;
             }
 
+            // Restore the original content structure if it was replaced by the "no data" message
+            analyticsContent.innerHTML = `
+                <div id="loading-analytics" class="loading-text" style="display:none;">Loading analytics data...</div>
+                <canvas id="skillRadarChart" style="max-height: 250px;"></canvas>
+                <h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4>
+                <div id="heatmap-container" class="heatmap"></div>
+                <div id="suggestion-box-container" class="suggestion-box">
+                    <div id="suggestion-text" class="suggestion-text"></div>
+                </div>`;
+            
             const incorrectData = subjectData.filter(item => item.result === 'Incorrect');
             
-            const errorTypes = ['C (Connect)', 'L (Link)', 'M (Manipulate)'];
+            // Determine error types based on subject
+            const errorTypes = subject === 'Chemistry' 
+                ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error']
+                : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
+            
             const errorCounts = errorTypes.map(type => 
-                incorrectData.filter(item => item.errorType === type).length
+                incorrectData.filter(item => item.errorType && item.errorType.startsWith(type)).length
             );
             
             const totalErrors = incorrectData.length || 1;
             const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
             
-            // 为了让雷达图看起来更完整，我们假设 "Other" 类型的错误为0
-            const radarLabels = ['Connect', 'Link', 'Manipulate', 'Other'];
-            const radarScores = [...skillScores, 100]; // 添加 Other 的满分
-
-            renderRadarChart(radarLabels, radarScores);
+            renderRadarChart(errorTypes, skillScores);
 
             const topicPerformance = {};
             const allTopics = [...new Set(subjectData.map(item => item.topic))];
@@ -303,16 +219,9 @@
                 if(totalCount > 0) topicPerformance[topic] = ((correctCount + (partialCount * 0.5)) / totalCount) * 100;
             });
             renderHeatmap(topicPerformance);
-            
-            generateSuggestion(topicPerformance, errorCounts, errorTypes, subjectData.length);
-
-            document.getElementById('loading-analytics').style.display = 'none';
-            document.getElementById('skillRadarChart').style.display = 'block';
-            document.getElementById('heatmap-title').style.display = 'block';
-            document.getElementById('heatmap-container').style.display = 'grid';
-            document.getElementById('suggestion-box-container').style.display = 'block';
+            generateSuggestion(topicPerformance, errorCounts, errorTypes);
         }
-
+        
         function renderRadarChart(labels, scores) {
             const ctx = document.getElementById('skillRadarChart').getContext('2d');
             if (skillRadarChart) skillRadarChart.destroy();
@@ -327,108 +236,20 @@
                         pointBackgroundColor: 'rgb(52, 152, 219)',
                     }]
                 },
-                options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 14 } } } }, plugins: { legend: { display: false } } }
+                options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } }
             });
         }
         
-        function renderHeatmap(performanceData) {
-            const container = document.getElementById('heatmap-container');
-            container.innerHTML = '';
-            const sortedTopics = Object.keys(performanceData).sort((a,b) => performanceData[a] - performanceData[b]);
-            
-            sortedTopics.forEach(topic => {
-                const score = performanceData[topic];
-                let heatClass = 'heat-low';
-                if (score >= 85) heatClass = 'heat-high';
-                else if (score >= 60) heatClass = 'heat-medium';
-                
-                const cell = document.createElement('div');
-                cell.className = `heatmap-cell ${heatClass}`;
-                cell.textContent = topic.length > 12 ? topic.substring(0, 10) + '...' : topic;
-                cell.title = `${topic}: ${score.toFixed(0)}% Correct`;
-                container.appendChild(cell);
-            });
-        }
-
-        function generateSuggestion(topicPerf, errorCounts, errorTypes, totalSubjectEntries) {
-            const suggestionEl = document.getElementById('suggestion-text');
-
-            if (totalSubjectEntries === 0) {
-                suggestionEl.textContent = "暂无该科目的练习数据。请在Notion中添加一些记录来看看你的分析报告！";
-                return;
-            }
-
-            const totalErrors = errorCounts.reduce((sum, count) => sum + count, 0);
-
-            if (totalErrors === 0) {
-                const partialTopics = Object.keys(topicPerf).filter(topic => topicPerf[topic] < 100);
-                if (partialTopics.length > 0) {
-                    suggestionEl.textContent = `🎉 非常棒！你没有完全错误的题目。可以重点回顾一下 "${partialTopics[0]}" 等部分掌握的主题，追求完美！`;
-                } else {
-                    suggestionEl.textContent = "🏆 表现出色，所有主题掌握良好！";
-                }
-                return;
-            }
-            
-            let weakestTopic = null, lowestScore = 101;
-            Object.keys(topicPerf).forEach(topic => {
-                if(topicPerf[topic] < lowestScore){
-                    lowestScore = topicPerf[topic];
-                    weakestTopic = topic;
-                }
-            });
-
-            let maxErrors = -1, mainErrorType = null;
-            errorCounts.forEach((count, index) => {
-                if(count > maxErrors){
-                    maxErrors = count;
-                    mainErrorType = errorTypes[index];
-                }
-            });
-
-            if (weakestTopic && mainErrorType) {
-                suggestionEl.textContent = `💡 你在 **"${weakestTopic}"** 上的表现需要加强 (正确率 ${lowestScore.toFixed(0)}%)。主要的错误类型是 **"${mainErrorType}"**。建议重点复习该主题的框架模型并加强练习。`;
-            } else {
-                suggestionEl.textContent = "数据分析完成，请根据上方的图表来规划你的学习。";
-            }
-        }
-
-        // --- 页面交互与其他功能 (保持不变) ---
+        // Other rendering and utility functions remain the same
+        function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
+        function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.textContent = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like "${p[0]}" to achieve perfection!`; else el.textContent = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.textContent = `💡 Your weakest area is **"${wT}"** (Accuracy ${lS.toFixed(0)}%). The most common error type is **"${mET}"**. I recommend reviewing this topic's framework and doing targeted practice.`; else el.textContent = "Analysis complete. Use the charts above to guide your study plan."; }
         function closeFramework() { document.getElementById('frameworkModal').style.display = 'none'; }
         window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
-
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('status-btn')) {
-                const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
-                const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
-                const symbols = ['', '●', 'P', '✓'];
-                let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
-                e.target.className = 'status-btn';
-                const nextIndex = (currentIndex + 1) % statuses.length;
-                e.target.classList.add(statuses[nextIndex]);
-                e.target.title = titles[nextIndex];
-                e.target.textContent = symbols[nextIndex];
-                updateAllProgress();
-            }
-        });
-        
-        function updateAllProgress() {
-            document.querySelectorAll('.subject-section').forEach(section => {
-                const masteredButtons = section.querySelectorAll('.status-mastered');
-                const totalTopicItems = section.querySelectorAll('.topic-item');
-                const progress = totalTopicItems.length > 0 ? (masteredButtons.length / totalTopicItems.length) * 100 : 0;
-                const progressFill = section.querySelector('.progress-fill');
-                const progressText = section.querySelector('.progress-text');
-                if (progressFill && progressText) {
-                    progressFill.style.width = progress + '%';
-                    progressText.textContent = `Mastered: ${masteredButtons.length} / ${totalTopicItems.length}`;
-                }
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', fetchAnalyticsData);
-        // Frameworks functions remain unchanged
-        // ... (showChemistryFramework and showFramework functions are the same as before)
+        document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
+        function updateAllProgress() { document.querySelectorAll('.subject-section').forEach(sec => { const mastered = sec.querySelectorAll('.status-mastered').length; const total = sec.querySelectorAll('.topic-item').length; const prog = total > 0 ? (mastered / total) * 100 : 0; const fill = sec.querySelector('.progress-fill'); const text = sec.querySelector('.progress-text'); if (fill && text) { fill.style.width = prog + '%'; text.textContent = `Mastered: ${mastered} / ${total}`; } }); }
+        // Frameworks functions (showChemistryFramework, showFramework) are not included for brevity but should be kept
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', fetchAllData);
     </script>
 </body>
 </html>
