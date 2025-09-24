@@ -3,390 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O-level Combined Science Study Planner</title>
-    
-    <!-- 1. 引入 Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <!-- 2. 引入静态数据文件 -->
-    <script src="data/exam-config.js"></script>
-    <script src="data/science-data.js"></script>
-
-     <!-- 3. Firebase SDKs -->
-     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
+    <title>O-Level Study Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f9; min-height: 100vh; padding: 20px; color: #374151; }
-        .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .module { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); height: fit-content; }
-        .module-header { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
-        .module-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: white; }
-        .icon-strategy { background: linear-gradient(135deg, #4299e1, #3182ce); }
-        .icon-review { background: linear-gradient(135deg, #10b981, #059669); }
-        .module-title { font-size: 1.4rem; font-weight: 700; color: #2d3748; }
-        .olevel-countdown { background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: center; }
-        .countdown-label { font-size: 0.9rem; opacity: 0.9; margin-bottom: 8px; }
-        .countdown-days { font-size: 2.5rem; font-weight: 800; margin-bottom: 5px; }
-        .next-exam { font-size: 0.8rem; opacity: 0.8; }
-        .study-phase { background: #f0f9ff; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid #3b82f6; }
-        .phase-title { font-weight: 600; color: #1e40af; margin-bottom: 5px; }
-        .phase-desc { font-size: 0.85rem; color: #1e40af; opacity: 0.8; }
-        .subject-balance { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .subject-card { padding: 15px; border-radius: 10px; text-align: center; }
-        .subject-chemistry { background: #fef3c7; border: 2px solid #fbbf24; }
-        .subject-physics { background: #dbeafe; border: 2px solid #3b82f6; }
-        .subject-name { font-weight: 600; margin-bottom: 8px; }
-        .subject-chemistry .subject-name { color: #92400e; }
-        .subject-physics .subject-name { color: #1e40af; }
-        .subject-score { font-size: 1.5rem; font-weight: 700; margin-bottom: 5px; }
-        .subject-status { font-size: 0.8rem; opacity: 0.8; }
-        .priority-topics { margin-bottom: 25px; }
-        .section-title { font-weight: 600; color: #2d3748; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
-        .topic-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 12px; border-radius: 10px; border-left: 4px solid; }
-        .topic-critical { background: #fef2f2; border-left-color: #ef4444; }
-        .topic-high { background: #fff7ed; border-left-color: #f59e0b; }
-        .topic-medium { background: #f0f9ff; border-left-color: #3b82f6; }
-        .topic-info { flex: 1; }
-        .topic-name { font-weight: 600; color: #2d3748; margin-bottom: 4px; }
-        .topic-meta { display: flex; flex-wrap: wrap; gap: 15px; font-size: 0.75rem; color: #6b7280; }
-        .topic-actions { display: flex; gap: 8px; }
-        .action-btn { padding: 6px 12px; border: none; border-radius: 6px; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; color: white; }
-        .btn-drill { background: #ef4444; } .btn-practice { background: #f59e0b; } .btn-review { background: #3b82f6; }
-        .action-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
-        .study-session { background: #f8fafc; border-radius: 12px; padding: 20px; text-align: center; }
-        .session-topic { font-size: 0.9rem; color: #6b7280; margin-bottom: 8px; }
-        .session-timer { font-size: 2.2rem; font-weight: 800; color: #2d3748; margin: 15px 0; }
-        .session-type { font-size: 0.8rem; color: #6b7280; margin-bottom: 15px; }
-        .timer-controls { display: flex; gap: 10px; justify-content: center; }
-        .timer-btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; color: white; }
-        .btn-start { background: #10b981; } .btn-pause { background: #f59e0b; }
-        .olevel-insights { background: #f0f9ff; border-radius: 12px; padding: 20px; margin-top: 20px; }
-        .insights-title { font-weight: 600; color: #1e40af; margin-bottom: 15px; }
-        .insight-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; }
-        .insight-label { color: #374151; }
-        .insight-value { font-weight: 600; color: #1e40af; }
-        .review-alert { background: #fef3c7; border: 1px solid #fde68a; padding: 12px 16px; border-radius: 8px; margin-bottom: 15px; }
-        .alert-text { font-size: 0.85rem; color: #92400e; font-weight: 500; }
-        .review-item { display: flex; align-items: center; justify-content: space-between; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #e5e7eb; }
-        .review-urgent { background: #fef2f2; border-color: #fecaca; }
-        .review-due { background: #fff7ed; border-color: #fed7aa; }
-        .review-scheduled { background: #f9fafb; }
-        .review-info { flex: 1; }
-        .review-topic { font-weight: 600; color: #2d3748; margin-bottom: 4px; }
-        .review-details { font-size: 0.75rem; color: #6b7280; display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; }
-        .review-badges { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-        .badge { padding: 2px 8px; border-radius: 12px; font-size: 0.65rem; font-weight: 600; }
-        .badge-frequency { background: #dbeafe; color: #1e40af; } .badge-score { background: #fee2e2; color: #991b1b; } .badge-type { background: #f3f4f6; color: #374151; }
-        .recommendation { background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 12px; padding: 20px; margin-top: 20px; text-align: center; }
-        .rec-title { font-weight: 600; margin-bottom: 10px; }
-        .rec-text { font-size: 0.9rem; line-height: 1.4; margin-bottom: 15px; }
-        .rec-btn { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
-        .rec-btn:hover { background: rgba(255,255,255,0.3); }
-        @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .subject-balance { grid-template-columns: 1fr; } }
-         /* 新增 Header 和 Dashboard Link 样式 */
-        .page-header {
-            text-align: center;
-            margin-bottom: 20px;
-            color: white;
-            background: #667eea; /* Match the body gradient */
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .dashboard-link {
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .subject-card {
+            text-decoration: none;
+            color: white;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background-color: white;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-header {
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .subject-icon {
+            font-size: 2rem;
+        }
+
+        .subject-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .card-content {
+            padding: 20px;
+            background-color: white;
+            color: #555;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .e-math .card-header { background-color: #8f94fb; }
+        .h-chinese .card-header { background-color: #a8e063; }
+        .english .card-header { background-color: #ff8e53; }
+        .a-math .card-header { background-color: #ffc837; }
+        .geography .card-header { background-color: #48dbfb; }
+        .science .card-header { background-color: #8e2de2; }
+        .poa .card-header { background-color: #c0392b; }
+        .history .card-header { background-color: #434343; }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 60px;
+            padding: 40px 20px;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
             display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .cta-primary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        .cta-secondary {
             background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            text-decoration: none;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.9em;
-            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
         }
-        .dashboard-link:hover {
-            background: rgba(255, 255, 255, 0.3);
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        }
+        
+        #notification {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+        }
+        #notification.show {
+            opacity: 1; visibility: visible; transform: translate(-50%, -20px);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .subjects-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-     <!-- 新增页面总头部 -->
-    <div style="max-width: 1400px; margin: 0 auto;">
-        <div class="page-header">
-            <h1>Combined Science Command Center</h1>
-            <p>Your strategic planner and smart review queue for O-Level success.</p>
-            <a href="chem-phys-dashboard.html" class="dashboard-link">📊 Go to Detailed Analytics Dashboard</a>
-        </div>
-    </div>
     <div class="container">
-        <!-- 模块一：战略规划 -->
-        <div class="module">
-            <div class="module-header">
-                <div class="module-icon icon-strategy">🎯</div>
-                <h3 class="module-title">O-level Study Strategy</h3>
-            </div>
-            <div id="strategy-module-content">
-                <p>Loading Strategy...</p>
-            </div>
+        <div class="header">
+            <h1>O-Level Study Platform</h1>
+            <p>A centralized hub for Dennis's O-Level learning journey, integrating all subjects and analysis tools.</p>
         </div>
 
-        <!-- 模块二：智能复习 -->
-        <div class="module">
-            <div class="module-header">
-                <div class="module-icon icon-review">🔄</div>
-                <h3 class="module-title">Smart Review Queue</h3>
-            </div>
-            <div id="review-module-content">
-                <p>Loading Review Queue...</p>
+        <div class="subjects-grid">
+            <a href="e-math/" class="subject-card e-math">
+                <div class="card-header"><span class="subject-icon">🧮</span><h3 class="subject-title">E-Math</h3></div>
+                <div class="card-content">
+                    <p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p>
+                </div>
+            </a>
+            <a href="h-chinese/" class="subject-card h-chinese">
+                <div class="card-header"><span class="subject-icon">✍️</span><h3 class="subject-title">Higher Chinese</h3></div>
+                <div class="card-content">
+                    <p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p>
+                </div>
+            </a>
+            <a href="english/" class="subject-card english">
+                <div class="card-header"><span class="subject-icon">📚</span><h3 class="subject-title">English Language</h3></div>
+                <div class="card-content">
+                    <p>Modules for composition, comprehension, and oral communication skills.</p>
+                </div>
+            </a>
+            <a href="a-math/" class="subject-card a-math">
+                <div class="card-header"><span class="subject-icon">📐</span><h3 class="subject-title">Additional Mathematics</h3></div>
+                <div class="card-content">
+                    <p>Algebraic methods, calculus, and trigonometric functions.</p>
+                </div>
+            </a>
+            <a href="geography/" class="subject-card geography">
+                <div class="card-header"><span class="subject-icon">🌍</span><h3 class="subject-title">Geography</h3></div>
+                <div class="card-content">
+                    <p>Study of physical and human geography, map skills, and case studies.</p>
+                </div>
+            </a>
+             <!-- =========== 核心修改点 =========== -->
+             <a href="combined-science/" class="subject-card science">
+                <div class="card-header"><span class="subject-icon">🔬</span><h3 class="subject-title">Combined Science (Phys/Chem)</h3></div>
+                <div class="card-content">
+                    <p>Core principles of Physics and Chemistry for the combined science paper.</p>
+                </div>
+            </a>
+             <!-- ================================== -->
+             <a href="poa/" class="subject-card poa">
+                <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
+                <div class="card-content">
+                    <p>Fundamentals of accounting, financial statements, and business entities.</p>
+                </div>
+            </a>
+             <a href="history/" class="subject-card history">
+                <div class="card-header"><span class="subject-icon">📜</span><h3 class="subject-title">History</h3></div>
+                <div class="card-content">
+                    <p>Analysis of key historical events, sources, and essay writing skills.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="cta-section">
+            <h2>Ready to Begin?</h2>
+            <div class="cta-buttons">
+                <a href="#subjects" class="cta-button cta-primary">Start Learning Journey</a>
+                <a href="g3-exam-timetable.html" class="cta-button cta-secondary">View Exam Timetable</a>
             </div>
         </div>
     </div>
+    
+    <div id="notification"></div>
 
     <script>
-        // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
-            authDomain: "emath-study-plan.firebaseapp.com",
-            projectId: "emath-study-plan",
-            storageBucket: "emath-study-plan.firebasestorage.app",
-            messagingSenderId: "589299697460",
-            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
-            measurementId: "G-09QVE4GLS0"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const reviewLogCollection = db.collection("science-review-log");
-
-        // --- 2. GLOBAL VARIABLES ---
-        let reviewLog = {};
-        let studyTimerInterval = null;
-        let studyTimerSeconds = 45 * 60;
-        let isStudying = false;
-        let currentStudyTopic = null;
-
-        // --- 3. INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', async function() {
-            await fetchReviewLog();
-            renderStrategyModule();
-            renderReviewModule();
-            setupEventListeners();
-            updateStudyTimerDisplay();
+        document.addEventListener('DOMContentLoaded', () => {
+            const notification = document.getElementById('notification');
+            const messages = [ "Welcome back! Let's make today productive.", "New analysis available for Higher Chinese.", "Remember to check the exam timetable regularly." ];
+            setTimeout(() => { const randomMessage = messages[Math.floor(Math.random() * messages.length)]; notification.textContent = randomMessage; notification.classList.add('show'); setTimeout(() => { notification.classList.remove('show'); }, 5000); }, 2000);
+            const learningJourneyButton = document.querySelector('a[href="#subjects"]');
+            if(learningJourneyButton) { const subjectsGrid = document.querySelector('.subjects-grid'); if(subjectsGrid && !subjectsGrid.id) { subjectsGrid.id = 'subjects'; } learningJourneyButton.addEventListener('click', function(e) { e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); }
         });
-        
-        // --- 4. DATA FETCHING ---
-        async function fetchReviewLog() {
-            try {
-                const snapshot = await reviewLogCollection.get();
-                snapshot.forEach(doc => {
-                    reviewLog[doc.id] = doc.data().lastReviewed;
-                });
-            } catch (error) {
-                console.error("Error fetching review log from Firebase:", error);
-            }
-        }
-
-        // --- 5. MODULE RENDERING FUNCTIONS (包含了所有子函数) ---
-        function renderStrategyModule() {
-            const container = document.getElementById('strategy-module-content');
-            const today = new Date();
-            const olevelDate = new Date(examConfig.mainExam.date);
-            const ca2Date = new Date(examConfig.schoolTest.date);
-            const olevelDaysLeft = Math.ceil((olevelDate - today) / (1000 * 60 * 60 * 24));
-            const ca2DaysLeft = Math.ceil((ca2Date - today) / (1000 * 60 * 60 * 24));
-            const chemData = scienceData.Chemistry || [];
-            const physData = scienceData.Physics || [];
-            const chemAccuracy = calculateAccuracy(chemData);
-            const physAccuracy = calculateAccuracy(physData);
-            const allTopicsData = [...chemData, ...physData];
-            const uniqueTopics = [...new Set(allTopicsData.map(item => item.Topic))];
-            const priorityList = uniqueTopics.map(topicName => {
-                const topicConfig = examConfig.topics[topicName];
-                if (!topicConfig) return null;
-                const topicData = allTopicsData.filter(item => item.Topic === topicName);
-                const accuracy = calculateAccuracy(topicData);
-                const freqWeight = { "High": 3, "Medium": 2, "Low": 1 }[topicConfig.frequency] || 1;
-                const typeWeight = { "Core": 2, "Satellite": 1 }[topicConfig.type] || 1;
-                const priorityScore = (100 - accuracy) * freqWeight * typeWeight;
-                return { name: topicName, accuracy: accuracy, config: topicConfig, score: priorityScore };
-            }).filter(Boolean).sort((a, b) => b.score - a.score);
-
-            container.innerHTML = `
-                <div class="olevel-countdown">
-                    <div class="countdown-label">Days Until ${examConfig.mainExam.name}</div>
-                    <div class="countdown-days">${olevelDaysLeft > 0 ? olevelDaysLeft : 'Done!'}</div>
-                    <div class="next-exam">${examConfig.schoolTest.name}: ${ca2DaysLeft > 0 ? ca2DaysLeft + ' days' : 'Passed'}</div>
-                </div>
-                <div class="study-phase">
-                    <div class="phase-title">Current Phase: Intensive Learning</div>
-                    <div class="phase-desc">Focus on mastering Core Topics and building strong foundations</div>
-                </div>
-                <div class="subject-balance">
-                    <div class="subject-card subject-chemistry">
-                        <div class="subject-name">Chemistry</div>
-                        <div class="subject-score">${chemAccuracy.toFixed(0)}%</div>
-                        <div class="subject-status">${chemAccuracy >= 75 ? 'On Track' : 'Needs Focus'}</div>
-                    </div>
-                    <div class="subject-card subject-physics">
-                        <div class="subject-name">Physics</div>
-                        <div class="subject-score">${physAccuracy.toFixed(0)}%</div>
-                        <div class="subject-status">${physAccuracy >= 75 ? 'On Track' : 'Needs Focus'}</div>
-                    </div>
-                </div>
-                <div class="priority-topics">
-                    <div class="section-title">🔥 Critical Focus Areas</div>
-                    <div>${generatePriorityListHTML(priorityList.slice(0, 3))}</div>
-                </div>
-                <div class="study-session">
-                    <div class="session-topic">Next Focused Session</div>
-                    <div class="session-timer" id="studyTimer">45:00</div>
-                    <div class="session-type" id="session-type-display">${priorityList.length > 0 ? `${priorityList[0].name} Deep Drill` : 'Review Past Papers'}</div>
-                    <div class="timer-controls">
-                        <button class="timer-btn btn-start" onclick="startStudySession()">Start Session</button>
-                        <button class="timer-btn btn-pause" onclick="pauseStudySession()">Pause</button>
-                    </div>
-                </div>
-                <div class="olevel-insights">
-                     <div class="insights-title">O-level Readiness Tracker</div>
-                     ${generateInsightsHTML(priorityList)}
-                </div>`;
-        }
-
-        function renderReviewModule() {
-            const container = document.getElementById('review-module-content');
-            const ca2DaysLeft = Math.ceil((new Date(examConfig.schoolTest.date) - new Date()) / (1000 * 60 * 60 * 24));
-            const allConfigTopics = Object.keys(examConfig.topics);
-            
-            const reviewList = allConfigTopics.map(topicName => {
-                const topicConfig = examConfig.topics[topicName];
-                const topicData = (scienceData[topicConfig.subject] || []).filter(item => item.Topic === topicName);
-                const accuracy = calculateAccuracy(topicData);
-                const lastReviewedTimestamp = reviewLog[topicName] || 0;
-                const daysSince = lastReviewedTimestamp ? Math.floor((new Date() - new Date(lastReviewedTimestamp)) / (1000 * 60 * 60 * 24)) : Infinity;
-                
-                let urgencyScore = 0;
-                if (daysSince > 14) urgencyScore += 100;
-                if (daysSince > 7) urgencyScore += 50;
-                urgencyScore += (100 - accuracy);
-                if (topicConfig.type === 'Core') urgencyScore *= 1.5;
-                if (topicConfig.frequency === 'High') urgencyScore *= 1.5;
-
-                return { name: topicName, accuracy: accuracy, config: topicConfig, daysSince: daysSince, urgencyScore: urgencyScore };
-            }).sort((a, b) => b.urgencyScore - a.urgencyScore);
-
-            const urgentReviews = reviewList.filter(item => item.urgencyScore > 200 && item.daysSince > 3);
-            const dueReviews = reviewList.filter(item => !urgentReviews.includes(item) && item.urgencyScore > 100);
-            const totalReviewTopics = urgentReviews.length + dueReviews.length;
-
-            container.innerHTML = `
-                <div class="review-alert">
-                    <div class="alert-text">
-                        <strong>Today's Review Load:</strong> ${totalReviewTopics} topics | Est. ${totalReviewTopics * 15} mins | <strong>CA2 prep focus</strong>
-                    </div>
-                </div>
-                <div class="review-queue">
-                    <div class="section-title">⚡ Urgent Reviews (CA2 in ${ca2DaysLeft} days)</div>
-                    ${generateReviewListHTML(urgentReviews.slice(0, 2), 'urgent')}
-                </div>
-                <div class="review-queue">
-                    <div class="section-title">📅 Scheduled Reviews</div>
-                    ${generateReviewListHTML(dueReviews.slice(0, 3), 'due')}
-                </div>
-                <div class="olevel-insights">
-                    <div class="insights-title">Review Performance Analytics</div>
-                </div>
-                 <div class="recommendation">
-                    <div class="rec-title">CA2 Strategy Recommendation</div>
-                    <div class="rec-text">Focus next 3 days on ${urgentReviews.length > 0 ? urgentReviews[0].name : 'your weakest topics'} for maximum CA2 impact.</div>
-                    <button class="rec-btn">Start CA2 Prep Plan</button>
-                </div>`;
-        }
-        
-        // --- 6. EVENT HANDLING & HELPERS ---
-        function setupEventListeners() {
-            document.querySelector('.container').addEventListener('click', function(e) {
-                const actionButton = e.target.closest('.action-btn');
-                if (actionButton) {
-                    const topicItem = actionButton.closest('.topic-item, .review-item');
-                    const topicNameElement = topicItem.querySelector('.topic-name, .review-topic');
-                    const actionType = actionButton.textContent.trim();
-                    if (topicNameElement) {
-                        const topicName = topicNameElement.textContent.trim();
-                        initiateStudySession(topicName, actionType);
-                    }
-                }
-            });
-        }
-
-        function initiateStudySession(topicName, type) {
-            const sessionModule = document.querySelector('.study-session');
-            sessionModule.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            currentStudyTopic = topicName;
-            document.getElementById('session-type-display').textContent = `${topicName} - ${type} Session`;
-            startStudySession();
-            sessionModule.style.boxShadow = '0 0 0 4px #4299e1';
-            setTimeout(() => { sessionModule.style.boxShadow = ''; }, 2000);
-        }
-
-        function updateReviewLog(topicName) {
-            if (!topicName) return;
-            const todayTimestamp = new Date().getTime();
-            reviewLog[topicName] = todayTimestamp;
-            reviewLogCollection.doc(topicName).set({ lastReviewed: todayTimestamp })
-                .then(() => {
-                    console.log(`Successfully logged review for: ${topicName}`);
-                    renderReviewModule();
-                })
-                .catch(error => {
-                    console.error("Error writing review log to Firebase:", error);
-                });
-        }
-        
-        function updateStudyTimerDisplay() {
-            const minutes = Math.floor(studyTimerSeconds / 60);
-            const seconds = studyTimerSeconds % 60;
-            document.getElementById('studyTimer').textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function startStudySession() {
-            if (!isStudying) {
-                isStudying = true;
-                studyTimerInterval = setInterval(() => {
-                    studyTimerSeconds--;
-                    updateStudyTimerDisplay();
-                    if (studyTimerSeconds <= 0) {
-                        clearInterval(studyTimerInterval);
-                        isStudying = false;
-                        if (confirm(`🎉 45-minute focus session on "${currentStudyTopic}" completed! Log this as a completed review session?`)) {
-                            updateReviewLog(currentStudyTopic);
-                        }
-                        studyTimerSeconds = 45 * 60;
-                        updateStudyTimerDisplay();
-                        document.getElementById('session-type-display').textContent = "Select a new topic to start";
-                        currentStudyTopic = null;
-                    }
-                }, 1000);
-            }
-        }
-
-        function pauseStudySession() {
-            if (isStudying) {
-                clearInterval(studyTimerInterval);
-                isStudying = false;
-            }
-        }
-
-        function calculateAccuracy(data) { if (!data || data.length === 0) return 0; let t = 0; data.forEach(i => { if (i.Result === 'Correct') t += 1; if (i.Result === 'Partial') t += 0.5; }); return (t / data.length) * 100; }
-        function getPriorityClass(score) { if (score > 200) return 'critical'; if (score > 100) return 'high'; return 'medium'; }
-        function generatePriorityListHTML(list) { if (list.length === 0) return '<p style="text-align: center; color: #6b7280;">No topics to prioritize yet.</p>'; return list.map(item => ` <div class="topic-item topic-${getPriorityClass(item.score)}"> <div class="topic-info"> <div class="topic-name">${item.name}</div> <div class="topic-meta"> <span>📊 ${item.accuracy.toFixed(0)}% accuracy</span> <span>🔥 ${item.config.frequency} frequency</span> <span>- ${item.config.type} (${item.config.marks} marks)</span> </div> </div> <div class="topic-actions"> <button class="action-btn btn-drill">Drill</button> <button class="action-btn btn-practice">Papers</button> <button class="action-btn btn-review">Theory</button> </div> </div> `).join(''); }
-        function generateReviewListHTML(list, type) { if (list.length === 0) return `<p style="font-size: 0.9em; text-align: center; color: #6b7280; padding: 10px;">Nothing here. Well done!</p>`; return list.map(item => { const a = item.accuracy < 50 ? 'Weak' : item.accuracy < 85 ? 'Fair' : 'Good'; return ` <div class="review-item review-${type}"> <div class="review-info"> <div class="review-topic">${item.name}</div> <div class="review-details"> <span>${item.daysSince > 365 ? 'Not practiced yet' : `Last practice: ${item.daysSince} days ago`}</span> </div> <div class="review-badges"> <span class="badge badge-frequency">${item.config.frequency} O-level</span> <span class="badge badge-score">${a} (${item.accuracy.toFixed(0)}%)</span> <span class="badge badge-type">${item.config.type}</span> </div> </div> <div class="topic-actions"> <button class="action-btn btn-review">${type === 'urgent' ? 'Fix Now' : 'Quick Review'}</button> </div> </div> ` }).join(''); }
-        function generateInsightsHTML(list) { const cM = calculateOverallAccuracy(list.filter(p => p.config.type === 'Core')); const sM = calculateOverallAccuracy(list.filter(p => p.config.type === 'Satellite')); const eS = (cM * 0.81 + sM * 0.19).toFixed(0); let grade = 'C6'; if (eS >= 75) grade = 'A1'; else if (eS >= 70) grade = 'A2'; else if (eS >= 65) grade = 'B3'; else if (eS >= 60) grade = 'B4'; return ` <div class="insight-item"> <span class="insight-label">Core Topics Mastery</span> <span class="insight-value">${cM.toFixed(0)}%</span> </div> <div class="insight-item"> <span class="insight-label">Satellite Topics Coverage</span> <span class="insight-value">${sM.toFixed(0)}%</span> </div> <div class="insight-item"> <span class="insight-label">Expected O-level Score</span> <span class="insight-value">${grade} (${eS} marks)</span> </div> <div class="insight-item"> <span class="insight-label">Improvement Potential</span> <span class="insight-value">+${(90 - eS).toFixed(0)} marks with focus</span> </div> `; }
-        function calculateOverallAccuracy(list) { if (list.length === 0) return 0; const tS = list.reduce((s, i) => s + (i.accuracy * i.config.marks), 0); const tM = list.reduce((s, i) => s + i.config.marks, 0); return tM > 0 ? (tS / tM) : 0; }
     </script>
 </body>
 </html>
