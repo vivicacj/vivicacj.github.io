@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -218,6 +219,8 @@
             details.innerHTML = chemistryFrameworks[frameworkType] || '<h2>Framework details not found</h2>';
             modal.style.display = 'block';
         }
+
+        // =========== 请将下面的完整函数粘贴到这里 ===========
         function showFramework(frameworkType) {
             const modal = document.getElementById('frameworkModal');
             const details = document.getElementById('frameworkDetails');
@@ -231,6 +234,10 @@
             details.innerHTML = frameworks[frameworkType] || '<h2>Framework details not found</h2>';
             modal.style.display = 'block';
         }
+        // =========================================================
+
+        // --- Other page interaction listeners ---
+        document.addEventListener('click', function(e) { /* ... */ });
 
         // --- Other page interaction listeners ---
         document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
