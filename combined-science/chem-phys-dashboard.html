@@ -116,8 +116,9 @@
     <script>
         // --- ⚙️ CONFIGURATION AREA ⚙️ ---
         const SPREADSHEET_ID = '14YcMnTWRBG0WIiTNBOZJUNXId4qr9koKOfAxxLJqrSg';
-        const API_ENDPOINT_TEMPLATE = `https://spreadsheets.google.com/feeds/list/${SPREADSHEET_ID}/{SHEET_NAME}/public/values?alt=json`;
-        
+        // This is a reliable, community-built proxy to parse published Google Sheets as clean JSON
+        const API_PROXY_TEMPLATE = `https://sheets.prod.gairal.com/${SPREADSHEET_ID}/{SHEET_NAME}`;
+
         // --- GLOBAL VARIABLES ---
         let allData = { Chemistry: [], Physics: [] };
         let skillRadarChart;
@@ -126,7 +127,6 @@
         async function fetchAllData() {
             const loadingDiv = document.getElementById('loading-analytics');
             try {
-                // Fetch both sheets in parallel for better performance
                 const [chemData, physData] = await Promise.all([
                     fetchSheetData('Chemistry'),
                     fetchSheetData('Physics')
@@ -135,37 +135,34 @@
                 allData.Chemistry = chemData;
                 allData.Physics = physData;
 
-                // Initial display
                 updateAnalytics('Chemistry');
             } catch (error) {
                 console.error('Failed to fetch analytics data:', error);
                 const errorDiv = document.getElementById('analytics-content');
-                errorDiv.innerHTML = `<div class="error-text">Failed to load data. Please check if the Google Sheet is 'Published to the web'.<br><small>${error.message}</small></div>`;
+                errorDiv.innerHTML = `<div class="error-text">Failed to load data. Please ensure the Google Sheet is 'Published to the web' and the sheet names are correct.<br><small>${error.message}</small></div>`;
             }
         }
 
         async function fetchSheetData(sheetName) {
-            const url = API_ENDPOINT_TEMPLATE.replace('{SHEET_NAME}', sheetName);
+            const url = API_PROXY_TEMPLATE.replace('{SHEET_NAME}', sheetName);
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`Could not fetch sheet: ${sheetName}. Status: ${response.status}`);
             }
             const data = await response.json();
             
-            // The actual data is in `data.feed.entry`
-            if (!data.feed || !data.feed.entry) {
-                return []; // Return empty array if the sheet is empty
+            // The proxy returns a clean array of objects, we just need to ensure keys are lowercase
+            if (!data || !data.rows) {
+                return [];
             }
-
-            return data.feed.entry.map(entry => {
-                // Google Sheets JSON format is verbose, we need to extract `gsx$` properties
-                return {
-                    subject: entry['gsx$subject']?.$t || null,
-                    topic: entry['gsx$topic']?.$t || null,
-                    result: entry['gsx$result']?.$t || null,
-                    errorType: entry['gsx$errortype']?.$t || null
-                };
-            }).filter(item => item.subject && item.topic && item.result); // Filter out incomplete rows
+            // Normalize keys to lowercase to avoid case-sensitivity issues
+            return data.rows.map(row => {
+                const newRow = {};
+                for (const key in row) {
+                    newRow[key.toLowerCase()] = row[key];
+                }
+                return newRow;
+            });
         }
 
         // --- CORE ANALYTICS & RENDERING ---
@@ -178,13 +175,12 @@
             const analyticsContent = document.getElementById('analytics-content');
             
             if (!subjectData || subjectData.length === 0) {
-                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for this subject. Please add some records in the Google Sheet to see your analysis!</div>`;
+                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for ${subject}. Please add records in the Google Sheet.</div>`;
                 return;
             }
 
-            // Restore the original content structure if it was replaced by the "no data" message
             analyticsContent.innerHTML = `
-                <div id="loading-analytics" class="loading-text" style="display:none;">Loading analytics data...</div>
+                <div id="loading-analytics" class="loading-text" style="display:none;">Loading...</div>
                 <canvas id="skillRadarChart" style="max-height: 250px;"></canvas>
                 <h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4>
                 <div id="heatmap-container" class="heatmap"></div>
@@ -194,24 +190,24 @@
             
             const incorrectData = subjectData.filter(item => item.result === 'Incorrect');
             
-            // Determine error types based on subject
             const errorTypes = subject === 'Chemistry' 
                 ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error']
                 : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
             
             const errorCounts = errorTypes.map(type => 
-                incorrectData.filter(item => item.errorType && item.errorType.startsWith(type)).length
+                incorrectData.filter(item => item.errortype && item.errortype.startsWith(type)).length
             );
             
             const totalErrors = incorrectData.length || 1;
             const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
             
-            renderRadarChart(errorTypes, skillScores);
+            renderRadarChart(errorTypes.map(e => e.split(' ')[0]), skillScores); // Use short names for labels
 
             const topicPerformance = {};
             const allTopics = [...new Set(subjectData.map(item => item.topic))];
             
             allTopics.forEach(topic => {
+                if (!topic) return; // Skip rows where topic is empty
                 const topicItems = subjectData.filter(item => item.topic === topic);
                 const correctCount = topicItems.filter(item => item.result === 'Correct').length;
                 const partialCount = topicItems.filter(item => item.result === 'Partial').length;
@@ -222,32 +218,15 @@
             generateSuggestion(topicPerformance, errorCounts, errorTypes);
         }
         
-        function renderRadarChart(labels, scores) {
-            const ctx = document.getElementById('skillRadarChart').getContext('2d');
-            if (skillRadarChart) skillRadarChart.destroy();
-            skillRadarChart = new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Skill Score', data: scores, fill: true,
-                        backgroundColor: 'rgba(52, 152, 219, 0.2)',
-                        borderColor: 'rgb(52, 152, 219)',
-                        pointBackgroundColor: 'rgb(52, 152, 219)',
-                    }]
-                },
-                options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } }
-            });
-        }
-        
         // Other rendering and utility functions remain the same
+        function renderRadarChart(labels, scores) { const ctx = document.getElementById('skillRadarChart').getContext('2d'); if (skillRadarChart) skillRadarChart.destroy(); skillRadarChart = new Chart(ctx, { type: 'radar', data: { labels: labels, datasets: [{ label: 'Skill Score', data: scores, fill: true, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgb(52, 152, 219)', pointBackgroundColor: 'rgb(52, 152, 219)', }] }, options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } } }); }
         function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
         function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.textContent = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like "${p[0]}" to achieve perfection!`; else el.textContent = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.textContent = `💡 Your weakest area is **"${wT}"** (Accuracy ${lS.toFixed(0)}%). The most common error type is **"${mET}"**. I recommend reviewing this topic's framework and doing targeted practice.`; else el.textContent = "Analysis complete. Use the charts above to guide your study plan."; }
         function closeFramework() { document.getElementById('frameworkModal').style.display = 'none'; }
         window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
         document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
         function updateAllProgress() { document.querySelectorAll('.subject-section').forEach(sec => { const mastered = sec.querySelectorAll('.status-mastered').length; const total = sec.querySelectorAll('.topic-item').length; const prog = total > 0 ? (mastered / total) * 100 : 0; const fill = sec.querySelector('.progress-fill'); const text = sec.querySelector('.progress-text'); if (fill && text) { fill.style.width = prog + '%'; text.textContent = `Mastered: ${mastered} / ${total}`; } }); }
-        // Frameworks functions (showChemistryFramework, showFramework) are not included for brevity but should be kept
+        // Frameworks functions are not included for brevity but should be kept
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', fetchAllData);
     </script>
