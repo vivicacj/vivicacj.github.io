@@ -7,94 +7,19 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #e0e0e0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #ffffff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .subjects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .subject-card {
-            text-decoration: none;
-            color: white;
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background-color: white;
-        }
-
-        .subject-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .card-header {
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .subject-icon {
-            font-size: 2rem;
-        }
-
-        .subject-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .card-content {
-            padding: 20px;
-            background-color: white;
-            color: #555;
-            font-size: 0.95rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #e0e0e0; line-height: 1.6; overflow-x: hidden; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 60px 20px; }
+        .header h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; color: #ffffff; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+        .header p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); max-width: 700px; margin: 0 auto; }
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .subject-card { text-decoration: none; color: white; border-radius: 20px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background-color: white; }
+        .subject-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        .card-header { padding: 20px; color: white; display: flex; align-items: center; gap: 15px; }
+        .subject-icon { font-size: 2rem; }
+        .subject-title { font-size: 1.5rem; font-weight: 600; }
+        .card-content { padding: 20px; background-color: white; color: #555; font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.1); }
         .e-math .card-header { background-color: #8f94fb; }
         .h-chinese .card-header { background-color: #a8e063; }
         .english .card-header { background-color: #ff8e53; }
@@ -103,62 +28,16 @@
         .science .card-header { background-color: #8e2de2; }
         .poa .card-header { background-color: #c0392b; }
         .history .card-header { background-color: #434343; }
-
-        .cta-section {
-            text-align: center;
-            margin-top: 60px;
-            padding: 40px 20px;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 15px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .cta-primary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-        }
-        .cta-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-        }
-        
-        #notification {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
-        }
-        #notification.show {
-            opacity: 1; visibility: visible; transform: translate(-50%, -20px);
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2.5rem; }
-            .subjects-grid { grid-template-columns: 1fr; }
-        }
+        .cta-section { text-align: center; margin-top: 60px; padding: 40px 20px; }
+        .cta-section h2 { font-size: 2.5rem; margin-bottom: 20px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .cta-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .cta-button { display: inline-block; padding: 15px 35px; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .cta-primary { background: rgba(255, 255, 255, 0.9); color: #333; }
+        .cta-secondary { background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid rgba(255, 255, 255, 0.5); }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.3); }
+        #notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s; }
+        #notification.show { opacity: 1; visibility: visible; transform: translate(-50%, -20px); }
+        @media (max-width: 768px) { .header h1 { font-size: 2.5rem; } .subjects-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -171,53 +50,37 @@
         <div class="subjects-grid">
             <a href="e-math/" class="subject-card e-math">
                 <div class="card-header"><span class="subject-icon">🧮</span><h3 class="subject-title">E-Math</h3></div>
-                <div class="card-content">
-                    <p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p>
-                </div>
+                <div class="card-content"><p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p></div>
             </a>
             <a href="h-chinese/" class="subject-card h-chinese">
                 <div class="card-header"><span class="subject-icon">✍️</span><h3 class="subject-title">Higher Chinese</h3></div>
-                <div class="card-content">
-                    <p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p>
-                </div>
+                <div class="card-content"><p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p></div>
             </a>
             <a href="english/" class="subject-card english">
                 <div class="card-header"><span class="subject-icon">📚</span><h3 class="subject-title">English Language</h3></div>
-                <div class="card-content">
-                    <p>Modules for composition, comprehension, and oral communication skills.</p>
-                </div>
+                <div class="card-content"><p>Modules for composition, comprehension, and oral communication skills.</p></div>
             </a>
-            <a href="#" class="subject-card a-math">
+            <a href="a-math/" class="subject-card a-math">
                 <div class="card-header"><span class="subject-icon">📐</span><h3 class="subject-title">Additional Mathematics</h3></div>
-                <div class="card-content">
-                    <p>Algebraic methods, calculus, and trigonometric functions.</p>
-                </div>
+                <div class="card-content"><p>Algebraic methods, calculus, and trigonometric functions.</p></div>
             </a>
-            <a href="#" class="subject-card geography">
+            <a href="geography/" class="subject-card geography">
                 <div class="card-header"><span class="subject-icon">🌍</span><h3 class="subject-title">Geography</h3></div>
-                <div class="card-content">
-                    <p>Study of physical and human geography, map skills, and case studies.</p>
-                </div>
+                <div class="card-content"><p>Study of physical and human geography, map skills, and case studies.</p></div>
             </a>
-            <!-- =========== 核心修改点：激活链接 =========== -->
-            <a href="combined-science/index.html" class="subject-card science">
+             <!-- =========== 核心修改点 =========== -->
+             <a href="combined-science/" class="subject-card science">
                 <div class="card-header"><span class="subject-icon">🔬</span><h3 class="subject-title">Combined Science (Phys/Chem)</h3></div>
-                <div class="card-content">
-                    <p>Core principles of Physics and Chemistry for the combined science paper.</p>
-                </div>
+                <div class="card-content"><p>Core principles of Physics and Chemistry for the combined science paper.</p></div>
             </a>
-            <!-- ============================================== -->
-             <a href="#" class="subject-card poa">
+             <!-- ================================== -->
+             <a href="poa/" class="subject-card poa">
                 <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
-                <div class="card-content">
-                    <p>Fundamentals of accounting, financial statements, and business entities.</p>
-                </div>
+                <div class="card-content"><p>Fundamentals of accounting, financial statements, and business entities.</p></div>
             </a>
-             <a href="#" class="subject-card history">
+             <a href="history/" class="subject-card history">
                 <div class="card-header"><span class="subject-icon">📜</span><h3 class="subject-title">History</h3></div>
-                <div class="card-content">
-                    <p>Analysis of key historical events, sources, and essay writing skills.</p>
-                </div>
+                <div class="card-content"><p>Analysis of key historical events, sources, and essay writing skills.</p></div>
             </a>
         </div>
 
