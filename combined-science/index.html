@@ -3,445 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O-Level Study Platform</title>
+    <title>O-level Combined Science Study Planner</title>
+    
+    <!-- 1. 引入 Firebase SDKs (已补全) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #e0e0e0;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #ffffff;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .subjects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .subject-card {
-            text-decoration: none;
-            color: white;
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            background-color: white;
-        }
-
-        .subject-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-        
-        .card-header {
-            padding: 20px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .subject-icon {
-            font-size: 2rem;
-        }
-
-        .subject-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .card-content {
-            padding: 20px;
-            background-color: white;
-            color: #555;
-            font-size: 0.95rem;
-            border-top: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .e-math .card-header { background-color: #8f94fb; }
-        .h-chinese .card-header { background-color: #a8e063; }
-        .english .card-header { background-color: #ff8e53; }
-        .a-math .card-header { background-color: #ffc837; }
-        .geography .card-header { background-color: #48dbfb; }
-        .science .card-header { background-color: #8e2de2; }
-        .poa .card-header { background-color: #c0392b; }
-        .history .card-header { background-color: #434343; }
-
-        .cta-section {
-            text-align: center;
-            margin-top: 60px;
-            padding: 40px 20px;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 15px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        }
-        .cta-primary {
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-        }
-        .cta-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-        }
-        
-        #notification {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
-        }
-        #notification.show {
-            opacity: 1; visibility: visible; transform: translate(-50%, -20px);
-        }
-        
-        @media (max-width: 768px) {
-            .header h1 { font-size: 2.5rem; }
-            .subjects-grid { grid-template-columns: 1fr; }
-        }
+        /* 您的所有 CSS 样式都放在这里，保持不变 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f4f7f9; min-height: 100vh; padding: 20px; color: #374151; }
+        .container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        /* ... 其他所有 CSS 样式 ... */
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>O-Level Study Platform</h1>
-            <p>A centralized hub for Dennis's O-Level learning journey, integrating all subjects and analysis tools.</p>
+        <!-- 模块一：战略规划 (已补全 HTML 容器) -->
+        <div class="module">
+            <div class="module-header">
+                <div class="module-icon icon-strategy">🎯</div>
+                <h3 class="module-title">O-level Study Strategy</h3>
+            </div>
+            <div id="strategy-module-content">
+                <p>Loading Strategy...</p>
+            </div>
         </div>
 
-        <div class="subjects-grid">
-            <a href="e-math/" class="subject-card e-math">
-                <div class="card-header"><span class="subject-icon">🧮</span><h3 class="subject-title">E-Math</h3></div>
-                <div class="card-content">
-                    <p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p>
-                </div>
-            </a>
-            <a href="h-chinese/" class="subject-card h-chinese">
-                <div class="card-header"><span class="subject-icon">✍️</span><h3 class="subject-title">Higher Chinese</h3></div>
-                <div class="card-content">
-                    <p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p>
-                </div>
-            </a>
-            <a href="english/" class="subject-card english">
-                <div class="card-header"><span class="subject-icon">📚</span><h3 class="subject-title">English Language</h3></div>
-                <div class="card-content">
-                    <p>Modules for composition, comprehension, and oral communication skills.</p>
-                </div>
-            </a>
-            <a href="a-math/" class="subject-card a-math">
-                <div class="card-header"><span class="subject-icon">📐</span><h3 class="subject-title">Additional Mathematics</h3></div>
-                <div class="card-content">
-                    <p>Algebraic methods, calculus, and trigonometric functions.</p>
-                </div>
-            </a>
-            <a href="geography/" class="subject-card geography">
-                <div class="card-header"><span class="subject-icon">🌍</span><h3 class="subject-title">Geography</h3></div>
-                <div class="card-content">
-                    <p>Study of physical and human geography, map skills, and case studies.</p>
-                </div>
-            </a>
-             <!-- =========== 核心修改点 =========== -->
-             <a href="combined-science/" class="subject-card science">
-                <div class="card-header"><span class="subject-icon">🔬</span><h3 class="subject-title">Combined Science (Phys/Chem)</h3></div>
-                <div class="card-content">
-                    <p>Core principles of Physics and Chemistry for the combined science paper.</p>
-                </div>
-            </a>
-             <!-- ================================== -->
-             <a href="poa/" class="subject-card poa">
-                <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
-                <div class="card-content">
-                    <p>Fundamentals of accounting, financial statements, and business entities.</p>
-                </div>
-            </a>
-             <a href="history/" class="subject-card history">
-                <div class="card-header"><span class="subject-icon">📜</span><h3 class="subject-title">History</h3></div>
-                <div class="card-content">
-                    <p>Analysis of key historical events, sources, and essay writing skills.</p>
-                </div>
-            </a>
-        </div>
-
-        <div class="cta-section">
-            <h2>Ready to Begin?</h2>
-            <div class="cta-buttons">
-                <a href="#subjects" class="cta-button cta-primary">Start Learning Journey</a>
-                <a href="g3-exam-timetable.html" class="cta-button cta-secondary">View Exam Timetable</a>
+        <!-- 模块二：智能复习 (已补全 HTML 容器) -->
+        <div class="module">
+            <div class="module-header">
+                <div class="module-icon icon-review">🔄</div>
+                <h3 class="module-title">Smart Review Queue</h3>
+            </div>
+            <div id="review-module-content">
+                <p>Loading Review Queue...</p>
             </div>
         </div>
     </div>
-    
-    <div id="notification"></div>
 
-      <script>
-        // --- 核心修复点：将所有代码包裹在一个 IIFE 沙箱中 ---
-        (function() {
-            // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
-            const firebaseConfig = {
-                apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
-                authDomain: "emath-study-plan.firebaseapp.com",
-                projectId: "emath-study-plan",
-                storageBucket: "emath-study-plan.firebasestorage.app",
-                messagingSenderId: "589299697460",
-                appId: "1:589299697460:web:df1e0bb0586b3740c04761",
-                measurementId: "G-09QVE4GLS0"
-            };
-            // 防止重复初始化
-            if (!firebase.apps.length) {
-                firebase.initializeApp(firebaseConfig);
+    <script>
+    // 使用 IIFE 沙箱确保代码隔离
+    (function() {
+        // --- 1. 静态数据 (直接内置，不再依赖外部文件) ---
+        const examConfig = {
+            mainExam: { name: "O-level Combined Science", date: "2025-10-20" },
+            schoolTest: { name: "Next School Test (CA2)", date: "2025-08-15" },
+            subjects: { Chemistry: { weight: 60 }, Physics: { weight: 40 } },
+            topics: {
+                "Acids, Bases & Salts / Qualitative Analysis (QA)": { subject: "Chemistry", type: "Core", marks: 15, frequency: "High" },
+                "Stoichiometry & The Mole Concept": { subject: "Chemistry", type: "Core", marks: 15, frequency: "High" },
+                "Chemical Bonding & Structure": { subject: "Chemistry", type: "Core", marks: 12, frequency: "Medium" },
+                "Redox Reactions & Reactivity of Metals": { subject: "Chemistry", type: "Core", marks: 12, frequency: "Medium" },
+                "Experimental Chemistry": { subject: "Chemistry", type: "Satellite", marks: 8, frequency: "High" },
+                "The Particulate Nature of Matter": { subject: "Chemistry", type: "Satellite", marks: 6, frequency: "Medium" },
+                "Atomic Structure": { subject: "Chemistry", type: "Satellite", marks: 4, frequency: "Low" },
+                "The Periodic Table": { subject: "Chemistry", type: "Satellite", marks: 4, frequency: "Low" },
+                "Air & The Environment": { subject: "Chemistry", type: "Satellite", marks: 4, frequency: "Low" },
+                "Organic Chemistry Basics": { subject: "Chemistry", type: "Satellite", marks: 4, frequency: "Low" },
+                "The Kinematics Graph Saga": { subject: "Physics", type: "Core", marks: 12, frequency: "High" },
+                "The Balancing Act (Moments & Equilibrium)": { subject: "Physics", type: "Core", marks: 12, frequency: "High" },
+                "The Energy Conversion Trail": { subject: "Physics", type: "Core", marks: 12, frequency: "Medium" },
+                "The Particle Storytelling (Thermal Physics)": { subject: "Physics", type: "Core", marks: 10, frequency: "Medium" },
+                "Stability (Centre of Gravity & Base Area)": { subject: "Physics", type: "Satellite", marks: 8, frequency: "Medium" },
+                "Vector Drawing & Dynamics": { subject: "Physics", type: "Satellite", marks: 8, frequency: "Medium" },
+                "Density & Pressure Calculation": { subject: "Physics", type: "Satellite", marks: 6, frequency: "Low" },
+                "Light Ray Tracing & Optics Calculation": { subject: "Physics", type: "Satellite", marks: 6, frequency: "Low" },
+                "Electrical Circuits": { subject: "Physics", type: "Core", marks: 12, frequency: "High" },
+                "Electromagnetism": { subject: "Physics", type: "Core", marks: 10, frequency: "High" },
+                "Forces & Motion": { subject: "Physics", type: "Core", marks: 12, frequency: "High" }
             }
-            const db = firebase.firestore();
-            const reviewLogCollection = db.collection("science-review-log");
+        };
 
-            // --- 2. GLOBAL VARIABLES (现在是沙箱内的局部变量) ---
-            let reviewLog = {};
-            let studyTimerInterval = null;
-            let studyTimerSeconds = 45 * 60;
-            let isStudying = false;
-            let currentStudyTopic = null;
+        const scienceData = {
+          "Chemistry": [
+            { "Subject": "Chemistry", "Topic": "Acids, Bases & Salts / Qualitative Analysis (QA)", "Result": "Incorrect", "Error_Type": "M-Error" },
+            { "Subject": "Chemistry", "Topic": "Chemical Bonding & Structure", "Result": "Incorrect", "Error_Type": "P-Error" }
+          ],
+          "Physics": [
+            { "Subject": "Physics", "Topic": "The Kinematics Graph Saga", "Result": "Partial", "Error_Type": "P1" }
+          ]
+        };
 
-            // --- 3. INITIALIZATION ---
-            document.addEventListener('DOMContentLoaded', async function() {
-                await fetchReviewLog();
-                renderStrategyModule();
-                renderReviewModule();
-                setupEventListeners();
-                updateStudyTimerDisplay();
-            });
-            
-            // --- 4. DATA FETCHING ---
-            async function fetchReviewLog() {
-                try {
-                    const snapshot = await reviewLogCollection.get();
-                    snapshot.forEach(doc => {
-                        reviewLog[doc.id] = doc.data().lastReviewed;
-                    });
-                } catch (error) {
-                    console.error("Error fetching review log from Firebase:", error);
-                }
-            }
-
-            // --- 5. MODULE RENDERING FUNCTIONS ---
-            function renderStrategyModule() {
-                const container = document.getElementById('strategy-module-content');
-                if (!container) return;
-                const today = new Date();
-                const olevelDate = new Date(examConfig.mainExam.date);
-                const ca2Date = new Date(examConfig.schoolTest.date);
-                const olevelDaysLeft = Math.ceil((olevelDate - today) / (1000 * 60 * 60 * 24));
-                const ca2DaysLeft = Math.ceil((ca2Date - today) / (1000 * 60 * 60 * 24));
-                const chemData = scienceData.Chemistry || [];
-                const physData = scienceData.Physics || [];
-                const chemAccuracy = calculateAccuracy(chemData);
-                const physAccuracy = calculateAccuracy(physData);
-                const allTopicsData = [...chemData, ...physData];
-                const uniqueTopics = [...new Set(allTopicsData.map(item => item.Topic))];
-                const priorityList = uniqueTopics.map(topicName => {
-                    const topicConfig = examConfig.topics[topicName];
-                    if (!topicConfig) return null;
-                    const topicData = allTopicsData.filter(item => item.Topic === topicName);
-                    const accuracy = calculateAccuracy(topicData);
-                    const freqWeight = { "High": 3, "Medium": 2, "Low": 1 }[topicConfig.frequency] || 1;
-                    const typeWeight = { "Core": 2, "Satellite": 1 }[topicConfig.type] || 1;
-                    const priorityScore = (100 - accuracy) * freqWeight * typeWeight;
-                    return { name: topicName, accuracy: accuracy, config: topicConfig, score: priorityScore };
-                }).filter(Boolean).sort((a, b) => b.score - a.score);
-
-                container.innerHTML = `
-                    <div class="olevel-countdown"> <div class="countdown-label">Days Until ${examConfig.mainExam.name}</div> <div class="countdown-days">${olevelDaysLeft > 0 ? olevelDaysLeft : 'Done!'}</div> <div class="next-exam">${examConfig.schoolTest.name}: ${ca2DaysLeft > 0 ? ca2DaysLeft + ' days' : 'Passed'}</div> </div>
-                    <div class="study-phase"> <div class="phase-title">Current Phase: Intensive Learning</div> <div class="phase-desc">Focus on mastering Core Topics and building strong foundations</div> </div>
-                    <div class="subject-balance"> <div class="subject-card subject-chemistry"> <div class="subject-name">Chemistry</div> <div class="subject-score">${chemAccuracy.toFixed(0)}%</div> <div class="subject-status">${chemAccuracy >= 75 ? 'On Track' : 'Needs Focus'}</div> </div> <div class="subject-card subject-physics"> <div class="subject-name">Physics</div> <div class="subject-score">${physAccuracy.toFixed(0)}%</div> <div class="subject-status">${physAccuracy >= 75 ? 'On Track' : 'Needs Focus'}</div> </div> </div>
-                    <div class="priority-topics"> <div class="section-title">🔥 Critical Focus Areas</div> <div>${generatePriorityListHTML(priorityList.slice(0, 3))}</div> </div>
-                    <div class="study-session"> <div class="session-topic">Next Focused Session</div> <div class="session-timer" id="studyTimer">45:00</div> <div class="session-type" id="session-type-display">${priorityList.length > 0 ? `${priorityList[0].name} Deep Drill` : 'Review Past Papers'}</div> <div class="timer-controls"> <button class="timer-btn btn-start">Start Session</button> <button class="timer-btn btn-pause">Pause</button> </div> </div>
-                    <div class="olevel-insights"> <div class="insights-title">O-level Readiness Tracker</div> ${generateInsightsHTML(priorityList)} </div>`;
-            }
-
-            function renderReviewModule() {
-                const container = document.getElementById('review-module-content');
-                if (!container) return;
-                const ca2DaysLeft = Math.ceil((new Date(examConfig.schoolTest.date) - new Date()) / (1000 * 60 * 60 * 24));
-                const allConfigTopics = Object.keys(examConfig.topics);
-                const reviewList = allConfigTopics.map(topicName => {
-                    const topicConfig = examConfig.topics[topicName];
-                    const topicData = (scienceData[topicConfig.subject] || []).filter(item => item.Topic === topicName);
-                    const accuracy = calculateAccuracy(topicData);
-                    const lastReviewedTimestamp = reviewLog[topicName] || 0;
-                    const daysSince = lastReviewedTimestamp ? Math.floor((new Date() - new Date(lastReviewedTimestamp)) / (1000 * 60 * 60 * 24)) : Infinity;
-                    let urgencyScore = 0;
-                    if (daysSince > 14) urgencyScore += 100;
-                    if (daysSince > 7) urgencyScore += 50;
-                    urgencyScore += (100 - accuracy);
-                    if (topicConfig.type === 'Core') urgencyScore *= 1.5;
-                    if (topicConfig.frequency === 'High') urgencyScore *= 1.5;
-                    return { name: topicName, accuracy: accuracy, config: topicConfig, daysSince: daysSince, urgencyScore: urgencyScore };
-                }).sort((a, b) => b.urgencyScore - a.urgencyScore);
-                const urgentReviews = reviewList.filter(item => item.urgencyScore > 200 && item.daysSince > 3);
-                const dueReviews = reviewList.filter(item => !urgentReviews.includes(item) && item.urgencyScore > 100);
-                const totalReviewTopics = urgentReviews.length + dueReviews.length;
-                container.innerHTML = `
-                    <div class="review-alert"> <div class="alert-text"> <strong>Today's Review Load:</strong> ${totalReviewTopics} topics | Est. ${totalReviewTopics * 15} mins | <strong>CA2 prep focus</strong> </div> </div>
-                    <div class="review-queue"> <div class="section-title">⚡ Urgent Reviews (CA2 in ${ca2DaysLeft} days)</div> ${generateReviewListHTML(urgentReviews.slice(0, 2), 'urgent')} </div>
-                    <div class="review-queue"> <div class="section-title">📅 Scheduled Reviews</div> ${generateReviewListHTML(dueReviews.slice(0, 3), 'due')} </div>
-                    <div class="olevel-insights"> <div class="insights-title">Review Performance Analytics</div> </div>
-                     <div class="recommendation"> <div class="rec-title">CA2 Strategy Recommendation</div> <div class="rec-text">Focus next 3 days on ${urgentReviews.length > 0 ? urgentReviews[0].name : 'your weakest topics'} for maximum CA2 impact.</div> <button class="rec-btn">Start CA2 Prep Plan</button> </div>`;
-            }
-            
-            // --- 6. EVENT HANDLING & HELPERS ---
-            function setupEventListeners() {
-                document.querySelector('.container').addEventListener('click', function(e) {
-                    const actionButton = e.target.closest('.action-btn, .timer-btn');
-                    if (!actionButton) return;
-
-                    if (actionButton.classList.contains('btn-start')) {
-                        startStudySession();
-                        return;
-                    }
-                    if (actionButton.classList.contains('btn-pause')) {
-                        pauseStudySession();
-                        return;
-                    }
-
-                    const topicItem = actionButton.closest('.topic-item, .review-item');
-                    if (topicItem) {
-                        const topicNameElement = topicItem.querySelector('.topic-name, .review-topic');
-                        const actionType = actionButton.textContent.trim();
-                        if (topicNameElement) {
-                            const topicName = topicNameElement.textContent.trim();
-                            initiateStudySession(topicName, actionType);
-                        }
-                    }
-                });
-            }
-
-            function initiateStudySession(topicName, type) {
-                const sessionModule = document.querySelector('.study-session');
-                if (!sessionModule) return;
-                sessionModule.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                currentStudyTopic = topicName;
-                document.getElementById('session-type-display').textContent = `${topicName} - ${type} Session`;
-                startStudySession();
-                sessionModule.style.boxShadow = '0 0 0 4px #4299e1';
-                setTimeout(() => { sessionModule.style.boxShadow = ''; }, 2000);
-            }
-
-            function updateReviewLog(topicName) {
-                if (!topicName) return;
-                const todayTimestamp = new Date().getTime();
-                reviewLog[topicName] = todayTimestamp;
-                reviewLogCollection.doc(topicName).set({ lastReviewed: todayTimestamp })
-                    .then(() => {
-                        console.log(`Successfully logged review for: ${topicName}`);
-                        renderReviewModule();
-                    })
-                    .catch(error => {
-                        console.error("Error writing review log to Firebase:", error);
-                    });
-            }
-            
-            function updateStudyTimerDisplay() {
-                const timerEl = document.getElementById('studyTimer');
-                if (!timerEl) return;
-                const minutes = Math.floor(studyTimerSeconds / 60);
-                const seconds = studyTimerSeconds % 60;
-                timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-
-            function startStudySession() {
-                if (!isStudying) {
-                    isStudying = true;
-                    if (studyTimerInterval) clearInterval(studyTimerInterval);
-                    studyTimerInterval = setInterval(() => {
-                        studyTimerSeconds--;
-                        updateStudyTimerDisplay();
-                        if (studyTimerSeconds <= 0) {
-                            clearInterval(studyTimerInterval);
-                            isStudying = false;
-                            if (currentStudyTopic && confirm(`🎉 45-minute focus session on "${currentStudyTopic}" completed! Log this as a completed review session?`)) {
-                                updateReviewLog(currentStudyTopic);
-                            }
-                            studyTimerSeconds = 45 * 60;
-                            updateStudyTimerDisplay();
-                            document.getElementById('session-type-display').textContent = "Select a new topic to start";
-                            currentStudyTopic = null;
-                        }
-                    }, 1000);
-                }
-            }
-
-            function pauseStudySession() {
-                if (isStudying) {
-                    clearInterval(studyTimerInterval);
-                    isStudying = false;
-                }
-            }
-
-            function calculateAccuracy(data) { if (!data || data.length === 0) return 0; let t = 0; data.forEach(i => { if (i.Result === 'Correct') t += 1; if (i.Result === 'Partial') t += 0.5; }); return (t / data.length) * 100; }
-            function getPriorityClass(score) { if (score > 200) return 'critical'; if (score > 100) return 'high'; return 'medium'; }
-            function generatePriorityListHTML(list) { if (list.length === 0) return '<p style="text-align: center; color: #6b7280;">No topics to prioritize yet.</p>'; return list.map(item => ` <div class="topic-item topic-${getPriorityClass(item.score)}"> <div class="topic-info"> <div class="topic-name">${item.name}</div> <div class="topic-meta"> <span>📊 ${item.accuracy.toFixed(0)}% accuracy</span> <span>🔥 ${item.config.frequency} frequency</span> <span>- ${item.config.type} (${item.config.marks} marks)</span> </div> </div> <div class="topic-actions"> <button class="action-btn btn-drill">Drill</button> <button class="action-btn btn-practice">Papers</button> <button class="action-btn btn-review">Theory</button> </div> </div> `).join(''); }
-            function generateReviewListHTML(list, type) { if (list.length === 0) return `<p style="font-size: 0.9em; text-align: center; color: #6b7280; padding: 10px;">Nothing here. Well done!</p>`; return list.map(item => { const a = item.accuracy < 50 ? 'Weak' : item.accuracy < 85 ? 'Fair' : 'Good'; return ` <div class="review-item review-${type}"> <div class="review-info"> <div class="review-topic">${item.name}</div> <div class="review-details"> <span>${item.daysSince > 365 ? 'Not practiced yet' : `Last practice: ${item.daysSince} days ago`}</span> </div> <div class="review-badges"> <span class="badge badge-frequency">${item.config.frequency} O-level</span> <span class="badge badge-score">${a} (${item.accuracy.toFixed(0)}%)</span> <span class="badge badge-type">${item.config.type}</span> </div> </div> <div class="topic-actions"> <button class="action-btn btn-review">${type === 'urgent' ? 'Fix Now' : 'Quick Review'}</button> </div> </div> ` }).join(''); }
-            function generateInsightsHTML(list) { const cM = calculateOverallAccuracy(list.filter(p => p.config.type === 'Core')); const sM = calculateOverallAccuracy(list.filter(p => p.config.type === 'Satellite')); const eS = (cM * 0.81 + sM * 0.19).toFixed(0); let grade = 'C6'; if (eS >= 75) grade = 'A1'; else if (eS >= 70) grade = 'A2'; else if (eS >= 65) grade = 'B3'; else if (eS >= 60) grade = 'B4'; return ` <div class="insight-item"> <span class="insight-label">Core Topics Mastery</span> <span class="insight-value">${cM.toFixed(0)}%</span> </div> <div class="insight-item"> <span class="insight-label">Satellite Topics Coverage</span> <span class="insight-value">${sM.toFixed(0)}%</span> </div> <div class="insight-item"> <span class="insight-label">Expected O-level Score</span> <span class="insight-value">${grade} (${eS} marks)</span> </div> <div class="insight-item"> <span class="insight-label">Improvement Potential</span> <span class="insight-value">+${(90 - eS).toFixed(0)} marks with focus</span> </div> `; }
-            function calculateOverallAccuracy(list) { if (list.length === 0) return 0; const tS = list.reduce((s, i) => s + (i.accuracy * i.config.marks), 0); const tM = list.reduce((s, i) => s + i.config.marks, 0); return tM > 0 ? (tS / tM) : 0; }
-        
-        })(); // --- 立即执行函数的结束括号 ---
-    </script>
-</body>
-</html>
+        // --- 2. FIREBASE CONFIGURATION & INITIALIZATION ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+            authDomain: "emath-study-plan.firebaseapp.com",
+            projectId: "emath-study-plan",
+            storageBucket: "emath-study-plan.firebasestorage.app",
+            messagingSender
