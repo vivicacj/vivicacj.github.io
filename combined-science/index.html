@@ -159,48 +159,44 @@
         let skillRadarChart;
         let chemSprintTasks = [], physSprintTasks = [];
 
-        // --- 3. INITIALIZATION & EVENT LISTENERS (包含按钮提示) ---
-            document.addEventListener('DOMContentLoaded', async function() {
-                // Check if essential data files are loaded
-                if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
-                    const container = document.querySelector('.container');
-                    if (container) { container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: data/science-data.js or data/exam-config.js not found. Please check file paths.</div>`; }
-                    return;
-                }
-
-                // Add tooltips to buttons automatically
-                document.querySelectorAll('.framework-btn').forEach(btn => btn.title = 'View Topic Framework');
-                document.querySelectorAll('.practice-btn').forEach(btn => btn.title = 'Open Practice Questions');
+         // --- 3. INITIALIZATION & EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', async function() {
+            // 首先，确保所有模块的渲染都能正常执行
+            // 我们假设 scienceData 和 examConfig 会被正确加载
+            try {
+                await fetchAllSprintTasks(); // 获取动态数据
                 
-                // Fetch dynamic data
-                await fetchAllSprintTasks();
-
-                // Render all modules
+                // 渲染所有模块
                 updateAnalytics('Chemistry');
                 renderGoalsModule();
-                updateAllProgress();
+                updateAllProgress(); 
+            } catch (error) {
+                console.error("Error during initial module rendering:", error);
+            }
 
-                // Set up a single event listener for the main panel
-                const mainPanel = document.querySelector('.main-panel');
-                if (mainPanel) {
-                    mainPanel.addEventListener('click', function(e) {
-                        if (e.target.classList.contains('status-btn')) {
-                            const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
-                            const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
-                            const symbols = ['', '●', 'P', '✓'];
-                            let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
-                            const nextIndex = (currentIndex + 1) % statuses.length;
-                            
-                            e.target.className = 'status-btn';
-                            e.target.classList.add(statuses[nextIndex]);
-                            e.target.title = titles[nextIndex];
-                            e.target.textContent = symbols[nextIndex];
-                            
-                            updateAllProgress();
-                        }
-                    });
-                }
-            });
+            // --- 状态按钮激活逻辑 ---
+            const mainPanel = document.querySelector('.main-panel');
+            if (mainPanel) {
+                mainPanel.addEventListener('click', function(e) {
+                    if (e.target.classList.contains('status-btn')) {
+                        const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
+                        const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
+                        const symbols = ['', '●', 'P', '✓'];
+                        
+                        let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
+                        const nextIndex = (currentIndex + 1) % statuses.length;
+                        
+                        e.target.className = 'status-btn'; // 重置类
+                        e.target.classList.add(statuses[nextIndex]);
+                        e.target.title = titles[nextIndex];
+                        e.target.textContent = symbols[nextIndex];
+
+                        // 每次点击后，重新计算进度条
+                        updateAllProgress();
+                    }
+                });
+            }
+        });
         
         // --- 4. DATA FETCHING ---
         async function fetchSprintTasksFromDB(docId) {
