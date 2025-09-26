@@ -314,6 +314,46 @@
             details.innerHTML = frameworks[frameworkType] || '<h2>Framework details not found</h2>';
             modal.style.display = 'block';
         }
+  // --- 8. PROGRESS BAR UPDATE LOGIC ---
+        /**
+         * 更新指定学科的进度条和文本
+         * @param {string} subjectSectionId - 学科部分的 ID (e.g., 'chemistry-section')
+         */
+        function updateSubjectProgress(subjectSectionId) {
+            const section = document.getElementById(subjectSectionId);
+            if (!section) return;
+
+            // 查找该学科下的所有主题项，以获取总数
+            const allTopicItems = section.querySelectorAll('.topic-item');
+            const totalTopics = allTopicItems.length;
+
+            // 查找所有被标记为 "mastered" 的按钮
+            const masteredItems = section.querySelectorAll('.status-btn.status-mastered');
+            const masteredCount = masteredItems.length;
+
+            // 计算百分比
+            const percentage = totalTopics > 0 ? (masteredCount / totalTopics) * 100 : 0;
+
+            // 获取需要更新的 DOM 元素
+            const progressFill = section.querySelector('.progress-fill');
+            const progressText = section.querySelector('.progress-text');
+
+            // 更新 UI
+            if (progressFill) {
+                progressFill.style.width = percentage + '%';
+            }
+            if (progressText) {
+                progressText.textContent = `Mastered: ${masteredCount} / ${totalTopics}`;
+            }
+        }
+
+        /**
+         * 更新所有学科的进度条
+         */
+        function updateAllProgress() {
+            updateSubjectProgress('chemistry-section');
+            updateSubjectProgress('physics-section');
+        }    
 
     </script>
 </body>
