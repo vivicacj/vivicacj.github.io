@@ -282,7 +282,10 @@ async function fetchErrorLogFromAPI(sheetName) {
         if (!response.ok) {
             throw new Error(`API request failed for ${sheetName} with status ${response.status}`);
         }
-        return await response.json();
+ // 关键修复点：解析JSON后，提取其中的 "rows" 数组        
+        const result = await response.json(); 
+        return result.rows || []; 
+        // 提取 "rows" 属性，如果不存在则返回空数组以防出错
     } catch (error) {
         console.error(`Error fetching error log for ${sheetName}:`, error);
         return []; // 出错时返回空数组
