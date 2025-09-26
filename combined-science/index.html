@@ -285,7 +285,7 @@
         window.updateAnalytics = function(subject) {
             document.querySelectorAll('.toggle-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(subject)); });
             // +++ 这是正确的代码行 +++
-            const subjectData = scienceData.filter(item => item.Subject === subject);
+            const subjectData = scienceData[subject] || [];
             const analyticsContent = document.getElementById('analytics-content');
             if (!analyticsContent) return;
 
