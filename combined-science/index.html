@@ -83,6 +83,47 @@
         .action-link-phys { background: #dbeafe; color: #1e40af; border: 1px solid #3b82f6; }
         .action-link:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
+          /* 状态图例容器 */
+.status-legend {
+    display: flex;
+    flex-wrap: wrap; /* 在小屏幕上允许换行 */
+    gap: 20px;       /* 图例项之间的间距 */
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 12px 20px;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+/* 单个图例项 (圆圈 + 文字) */
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;       /* 圆圈和文字之间的间距 */
+    font-size: 0.9em;
+    color: #4a5568;
+}
+
+/* 模拟的状态按钮 (圆形) */
+.status-btn-mock {
+    /* 完全复制 .status-btn 的核心样式 */
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: white; /* 默认文字颜色 */
+}
+
+/* 我们复用已有的状态颜色类，无需额外代码。
+   但为了确保边框不影响大小，为 not-started 单独加一个属性 */
+.status-btn-mock.status-not-started {
+    box-sizing: border-box; 
+}
     </style>
 </head>
 <body>
@@ -97,6 +138,26 @@
         <div class="dashboard">
             <div class="main-panel">
                  <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
+              <!-- 新增的状态图例 -->
+<!-- 新增的状态图例 (圆形版本) -->
+<div class="status-legend">
+    <div class="legend-item">
+        <div class="status-btn-mock status-not-started"></div>
+        <span>Not Started</span>
+    </div>
+    <div class="legend-item">
+        <div class="status-btn-mock status-in-progress">●</div>
+        <span>In Progress</span>
+    </div>
+    <div class="legend-item">
+        <div class="status-btn-mock status-practicing">P</div>
+        <span>Practicing</span>
+    </div>
+    <div class="legend-item">
+        <div class="status-btn-mock status-mastered">✓</div>
+        <span>Mastered</span>
+    </div>
+</div>
                 <div class="subject-section" id="chemistry-section">
                     <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
                     <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div></div>
