@@ -268,7 +268,11 @@
             rows.forEach(row => {
                 const dayCell = row.querySelector('.day-cell');
                 if (dayCell) {
-                    currentDay = dayCell.textContent.trim().split('\n')[0].replace(/\s/g, ''); // Extract just 'Sat', 'Sun', etc.
+                    // --- 这是最关键的修正：使用更可靠的方法提取星期几 ---
+                    const strongTag = dayCell.querySelector('strong');
+                    if (strongTag) {
+                        currentDay = strongTag.textContent.trim(); // This will reliably get "Sat", "Sun", etc.
+                    }
                 }
 
                 const missionCell = row.querySelector('.mission-cell');
@@ -277,12 +281,12 @@
                 }
 
                 const detailsCell = row.querySelector('.details-cell');
-                const missionText = detailsCell ? detailsCell.textContent.trim().replace('Task:', '').trim() : 'No details';
+                const missionText = detailsCell ? detailsCell.textContent.trim().replace(/^.*?Task:\s*/, '') : 'No details';
                 
                 allTasks.push({
                     day: currentDay,
-                    mission: missionText, // Using detailed task as the mission
-                    coreMission: currentMission, // Storing the overarching mission
+                    mission: missionText,
+                    coreMission: currentMission,
                     checked: false,
                     links: []
                 });
@@ -296,13 +300,11 @@
             if (d) { 
                 try { return JSON.parse(d); } catch(e){} 
             }
-            // If no cache, generate from HTML
             return getInitialTaskData();
         }
 
         function saveProgressData(data) { 
             sessionStorage.setItem('localDataCache', JSON.stringify(data)); 
-            // Save the complete data object to Firebase
             docRef.set({ allTasks: data }).catch(e => console.error("Firebase save error: ", e)); 
         }
 
@@ -310,16 +312,16 @@
             const linkArea = document.querySelector(`.task-row[data-task-index="${taskIndex}"] .link-area`); 
             if (!linkArea) return; 
             linkArea.innerHTML = ''; 
-            links.forEach((link, linkIndex) => { 
+            (links || []).forEach((link, linkIndex) => { 
                 const pill = document.createElement('a'); 
                 pill.className = 'link-pill'; 
                 pill.textContent = `Link ${linkIndex + 1}`; 
                 pill.href = link; 
-                pill.target = '_blank'; // Open in new tab
+                pill.target = '_blank';
                 pill.dataset.linkIndex = linkIndex; 
                 linkArea.appendChild(pill); 
             }); 
-            if (links.length < MAX_LINKS_PER_TASK) { 
+            if (!links || links.length < MAX_LINKS_PER_TASK) { 
                 const addButton = document.createElement('button'); 
                 addButton.className = 'add-link-btn'; 
                 addButton.textContent = '➕ Add'; 
@@ -331,11 +333,10 @@
             const rows = document.querySelectorAll('.task-row[data-task-index]'); 
             rows.forEach((row) => { 
                 const idx = parseInt(row.dataset.taskIndex, 10);
-                // Ensure data from Firebase has priority, but fall back to initial structure
                 const taskData = data[idx] || {checked: false, links: []};
                 const cb = row.querySelector('.task-checkbox'); 
                 if (cb) cb.checked = taskData.checked; 
-                renderLinksForTask(idx, taskData.links || []); // Ensure links is an array
+                renderLinksForTask(idx, taskData.links);
             }); 
             sessionStorage.setItem('localDataCache', JSON.stringify(data)); 
             updateOverallProgress(); 
@@ -371,7 +372,6 @@
             if (target.matches('.task-checkbox')) {
                 taskData.checked = target.checked;
                 saveProgressData(data);
-                // No need to call updateOverallProgress here, as listenForProgressChanges will do it
                 return;
             }
             if (target.matches('.add-link-btn')) {
@@ -415,7 +415,6 @@
                 if (doc.exists && doc.data().allTasks && doc.data().allTasks.length > 0) { 
                     loadProgress(doc.data().allTasks); 
                 } else { 
-                    // If doc doesn't exist or is empty, create it from the HTML table
                     console.log("No data in Firebase. Initializing from HTML table.");
                     const initialData = getInitialTaskData();
                     saveProgressData(initialData); 
@@ -430,6 +429,7 @@
         // --- UTILITY & UI ---
         function updateOverallProgress() { 
             const data = getProgressData();
+            if(!data) return;
             const total = data.length;
             const completed = data.filter(task => task.checked).length;
             
@@ -467,3 +467,21 @@
     </script>
 </body>
 </html>
+```
+
+### 核心修正
+
+我在 `getInitialTaskData` 函数中修改了提取星期几的方式。旧代码不可靠，新代码会**精确地只读取 `<strong>` 标签里的文本**（例如 "Sat"），确保写入数据库的 `day` 字段是完全正确的。
+
+```javascript
+// ...
+const dayCell = row.querySelector('.day-cell');
+if (dayCell) {
+    // --- 这是最关键的修正：使用更可靠的方法提取星期几 ---
+    const strongTag = dayCell.querySelector('strong');
+    if (strongTag) {
+        currentDay = strongTag.textContent.trim(); // 这会可靠地获取 "Sat", "Sun" 等
+    }
+}
+//...
+
