@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Combined Science - Chem & Phys Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <title>Combined Science - Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script src="data/science-data.js"></script>
-    <!-- 核心修改点：增加 Firebase SDK 引用 -->
+    <script src="data/science-data.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-        <style>
+    <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #667eea; color: #333; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -87,60 +86,61 @@
 </head>
 <body>
     <div class="container">
-        <!-- 核心修改点：在 Header 中增加一个跳转按钮 -->
         <div class="header">
             <h1>🎯 Combined Science 「 Chemistry & Physics」</h1>
             <p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p>
             <a href="strategic-planner.html" class="planner-link">🚀 Go to Strategic Planner</a>
-            <a href="chemistry-sprint-guide.html" class="planner-link chemistry-sprint-btn">🧪 Start Chemistry Sprint</a>
         </div>
+        
         <div class="dashboard">
             <div class="main-panel">
-                 <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
+                <!-- 左侧主面板的完整 HTML 内容 -->
+                <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
                 <div class="subject-section" id="chemistry-section">
                     <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
-                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Stoichiometry & The Mole Concept</div><div class="topic-description">The most calculation-intensive and procedural topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Chemical Bonding & Structure</div><div class="topic-description">A major source of explanation and diagram-based questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Redox Reactions & Reactivity of Metals</div><div class="topic-description">The core of logical reasoning and prediction questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
-                    <div class="topic-category"><div class="category-title">🛰️ Satellite Topics (19% of marks)</div><div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Stoichiometry & The Mole Concept</div><div class="topic-description">The most calculation-intensive and procedural topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Chemical Bonding & Structure</div><div class="topic-description">A major source of explanation and diagram-based questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Redox Reactions & Reactivity of Metals</div><div class="topic-description">The core of logical reasoning and prediction questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Topics (19% of marks)</div><div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn">Practice</button></div></div></div>
                 </div>
                 <div class="subject-section" id="physics-section">
                     <div class="subject-header"><div class="subject-title">⚡ Physics</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 8</div></div></div>
-                    <div class="topic-category"><div class="category-title">🎯 Core Archetypes (The "Big Four")</div><div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1qDLUzRLwvqSofKnvvQbD2DoKtdX_tkP73-UL4i9BcKY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Balancing Act (Moments & Equilibrium)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1Xdh3DoB2UjPHIGpL4vcTRR5AGHxwCocTvN5fsrYtH7U/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Energy Conversion Trail</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1hre1cJO-ya60dBkteMFe2quBY8Ac3hRAQP9efveVdbI/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1z7UGZ71aNo57NG5Q-m384KA2_YmLnCPybPTzKipriYQ/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
-                    <div class="topic-category"><div class="category-title">🛰️ Satellite Archetypes</div><div class="topic-item"><div><div class="topic-name">Stability (Centre of Gravity & Base Area)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1zUDZD90Lge9KdqCkgA7SPIWc2w0qKgK2puRUvSNzRpY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Vector Drawing & Dynamics</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1y2e3CKutRQVF8krx5HH_VNgmaPPHYvqKzpi-3srC-bo/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Density & Pressure Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1c3yPKiqNiW3ayzNwO8jXOaCETFGCEa-9MFQXo85vGws/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Light Ray Tracing & Optics Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1JbXc39hdg7e0liPzMd0fQMUY92tWn0tmu17wqfEKaPA/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Archetypes (The "Big Four")</div><div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Balancing Act (Moments & Equilibrium)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Energy Conversion Trail</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Archetypes</div><div class="topic-item"><div><div class="topic-name">Stability (Centre of Gravity & Base Area)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Vector Drawing & Dynamics</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Density & Pressure Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Light Ray Tracing & Optics Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn">Practice</button></div></div></div>
                 </div>
             </div>
+            
             <div class="side-panel">
                 <div class="widget" id="strengths-widget">
                     <h3 class="section-title">📊 Strengths & Weaknesses</h3>
                     <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
                     <div id="analytics-content">
                         <div id="loading-analytics" class="loading-text">Loading analytics data...</div>
-                         <!-- Dynamic content will be injected here -->
                     </div>
                 </div>
-                     <!-- =========== 核心修改点：更新 Goals 模块 =========== -->
-                <div class="widget">
+                 <div class="widget">
                     <h3 class="section-title">🎯 This Week's Sprint Goals</h3>
-                    <div id="goals-module-content">
-                        <p class="loading-text">Loading weekly goals...</p>
-                    </div>
+                    <div id="goals-module-content"><p class="loading-text">Loading weekly goals...</p></div>
                  </div>
+                 <div class="widget"><h3 class="section-title">🔄 Today's Review</h3></div>
+            </div>
+        </div>
     </div>
+    
     <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
     
-        <script>
+    <script>
         // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
         const firebaseConfig = {
             apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
@@ -158,18 +158,15 @@
 
         // --- 2. GLOBAL VARIABLES ---
         let skillRadarChart;
-        let allData = { Chemistry: [], Physics: [] }; // From science-data.js
-        let chemSprintTasks = []; // For the new module
-        let physSprintTasks = []; // For the new module
+        let allData = { Chemistry: [], Physics: [] };
+        let chemSprintTasks = [], physSprintTasks = [];
 
         // --- 3. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async function() {
-            // Data for analytics dashboard
             allData.Chemistry = scienceData.Chemistry || [];
             allData.Physics = scienceData.Physics || [];
             updateAnalytics('Chemistry');
             
-            // Data for the new sprint goals module
             await fetchAllSprintTasks();
             renderGoalsModule();
         });
@@ -177,12 +174,10 @@
         // --- 4. DATA FETCHING ---
         async function fetchAllSprintTasks() {
             try {
-                const [chemTasks, physTasks] = await Promise.all([
+                [chemSprintTasks, physSprintTasks] = await Promise.all([
                     fetchSprintTasksFromDB('chemistry_tasks_v1'),
                     fetchSprintTasksFromDB('physics_tasks_v1')
                 ]);
-                chemSprintTasks = chemTasks;
-                physSprintTasks = physTasks;
             } catch (error) {
                 console.error("Error fetching sprint tasks:", error);
             }
@@ -191,10 +186,7 @@
         async function fetchSprintTasksFromDB(docId) {
             try {
                 const doc = await db.collection("sprintPlan").doc(docId).get();
-                if (doc.exists) {
-                    return doc.data().allTasks || [];
-                }
-                return [];
+                return doc.exists ? (doc.data().allTasks || []) : [];
             } catch (error) {
                 console.error(`Error fetching tasks from ${docId}:`, error);
                 return [];
@@ -205,55 +197,30 @@
         function renderGoalsModule() {
             const container = document.getElementById('goals-module-content');
             if (!container) return;
-            
             const chemStats = calculateSprintStats(chemSprintTasks);
             const physStats = calculateSprintStats(physSprintTasks);
-            
             container.innerHTML = `
                 <div class="goals-progress">
-                    <div class="progress-item">
-                        <div class="progress-label"><span>🧪 Chemistry Sprint</span><span>${chemStats.completed} / ${chemStats.total} Done</span></div>
-                        <div class="progress-bar"><div class="progress-fill progress-fill-chem" style="width: ${chemStats.percentage}%;"></div></div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-label"><span>⚡ Physics Sprint</span><span>${physStats.completed} / ${physStats.total} Done</span></div>
-                        <div class="progress-bar"><div class="progress-fill progress-fill-phys" style="width: ${physStats.percentage}%;"></div></div>
-                    </div>
+                    <div class="progress-item"><div class="progress-label"><span>🧪 Chemistry Sprint</span><span>${chemStats.completed} / ${chemStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-chem" style="width: ${chemStats.percentage}%;"></div></div></div>
+                    <div class="progress-item"><div class="progress-label"><span>⚡ Physics Sprint</span><span>${physStats.completed} / ${physStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-phys" style="width: ${physStats.percentage}%;"></div></div></div>
                 </div>
-                <div class="goals-today">
-                    <div class="today-title">Today's Focus</div>
-                    <div class="today-columns">
-                        <div><h4 style="text-align:center; margin-bottom:10px;">Chemistry</h4><ul class="today-task-list">${generateTodayTaskList(chemSprintTasks, 'Chemistry')}</ul></div>
-                        <div><h4 style="text-align:center; margin-bottom:10px;">Physics</h4><ul class="today-task-list">${generateTodayTaskList(physSprintTasks, 'Physics')}</ul></div>
-                    </div>
-                </div>
-                <div class="goals-actions">
-                    <a href="chemistry-sprint-guide.html" class="action-link action-link-chem">Go to Chem Sprint</a>
-                    <a href="#" class="action-link action-link-phys" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">Go to Phys Sprint</a>
-                </div>`;
+                <div class="goals-today"><div class="today-title">Today's Focus</div><div class="today-columns"><div><h4 style="text-align:center; margin-bottom:10px;">Chemistry</h4><ul class="today-task-list">${generateTodayTaskList(chemSprintTasks, 'Chemistry')}</ul></div><div><h4 style="text-align:center; margin-bottom:10px;">Physics</h4><ul class="today-task-list">${generateTodayTaskList(physSprintTasks, 'Physics')}</ul></div></div></div>
+                <div class="goals-actions"><a href="chemistry-sprint-guide.html" class="action-link action-link-chem">Go to Chem Sprint</a><a href="#" class="action-link action-link-phys" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">Go to Phys Sprint</a></div>`;
         }
         
-        // --- ALL OTHER FUNCTIONS (Analytics, Frameworks, Helpers) ---
         function updateAnalytics(subject) { /* ... Your existing, working analytics code ... */ }
-        function calculateSprintStats(tasks) { const total = tasks.length; if (total === 0) return { total: 0, completed: 0, percentage: 0 }; const completed = tasks.filter(task => task.checked === true).length; const percentage = (completed / total) * 100; return { total, completed, percentage }; }
+
+        // --- 6. HELPER & FRAMEWORK FUNCTIONS ---
+        function calculateSprintStats(tasks) { const t = tasks.length; if (t === 0) return { total: 0, completed: 0, percentage: 0 }; const c = tasks.filter(task => task.checked === true).length; return { total: t, completed: c, percentage: (c / t) * 100 }; }
         function generateTodayTaskList(tasks, subject) {
-            // This function needs the 'day' property in your task object from Firebase
-            if (!tasks || tasks.length === 0) { return `<li>No ${subject} sprint plan active.</li>`; }
-            const today = new Date().toLocaleDateString('en-US', { weekday: 'short' }); // e.g., "Sat"
+            if (!tasks || tasks.length === 0) return `<li>No ${subject} sprint plan active.</li>`;
+            const today = new Date().toLocaleDateString('en-US', { weekday: 'short' });
             const todayTasks = tasks.filter(task => task.day && task.day.toLowerCase().startsWith(today.toLowerCase()));
-            if (todayTasks.length === 0) { return `<li>No tasks for today.</li>`; }
+            if (todayTasks.length === 0) return `<li>No tasks for today.</li>`;
             return todayTasks.map(task => `<li class="today-task-item ${task.checked ? 'completed' : ''}">${task.mission}</li>`).join('');
         }
-        
-        // --- Paste your other working functions here ---
-        // function renderRadarChart(...) {}
-        // function renderHeatmap(...) {}
-        // function generateSuggestion(...) {}
-        // function closeFramework(...) {}
-        // function showChemistryFramework(...) {}
-        // function showFramework(...) {}
-        // function updateAllProgress(...) {}
-
+        // ... PASTE ALL YOUR OTHER WORKING FUNCTIONS HERE ...
+        // (renderRadarChart, renderHeatmap, generateSuggestion, showFramework, showChemistryFramework, etc.)
     </script>
 </body>
 </html>
