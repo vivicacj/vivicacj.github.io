@@ -159,59 +159,48 @@
         let skillRadarChart;
         let chemSprintTasks = [], physSprintTasks = [];
 
-         // --- 3. INITIALIZATION & EVENT LISTENERS ---
-                document.addEventListener('DOMContentLoaded', async function() {
-            // --- 核心修改点：在这里自动为所有按钮批量添加 title 提示 ---
-            
-            // 为所有“框架”按钮添加提示
-            document.querySelectorAll('.framework-btn').forEach(btn => {
-                btn.title = 'View Topic Framework';
-            });
-            
-            // 为所有“练习”按钮添加提示
-            document.querySelectorAll('.practice-btn').forEach(btn => {
-                btn.title = 'Open Practice Questions';
-            });
-            
-            // 为所有“状态”按钮添加初始提示
-            // (这段代码其实我们之前已经有了，但放在这里更清晰)
-            document.querySelectorAll('.status-btn.status-not-started').forEach(btn => {
-                btn.title = 'Not Started';
-            });
-            
-            // --- 保留您所有现有的初始化代码 ---
-            if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
-                const container = document.querySelector('.container');
-                if (container) {
-                    container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: One of the data files (science-data.js or exam-config.js) failed to load. Please check the file paths and names.</div>`;
+        // --- 3. INITIALIZATION & EVENT LISTENERS (包含按钮提示) ---
+            document.addEventListener('DOMContentLoaded', async function() {
+                // Check if essential data files are loaded
+                if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
+                    const container = document.querySelector('.container');
+                    if (container) { container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: data/science-data.js or data/exam-config.js not found. Please check file paths.</div>`; }
+                    return;
                 }
-                return;
-            }
 
-            await fetchAllSprintTasks();
-            updateAnalytics('Chemistry');
-            renderGoalsModule();
-            updateAllProgress();
+                // Add tooltips to buttons automatically
+                document.querySelectorAll('.framework-btn').forEach(btn => btn.title = 'View Topic Framework');
+                document.querySelectorAll('.practice-btn').forEach(btn => btn.title = 'Open Practice Questions');
+                
+                // Fetch dynamic data
+                await fetchAllSprintTasks();
 
-            // 这段代码也保持不变，它负责后续的状态更新
-            const mainPanel = document.querySelector('.main-panel');
-            if (mainPanel) {
-                mainPanel.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('status-btn')) {
-                        const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
-                        const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
-                        const symbols = ['', '●', 'P', '✓'];
-                        let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
-                        const nextIndex = (currentIndex + 1) % statuses.length;
-                        e.target.className = 'status-btn';
-                        e.target.classList.add(statuses[nextIndex]);
-                        e.target.title = titles[nextIndex]; // 自动更新 title
-                        e.target.textContent = symbols[nextIndex];
-                        updateAllProgress();
-                    }
-                });
-            }
-        });
+                // Render all modules
+                updateAnalytics('Chemistry');
+                renderGoalsModule();
+                updateAllProgress();
+
+                // Set up a single event listener for the main panel
+                const mainPanel = document.querySelector('.main-panel');
+                if (mainPanel) {
+                    mainPanel.addEventListener('click', function(e) {
+                        if (e.target.classList.contains('status-btn')) {
+                            const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
+                            const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
+                            const symbols = ['', '●', 'P', '✓'];
+                            let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
+                            const nextIndex = (currentIndex + 1) % statuses.length;
+                            
+                            e.target.className = 'status-btn';
+                            e.target.classList.add(statuses[nextIndex]);
+                            e.target.title = titles[nextIndex];
+                            e.target.textContent = symbols[nextIndex];
+                            
+                            updateAllProgress();
+                        }
+                    });
+                }
+            });
         
         // --- 4. DATA FETCHING ---
         async function fetchSprintTasksFromDB(docId) {
