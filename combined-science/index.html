@@ -59,10 +59,35 @@
         .suggestion-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; }
         .suggestion-text { font-style: italic; line-height: 1.6; }
         @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
+        /* 新增一个按钮样式 */
+        .header .planner-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+        .header .planner-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- 核心修改点：在 Header 中增加一个跳转按钮 -->
+        <div class="header">
+            <h1>🎯 Combined Science 「 Chemistry & Physics」</h1>
+            <p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p>
+            <a href="strategic-planner.html" class="planner-link">🚀 Go to Strategic Planner</a>
+        </div>
+        
+        <div class="dashboard">
         <!-- HTML 部分保持不变 -->
         <div class="header"><h1>🎯 Combined Science 「 Chemistry & Physics」</h1><p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p></div>
         <div class="dashboard">
