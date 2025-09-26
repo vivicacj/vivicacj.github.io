@@ -139,127 +139,153 @@
                  </div>
     </div>
     <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
-    
-            <script>
-        // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
-            authDomain: "emath-study-plan.firebaseapp.com",
-            projectId: "emath-study-plan",
-            storageBucket: "emath-study-plan.firebasestorage.app",
-            messagingSenderId: "589299697460",
-            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
-            measurementId: "G-09QVE4GLS0"
-        };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
+        <script>
+        (function() {
+            // --- 1. GLOBAL VARIABLES ---
+            let skillRadarChart;
+            let chemSprintTasks = [], physSprintTasks = [];
 
-        // --- 2. GLOBAL VARIABLES ---
-        let skillRadarChart;
-        let chemSprintTasks = [], physSprintTasks = [];
+            // --- 2. INITIALIZATION ---
+            document.addEventListener('DOMContentLoaded', async function() {
+                // Check if data objects exist
+                if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
+                    const container = document.querySelector('.container');
+                    if (container) {
+                        container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: data/science-data.js or data/exam-config.js not found.</div>`;
+                    }
+                    return;
+                }
+                
+                await fetchAllSprintTasks();
 
-        // --- 3. INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Data for analytics dashboard is now also global
-            // No need to re-declare scienceData here as it's loaded from file
-            
-            // Fetch dynamic data first
-            await fetchAllSprintTasks();
+                updateAnalytics('Chemistry');
+                renderGoalsModule();
+                updateAllProgress();
+            });
 
-            // Render all modules
-            updateAnalytics('Chemistry');
-            renderGoalsModule();
-        });
-        
-        // --- 4. DATA FETCHING ---
-        async function fetchSprintTasksFromDB(docId) {
-            try {
-                const doc = await db.collection("sprintPlan").doc(docId).get();
-                return doc.exists ? (doc.data().allTasks || []) : [];
-            } catch (error) {
-                console.error(`Error fetching tasks from ${docId}:`, error);
-                return [];
+            // --- 3. FIREBASE & DATA FETCHING ---
+            const firebaseConfig = {
+                apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+                authDomain: "emath-study-plan.firebaseapp.com",
+                projectId: "emath-study-plan",
+                storageBucket: "emath-study-plan.firebasestorage.app",
+                messagingSenderId: "589299697460",
+                appId: "1:589299697460:web:df1e0bb0586b3740c04761",
+                measurementId: "G-09QVE4GLS0"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
             }
-        }
+            const db = firebase.firestore();
 
-        async function fetchAllSprintTasks() {
-            try {
-                [chemSprintTasks, physSprintTasks] = await Promise.all([
-                    fetchSprintTasksFromDB('chemistry_tasks_v1'),
-                    fetchSprintTasksFromDB('physics_tasks_v1')
-                ]);
-            } catch (error) {
-                console.error("Error fetching sprint tasks:", error);
+            async function fetchSprintTasksFromDB(docId) {
+                try {
+                    const doc = await db.collection("sprintPlan").doc(docId).get();
+                    return doc.exists ? (doc.data().allTasks || []) : [];
+                } catch (error) {
+                    console.error(`Error fetching tasks from ${docId}:`, error);
+                    return [];
+                }
             }
-        }
-
-        // --- 5. ANALYTICS MODULE (Strengths & Weaknesses) ---
-        window.updateAnalytics = function(subject) {
-            document.querySelectorAll('.toggle-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(subject)); });
-            const subjectData = scienceData[subject] || [];
-            const analyticsContent = document.getElementById('analytics-content');
-            if (!analyticsContent) return;
-
-            if (subjectData.length === 0) {
-                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data for ${subject}. Update science-data.js.</div>`;
-                return;
+            async function fetchAllSprintTasks() {
+                try {
+                    [chemSprintTasks, physSprintTasks] = await Promise.all([
+                        fetchSprintTasksFromDB('chemistry_tasks_v1'),
+                        fetchSprintTasksFromDB('physics_tasks_v1')
+                    ]);
+                } catch (error) {
+                    console.error("Error fetching sprint tasks:", error);
+                }
             }
-            analyticsContent.innerHTML = `<canvas id="skillRadarChart" style="max-height: 250px;"></canvas><h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4><div id="heatmap-container" class="heatmap"></div><div id="suggestion-box-container" class="suggestion-box"><div id="suggestion-text" class="suggestion-text"></div></div>`;
             
-            const incorrectData = subjectData.filter(item => item.Result === 'Incorrect');
-            const errorTypes = subject === 'Chemistry' ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error'] : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
-            const errorCounts = errorTypes.map(type => 
-                incorrectData.filter(item => item.Error_Type && item.Error_Type.startsWith(type)).length
-            );
-            const totalErrors = incorrectData.length || 1;
-            const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
+            // --- 4. ANALYTICS MODULE (Strengths & Weaknesses) ---
+            window.updateAnalytics = function(subject) {
+                document.querySelectorAll('.toggle-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(subject)); });
+                const subjectData = scienceData[subject] || [];
+                const analyticsContent = document.getElementById('analytics-content');
+                if (!analyticsContent) return;
+
+                if (subjectData.length === 0) {
+                    analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data for ${subject}. Update science-data.js.</div>`;
+                    return;
+                }
+                analyticsContent.innerHTML = `<canvas id="skillRadarChart" style="max-height: 250px;"></canvas><h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4><div id="heatmap-container" class="heatmap"></div><div id="suggestion-box-container" class="suggestion-box"><div id="suggestion-text" class="suggestion-text"></div></div>`;
+                
+                const incorrectData = subjectData.filter(item => item.Result === 'Incorrect');
+                const errorTypes = subject === 'Chemistry' ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error'] : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
+                const errorCounts = errorTypes.map(type => 
+                    incorrectData.filter(item => item.Error_Type && item.Error_Type.startsWith(type)).length
+                );
+                const totalErrors = incorrectData.length || 1;
+                const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
+                
+                renderRadarChart(errorTypes.map(e => e.split('(')[0].trim()), skillScores);
+                
+                const topicPerformance = {};
+                const allTopics = [...new Set(subjectData.map(item => item.Topic))].filter(Boolean);
+                allTopics.forEach(topic => { const items = subjectData.filter(item => item.Topic === topic); const correct = items.filter(item => item.Result === 'Correct').length; const partial = items.filter(item => item.Result === 'Partial').length; if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; });
+                renderHeatmap(topicPerformance);
+                generateSuggestion(topicPerformance, errorCounts, errorTypes);
+            }
+
+            // --- 5. GOALS MODULE ---
+            function renderGoalsModule() {
+                const container = document.getElementById('goals-module-content');
+                if (!container) return;
+                const chemStats = calculateSprintStats(chemSprintTasks);
+                const physStats = calculateSprintStats(physSprintTasks);
+                container.innerHTML = `
+                    <div class="goals-progress">
+                        <div class="progress-item"><div class="progress-label"><span>🧪 Chemistry Sprint</span><span>${chemStats.completed} / ${chemStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-chem" style="width: ${chemStats.percentage}%;"></div></div></div>
+                        <div class="progress-item"><div class="progress-label"><span>⚡ Physics Sprint</span><span>${physStats.completed} / ${physStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-phys" style="width: ${physStats.percentage}%;"></div></div></div>
+                    </div>
+                    <div class="goals-today"><div class="today-title">Today's Focus</div><div class="today-columns"><div><h4 style="text-align:center; margin-bottom:10px;">Chemistry</h4><ul class="today-task-list">${generateTodayTaskList(chemSprintTasks, 'Chemistry')}</ul></div><div><h4 style="text-align:center; margin-bottom:10px;">Physics</h4><ul class="today-task-list">${generateTodayTaskList(physSprintTasks, 'Physics')}</ul></div></div></div>
+                    <div class="goals-actions"><a href="chemistry-sprint-guide.html" class="action-link action-link-chem">Go to Chem Sprint</a><a href="#" class="action-link action-link-phys" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">Go to Phys Sprint</a></div>`;
+            }
+
+            // --- 6. FRAMEWORK FUNCTIONS (COMPLETE & RESTORED) ---
+            window.closeFramework = function() { document.getElementById('frameworkModal').style.display = 'none'; }
+            window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
             
-            renderRadarChart(errorTypes.map(e => e.split('(')[0].trim()), skillScores);
+            window.showChemistryFramework = function(frameworkType) {
+                const modal = document.getElementById('frameworkModal');
+                const details = document.getElementById('frameworkDetails');
+                const chemistryFrameworks = {
+                    'qa-framework': `<h2>Acids, Bases & Salts / QA Framework</h2><h3>Model Emphasis: C → L (Connect → Link), supported by M (Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span> Crucial</h4><p>Connect descriptive words (green solution, gas turns limewater cloudy, white precipitate) to your memorised database of specific ions or substances (Fe²⁺, CO₂, AgCl).</p><p>Connect the task "prepare an insoluble salt" to the reaction type "Precipitation".</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>Manipulate chemical symbols to write and balance full and ionic equations correctly.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span></h4><p>Link the observations from multiple experimental steps to construct a complete logical chain for deducing an unknown substance (in QA flowcharts).</p><p>Link the microscopic rule (salt solubility) to the macroscopic decision (choice of preparation method).</p></div>`,
+                    'stoichiometry-framework': `<h2>Stoichiometry & Mole Concept Framework</h2><h3>Model Emphasis: C → M (Connect → Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the numerical values in the question (50.0 cm³, 2.00 mol/dm³) to their corresponding physical quantity symbols (V, C).</p><p>Connect the required answer "mass" to the final formula needed, m = n × M.</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span> Crucial</h4><p>Manipulate the mole-triangle formulas for unit conversion and calculation.</p><p>Manipulate balanced chemical equations to extract the mole ratio.</p><p>Manipulate the limiting reactant identification procedure. This is the most procedural part of the topic.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span></h4><p>(Less emphasized) Occasionally required to link a calculation result to its real-world meaning, such as explaining why one reactant was used in excess.</p></div>`,
+                    'bonding-framework': `<h2>Chemical Bonding & Structure Framework</h2><h3>Model Emphasis: C → L (Connect → Link), supported by M (Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the substance name (sodium chloride) to its bonding type (metal + non-metal → Ionic).</p><p>Connect the question "explain high melting point" to the corresponding explanation model.</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>Manipulate electron arrangement rules to accurately construct dot-and-cross diagrams.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span> Crucial</h4><p>Link the microscopic structure (Giant Ionic Lattice) and forces (strong electrostatic forces) to macroscopic physical properties (high melting point, conducts electricity when molten). This is the core of all explanation questions in this topic.</p></div>`,
+                    'redox-framework': `<h2>Redox Reactions & Reactivity Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the reactant combination (Zn + CuSO₄) to the "Displacement Reaction" type.</p><p>Connect a real-world context ("preventing rust on a ship") to the application of the "Reactivity Series" or "Sacrificial Protection".</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>(Less emphasized) Occasionally required to manipulate half-equations.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span> Crucial</h4><p>Link an element's position in the reactivity series (a rule) to whether a reaction will occur (a prediction).</p><p>Link the microscopic meaning of "more reactive" (easier to lose electrons) to the macroscopic outcome (Zn is preferentially oxidised).</p></div>`,
+                    'experimental-framework': `<h2>Experimental Chemistry Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><p>Connect the state of the mixture (e.g., insoluble solid in liquid) to a specific separation technique (e.g., Filtration). Link the choice of technique (e.g., Fractional Distillation) to differences in the substances' physical properties (e.g., different boiling points).</p></div>`,
+                    'matter-framework': `<h2>Particulate Nature of Matter Framework</h2><h3>Model Emphasis: L (Link)</h3><div class="clm-section"><p>Link the microscopic particle behavior (gain in kinetic energy, overcoming forces of attraction) to macroscopic changes of state (melting, boiling). Your explanation must describe the particles.</p></div>`,
+                    'atomic-framework': `<h2>Atomic Structure Framework</h2><h3>Model Emphasis: C → M (Connect → Manipulate)</h3><div class="clm-section"><p>Connect symbols (e.g., ²⁴₁₂Mg²⁺) to its constituent parts (A=24, Z=12, charge=+2). Manipulate formulas (n⁰ = A - Z) to calculate the number of particles and write electronic configurations.</p></div>`,
+                    'periodic-framework': `<h2>The Periodic Table Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><p>Link an element's position (Group/Period) to its atomic structure (e.g., number of valence electrons) and then link that structure to its chemical properties and trends down a group or across a period.</p></div>`,
+                    'environment-framework': `<h2>Air & The Environment Framework</h2><h3>Model Emphasis: C (Connect)</h3><div class="clm-section"><p>This topic is heavy on memory and association. Your primary task is to connect pollutants (e.g. SO₂) to their sources (e.g. burning fossil fuels) and their resulting environmental problems (e.g. acid rain).</p></div>`
+                };
+                details.innerHTML = chemistryFrameworks[frameworkType] || '<h2>Framework details not found</h2>';
+                modal.style.display = 'block';
+            }
+            window.showFramework = function(frameworkType) {
+                const modal = document.getElementById('frameworkModal');
+                const details = document.getElementById('frameworkDetails');
+                const frameworks = {
+                    'thermal': `<h2>Thermal Physics Explanation Framework</h2><h3>Model Name: The M-C-E (Micro-Cause-Effect) Chain</h3><div class="clm-section"><h4><span class="clm-letter">M (Micro-level):</span> Energy Change</h4><p>Describe the change in the particles' Kinetic Energy (KE) or Potential Energy (PE).</p><p><strong>Trigger Phrases:</strong> "Particles gain/lose KE...", "Energy is absorbed to overcome forces of attraction..."</p></div><div class="clm-section"><h4><span class="clm-letter">C (Cause):</span> Particle Behaviour</h4><p>Describe how the energy change alters the motion, spacing, or arrangement of the particles.</p><p><strong>For Convection:</strong> Must include Density Change! [Gains heat] → [Expands] → [Becomes less dense] → [Rises]</p></div><div class="clm-section"><h4><span class="clm-letter">E (Effect):</span> Macro-level Phenomenon</h4><p>Link the change in particle behaviour to the macroscopic phenomenon.</p></div>`,
+                    'kinematics': `<h2>Kinematics Graph Narrative Framework</h2><h3>Model Name: The G-S-V (Gradient-Shape-Value) Storyboard</h3><div class="clm-section"><h4><span class="clm-letter">G (Gradient's Meaning):</span></h4><p>State the physical meaning of the gradient (e.g., "The gradient of the v-t graph represents acceleration.")</p></div><div class="clm-section"><h4><span class="clm-letter">S (Shape's Meaning):</span></h4><p>Translate the shape of the graph line into a description of the motion (e.g., "...a straight line, indicating constant acceleration.")</p></div><div class="clm-section"><h4><span class="clm-letter">V (Key Values):</span></h4><p>Include specific numerical values for time, speed, or calculated acceleration.</p></div>`,
+                    'equilibrium': `<h2>Force Equilibrium Explanation Framework</h2><h3>Model Name: The N1L (Newton's First Law) Principle</h3><div class="clm-section"><p><strong>1. State the Motion:</strong> "The object is moving at a constant velocity / is at rest."</p></div><div class="clm-section"><p><strong>2. Apply the Law:</strong> "According to Newton's First Law, this implies that the net force on the object is zero."</p></div><div class="clm-section"><p><strong>3. Analyze the Forces:</strong> "Therefore, the forward force must be equal and opposite to the total resistive forces."</p></div>`,
+                    'stability': `<h2>Stability Comparison Framework</h2><h3>Model Name: The CG-B (Centre of Gravity & Base Area) Principle</h3><div class="clm-section"><p><strong>1. Centre of Gravity (CG) Position:</strong> A lower CG leads to greater stability.</p></div><div class="clm-section"><p><strong>2. Base Area:</strong> A wider base of support leads to greater stability.</p></div><div class="clm-section"><p><strong>Reasoning:</strong> A wider base and lower CG mean the object has to be tilted through a larger angle before its line of action falls outside the base.</p></div>`,
+                    'energy': `<h2>Energy Transformation Framework</h2><h3>Model Name: The PCE+WD (Principle of Conservation of Energy + Work Done) Flowchart</h3><div class="clm-section"><p><strong>1. State the Principle:</strong> "According to the Principle of Conservation of Energy, energy is converted from one form to another."</p></div><div class="clm-section"><p><strong>2. Identify Main Conversion:</strong> "The primary conversion is from [Initial Energy, e.g., GPE] to [Final Energy, e.g., KE]."</p></div><div class="clm-section"><p><strong>3. Identify Dissipation Path:</strong> "However, work is done against [Resistive Force, e.g., friction]."</p></div><div class="clm-section"><p><strong>4. State Final Destination:</strong> "This converts some mechanical energy into thermal energy and/or sound, which is dissipated."</p></div>`
+                };
+                details.innerHTML = frameworks[frameworkType] || '<h2>Framework details not found</h2>';
+                modal.style.display = 'block';
+            }
 
-            const topicPerformance = {};
-            const allTopics = [...new Set(subjectData.map(item => item.Topic))].filter(Boolean);
-            allTopics.forEach(topic => { const items = subjectData.filter(item => item.Topic === topic); const correct = items.filter(item => item.Result === 'Correct').length; const partial = items.filter(item => item.Result === 'Partial').length; if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; });
-            renderHeatmap(topicPerformance);
-            generateSuggestion(topicPerformance, errorCounts, errorTypes);
-        }
+            // --- 7. HELPER FUNCTIONS ---
+            function calculateSprintStats(tasks) { const t = tasks.length; if (t === 0) return { total: 0, completed: 0, percentage: 0 }; const c = tasks.filter(task => task.checked === true).length; return { total: t, completed: c, percentage: (c / t) * 100 }; }
+            function generateTodayTaskList(tasks, subject) { if (!tasks || tasks.length === 0) return `<li>No ${subject} sprint plan active.</li>`; const today = new Date().toLocaleDateString('en-US', { weekday: 'short' }); const todayTasks = tasks.filter(task => task.day && task.day.toLowerCase().startsWith(today.toLowerCase())); if (todayTasks.length === 0) return `<li>No tasks for today.</li>`; return todayTasks.map(task => `<li class="today-task-item ${task.checked ? 'completed' : ''}">${task.mission}</li>`).join(''); }
+            function updateAllProgress() { document.querySelectorAll('.subject-section').forEach(sec => { const mastered = sec.querySelectorAll('.status-mastered').length; const total = sec.querySelectorAll('.topic-item').length; const prog = total > 0 ? (mastered / total) * 100 : 0; const fill = sec.querySelector('.progress-fill'); const text = sec.querySelector('.progress-text'); if (fill && text) { fill.style.width = prog + '%'; text.textContent = `Mastered: ${mastered} / ${total}`; } }); }
+            document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
 
-        function renderRadarChart(labels, scores) { const ctx = document.getElementById('skillRadarChart').getContext('2d'); if (skillRadarChart) skillRadarChart.destroy(); skillRadarChart = new Chart(ctx, { type: 'radar', data: { labels: labels, datasets: [{ label: 'Skill Score', data: scores, fill: true, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgb(52, 152, 219)', pointBackgroundColor: 'rgb(52, 152, 219)', }] }, options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } } }); }
-        function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
-        function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.innerHTML = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like <strong>"${p[0]}"</strong> to achieve perfection!`; else el.innerHTML = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.innerHTML = `💡 Your weakest area is <strong>"${wT}"</strong> (Accuracy ${lS.toFixed(0)}%). The most common error type is <strong>"${mET}"</strong>. I recommend reviewing this topic's framework and doing targeted practice.`; else el.innerHTML = "Analysis complete. Use the charts above to guide your study plan."; }
-
-        // --- 6. GOALS MODULE ---
-        function renderGoalsModule() {
-            const container = document.getElementById('goals-module-content');
-            if (!container) return;
-            
-            const chemStats = calculateSprintStats(chemSprintTasks);
-            const physStats = calculateSprintStats(physSprintTasks);
-            
-            container.innerHTML = `
-                <div class="goals-progress">
-                    <div class="progress-item"><div class="progress-label"><span>🧪 Chemistry Sprint</span><span>${chemStats.completed} / ${chemStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-chem" style="width: ${chemStats.percentage}%;"></div></div></div>
-                    <div class="progress-item"><div class="progress-label"><span>⚡ Physics Sprint</span><span>${physStats.completed} / ${physStats.total} Done</span></div><div class="progress-bar"><div class="progress-fill progress-fill-phys" style="width: ${physStats.percentage}%;"></div></div></div>
-                </div>
-                <div class="goals-today"><div class="today-title">Today's Focus</div><div class="today-columns"><div><h4 style="text-align:center; margin-bottom:10px;">Chemistry</h4><ul class="today-task-list">${generateTodayTaskList(chemSprintTasks, 'Chemistry')}</ul></div><div><h4 style="text-align:center; margin-bottom:10px;">Physics</h4><ul class="today-task-list">${generateTodayTaskList(physSprintTasks, 'Physics')}</ul></div></div></div>
-                <div class="goals-actions"><a href="chemistry-sprint-guide.html" class="action-link action-link-chem">Go to Chem Sprint</a><a href="#" class="action-link action-link-phys" style="opacity:0.5; cursor:not-allowed;" title="Coming Soon">Go to Phys Sprint</a></div>`;
-        }
-        function calculateSprintStats(tasks) { const t = tasks.length; if (t === 0) return { total: 0, completed: 0, percentage: 0 }; const c = tasks.filter(task => task.checked === true).length; return { total: t, completed: c, percentage: (c / t) * 100 }; }
-        function generateTodayTaskList(tasks, subject) {
-            if (!tasks || tasks.length === 0) return `<li>No ${subject} sprint plan active.</li>`;
-            const today = new Date().toLocaleDateString('en-US', { weekday: 'short' });
-            const todayTasks = tasks.filter(task => task.day && task.day.toLowerCase().startsWith(today.toLowerCase()));
-            if (todayTasks.length === 0) return `<li>No tasks for today.</li>`;
-            return todayTasks.map(task => `<li class="today-task-item ${task.checked ? 'completed' : ''}">${task.mission}</li>`).join('');
-        }
-
-        // --- 7. FRAMEWORK FUNCTIONS ---
-        window.closeFramework = function() { document.getElementById('frameworkModal').style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
-        window.showChemistryFramework = function(frameworkType) { /* ... PASTE FULL CHEMISTRY FRAMEWORK CONTENT HERE ... */ };
-        window.showFramework = function(frameworkType) { /* ... PASTE FULL PHYSICS FRAMEWORK CONTENT HERE ... */ };
-
+        })();
     </script>
 </body>
 </html>
+           
