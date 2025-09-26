@@ -161,51 +161,41 @@
 
          // --- 3. INITIALIZATION & EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', async function() {
-            // Check if essential data objects are loaded
-            if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
-                const container = document.querySelector('.container');
-                if (container) {
-                    container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: One of the data files (science-data.js or exam-config.js) failed to load. Please check the file paths and names.</div>`;
-                }
-                return; // Stop execution if data is missing
+            // 首先，确保所有模块的渲染都能正常执行
+            // 我们假设 scienceData 和 examConfig 会被正确加载
+            try {
+                await fetchAllSprintTasks(); // 获取动态数据
+                
+                // 渲染所有模块
+                updateAnalytics('Chemistry');
+                renderGoalsModule();
+                updateAllProgress(); 
+            } catch (error) {
+                console.error("Error during initial module rendering:", error);
             }
 
-            // Fetch dynamic data first
-            await fetchAllSprintTasks();
-
-            // Render all modules
-            updateAnalytics('Chemistry');
-            renderGoalsModule();
-            updateAllProgress(); // Initial calculation for progress bars
-
-            // =========== 核心修改点：在这里添加事件监听 ===========
-            // Set up a single event listener for the entire main panel
+            // --- 状态按钮激活逻辑 ---
             const mainPanel = document.querySelector('.main-panel');
             if (mainPanel) {
                 mainPanel.addEventListener('click', function(e) {
-                    // Check if a status button was clicked
                     if (e.target.classList.contains('status-btn')) {
                         const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
                         const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
                         const symbols = ['', '●', 'P', '✓'];
                         
                         let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
-                        
-                        // Cycle to the next status
                         const nextIndex = (currentIndex + 1) % statuses.length;
                         
-                        // Update the button's class, title, and text content
-                        e.target.className = 'status-btn'; // Reset classes first
+                        e.target.className = 'status-btn'; // 重置类
                         e.target.classList.add(statuses[nextIndex]);
                         e.target.title = titles[nextIndex];
                         e.target.textContent = symbols[nextIndex];
 
-                        // After changing the status, update the progress bar
+                        // 每次点击后，重新计算进度条
                         updateAllProgress();
                     }
                 });
             }
-            // =========== 修改结束 ===========
         });
         
         // --- 4. DATA FETCHING ---
