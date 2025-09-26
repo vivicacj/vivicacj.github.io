@@ -8,7 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <style>
-        /* --- CSS 样式保持不变 --- */
+        /* --- CSS styles remain unchanged --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #333; line-height: 1.6; min-height: 100vh; }
         .container { max-width: 1200px; margin: 30px auto 0 auto; padding: 20px; }
@@ -78,14 +78,14 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER UPDATED FOR CHEMISTRY -->
+        <!-- HEADER -->
         <div class="header">
             <h1 class="title">🎯 Chemistry Sprint Study Plan</h1>
             <p class="subtitle">7-Day Paper 2 Comprehensive Review Plan - Dynamic Tracking System</p>
             <a href="index.html" class="back-link">❮ 返回学习仪表盘</a>
         </div>
         
-        <!-- COUNTDOWN UPDATED FOR CHEMISTRY -->
+        <!-- COUNTDOWN -->
         <div class="countdown-section">
             <h2 style="color: white; margin-bottom: 20px; font-size: 1.5em;">⏰ Exam Countdown</h2>
             <div class="countdown-grid">
@@ -102,19 +102,19 @@
             </div>
         </div>
         
-        <!-- PROGRESS OVERVIEW (STRUCTURE REMAINS THE SAME) -->
+        <!-- PROGRESS OVERVIEW -->
         <div class="progress-overview">
              <h3 style="margin-bottom: 20px; color: #2c3e50;">📊 Overall Progress Overview</h3>
              <div class="stats-grid">
-                 <div class="stat-card"> <div class="stat-number" id="total-tasks">0</div> <div class="stat-label">Total Tasks</div> </div>
-                 <div class="stat-card"> <div class="stat-number" id="completed-tasks">0</div> <div class="stat-label">Completed</div> </div>
-                 <div class="stat-card"> <div class="stat-number" id="completion-rate">0%</div> <div class="stat-label">Completion Rate</div> </div>
-                 <div class="stat-card"> <div class="stat-number" id="days-remaining">--</div> <div class="stat-label">Days Left</div> </div>
+                  <div class="stat-card"> <div class="stat-number" id="total-tasks">0</div> <div class="stat-label">Total Tasks</div> </div>
+                  <div class="stat-card"> <div class="stat-number" id="completed-tasks">0</div> <div class="stat-label">Completed</div> </div>
+                  <div class="stat-card"> <div class="stat-number" id="completion-rate">0%</div> <div class="stat-label">Completion Rate</div> </div>
+                  <div class="stat-card"> <div class="stat-number" id="days-remaining">--</div> <div class="stat-label">Days Left</div> </div>
              </div>
              <div class="progress-bar"> <div class="progress-fill" id="overall-progress" style="width: 0%"></div> </div>
         </div>
 
-        <!-- REPLACEMENT: CHEMISTRY PLAN SECTION -->
+        <!-- CHEMISTRY PLAN SECTION -->
         <div class="week-section">
             <div class="week-header" onclick="toggleWeek(1)">
                 <span>🔥 Chemistry Sprint: Paper 2 Assault (Sep 27 - Oct 3)</span>
@@ -132,6 +132,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- Day: Saturday -->
                         <tr class="task-row" data-task-index="0">
                             <td class="day-cell" data-label="Day" rowspan="3"><strong>Sat</strong><br>(Sep 27)</td>
                             <td class="mission-cell" data-label="Mission" rowspan="3"><strong>Diagnosis & Foundation</strong></td>
@@ -146,7 +147,7 @@
                             <td class="details-cell" data-label="Task">📚 <strong>Task:</strong> Master all <strong>Level 1: Fact & Definition Flashcards</strong> for ALL topics (Core + Satellite).</td>
                             <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-
+                        <!-- Day: Sunday -->
                         <tr class="task-row" data-task-index="3">
                             <td class="day-cell" data-label="Day" rowspan="3"><strong>Sun</strong><br>(Sep 28)</td>
                             <td class="mission-cell" data-label="Mission" rowspan="3"><strong>Core Assault (Batch 1)</strong></td>
@@ -161,8 +162,8 @@
                              <td class="details-cell" data-label="Task">✍️ <strong>Task:</strong> For every error, update your "Mistake Analysis Log" and immediately review the corresponding AKM.</td>
                              <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-
-                        <tr class="task-row" data-task-index="6">
+                        <!-- And so on for other days -->
+                         <tr class="task-row" data-task-index="6">
                             <td class="day-cell" data-label="Day" rowspan="3"><strong>Mon</strong><br>(Sep 29)</td>
                             <td class="mission-cell" data-label="Mission" rowspan="3"><strong>Core Assault (Batch 2)</strong></td>
                             <td class="details-cell" data-label="Task">🔗 <strong>Task:</strong> Complete all Paper 2 questions from the <code>Chemical Bonding & Structure</code> drill package.</td>
@@ -176,7 +177,6 @@
                              <td class="details-cell" data-label="Task">📚 <strong>Task:</strong> Master all <strong>Level 2 (SOP), Level 3 (Conceptual), and Level 4 (Pitfall)</strong> Flashcards for all Core Topics.</td>
                              <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-                        
                         <tr class="task-row" data-task-index="9">
                             <td class="day-cell" data-label="Day" rowspan="3"><strong>Tue</strong><br>(Sep 30)</td>
                             <td class="mission-cell" data-label="Mission" rowspan="3"><strong>Final Simulation & Precision Strike</strong></td>
@@ -191,7 +191,6 @@
                              <td class="details-cell" data-label="Task">⚔️ <strong>Task:</strong> Dedicate the rest of the day to a "precision strike" on that single weakest area using atomic notes and drills.</td>
                              <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-
                         <tr class="task-row" data-task-index="12">
                             <td class="day-cell" data-label="Day" rowspan="3"><strong>Wed</strong><br>(Oct 1)</td>
                             <td class="mission-cell" data-label="Mission" rowspan="3"><strong>Zen Day & Consolidation</strong></td>
@@ -206,14 +205,12 @@
                             <td class="details-cell" data-label="Task">😌 <strong>Task:</strong> No new questions. Relax your mind. Pack your stationery. Get a full night's sleep.</td>
                             <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-                        
                         <tr class="task-row" data-task-index="15">
                             <td class="day-cell" data-label="Day"><strong>Thu</strong><br>(Oct 2)</td>
                             <td class="mission-cell" data-label="Mission"><strong>P2 BATTLE DAY</strong></td>
                             <td class="details-cell" data-label="Task">🚀 <strong>Task:</strong> Quick scan of the <strong>Cheat Sheets</strong> only. Trust your preparation. Good luck!</td>
                             <td class="status-cell" data-label="Status"><div class="status-content"><input type="checkbox" class="task-checkbox"><div class="link-area"></div></div></td>
                         </tr>
-                        
                         <tr class="task-row" data-task-index="16">
                             <td class="day-cell" data-label="Day"><strong>Fri</strong><br>(Oct 3)</td>
                             <td class="mission-cell" data-label="Mission"><strong>P1 BATTLE DAY</strong></td>
@@ -226,7 +223,7 @@
         </div>
     </div>
 
-    <!-- MODAL AND FLOATING BUTTON (STRUCTURE REMAINS THE SAME) -->
+    <!-- MODAL AND FLOATING BUTTON -->
     <button class="floating-action" onclick="resetProgress()" title="Reset Progress">🔄</button>
     <div id="link-modal" class="modal-overlay">
         <div class="modal-content">
@@ -253,21 +250,96 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        // UPDATED DOC REF FOR CHEMISTRY
         const docRef = db.collection("sprintPlan").doc("chemistry_tasks_v1");
 
         // --- 2. LOCAL CONFIGURATION & GLOBAL VARS ---
-        // UPDATED EXAM DATES
         const paper2Date = new Date('2025-10-02');
         const paper1Date = new Date('2025-10-03');
         const MAX_LINKS_PER_TASK = 3;
         let currentModalCallback = null;
 
+        // --- 核心修正：此函数现在会从 HTML 表格中提取完整的数据 ---
+        function getInitialTaskData() {
+            const allTasks = [];
+            const rows = document.querySelectorAll('.task-row[data-task-index]');
+            let currentDay = '';
+            let currentMission = '';
+
+            rows.forEach(row => {
+                const dayCell = row.querySelector('.day-cell');
+                if (dayCell) {
+                    currentDay = dayCell.textContent.trim().split('\n')[0].replace(/\s/g, ''); // Extract just 'Sat', 'Sun', etc.
+                }
+
+                const missionCell = row.querySelector('.mission-cell');
+                if (missionCell) {
+                    currentMission = missionCell.textContent.trim();
+                }
+
+                const detailsCell = row.querySelector('.details-cell');
+                const missionText = detailsCell ? detailsCell.textContent.trim().replace('Task:', '').trim() : 'No details';
+                
+                allTasks.push({
+                    day: currentDay,
+                    mission: missionText, // Using detailed task as the mission
+                    coreMission: currentMission, // Storing the overarching mission
+                    checked: false,
+                    links: []
+                });
+            });
+            return allTasks;
+        }
+        
         // --- 3. CORE DATA & UI FUNCTIONS ---
-        function getProgressData() { const d = sessionStorage.getItem('localDataCache'); if (d) { try { return JSON.parse(d); } catch(e){} } const t = document.querySelectorAll('.task-row[data-task-index]').length; return Array(t).fill().map(() => ({ checked: false, links: [] })); }
-        function saveProgressData(data) { sessionStorage.setItem('localDataCache', JSON.stringify(data)); docRef.set({ allTasks: data }).catch(e => console.error("Firebase save error: ", e)); }
-        function renderLinksForTask(taskIndex, links) { const linkArea = document.querySelector(`.task-row[data-task-index="${taskIndex}"] .link-area`); if (!linkArea) return; linkArea.innerHTML = ''; links.forEach((link, linkIndex) => { const pill = document.createElement('a'); pill.className = 'link-pill'; pill.textContent = `Link ${linkIndex + 1}`; pill.href = link; pill.dataset.linkIndex = linkIndex; linkArea.appendChild(pill); }); if (links.length < MAX_LINKS_PER_TASK) { const addButton = document.createElement('button'); addButton.className = 'add-link-btn'; addButton.textContent = '➕ Add'; linkArea.appendChild(addButton); } }
-        function loadProgress(data) { const rows = document.querySelectorAll('.task-row[data-task-index]'); if (data && data.length > 0 && data.length !== rows.length) { resetProgress(true); return; } rows.forEach((row, i) => { const idx = parseInt(row.dataset.taskIndex, 10); const taskData = data[idx] || {checked: false, links: []}; const cb = row.querySelector('.task-checkbox'); if (cb) cb.checked = taskData.checked; renderLinksForTask(idx, taskData.links); }); sessionStorage.setItem('localDataCache', JSON.stringify(data)); updateOverallProgress(); }
+        function getProgressData() { 
+            const d = sessionStorage.getItem('localDataCache'); 
+            if (d) { 
+                try { return JSON.parse(d); } catch(e){} 
+            }
+            // If no cache, generate from HTML
+            return getInitialTaskData();
+        }
+
+        function saveProgressData(data) { 
+            sessionStorage.setItem('localDataCache', JSON.stringify(data)); 
+            // Save the complete data object to Firebase
+            docRef.set({ allTasks: data }).catch(e => console.error("Firebase save error: ", e)); 
+        }
+
+        function renderLinksForTask(taskIndex, links) { 
+            const linkArea = document.querySelector(`.task-row[data-task-index="${taskIndex}"] .link-area`); 
+            if (!linkArea) return; 
+            linkArea.innerHTML = ''; 
+            links.forEach((link, linkIndex) => { 
+                const pill = document.createElement('a'); 
+                pill.className = 'link-pill'; 
+                pill.textContent = `Link ${linkIndex + 1}`; 
+                pill.href = link; 
+                pill.target = '_blank'; // Open in new tab
+                pill.dataset.linkIndex = linkIndex; 
+                linkArea.appendChild(pill); 
+            }); 
+            if (links.length < MAX_LINKS_PER_TASK) { 
+                const addButton = document.createElement('button'); 
+                addButton.className = 'add-link-btn'; 
+                addButton.textContent = '➕ Add'; 
+                linkArea.appendChild(addButton); 
+            } 
+        }
+
+        function loadProgress(data) { 
+            const rows = document.querySelectorAll('.task-row[data-task-index]'); 
+            rows.forEach((row) => { 
+                const idx = parseInt(row.dataset.taskIndex, 10);
+                // Ensure data from Firebase has priority, but fall back to initial structure
+                const taskData = data[idx] || {checked: false, links: []};
+                const cb = row.querySelector('.task-checkbox'); 
+                if (cb) cb.checked = taskData.checked; 
+                renderLinksForTask(idx, taskData.links || []); // Ensure links is an array
+            }); 
+            sessionStorage.setItem('localDataCache', JSON.stringify(data)); 
+            updateOverallProgress(); 
+        }
 
         // --- CUSTOM MODAL FUNCTIONS ---
         function showModal(config) {
@@ -295,9 +367,11 @@
             const taskIndex = parseInt(row.dataset.taskIndex, 10);
             let data = getProgressData();
             let taskData = data[taskIndex];
+            
             if (target.matches('.task-checkbox')) {
                 taskData.checked = target.checked;
                 saveProgressData(data);
+                // No need to call updateOverallProgress here, as listenForProgressChanges will do it
                 return;
             }
             if (target.matches('.add-link-btn')) {
@@ -306,7 +380,8 @@
                     value: 'https://',
                     showDelete: false,
                     callback: (result) => {
-                        if (result.action === 'save' && result.value) {
+                        if (result.action === 'save' && result.value && result.value !== 'https://') {
+                            if (!taskData.links) taskData.links = [];
                             taskData.links.push(result.value);
                             saveProgressData(data);
                         }
@@ -335,13 +410,47 @@
             }
         }
         
-        function listenForProgressChanges() { docRef.onSnapshot((doc) => { if (doc.exists) { loadProgress(doc.data().allTasks || []); } else { const t = document.querySelectorAll('.task-row[data-task-index]').length; saveProgressData(Array(t).fill().map(() => ({ checked: false, links: [] }))); } }, (e) => { console.error("Firebase listen error:", e); alert("Cloud connection error."); }); }
+        function listenForProgressChanges() { 
+            docRef.onSnapshot((doc) => { 
+                if (doc.exists && doc.data().allTasks && doc.data().allTasks.length > 0) { 
+                    loadProgress(doc.data().allTasks); 
+                } else { 
+                    // If doc doesn't exist or is empty, create it from the HTML table
+                    console.log("No data in Firebase. Initializing from HTML table.");
+                    const initialData = getInitialTaskData();
+                    saveProgressData(initialData); 
+                    loadProgress(initialData);
+                } 
+            }, (e) => { 
+                console.error("Firebase listen error:", e); 
+                alert("Cloud connection error. Progress may not be saved."); 
+            }); 
+        }
 
         // --- UTILITY & UI ---
-        function updateOverallProgress() { const tasks = document.querySelectorAll('.task-checkbox'); const total = tasks.length; const completed = document.querySelectorAll('.task-checkbox:checked').length; document.querySelectorAll('.task-row[data-task-index]').forEach(row => { const cb = row.querySelector('.task-checkbox'); if (cb && cb.checked) { row.classList.add('task-completed'); } else { row.classList.remove('task-completed'); } }); const rate = total > 0 ? Math.round((completed / total) * 100) : 0; document.getElementById('total-tasks').textContent = total; document.getElementById('completed-tasks').textContent = completed; document.getElementById('completion-rate').textContent = `${rate}%`; document.getElementById('overall-progress').style.width = `${rate}%`; }
+        function updateOverallProgress() { 
+            const data = getProgressData();
+            const total = data.length;
+            const completed = data.filter(task => task.checked).length;
+            
+            document.querySelectorAll('.task-row[data-task-index]').forEach(row => { 
+                const idx = parseInt(row.dataset.taskIndex, 10);
+                if (data[idx] && data[idx].checked) { 
+                    row.classList.add('task-completed'); 
+                } else { 
+                    row.classList.remove('task-completed'); 
+                } 
+            }); 
+            
+            const rate = total > 0 ? Math.round((completed / total) * 100) : 0; 
+            document.getElementById('total-tasks').textContent = total; 
+            document.getElementById('completed-tasks').textContent = completed; 
+            document.getElementById('completion-rate').textContent = `${rate}%`; 
+            document.getElementById('overall-progress').style.width = `${rate}%`; 
+        }
         function updateCountdown() { const now = new Date(); const p1d = Math.ceil((paper1Date - now) / (1000*60*60*24)); const p2d = Math.ceil((paper2Date - now) / (1000*60*60*24)); document.getElementById('paper1-countdown').textContent = p1d > 0 ? `${p1d}` : 'Done'; document.getElementById('paper2-countdown').textContent = p2d > 0 ? `${p2d}` : 'Done'; const rem = Math.max(0, Math.min(p1d > 0 ? p1d : Infinity, p2d > 0 ? p2d : Infinity)); document.getElementById('days-remaining').textContent = rem === Infinity ? '0' : rem; }
         function toggleWeek(num) { const c = document.getElementById(`week-${num}`); const i = document.getElementById(`icon-${num}`); c.classList.toggle('active'); i.classList.toggle('rotated'); }
-        function resetProgress(force = false) { if (force || confirm('Reset all progress and links for everyone?')) { const t = document.querySelectorAll('.task-row[data-task-index]').length; saveProgressData(Array(t).fill().map(() => ({ checked: false, links: [] }))); } }
+        function resetProgress(force = false) { if (force || confirm('This will reset all progress and links for everyone. Are you sure?')) { const initialData = getInitialTaskData(); saveProgressData(initialData); } }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
