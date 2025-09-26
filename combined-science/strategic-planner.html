@@ -84,43 +84,13 @@
         .rec-btn:hover { background: rgba(255,255,255,0.3); }
         @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } }
         @media (max-width: 768px) { .subject-balance { grid-template-columns: 1fr; } }
-                /* --- 新增：页面顶部导航栏样式 --- */
-        .page-header {
-            max-width: 1400px;
-            margin: 0 auto 20px auto; /* 顶部外边距设为0，底部20px */
-            padding: 20px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .dashboard-link {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 25px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .dashboard-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-        }
+                /* --- 新增：页面顶部导航栏样式 删除了--- */
+       
     </style>
 </head>
 <body>
      <!-- =========== 在这里添加新的页头 =========== -->
-    <div class="page-header">
-        <h1>Combined Science Command Center</h1>
-        <p>Your strategic planner and smart review queue for O-Level success.</p>
-        <a href="chem-phys-dashboard.html" class="dashboard-link">📊 View Detailed Analytics Dashboard</a>
-    </div>
+  
     <!-- ========================================== -->
     <div class="container">
         <!-- 核心修复点 2：添加了这两个必需的 HTML 骨架 -->
