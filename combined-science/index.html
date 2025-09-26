@@ -286,6 +286,7 @@
             document.querySelectorAll('.toggle-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(subject)); });
             // +++ 这是正确的代码行 +++
             const subjectData = scienceData[subject] || [];
+            console.log("Data being used for analysis:", subjectData);
             const analyticsContent = document.getElementById('analytics-content');
             if (!analyticsContent) return;
 
