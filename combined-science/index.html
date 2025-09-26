@@ -160,21 +160,40 @@
         let chemSprintTasks = [], physSprintTasks = [];
 
          // --- 3. INITIALIZATION & EVENT LISTENERS ---
-        document.addEventListener('DOMContentLoaded', async function() {
-            // 首先，确保所有模块的渲染都能正常执行
-            // 我们假设 scienceData 和 examConfig 会被正确加载
-            try {
-                await fetchAllSprintTasks(); // 获取动态数据
-                
-                // 渲染所有模块
-                updateAnalytics('Chemistry');
-                renderGoalsModule();
-                updateAllProgress(); 
-            } catch (error) {
-                console.error("Error during initial module rendering:", error);
+                document.addEventListener('DOMContentLoaded', async function() {
+            // --- 核心修改点：在这里自动为所有按钮批量添加 title 提示 ---
+            
+            // 为所有“框架”按钮添加提示
+            document.querySelectorAll('.framework-btn').forEach(btn => {
+                btn.title = 'View Topic Framework';
+            });
+            
+            // 为所有“练习”按钮添加提示
+            document.querySelectorAll('.practice-btn').forEach(btn => {
+                btn.title = 'Open Practice Questions';
+            });
+            
+            // 为所有“状态”按钮添加初始提示
+            // (这段代码其实我们之前已经有了，但放在这里更清晰)
+            document.querySelectorAll('.status-btn.status-not-started').forEach(btn => {
+                btn.title = 'Not Started';
+            });
+            
+            // --- 保留您所有现有的初始化代码 ---
+            if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: One of the data files (science-data.js or exam-config.js) failed to load. Please check the file paths and names.</div>`;
+                }
+                return;
             }
 
-            // --- 状态按钮激活逻辑 ---
+            await fetchAllSprintTasks();
+            updateAnalytics('Chemistry');
+            renderGoalsModule();
+            updateAllProgress();
+
+            // 这段代码也保持不变，它负责后续的状态更新
             const mainPanel = document.querySelector('.main-panel');
             if (mainPanel) {
                 mainPanel.addEventListener('click', function(e) {
@@ -182,16 +201,12 @@
                         const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
                         const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
                         const symbols = ['', '●', 'P', '✓'];
-                        
                         let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
                         const nextIndex = (currentIndex + 1) % statuses.length;
-                        
-                        e.target.className = 'status-btn'; // 重置类
+                        e.target.className = 'status-btn';
                         e.target.classList.add(statuses[nextIndex]);
-                        e.target.title = titles[nextIndex];
+                        e.target.title = titles[nextIndex]; // 自动更新 title
                         e.target.textContent = symbols[nextIndex];
-
-                        // 每次点击后，重新计算进度条
                         updateAllProgress();
                     }
                 });
