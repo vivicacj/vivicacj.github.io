@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Science - Chem & Phys Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* CSS 样式部分保持不变 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #667eea; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; color: white; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 10px; font-weight: 700; }
+        .header p { font-size: 1.1rem; opacity: 0.9; }
+        .dashboard { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .main-panel, .side-panel .widget { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .side-panel { display: flex; flex-direction: column; gap: 20px; }
+        .section-title { font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; color: #2d3748; }
+        .subject-section { margin-bottom: 30px; }
+        .subject-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding: 15px 20px; background: linear-gradient(135deg, #4299e1, #3182ce); color: white; border-radius: 10px; }
+        .subject-title { font-size: 1.3rem; font-weight: 600; }
+        .progress-bar { width: 200px; height: 8px; background: rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #48bb78; border-radius: 4px; transition: width 0.3s ease; }
+        .progress-text { font-size: 0.9rem; margin-top: 5px; }
+        .topic-category { margin-bottom: 20px; }
+        .category-title { font-size: 1.1rem; font-weight: 500; color: #4a5568; margin-bottom: 10px; padding: 8px 12px; background: #f7fafc; border-radius: 6px; }
+        .topic-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 8px; transition: all 0.2s ease; }
+        .topic-item:hover { background: #f8f9fa; border-color: #cbd5e0; }
+        .topic-name { font-weight: 500; color: #2d3748; }
+        .topic-description { font-size: 0.85rem; color: #718096; margin-top: 4px; }
+        .topic-controls { display: flex; align-items: center; gap: 10px; }
+        .status-btn { width: 25px; height: 25px; border: none; border-radius: 50%; cursor: pointer; transition: transform 0.2s ease; font-size: 12px; }
+        .status-btn:hover { transform: scale(1.1); }
+        .status-not-started { background: #e2e8f0; border: 2px solid #cbd5e0; }
+        .status-in-progress { background: #fbd38d; color: white; }
+        .status-practicing { background: #63b3ed; color: white; }
+        .status-mastered { background: #68d391; color: white; }
+        .practice-btn, .framework-btn { padding: 6px 12px; color: white; border: none; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: background 0.2s ease; }
+        .practice-btn { background: #805ad5; }
+        .practice-btn:hover { background: #6b46c1; }
+        .framework-btn { background: #3182ce; }
+        .framework-btn:hover { background: #2c5282; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); animation: fadeIn 0.3s ease; }
+        .modal-content { background-color: white; margin: 5% auto; padding: 2rem; border-radius: 10px; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .close { color: #aaa; position: absolute; right: 1rem; top: 1rem; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: #000; }
+        .clm-section { background: #f8f9fa; padding: 1rem; border-radius: 5px; margin: 1rem 0; border-left: 4px solid #3498db; }
+        .clm-letter { font-weight: bold; color: #e74c3c; font-size: 1.2rem; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .subject-toggle { display: flex; gap: 10px; margin-bottom: 20px; }
+        .toggle-btn { flex: 1; padding: 10px; border: 1px solid #cbd5e0; border-radius: 8px; background-color: #f7fafc; cursor: pointer; font-weight: 500; transition: all 0.2s ease; }
+        .toggle-btn.active { background-color: #3182ce; color: white; border-color: #3182ce; }
+        .loading-text, .error-text { text-align: center; color: #718096; padding: 20px; background: #f7fafc; border-radius: 8px; }
+        .error-text { background: #fed7d7; color: #c53030; }
+        .heatmap { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 5px; }
+        .heatmap-cell { padding: 0.5rem; font-size: 0.8rem; text-align: center; border-radius: 5px; color: white; font-weight: 500; }
+        .heat-high { background: #48bb78; } .heat-medium { background: #ed8936; } .heat-low { background: #e53e3e; }
+        .suggestion-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 15px; margin-top: 20px; }
+        .suggestion-text { font-style: italic; line-height: 1.6; }
+        @media (max-width: 992px) { .dashboard { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HTML 部分保持不变 -->
+        <div class="header"><h1>🎯 Combined Science 「 Chemistry & Physics」</h1><p>Intelligent Learning Dashboard - Track Your Progress & Master Your Goals</p></div>
+        <div class="dashboard">
+            <div class="main-panel">
+                 <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
+                <div class="subject-section" id="chemistry-section">
+                    <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Stoichiometry & The Mole Concept</div><div class="topic-description">The most calculation-intensive and procedural topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Chemical Bonding & Structure</div><div class="topic-description">A major source of explanation and diagram-based questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Redox Reactions & Reactivity of Metals</div><div class="topic-description">The core of logical reasoning and prediction questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Topics (19% of marks)</div><div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                </div>
+                <div class="subject-section" id="physics-section">
+                    <div class="subject-header"><div class="subject-title">⚡ Physics</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 8</div></div></div>
+                    <div class="topic-category"><div class="category-title">🎯 Core Archetypes (The "Big Four")</div><div class="topic-item"><div><div class="topic-name">The Kinematics Graph Saga</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1qDLUzRLwvqSofKnvvQbD2DoKtdX_tkP73-UL4i9BcKY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Balancing Act (Moments & Equilibrium)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1Xdh3DoB2UjPHIGpL4vcTRR5AGHxwCocTvN5fsrYtH7U/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Energy Conversion Trail</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1hre1cJO-ya60dBkteMFe2quBY8Ac3hRAQP9efveVdbI/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1z7UGZ71aNo57NG5Q-m384KA2_YmLnCPybPTzKipriYQ/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                    <div class="topic-category"><div class="category-title">🛰️ Satellite Archetypes</div><div class="topic-item"><div><div class="topic-name">Stability (Centre of Gravity & Base Area)</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1zUDZD90Lge9KdqCkgA7SPIWc2w0qKgK2puRUvSNzRpY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Vector Drawing & Dynamics</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1y2e3CKutRQVF8krx5HH_VNgmaPPHYvqKzpi-3srC-bo/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Density & Pressure Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1c3yPKiqNiW3ayzNwO8jXOaCETFGCEa-9MFQXo85vGws/edit?usp=drive_link', '_blank')">Practice</button></div></div>
+                    <div class="topic-item"><div><div class="topic-name">Light Ray Tracing & Optics Calculation</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1JbXc39hdg7e0liPzMd0fQMUY92tWn0tmu17wqfEKaPA/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+                </div>
+            </div>
+            <div class="side-panel">
+                <div class="widget" id="strengths-widget">
+                    <h3 class="section-title">📊 Strengths & Weaknesses</h3>
+                    <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
+                    <div id="analytics-content">
+                        <div id="loading-analytics" class="loading-text">Loading analytics data...</div>
+                        <!-- Dynamic content will be injected here -->
+                    </div>
+                </div>
+                 <div class="widget"><h3 class="section-title">🎯 This Week's Goals</h3></div>
+                 <div class="widget"><h3 class="section-title">🔄 Today's Review</h3></div>
+            </div>
+        </div>
+    </div>
+    <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
+    
+    <script>
+        // --- ⚙️ CONFIGURATION & GLOBAL VARS ⚙️ ---
+        // 核心修改点：已更新为您的最新 Web App URL
+        const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzUoTqJwi6761U6VaMdJmUa9y5s8AATnr6iW6A-cb3q8iilbWCFdepDRB-auD160tNh/exec';
+        let skillRadarChart;
+        let allData = { Chemistry: [], Physics: [] };
+
+        // --- DATA FETCHING & PARSING ---
+        async function fetchAllData() {
+            try {
+                const [chemData, physData] = await Promise.all([
+                    fetchSheetData('Chemistry'),
+                    fetchSheetData('Physics')
+                ]);
+                allData.Chemistry = chemData;
+                allData.Physics = physData;
+                updateAnalytics('Chemistry');
+            } catch (error) {
+                console.error('Failed to fetch analytics data:', error);
+                const errorDiv = document.getElementById('analytics-content');
+                errorDiv.innerHTML = `<div class="error-text">Failed to load data. Please ensure the Google Sheet is 'Published to the web' and the sheet names are correct.<br><small>${error.message}</small></div>`;
+            }
+        }
+
+        async function fetchSheetData(sheetName) {
+            const timestamp = new Date().getTime();
+            const url = `${API_ENDPOINT}?sheet=${sheetName}&t=${timestamp}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`Could not fetch sheet: ${sheetName}. Status: ${response.status}`);
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            return data.rows || [];
+        }
+
+        // --- CORE ANALYTICS & RENDERING ---
+        function updateAnalytics(subject) {
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.includes(subject));
+            });
+
+            const subjectData = allData[subject];
+            const analyticsContent = document.getElementById('analytics-content');
+            
+            if (!subjectData || subjectData.length === 0) {
+                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for ${subject}. Please add records in the Google Sheet.</div>`;
+                return;
+            }
+
+            analyticsContent.innerHTML = `<canvas id="skillRadarChart" style="max-height: 250px;"></canvas><h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4><div id="heatmap-container" class="heatmap"></div><div id="suggestion-box-container" class="suggestion-box"><div id="suggestion-text" class="suggestion-text"></div></div>`;
+            
+            const incorrectData = subjectData.filter(item => item.result === 'Incorrect');
+            
+            const errorTypes = subject === 'Chemistry' 
+                ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error']
+                : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
+            
+            const errorCounts = errorTypes.map(type => 
+                incorrectData.filter(item => item.errortype && item.errortype.startsWith(type)).length
+            );
+            
+            const totalErrors = incorrectData.length || 1;
+            const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
+            
+            renderRadarChart(errorTypes.map(e => e.split('(')[0].trim()), skillScores);
+
+            const topicPerformance = {};
+            const allTopics = [...new Set(subjectData.map(item => item.topic))].filter(Boolean);
+            
+            allTopics.forEach(topic => { const items = subjectData.filter(item => item.topic === topic); const correct = items.filter(item => item.result === 'Correct').length; const partial = items.filter(item => item.result === 'Partial').length; if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; });
+            renderHeatmap(topicPerformance);
+            generateSuggestion(topicPerformance, errorCounts, errorTypes);
+        }
+        
+        // --- 完整的、未经删减的辅助与框架函数 ---
+        function renderRadarChart(labels, scores) { const ctx = document.getElementById('skillRadarChart').getContext('2d'); if (skillRadarChart) skillRadarChart.destroy(); skillRadarChart = new Chart(ctx, { type: 'radar', data: { labels: labels, datasets: [{ label: 'Skill Score', data: scores, fill: true, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgb(52, 152, 219)', pointBackgroundColor: 'rgb(52, 152, 219)', }] }, options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } } }); }
+        function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
+        function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.textContent = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like "${p[0]}" to achieve perfection!`; else el.textContent = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.innerHTML = `💡 Your weakest area is **"${wT}"** (Accuracy ${lS.toFixed(0)}%). The most common error type is **"${mET}"**. I recommend reviewing this topic's framework and doing targeted practice.`; else el.textContent = "Analysis complete. Use the charts above to guide your study plan."; }
+        function closeFramework() { document.getElementById('frameworkModal').style.display = 'none'; }
+        window.onclick = function(event) { if (event.target == document.getElementById('frameworkModal')) { closeFramework(); } }
+        function showChemistryFramework(frameworkType) { const modal = document.getElementById('frameworkModal'); const details = document.getElementById('frameworkDetails'); const chemistryFrameworks = { 'qa-framework': `<h2>Acids, Bases & Salts / QA Framework</h2><h3>Model Emphasis: C → L (Connect → Link), supported by M (Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span> Crucial</h4><p>Connect descriptive words (green solution, gas turns limewater cloudy, white precipitate) to your memorised database of specific ions or substances (Fe²⁺, CO₂, AgCl).</p><p>Connect the task "prepare an insoluble salt" to the reaction type "Precipitation".</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>Manipulate chemical symbols to write and balance full and ionic equations correctly.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span></h4><p>Link the observations from multiple experimental steps to construct a complete logical chain for deducing an unknown substance (in QA flowcharts).</p><p>Link the microscopic rule (salt solubility) to the macroscopic decision (choice of preparation method).</p></div>`, 'stoichiometry-framework': `<h2>Stoichiometry & Mole Concept Framework</h2><h3>Model Emphasis: C → M (Connect → Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the numerical values in the question (50.0 cm³, 2.00 mol/dm³) to their corresponding physical quantity symbols (V, C).</p><p>Connect the required answer "mass" to the final formula needed, m = n × M.</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span> Crucial</h4><p>Manipulate the mole-triangle formulas for unit conversion and calculation.</p><p>Manipulate balanced chemical equations to extract the mole ratio.</p><p>Manipulate the limiting reactant identification procedure. This is the most procedural part of the topic.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span></h4><p>(Less emphasized) Occasionally required to link a calculation result to its real-world meaning, such as explaining why one reactant was used in excess.</p></div>`, 'bonding-framework': `<h2>Chemical Bonding & Structure Framework</h2><h3>Model Emphasis: C → L (Connect → Link), supported by M (Manipulate)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the substance name (sodium chloride) to its bonding type (metal + non-metal → Ionic).</p><p>Connect the question "explain high melting point" to the corresponding explanation model.</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>Manipulate electron arrangement rules to accurately construct dot-and-cross diagrams.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span> Crucial</h4><p>Link the microscopic structure (Giant Ionic Lattice) and forces (strong electrostatic forces) to macroscopic physical properties (high melting point, conducts electricity when molten). This is the core of all explanation questions in this topic.</p></div>`, 'redox-framework': `<h2>Redox Reactions & Reactivity Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><h4><span class="clm-letter">C (Connect):</span></h4><p>Connect the reactant combination (Zn + CuSO₄) to the "Displacement Reaction" type.</p><p>Connect a real-world context ("preventing rust on a ship") to the application of the "Reactivity Series" or "Sacrificial Protection".</p></div><div class="clm-section"><h4><span class="clm-letter">M (Manipulate):</span></h4><p>(Less emphasized) Occasionally required to manipulate half-equations.</p></div><div class="clm-section"><h4><span class="clm-letter">L (Link):</span> Crucial</h4><p>Link an element's position in the reactivity series (a rule) to whether a reaction will occur (a prediction).</p><p>Link the microscopic meaning of "more reactive" (easier to lose electrons) to the macroscopic outcome (Zn is preferentially oxidised).</p></div>`, 'experimental-framework': `<h2>Experimental Chemistry Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><p>Connect the state of the mixture (e.g., insoluble solid in liquid) to a specific separation technique (e.g., Filtration). Link the choice of technique (e.g., Fractional Distillation) to differences in the substances' physical properties (e.g., different boiling points).</p></div>`, 'matter-framework': `<h2>Particulate Nature of Matter Framework</h2><h3>Model Emphasis: L (Link)</h3><div class="clm-section"><p>Link the microscopic particle behavior (gain in kinetic energy, overcoming forces of attraction) to macroscopic changes of state (melting, boiling). Your explanation must describe the particles.</p></div>`, 'atomic-framework': `<h2>Atomic Structure Framework</h2><h3>Model Emphasis: C → M (Connect → Manipulate)</h3><div class="clm-section"><p>Connect symbols (e.g., ²⁴₁₂Mg²⁺) to its constituent parts (A=24, Z=12, charge=+2). Manipulate formulas (n⁰ = A - Z) to calculate the number of particles and write electronic configurations.</p></div>`, 'periodic-framework': `<h2>The Periodic Table Framework</h2><h3>Model Emphasis: C → L (Connect → Link)</h3><div class="clm-section"><p>Link an element's position (Group/Period) to its atomic structure (e.g., number of valence electrons) and then link that structure to its chemical properties and trends down a group or across a period.</p></div>`, 'environment-framework': `<h2>Air & The Environment Framework</h2><h3>Model Emphasis: C (Connect)</h3><div class="clm-section"><p>This topic is heavy on memory and association. Your primary task is to connect pollutants (e.g. SO₂) to their sources (e.g. burning fossil fuels) and their resulting environmental problems (e.g. acid rain).</p></div>` }; details.innerHTML = chemistryFrameworks[frameworkType] || '<h2>Framework not found</h2>'; modal.style.display = 'block'; }
+        function showFramework(frameworkType) { const modal = document.getElementById('frameworkModal'); const details = document.getElementById('frameworkDetails'); const frameworks = { 'thermal': `<h2>Thermal Physics Explanation Framework</h2><h3>Model Name: The M-C-E (Micro-Cause-Effect) Chain</h3><div class="clm-section"><h4><span class="clm-letter">M (Micro-level):</span> Energy Change</h4><p>Describe the change in the particles' Kinetic Energy (KE) or Potential Energy (PE).</p><p><strong>Trigger Phrases:</strong> "Particles gain/lose KE...", "Energy is absorbed to overcome forces of attraction..."</p></div><div class="clm-section"><h4><span class="clm-letter">C (Cause):</span> Particle Behaviour</h4><p>Describe how the energy change alters the motion, spacing, or arrangement of the particles.</p><p><strong>For Convection:</strong> Must include Density Change! [Gains heat] → [Expands] → [Becomes less dense] → [Rises]</p></div><div class="clm-section"><h4><span class="clm-letter">E (Effect):</span> Macro-level Phenomenon</h4><p>Link the change in particle behaviour to the macroscopic phenomenon.</p></div>`, 'kinematics': `<h2>Kinematics Graph Narrative Framework</h2><h3>Model Name: The G-S-V (Gradient-Shape-Value) Storyboard</h3><div class="clm-section"><h4><span class="clm-letter">G (Gradient's Meaning):</span></h4><p>State the physical meaning of the gradient (e.g., "The gradient of the v-t graph represents acceleration.")</p></div><div class="clm-section"><h4><span class="clm-letter">S (Shape's Meaning):</span></h4><p>Translate the shape of the graph line into a description of the motion (e.g., "...a straight line, indicating constant acceleration.")</p></div><div class="clm-section"><h4><span class="clm-letter">V (Key Values):</span></h4><p>Include specific numerical values for time, speed, or calculated acceleration.</p></div>`, 'equilibrium': `<h2>Force Equilibrium Explanation Framework</h2><h3>Model Name: The N1L (Newton's First Law) Principle</h3><div class="clm-section"><p><strong>1. State the Motion:</strong> "The object is moving at a constant velocity / is at rest."</p></div><div class="clm-section"><p><strong>2. Apply the Law:</strong> "According to Newton's First Law, this implies that the net force on the object is zero."</p></div><div class="clm-section"><p><strong>3. Analyze the Forces:</strong> "Therefore, the forward force must be equal and opposite to the total resistive forces."</p></div>`, 'stability': `<h2>Stability Comparison Framework</h2><h3>Model Name: The CG-B (Centre of Gravity & Base Area) Principle</h3><div class="clm-section"><p><strong>1. Centre of Gravity (CG) Position:</strong> A lower CG leads to greater stability.</p></div><div class="clm-section"><p><strong>2. Base Area:</strong> A wider base of support leads to greater stability.</p></div><div class="clm-section"><p><strong>Reasoning:</strong> A wider base and lower CG mean the object has to be tilted through a larger angle before its line of action falls outside the base.</p></div>`, 'energy': `<h2>Energy Transformation Framework</h2><h3>Model Name: The PCE+WD (Principle of Conservation of Energy + Work Done) Flowchart</h3><div class="clm-section"><p><strong>1. State the Principle:</strong> "According to the Principle of Conservation of Energy, energy is converted from one form to another."</p></div><div class="clm-section"><p><strong>2. Identify Main Conversion:</strong> "The primary conversion is from [Initial Energy, e.g., GPE] to [Final Energy, e.g., KE]."</p></div><div class="clm-section"><p><strong>3. Identify Dissipation Path:</strong> "However, work is done against [Resistive Force, e.g., friction]."</p></div><div class="clm-section"><p><strong>4. State Final Destination:</strong> "This converts some mechanical energy into thermal energy and/or sound, which is dissipated."</p></div>` }; details.innerHTML = frameworks[frameworkType] || '<h2>Framework not found</h2>'; modal.style.display = 'block'; }
+        document.addEventListener('click', function(e) { if (e.target.classList.contains('status-btn')) { const s = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered']; const t = ['Not Started', 'In Progress', 'Practicing', 'Mastered']; const sym = ['', '●', 'P', '✓']; let i = s.findIndex(st => e.target.classList.contains(st)); e.target.className = 'status-btn'; const nI = (i + 1) % s.length; e.target.classList.add(s[nI]); e.target.title = t[nI]; e.target.textContent = sym[nI]; updateAllProgress(); } });
+        function updateAllProgress() { document.querySelectorAll('.subject-section').forEach(sec => { const mastered = sec.querySelectorAll('.status-mastered').length; const total = sec.querySelectorAll('.topic-item').length; const prog = total > 0 ? (mastered / total) * 100 : 0; const fill = sec.querySelector('.progress-fill'); const text = sec.querySelector('.progress-text'); if (fill && text) { fill.style.width = prog + '%'; text.textContent = `Mastered: ${mastered} / ${total}`; } }); }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', fetchAllData);
+    </script>
+</body>
+</html>
