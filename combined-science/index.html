@@ -222,13 +222,11 @@
 
          // --- 3. INITIALIZATION & EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', async function() {
-            // 首先，确保所有模块的渲染都能正常执行
-            // 我们假设 scienceData 和 examConfig 会被正确加载
             try {
-                await fetchAllSprintTasks(); // 获取动态数据
+                await fetchAllData(); // 调用新的总数据获取函数
                 
                 // 渲染所有模块
-                updateAnalytics('Chemistry');
+                updateAnalytics('Chemistry'); // 这个函数现在会直接使用 science-data.js 的数据
                 renderGoalsModule();
                 updateAllProgress(); 
             } catch (error) {
@@ -270,23 +268,29 @@
             }
         }
 
-        async function fetchAllSprintTasks() {
+                // 这个函数现在更名为 fetchAllData，因为它获取所有类型的数据
+        async function fetchAllData() {
             try {
+                // 并行获取所有需要的数据
                 [chemSprintTasks, physSprintTasks] = await Promise.all([
                     fetchSprintTasksFromDB('chemistry_tasks_v1'),
-                    fetchSprintTasksFromDB('physics_tasks_v1')
+                    fetchSprintTasksFromDB('physics_tasks_v1') 
                 ]);
+                // 注意：这里我们不再需要为 Strengths & Weaknesses 单独 fetch 数据
+                // 因为它直接使用我们已经引入的 science-data.js
             } catch (error) {
                 console.error("Error fetching sprint tasks:", error);
             }
         }
 
-        // --- 5. ANALYTICS MODULE (Strengths & Weaknesses) ---
+                // --- 5. ANALYTICS MODULE (Strengths & Weaknesses) ---
         window.updateAnalytics = function(subject) {
-            document.querySelectorAll('.toggle-btn').forEach(btn => { btn.classList.toggle('active', btn.textContent.includes(subject)); });
-            // +++ 这是正确的代码行 +++
+            document.querySelectorAll('.toggle-btn').forEach(btn => { 
+                btn.classList.toggle('active', btn.textContent.includes(subject)); 
+            });
+
+            // 核心修复点：确保它从正确的全局变量 scienceData 中读取数据
             const subjectData = scienceData[subject] || [];
-            console.log("Data being used for analysis:", subjectData);
             const analyticsContent = document.getElementById('analytics-content');
             if (!analyticsContent) return;
 
@@ -308,15 +312,78 @@
 
             const topicPerformance = {};
             const allTopics = [...new Set(subjectData.map(item => item.Topic))].filter(Boolean);
-            allTopics.forEach(topic => { const items = subjectData.filter(item => item.Topic === topic); const correct = items.filter(item => item.Result === 'Correct').length; const partial = items.filter(item => item.Result === 'Partial').length; if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; });
+            allTopics.forEach(topic => { 
+                const items = subjectData.filter(item => item.Topic === topic); 
+                const correct = items.filter(item => item.Result === 'Correct').length; 
+                const partial = items.filter(item => item.Result === 'Partial').length; 
+                if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; 
+            });
             renderHeatmap(topicPerformance);
             generateSuggestion(topicPerformance, errorCounts, errorTypes);
         }
 
-        function renderRadarChart(labels, scores) { const ctx = document.getElementById('skillRadarChart').getContext('2d'); if (skillRadarChart) skillRadarChart.destroy(); skillRadarChart = new Chart(ctx, { type: 'radar', data: { labels: labels, datasets: [{ label: 'Skill Score', data: scores, fill: true, backgroundColor: 'rgba(52, 152, 219, 0.2)', borderColor: 'rgb(52, 152, 219)', pointBackgroundColor: 'rgb(52, 152, 219)', }] }, options: { scales: { r: { suggestedMin: 0, suggestedMax: 100, pointLabels: { font: { size: 12 } } } }, plugins: { legend: { display: false } } } }); }
-        function renderHeatmap(d) { const c = document.getElementById('heatmap-container'); c.innerHTML = ''; const s = Object.keys(d).sort((a,b) => d[a] - d[b]); s.forEach(t => { const score = d[t]; let h = 'heat-low'; if (score >= 85) h = 'heat-high'; else if (score >= 60) h = 'heat-medium'; const cell = document.createElement('div'); cell.className = `heatmap-cell ${h}`; cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; cell.title = `${t}: ${score.toFixed(0)}% Correct`; c.appendChild(cell); }); }
-        function generateSuggestion(topicPerf, errorCounts, errorTypes) { const el = document.getElementById('suggestion-text'); const totalErrors = errorCounts.reduce((s, c) => s + c, 0); if (totalErrors === 0) { const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); if (p.length > 0) el.innerHTML = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like <strong>"${p[0]}"</strong> to achieve perfection!`; else el.innerHTML = "🏆 Outstanding performance! All topics are well-mastered."; return; } let wT = null, lS = 101; Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); let mE = -1, mET = null; errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); if (wT && mET) el.innerHTML = `💡 Your weakest area is <strong>"${wT}"</strong> (Accuracy ${lS.toFixed(0)}%). The most common error type is <strong>"${mET}"</strong>. I recommend reviewing this topic's framework and doing targeted practice.`; else el.innerHTML = "Analysis complete. Use the charts above to guide your study plan."; }
+        function renderRadarChart(labels, scores) { 
+            const ctx = document.getElementById('skillRadarChart').getContext('2d'); 
+            if (skillRadarChart) skillRadarChart.destroy(); 
+            skillRadarChart = new Chart(ctx, { 
+                type: 'radar', 
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        label: 'Skill Score', 
+                        data: scores, 
+                        fill: true, 
+                        backgroundColor: 'rgba(52, 152, 219, 0.2)', 
+                        borderColor: 'rgb(52, 152, 219)', 
+                        pointBackgroundColor: 'rgb(52, 152, 219)', 
+                    }] 
+                }, 
+                options: { 
+                    scales: { 
+                        r: { 
+                            suggestedMin: 0, 
+                            suggestedMax: 100, 
+                            pointLabels: { font: { size: 12 } } 
+                        } 
+                    }, 
+                    plugins: { legend: { display: false } } 
+                } 
+            }); 
+        }
 
+        function renderHeatmap(d) { 
+            const c = document.getElementById('heatmap-container'); 
+            c.innerHTML = ''; 
+            const s = Object.keys(d).sort((a,b) => d[a] - d[b]); 
+            s.forEach(t => { 
+                const score = d[t]; 
+                let h = 'heat-low'; 
+                if (score >= 85) h = 'heat-high'; 
+                else if (score >= 60) h = 'heat-medium'; 
+                const cell = document.createElement('div'); 
+                cell.className = `heatmap-cell ${h}`; 
+                cell.textContent = t.length > 12 ? t.substring(0, 10) + '...' : t; 
+                cell.title = `${t}: ${score.toFixed(0)}% Correct`; 
+                c.appendChild(cell); 
+            }); 
+        }
+        
+        function generateSuggestion(topicPerf, errorCounts, errorTypes) { 
+            const el = document.getElementById('suggestion-text'); 
+            const totalErrors = errorCounts.reduce((s, c) => s + c, 0); 
+            if (totalErrors === 0) { 
+                const p = Object.keys(topicPerf).filter(t => topicPerf[t] < 100); 
+                if (p.length > 0) el.innerHTML = `🎉 Excellent! No incorrect answers. Focus on mastering partially correct topics like <strong>"${p[0]}"</strong> to achieve perfection!`; 
+                else el.innerHTML = "🏆 Outstanding performance! All topics are well-mastered."; 
+                return; 
+            } 
+            let wT = null, lS = 101; 
+            Object.keys(topicPerf).forEach(t => { if(topicPerf[t] < lS){ lS = topicPerf[t]; wT = t; } }); 
+            let mE = -1, mET = null; 
+            errorCounts.forEach((c, i) => { if(c > mE){ mE = c; mET = errorTypes[i]; } }); 
+            if (wT && mET) el.innerHTML = `💡 Your weakest area is <strong>"${wT}"</strong> (Accuracy ${lS.toFixed(0)}%). The most common error type is <strong>"${mET}"</strong>. I recommend reviewing this topic's framework and doing targeted practice.`; 
+            else el.innerHTML = "Analysis complete. Use the charts above to guide your study plan."; 
+        }
         // --- 6. GOALS MODULE ---
         function renderGoalsModule() {
             const container = document.getElementById('goals-module-content');
