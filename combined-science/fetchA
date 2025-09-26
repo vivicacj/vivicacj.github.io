@@ -309,7 +309,10 @@ async function fetchAllData() {
             'Chemistry': chemErrors,
             'Physics': physErrors
         };
-
+        
+     // +++ 在这里添加下面这行代码 +++
+    console.log("Final data received from API:", errorLogData);
+        
     } catch (error) {
         console.error("An error occurred during parallel data fetching:", error);
         // 可以在此处添加UI提示，告知用户数据加载失败
@@ -327,16 +330,17 @@ async function fetchAllData() {
             const analyticsContent = document.getElementById('analytics-content');
             if (!analyticsContent) return;
 
-            if (subjectData.length === 0) {
-                analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data for ${subject}. Update science-data.js.</div>`;
-                return;
+            // 新的提示
+            if (!subjectData || subjectData.length === 0) {
+            analyticsContent.innerHTML = `<div class="loading-text" style="background: #e6e8ff; color: #667eea;">No practice data found for ${subject}. Please update the Google Sheet.</div>`;
+            return;
             }
             analyticsContent.innerHTML = `<canvas id="skillRadarChart" style="max-height: 250px;"></canvas><h4 id="heatmap-title" style="margin: 15px 0 10px 0; color: #4a5568;">Knowledge Heatmap</h4><div id="heatmap-container" class="heatmap"></div><div id="suggestion-box-container" class="suggestion-box"><div id="suggestion-text" class="suggestion-text"></div></div>`;
             
-            const incorrectData = subjectData.filter(item => item.Result === 'Incorrect');
+            const incorrectData = subjectData.filter(item => item.result === 'Incorrect');
             const errorTypes = subject === 'Chemistry' ? ['M-Error', 'P-Error', 'C-Error', 'Q-Error', 'L-Error'] : ['C1', 'P1', 'P2', 'P3', 'C2', 'M1'];
             const errorCounts = errorTypes.map(type => 
-                incorrectData.filter(item => item.Error_Type && item.Error_Type.startsWith(type)).length
+               incorrectData.filter(item => item.errortype && item.errortype.startsWith(type)).length
             );
             const totalErrors = incorrectData.length || 1;
             const skillScores = errorCounts.map(count => Math.max(0, 100 - (count / totalErrors * 100)));
@@ -344,12 +348,12 @@ async function fetchAllData() {
             renderRadarChart(errorTypes.map(e => e.split('(')[0].trim()), skillScores);
 
             const topicPerformance = {};
-            const allTopics = [...new Set(subjectData.map(item => item.Topic))].filter(Boolean);
+            const allTopics = [...new Set(subjectData.map(item => item.topic))].filter(Boolean);
             allTopics.forEach(topic => { 
-                const items = subjectData.filter(item => item.Topic === topic); 
-                const correct = items.filter(item => item.Result === 'Correct').length; 
-                const partial = items.filter(item => item.Result === 'Partial').length; 
-                if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; 
+               const items = subjectData.filter(item => item.topic === topic); 
+               const correct = items.filter(item => item.result === 'Correct').length; 
+               const partial = items.filter(item => item.result === 'Partial').length; 
+               if (items.length > 0) topicPerformance[topic] = ((correct + (partial * 0.5)) / items.length) * 100; 
             });
             renderHeatmap(topicPerformance);
             generateSuggestion(topicPerformance, errorCounts, errorTypes);
