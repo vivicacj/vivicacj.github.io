@@ -159,17 +159,53 @@
         let skillRadarChart;
         let chemSprintTasks = [], physSprintTasks = [];
 
-        // --- 3. INITIALIZATION ---
+         // --- 3. INITIALIZATION & EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', async function() {
-            // Data for analytics dashboard is now also global
-            // No need to re-declare scienceData here as it's loaded from file
-            
+            // Check if essential data objects are loaded
+            if (typeof scienceData === 'undefined' || typeof examConfig === 'undefined') {
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.innerHTML = `<div class="error-text" style="grid-column: 1 / -1;">Critical Error: One of the data files (science-data.js or exam-config.js) failed to load. Please check the file paths and names.</div>`;
+                }
+                return; // Stop execution if data is missing
+            }
+
             // Fetch dynamic data first
             await fetchAllSprintTasks();
 
             // Render all modules
             updateAnalytics('Chemistry');
             renderGoalsModule();
+            updateAllProgress(); // Initial calculation for progress bars
+
+            // =========== 核心修改点：在这里添加事件监听 ===========
+            // Set up a single event listener for the entire main panel
+            const mainPanel = document.querySelector('.main-panel');
+            if (mainPanel) {
+                mainPanel.addEventListener('click', function(e) {
+                    // Check if a status button was clicked
+                    if (e.target.classList.contains('status-btn')) {
+                        const statuses = ['status-not-started', 'status-in-progress', 'status-practicing', 'status-mastered'];
+                        const titles = ['Not Started', 'In Progress', 'Practicing', 'Mastered'];
+                        const symbols = ['', '●', 'P', '✓'];
+                        
+                        let currentIndex = statuses.findIndex(status => e.target.classList.contains(status));
+                        
+                        // Cycle to the next status
+                        const nextIndex = (currentIndex + 1) % statuses.length;
+                        
+                        // Update the button's class, title, and text content
+                        e.target.className = 'status-btn'; // Reset classes first
+                        e.target.classList.add(statuses[nextIndex]);
+                        e.target.title = titles[nextIndex];
+                        e.target.textContent = symbols[nextIndex];
+
+                        // After changing the status, update the progress bar
+                        updateAllProgress();
+                    }
+                });
+            }
+            // =========== 修改结束 ===========
         });
         
         // --- 4. DATA FETCHING ---
