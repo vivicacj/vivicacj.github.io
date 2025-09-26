@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Combined Science - Chem & Phys Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-     <script src="data/science-data.js"></script>
+     <!-- 删除-->
     <!-- 核心修改点：增加 Firebase SDK 引用 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -219,6 +219,9 @@
         // --- 2. GLOBAL VARIABLES ---
         let skillRadarChart;
         let chemSprintTasks = [], physSprintTasks = [];
+        // +++ 新增代码 +++
+        const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzUoTqJwi6761U6VaMdJmUa9y5s8AATnr6iW6A-cb3q8iilbWCFdepDRB-auD160tNh/exec';
+        let errorLogData = {}; // 用于存储从 Google Sheet 获取的最新错题数据
 
          // --- 3. INITIALIZATION & EVENT LISTENERS ---
         document.addEventListener('DOMContentLoaded', async function() {
@@ -258,30 +261,57 @@
         });
         
         // --- 4. DATA FETCHING ---
-        async function fetchSprintTasksFromDB(docId) {
-            try {
-                const doc = await db.collection("sprintPlan").doc(docId).get();
-                return doc.exists ? (doc.data().allTasks || []) : [];
-            } catch (error) {
-                console.error(`Error fetching tasks from ${docId}:`, error);
-                return [];
-            }
-        }
 
-                // 这个函数现在更名为 fetchAllData，因为它获取所有类型的数据
-        async function fetchAllData() {
-            try {
-                // 并行获取所有需要的数据
-                [chemSprintTasks, physSprintTasks] = await Promise.all([
-                    fetchSprintTasksFromDB('chemistry_tasks_v1'),
-                    fetchSprintTasksFromDB('physics_tasks_v1') 
-                ]);
-                // 注意：这里我们不再需要为 Strengths & Weaknesses 单独 fetch 数据
-                // 因为它直接使用我们已经引入的 science-data.js
-            } catch (error) {
-                console.error("Error fetching sprint tasks:", error);
-            }
+// 辅助函数：从 Firebase 获取 Sprint 任务
+async function fetchSprintTasksFromDB(docId) {
+    try {
+        const doc = await db.collection("sprintPlan").doc(docId).get();
+        return doc.exists ? (doc.data().allTasks || []) : [];
+    } catch (error) {
+        console.error(`Error fetching tasks from ${docId}:`, error);
+        return [];
+    }
+}
+
+// 辅助函数：从 Google Apps Script API 获取错题数据
+async function fetchErrorLogFromAPI(sheetName) {
+    try {
+        // 附加时间戳参数以强制绕过缓存
+        const url = `${API_ENDPOINT}?sheet=${sheetName}&t=${new Date().getTime()}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`API request failed for ${sheetName} with status ${response.status}`);
         }
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching error log for ${sheetName}:`, error);
+        return []; // 出错时返回空数组
+    }
+}
+
+// 主函数：并行获取所有数据
+async function fetchAllData() {
+    try {
+        const [chemTasks, physTasks, chemErrors, physErrors] = await Promise.all([
+            fetchSprintTasksFromDB('chemistry_tasks_v1'),
+            fetchSprintTasksFromDB('physics_tasks_v1'),
+            fetchErrorLogFromAPI('Chemistry'),
+            fetchErrorLogFromAPI('Physics')
+        ]);
+
+        // 将获取到的数据存入全局变量
+        chemSprintTasks = chemTasks;
+        physSprintTasks = physTasks;
+        errorLogData = {
+            'Chemistry': chemErrors,
+            'Physics': physErrors
+        };
+
+    } catch (error) {
+        console.error("An error occurred during parallel data fetching:", error);
+        // 可以在此处添加UI提示，告知用户数据加载失败
+    }
+}
 
                 // --- 5. ANALYTICS MODULE (Strengths & Weaknesses) ---
         window.updateAnalytics = function(subject) {
@@ -290,7 +320,7 @@
             });
 
             // 核心修复点：确保它从正确的全局变量 scienceData 中读取数据
-            const subjectData = scienceData[subject] || [];
+            const subjectData = errorLogData[subject] || [];
             const analyticsContent = document.getElementById('analytics-content');
             if (!analyticsContent) return;
 
