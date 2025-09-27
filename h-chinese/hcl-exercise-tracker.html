@@ -434,18 +434,18 @@
         // Data and State Management
         const sectionTypes = {
             'practical-writing': ['私人电邮', '公务电邮', '博客', '网页', '论坛'],
-            'composition': ['记叙文', '论说文', '演讲稿'],
-            'language-application': ['短文填空', '病句修改', '词语选择', '完成对话'],
-            'reading-1': ['新闻报道', '广告传单', '说明文'],
-            'reading-2': ['文学赏析', '人物访谈', '议论文'],
-            'summary': ['新闻缩写', '文章摘要']
+            'composition': ['记叙文', '论说文', '演讲词', '新闻/材料读后感'],
+            'language-application': ['A.短文填空', 'B.病句修改'],
+            'reading-1': ['阅读理解一'],
+            'reading-2': ['阅读理解二'],
+            'summary': ['片段缩写']
         };
 
         let practicesData = {
             'practical-writing': [{ id: 1, name: '私人电邮：邀请朋友', type: '私人电邮', status: 'completed', difficulty: 'beginner', estimatedTime: 30, googleDocLink: '#', dateAdded: '2024-03-15', completedDate: '2024-03-20' }],
             'composition': [{ id: 11, name: '记叙文：难忘的一天', type: '记叙文', status: 'new', difficulty: 'intermediate', estimatedTime: 90, googleDocLink: '#', dateAdded: '2024-09-20' }],
-            'language-application': [{ id: 31, name: '病句修改练习（一）', type: '病句修改', status: 'new', difficulty: 'intermediate', estimatedTime: 25, googleDocLink: '#', dateAdded: '2024-09-28' }],
-            'reading-1': [{ id: 21, name: '说明文阅读：人工智能', type: '说明文', status: 'pending', difficulty: 'intermediate', estimatedTime: 50, googleDocLink: '#', dateAdded: '2024-09-25' }],
+            'language-application': [{ id: 31, name: '病句修改练习（一）', type: 'B.病句修改', status: 'new', difficulty: 'intermediate', estimatedTime: 25, googleDocLink: '#', dateAdded: '2024-09-28' }],
+            'reading-1': [{ id: 21, name: '2023年真题练习', type: '阅读理解一', status: 'pending', difficulty: 'intermediate', estimatedTime: 50, googleDocLink: '#', dateAdded: '2024-09-25' }],
             'reading-2': [],
             'summary': []
         };
@@ -486,12 +486,18 @@
             batchUploadModal.addEventListener('click', (e) => { if (e.target === batchUploadModal) closeBatchUploadModal(); });
 
             practiceGrid.addEventListener('click', e => {
-                if (e.target.classList.contains('card-actions-menu')) {
+                const menuButton = e.target.closest('.card-actions-menu');
+                if (menuButton) {
+                    const currentMenu = menuButton.nextElementSibling;
+                    const isVisible = currentMenu.classList.contains('show');
+                    
                     document.querySelectorAll('.card-menu.show').forEach(menu => {
-                        if (menu !== e.target.nextElementSibling) menu.classList.remove('show');
+                        menu.classList.remove('show');
                     });
-                    const menu = e.target.nextElementSibling;
-                    if (menu) menu.classList.toggle('show');
+                    
+                    if (!isVisible) {
+                        currentMenu.classList.add('show');
+                    }
                 }
             });
             window.addEventListener('click', e => {
@@ -531,7 +537,7 @@
             card.className = 'practice-card';
             card.dataset.id = practice.id;
 
-            const sectionKey = Object.keys(sectionTypes).find(key => sectionTypes[key].includes(practice.type)) || 'practical-writing';
+            const sectionKey = currentSection;
             const headerClass = `card-header-${sectionKey}`;
 
             card.innerHTML = `
