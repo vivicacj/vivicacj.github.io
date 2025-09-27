@@ -449,7 +449,7 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closePracticeModal()">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton">保存</button>
                 </div>
              </form>
         </div>
@@ -685,11 +685,24 @@
             practiceForm.reset();
             practiceForm.dataset.editingId = '';
             
-            updatePracticeTypeOptions();
-
             if (id) {
                 const practice = findPractice(id);
                 if (practice) {
+                    // 找到这个练习所属的分类
+                    let practiceSection = currentSection;
+                    if (currentSection === 'all-sections') {
+                        for (const [sectionKey, practices] of Object.entries(practicesData)) {
+                            if (practices.some(p => p.id === practice.id)) {
+                                practiceSection = sectionKey;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // 根据练习所属分类更新练习类型选项
+                    const types = sectionTypes[practiceSection] || [];
+                    practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join('');
+                    
                     modalTitle.textContent = '编辑练习';
                     document.getElementById('practiceName').value = practice.name;
                     document.getElementById('practiceType').value = practice.type;
@@ -698,8 +711,15 @@
                     document.getElementById('difficultyLevel').value = practice.difficulty;
                     document.getElementById('estimatedTime').value = practice.estimatedTime;
                     practiceForm.dataset.editingId = id;
+                    practiceForm.dataset.practiceSection = practiceSection; // 保存原始分类
                 }
             } else {
+                // 新增练习时，只在非全部题型视图中允许
+                if (currentSection === 'all-sections') {
+                    alert('请先选择具体的练习分类，然后再添加练习。');
+                    return;
+                }
+                updatePracticeTypeOptions();
                 modalTitle.textContent = '添加新练习';
                 document.getElementById('practiceStatus').value = 'new';
                 document.getElementById('difficultyLevel').value = 'intermediate';
@@ -1043,12 +1063,19 @@
             };
 
             if (id) {
-                const index = practicesData[currentSection].findIndex(p => p.id == id);
+                // 编辑现有练习
+                const originalSection = practiceForm.dataset.practiceSection || currentSection;
+                const index = practicesData[originalSection].findIndex(p => p.id == id);
                 if (index !== -1) {
-                    const existingPractice = practicesData[currentSection][index];
-                    practicesData[currentSection][index] = { ...existingPractice, ...formData };
+                    const existingPractice = practicesData[originalSection][index];
+                    practicesData[originalSection][index] = { ...existingPractice, ...formData };
                 }
             } else {
+                // 新增练习
+                if (currentSection === 'all-sections') {
+                    alert('请先选择具体的练习分类，然后再添加练习。');
+                    return;
+                }
                 const newPractice = { ...formData, id: Date.now(), dateAdded: new Date().toISOString().split('T')[0] };
                 if (!practicesData[currentSection]) practicesData[currentSection] = [];
                 practicesData[currentSection].push(newPractice);
@@ -1070,7 +1097,15 @@
                 });
             });
 
+            // 确保表单提交事件正确绑定
             practiceForm.addEventListener('submit', handleFormSubmit);
+            
+            // 也给保存按钮添加点击事件作为备用
+            document.getElementById('saveButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                handleFormSubmit(e);
+            });
+
             practiceModal.addEventListener('click', (e) => { if (e.target === practiceModal) closePracticeModal(); });
             batchUploadModal.addEventListener('click', (e) => { if (e.target === batchUploadModal) closeBatchUploadModal(); });
 
