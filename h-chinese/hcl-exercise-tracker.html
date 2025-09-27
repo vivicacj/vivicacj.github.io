@@ -377,14 +377,17 @@
         <div class="container">
             <div class="content-header">
                 <h1 class="section-title" id="sectionTitle">专项考题一：实用文</h1>
-                <select class="form-input" id="sectionSelect" onchange="changeSection()" style="max-width: 250px;">
-                    <option value="practical-writing">专项考题一：实用文</option>
-                    <option value="composition">专项考题二：作文</option>
-                    <option value="language-application">专项考题三：语文应用</option>
-                    <option value="reading-1">专项考题四：阅读理解一</option>
-                    <option value="reading-2">专项考题五：阅读理解二</option>
-                    <option value="summary">专项考题六：片段缩写</option>
-                </select>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <select class="form-input" id="sectionSelect" onchange="changeSection()" style="max-width: 250px;">
+                        <option value="practical-writing">专项考题一：实用文</option>
+                        <option value="composition">专项考题二：作文</option>
+                        <option value="language-application">专项考题三：语文应用</option>
+                        <option value="reading-1">专项考题四：阅读理解一</option>
+                        <option value="reading-2">专项考题五：阅读理解二</option>
+                        <option value="summary">专项考题六：片段缩写</option>
+                        <option value="all-sections">🔍 查看全部题型</option>
+                    </select>
+                </div>
             </div>
 
             <div class="toolbar">
@@ -724,11 +727,20 @@
 
         function changeSection() {
             currentSection = sectionSelect.value;
-            sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text;
-            if (practiceModal.style.display === 'flex') {
-                updatePracticeTypeOptions();
-                if (practiceTypeSelect.options.length > 0) {
-                    practiceTypeSelect.selectedIndex = 0;
+            
+            if (currentSection === 'all-sections') {
+                sectionTitle.textContent = '全部题型总览';
+                // 隐藏添加练习按钮，因为无法确定要添加到哪个分类
+                document.querySelector('.btn-primary').style.display = 'none';
+            } else {
+                sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text;
+                document.querySelector('.btn-primary').style.display = 'inline-flex';
+                
+                if (practiceModal.style.display === 'flex') {
+                    updatePracticeTypeOptions();
+                    if (practiceTypeSelect.options.length > 0) {
+                        practiceTypeSelect.selectedIndex = 0;
+                    }
                 }
             }
             renderPractices();
@@ -906,7 +918,15 @@
 
         function getFilteredData() {
             const searchTerm = searchInput.value.toLowerCase();
-            let practices = practicesData[currentSection] || [];
+            let practices = [];
+            
+            if (currentSection === 'all-sections') {
+                // 显示所有分类的练习
+                practices = Object.values(practicesData).flat();
+            } else {
+                practices = practicesData[currentSection] || [];
+            }
+            
             if (currentFilter !== 'all') {
                 practices = practices.filter(p => p.status === currentFilter);
             }
@@ -921,8 +941,19 @@
             card.className = 'practice-card';
             card.dataset.id = practice.id;
 
-            const sectionKey = currentSection;
-            const headerClass = `card-header-${sectionKey}`;
+            // 确定练习所属的分类
+            let practiceSection = currentSection;
+            if (currentSection === 'all-sections') {
+                // 在全部题型视图中，需要找到这个练习属于哪个分类
+                for (const [sectionKey, practices] of Object.entries(practicesData)) {
+                    if (practices.some(p => p.id === practice.id)) {
+                        practiceSection = sectionKey;
+                        break;
+                    }
+                }
+            }
+
+            const headerClass = `card-header-${practiceSection}`;
 
             const isLink = practice.documentContent && (
                 practice.documentContent.startsWith('http://') || 
@@ -935,9 +966,14 @@
                 ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>`
                 : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`;
 
+            // 在全部题型视图中显示所属分类
+            const sectionBadge = currentSection === 'all-sections' 
+                ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>`
+                : '';
+
             card.innerHTML = `
                 <div class="card-header ${headerClass}">
-                    <h3 class="card-title">${practice.name}</h3>
+                    <h3 class="card-title">${practice.name}${sectionBadge}</h3>
                     <p class="card-meta">${practice.type}</p>
                     <button class="card-actions-menu">⋮</button>
                     <div class="card-menu">
@@ -968,6 +1004,18 @@
                 </div>
             `;
             return card;
+        }
+
+        function getSectionName(sectionKey) {
+            const sectionNames = {
+                'practical-writing': '实用文',
+                'composition': '作文',
+                'language-application': '语文应用',
+                'reading-1': '阅读理解一',
+                'reading-2': '阅读理解二',
+                'summary': '片段缩写'
+            };
+            return sectionNames[sectionKey] || sectionKey;
         }
 
         function renderPractices() {
