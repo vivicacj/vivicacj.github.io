@@ -71,14 +71,22 @@
         .cta-section { text-align: center; margin-top: 40px; padding: 30px; background: rgba(255,255,255,0.95); border-radius: 20px; backdrop-filter: blur(10px); }
         .cta-title { font-size: 1.5rem; color: #333; margin-bottom: 10px; }
         .cta-subtitle { color: #666; margin-bottom: 25px; }
-        .cta-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .cta-buttons { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         .cta-button { display: inline-block; padding: 15px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; text-decoration: none; border-radius: 25px; font-weight: bold; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3); }
         .cta-button:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4); }
         .cta-button.disabled { background: linear-gradient(135deg, #ccc, #999); cursor: not-allowed; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
         .cta-button.disabled:hover { transform: none; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
-        @media (max-width: 768px) { .header h1 { font-size: 2.2rem; } .section-title h2 { font-size: 1.8rem; } .papers-grid { grid-template-columns: 1fr; } .overview-stats { grid-template-columns: repeat(2, 1fr); } .cta-buttons { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .header h1 { font-size: 2.2rem; } 
+            .section-title h2 { font-size: 1.8rem; } 
+            .papers-grid { grid-template-columns: 1fr; } 
+            .overview-stats { grid-template-columns: repeat(2, 1fr); } 
+        }
+        @media (max-width: 1200px) {
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .cta-button { width: 80%; max-width: 300px; }
+        }
     </style>
-    <!-- Cloudflare Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "fe5fc51fb53c43148a2adcf389b12fcb"}'></script>
 </head>
 <body>
@@ -188,9 +196,8 @@
                 <a href="summary.html" target="_blank" class="cta-button">片段缩写训练</a>
                 <a href="practical-writing.html" target="_blank" class="cta-button">实用文训练</a>
                 <a href="composition.html" target="_blank" class="cta-button">作文训练</a>
-                <!-- =========== 核心修改点：激活按钮 =========== -->
                 <a href="h-chinese-oral.html" class="cta-button">口试模块练习</a>
-                <!-- ============================================== -->
+                <a href="hcl-exercise-tracker.html" target="_blank" class="cta-button">练习中枢</a>
             </div>
         </div>
         
