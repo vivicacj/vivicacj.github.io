@@ -19,10 +19,10 @@
             --card-background: rgba(255, 255, 255, 0.98);
             --text-color: #34495e;
             --text-light: #7f8c8d;
-            --status-not-started: #E8B4B8; /* 柔和粉 (Soft Pink) */
-            --status-in-progress: #F7EAB9; /* 柠檬黄 (Lemon Yellow) */
-            --status-practicing: #85b0f1; /* 天空蓝 (Sky Blue) */
-            --status-mastered: #92eecc; /* 薄荷绿 (Mint Green) */
+            --status-not-started: #E8B4B8;
+            --status-in-progress: #F7EAB9;
+            --status-practicing: #B9D2F7;
+            --status-mastered: #B5EAD7;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: var(--text-color); }
@@ -59,8 +59,8 @@
         .status-filter input[type="radio"] { display: none; }
         .status-indicator { width: 14px; height: 14px; border-radius: 50%; transition: all 0.2s ease-in-out; }
         .status-filter input[type="radio"] + .status-indicator { background-color: #e5e7eb; box-shadow: inset 0 0 0 2px white; }
-        .status-filter input[type="radio"]:checked + .status-indicator {background-color: var(--color); /* 新增：将底色也设为主题色 */transform: scale(1.2);box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color);}
-        .status-indicator.all { --color: #C7B8E2; } /* 香芋紫 (Taro Purple) */
+        .status-filter input[type="radio"]:checked + .status-indicator { background-color: var(--color); transform: scale(1.2); box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color); }
+        .status-indicator.all { --color: #C7B8E2; }
         .status-indicator.not-started { --color: var(--status-not-started); }
         .status-indicator.in-progress { --color: var(--status-in-progress); }
         .status-indicator.practicing { --color: var(--status-practicing); }
@@ -82,11 +82,11 @@
         .info-item { background: #f8f9fa; border-radius: 8px; padding: 10px; text-align: center; }
         .info-label { font-size: 0.8rem; color: var(--text-light); }
         .info-value { font-weight: 500; }
-        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; color: white; display: inline-block; }
-        .status-badge.not-started { background-color: var(--status-not-started); color: #555;}
-        .status-badge.in-progress { background-color: var(--status-in-progress); }
-        .status-badge.practicing { background-color: var(--status-practicing); }
-        .status-badge.mastered { background-color: var(--status-mastered); }
+        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; display: inline-block; }
+        .status-badge.not-started { background-color: var(--status-not-started); color: #374151; }
+        .status-badge.in-progress { background-color: var(--status-in-progress); color: #374151; }
+        .status-badge.practicing { background-color: var(--status-practicing); color: #374151; }
+        .status-badge.mastered { background-color: var(--status-mastered); color: #374151; }
         .difficulty-badge { font-weight: 500; }
         .difficulty-beginner { color: #28a745; }
         .difficulty-intermediate { color: #fd7e14; }
@@ -119,22 +119,12 @@
         <div class="auth-box">
             <div id="login-view">
                 <h2>登录</h2>
-                <form id="login-form">
-                    <input type="email" id="login-email" class="form-input" placeholder="邮箱" required>
-                    <input type="password" id="login-password" class="form-input" placeholder="密码" required>
-                    <p id="login-error" class="auth-error"></p>
-                    <button type="submit" class="btn btn-primary">登录</button>
-                </form>
+                <form id="login-form"><input type="email" id="login-email" class="form-input" placeholder="邮箱" required><input type="password" id="login-password" class="form-input" placeholder="密码" required><p id="login-error" class="auth-error"></p><button type="submit" class="btn btn-primary">登录</button></form>
                 <p class="auth-toggle-link" onclick="toggleAuthView()">还没有账号？点击注册</p>
             </div>
             <div id="register-view" class="hidden">
                 <h2>注册新账号</h2>
-                <form id="register-form">
-                    <input type="email" id="register-email" class="form-input" placeholder="邮箱" required>
-                    <input type="password" id="register-password" class="form-input" placeholder="密码 (至少6位)" required>
-                    <p id="register-error" class="auth-error"></p>
-                    <button type="submit" class="btn btn-primary">注册</button>
-                </form>
+                <form id="register-form"><input type="email" id="register-email" class="form-input" placeholder="邮箱" required><input type="password" id="register-password" class="form-input" placeholder="密码 (至少6位)" required><p id="register-error" class="auth-error"></p><button type="submit" class="btn btn-primary">注册</button></form>
                 <p class="auth-toggle-link" onclick="toggleAuthView()">已有账号？点击登录</p>
             </div>
         </div>
@@ -145,10 +135,7 @@
             <div class="container">
                 <div class="header-content">
                     <div class="logo">✍️ 高级华文・练习中枢</div>
-                    <div class="header-user-info">
-                        <span id="user-email-display"></span>
-                        <button class="btn btn-danger" onclick="handleLogout()">登出</button>
-                    </div>
+                    <div class="header-user-info"><span id="user-email-display"></span><button class="btn btn-danger" onclick="handleLogout()">登出</button></div>
                 </div>
             </div>
         </header>
@@ -157,18 +144,10 @@
             <div class="container">
                 <div class="content-header">
                     <h1 class="section-title" id="sectionTitle">专项考题一：实用文</h1>
-                    <div class="action-buttons">
-                        <button class="btn btn-primary" onclick="openPracticeModal()">➕ 添加练习</button>
-                        <button class="btn btn-secondary" onclick="openBatchUploadModal()">📁 批量上传</button>
-                        <button class="btn btn-secondary" onclick="exportProgress()">📊 导出进度</button>
-                    </div>
+                    <div class="action-buttons"><button class="btn btn-primary" onclick="openPracticeModal()">➕ 添加练习</button><button class="btn btn-secondary" onclick="openBatchUploadModal()">📁 批量上传</button><button class="btn btn-secondary" onclick="exportProgress()">📊 导出进度</button></div>
                 </div>
-
                 <div class="toolbar">
-                    <div class="search-box">
-                        <span>🔍</span>
-                        <input type="text" placeholder="按名称搜索..." id="searchInput">
-                    </div>
+                    <div class="search-box"><span>🔍</span><input type="text" placeholder="按名称搜索..." id="searchInput"></div>
                     <div class="status-filter" id="statusFilterContainer">
                         <label><input type="radio" name="statusFilter" value="all" checked> <span class="status-indicator all"></span> All</label>
                         <label><input type="radio" name="statusFilter" value="not-started"> <span class="status-indicator not-started"></span> Not Started</label>
@@ -186,7 +165,6 @@
                         <option value="all-sections">🔍 查看全部题型</option>
                     </select>
                 </div>
-
                 <div class="practice-grid" id="practiceGrid"></div>
             </div>
         </main>
@@ -200,15 +178,7 @@
                 <div class="form-group"><label class="form-label" for="practiceType">练习类型</label><select class="form-select" id="practiceType"></select></div>
                 <div class="form-group"><label class="form-label" for="documentContent">练习内容/链接 *</label><textarea class="form-input" id="documentContent" rows="4" placeholder="输入练习内容或粘贴文档链接..." required></textarea></div>
                 <div class="form-group"><label class="form-label" for="contentType">内容类型</label><select class="form-select" id="contentType"><option value="auto">自动检测</option><option value="text">文本内容</option><option value="link">外部链接</option></select></div>
-                <div class="form-group">
-                    <label class="form-label" for="practiceStatus">状态</label>
-                    <select class="form-select" id="practiceStatus">
-                        <option value="not-started">Not Started</option>
-                        <option value="in-progress">In Progress</option>
-                        <option value="practicing">Practicing</option>
-                        <option value="mastered">Mastered</option>
-                    </select>
-                </div>
+                <div class="form-group"><label class="form-label" for="practiceStatus">状态</label><select class="form-select" id="practiceStatus"><option value="not-started">Not Started</option><option value="in-progress">In Progress</option><option value="practicing">Practicing</option><option value="mastered">Mastered</option></select></div>
                 <div class="form-group"><label class="form-label" for="difficultyLevel">难度等级</label><select class="form-select" id="difficultyLevel"><option value="beginner">初级</option><option value="intermediate">中级</option><option value="advanced">高级</option></select></div>
                 <div class="form-group"><label class="form-label" for="estimatedTime">预计时间 (分钟)</label><input type="number" class="form-input" id="estimatedTime" min="5"></div>
                 <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="closePracticeModal()">取消</button><button type="submit" class="btn btn-primary" id="saveButton">保存到云端</button></div>
@@ -313,24 +283,32 @@
         
         function getFilteredData() {
             const searchTerm = searchInput.value.toLowerCase();
-            let practices = [];
+            let allItems = [];
             if (currentSection === 'all-sections') {
-                practices = Object.values(practicesData).flat();
+                allItems = Object.values(practicesData).flat();
             } else {
-                practices = practicesData[currentSection] || [];
+                allItems = practicesData[currentSection] || [];
             }
+            
+            let filteredByStatus = [];
             if (currentStatusFilter !== 'all') {
-                practices = practices.filter(p => p.status === currentStatusFilter);
+                filteredByStatus = allItems.filter(p => p.status === currentStatusFilter);
+            } else {
+                filteredByStatus = allItems;
             }
+            
+            let filteredBySearch = [];
             if (searchTerm) {
-                practices = practices.filter(p => p.name.toLowerCase().includes(searchTerm));
+                filteredBySearch = filteredByStatus.filter(p => p.name.toLowerCase().includes(searchTerm));
+            } else {
+                filteredBySearch = filteredByStatus;
             }
-            return practices.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+            return filteredBySearch.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
         }
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const id = practiceForm.dataset.editingId;
+            const id = Number(practiceForm.dataset.editingId);
             const formData = {
                 name: document.getElementById('practiceName').value,
                 type: document.getElementById('practiceType').value,
@@ -341,10 +319,9 @@
                 estimatedTime: parseInt(document.getElementById('estimatedTime').value) || 30,
             };
             if (id) {
-                const originalSection = practiceForm.dataset.practiceSection || currentSection;
-                const practiceToUpdate = findPractice(id);
-                if (practiceToUpdate) {
-                    Object.assign(practiceToUpdate, formData);
+                const result = findPractice(id);
+                if (result) {
+                    Object.assign(result.practice, formData);
                 }
             } else {
                 if (currentSection === 'all-sections') { alert('请先选择具体的练习分类，然后再添加练习。'); return; }
@@ -359,7 +336,7 @@
         function renderPractices() {
             const filteredData = getFilteredData();
             practiceGrid.innerHTML = '';
-            if (Object.keys(practicesData).length === 0 && !user) return;
+            if (!user) return; 
             if (filteredData.length === 0) {
                 practiceGrid.innerHTML = '<p style="color: #495057; text-align: center; grid-column: 1 / -1; font-size: 1.1rem; padding: 50px 0;">该分类下没有练习。</p>';
                 return;
@@ -369,15 +346,21 @@
             });
         }
         
-        // ... (其他所有函数，如 openPracticeModal, deletePractice, createPracticeCard 等保持不变) ...
         function findPractice(id) { for (const section in practicesData) { const practice = practicesData[section].find(p => p.id == id); if (practice) return {practice, section}; } return null; }
         async function openPracticeModal(id = null) { practiceForm.reset(); practiceForm.dataset.editingId = ''; if (id) { const result = findPractice(id); if (result) { const { practice, section } = result; let practiceSection = section; const types = sectionTypes[practiceSection] || []; practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join(''); modalTitle.textContent = '编辑练习'; document.getElementById('practiceName').value = practice.name; document.getElementById('practiceType').value = practice.type; document.getElementById('documentContent').value = practice.documentContent; document.getElementById('contentType').value = practice.contentType || 'auto'; document.getElementById('practiceStatus').value = practice.status; document.getElementById('difficultyLevel').value = practice.difficulty; document.getElementById('estimatedTime').value = practice.estimatedTime; practiceForm.dataset.editingId = id; practiceForm.dataset.practiceSection = practiceSection; } } else { if (currentSection === 'all-sections') { alert('请先选择具体的练习分类，然后再添加练习。'); return; } updatePracticeTypeOptions(); modalTitle.textContent = '添加新练习'; document.getElementById('practiceStatus').value = 'not-started'; document.getElementById('difficultyLevel').value = 'intermediate'; document.getElementById('estimatedTime').value = 30; if (practiceTypeSelect.options.length > 0) { practiceTypeSelect.selectedIndex = 0; } } practiceModal.style.display = 'flex'; }
         async function deletePractice(id) { if (confirm('确定要删除这个练习吗？此操作将从云端永久删除。')) { for (const sectionKey in practicesData) { const index = practicesData[sectionKey].findIndex(p => p.id == id); if (index > -1) { practicesData[sectionKey].splice(index, 1); break; } } await saveData(); } }
         function changeSection() { currentSection = sectionSelect.value; if (currentSection === 'all-sections') { sectionTitle.textContent = '全部题型总览'; } else { sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text; } renderPractices(); }
         function openBatchUploadModal() { batchUploadModal.style.display = 'flex'; }
-        function createPracticeCard(practice) { const card = document.createElement('div'); card.className = 'practice-card'; card.dataset.id = practice.id; let practiceSection = ''; for (const [sectionKey, practices] of Object.entries(practicesData)) { if (practices.some(p => p.id === practice.id)) { practiceSection = sectionKey; break; } } const headerClass = `card-header-${practiceSection}`; let isLink = false; if (practice.contentType === 'link') { isLink = true; } else if (practice.contentType === 'text') { isLink = false; } else { isLink = practice.documentContent && ( practice.documentContent.trim().startsWith('http://') || practice.documentContent.trim().startsWith('https://') || practice.documentContent.includes('docs.google.com') || practice.documentContent.includes('onedrive.live.com') || practice.documentContent.includes('drive.google.com') || (practice.documentContent.includes('http') && practice.documentContent.trim().split('\n').length <= 3) ); } const actionButton = isLink ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>` : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`; const sectionBadge = currentSection === 'all-sections' ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>` : ''; card.innerHTML = ` <div class="card-header ${headerClass}"> <h3 class="card-title">${practice.name}${sectionBadge}</h3> <p class="card-meta">${practice.type}</p> <button class="card-actions-menu">⋮</button> <div class="card-menu"> <button class="card-menu-item edit" onclick="openPracticeModal(${practice.id})">✏️ 编辑</button> <button class="card-menu-item delete" onclick="deletePractice(${practice.id})">🗑️ 删除</button> </div> </div> <div class="card-content"> <div class="info-grid"> <div class="info-item"><div class="info-label">状态</div><div class="info-value"><span class="status-badge status-${practice.status}">${getStatusText(practice.status)}</span></div></div> <div class="info-item"><div class="info-label">难度</div><div class="info-value difficulty-badge difficulty-${practice.difficulty}">${getDifficultyText(practice.difficulty)}</div></div> <div class="info-item"><div class="info-label">添加日期</div><div class="info-value">${practice.dateAdded}</div></div> <div class="info-item"><div class="info-label">预计时间</div><div class="info-value">${practice.estimatedTime} 分钟</div></div> </div> ${actionButton} </div> `; return card; }
+        function createPracticeCard(practice) { const card = document.createElement('div'); card.className = 'practice-card'; card.dataset.id = practice.id; let practiceSection = ''; for (const [sectionKey, practices] of Object.entries(practicesData)) { if (practices.some(p => p.id === practice.id)) { practiceSection = sectionKey; break; } } if(!practiceSection) return null; const headerClass = `card-header-${practiceSection}`; let isLink = false; if (practice.contentType === 'link') { isLink = true; } else if (practice.contentType === 'text') { isLink = false; } else { isLink = practice.documentContent && ( practice.documentContent.trim().startsWith('http://') || practice.documentContent.trim().startsWith('https://') || practice.documentContent.includes('docs.google.com') || practice.documentContent.includes('onedrive.live.com') || practice.documentContent.includes('drive.google.com') || (practice.documentContent.includes('http') && practice.documentContent.trim().split('\n').length <= 3) ); } const actionButton = isLink ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>` : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`; const sectionBadge = currentSection === 'all-sections' ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>` : ''; card.innerHTML = ` <div class="card-header ${headerClass}"> <h3 class="card-title">${practice.name}${sectionBadge}</h3> <p class="card-meta">${practice.type}</p> <button class="card-actions-menu" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('show')">⋮</button> <div class="card-menu"> <button class="card-menu-item edit" onclick="openPracticeModal(${practice.id})">✏️ 编辑</button> <button class="card-menu-item delete" onclick="deletePractice(${practice.id})">🗑️ 删除</button> </div> </div> <div class="card-content"> <div class="info-grid"> <div class="info-item"><div class="info-label">状态</div><div class="info-value"><span class="status-badge status-${practice.status}">${getStatusText(practice.status)}</span></div></div> <div class="info-item"><div class="info-label">难度</div><div class="info-value difficulty-badge difficulty-${practice.difficulty}">${getDifficultyText(practice.difficulty)}</div></div> <div class="info-item"><div class="info-label">添加日期</div><div class="info-value">${practice.dateAdded}</div></div> <div class="info-item"><div class="info-label">预计时间</div><div class="info-value">${practice.estimatedTime} 分钟</div></div> </div> ${actionButton} </div> `; return card; }
         function getSectionName(sectionKey) { const sectionNames = { 'practical-writing': '实用文', 'composition': '作文', 'language-application': '语文应用', 'reading-1': '阅读理解一', 'reading-2': '阅读理解二', 'summary': '片段缩写' }; return sectionNames[sectionKey] || sectionKey; }
         function updatePracticeTypeOptions() { const types = sectionTypes[currentSection] || []; practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join(''); }
+        function viewContent(id) { const result = findPractice(id); if (!result) return; const { practice } = result; const modal = document.createElement('div'); modal.className = 'modal'; modal.style.display = 'flex'; modal.innerHTML = ` <div class="modal-content"> <div class="modal-header">${practice.name}</div> <div style="margin-bottom: 20px;"> <strong>类型：</strong>${practice.type}<br> <strong>难度：</strong>${getDifficultyText(practice.difficulty)}<br> <strong>预计时间：</strong>${practice.estimatedTime} 分钟 </div> <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; line-height: 1.6;"> ${practice.documentContent} </div> <div class="form-actions"> <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">关闭</button> <button type="button" class="btn btn-primary" onclick="markAsCompleted(${practice.id}); this.closest('.modal').remove();">标记为 Mastered</button> </div> </div> `; document.body.appendChild(modal); }
+        async function markAsCompleted(id) { const result = findPractice(id); if (result) { result.practice.status = 'mastered'; result.practice.completedDate = new Date().toISOString().split('T')[0]; await saveData(); } }
+        function closePracticeModal() { practiceModal.style.display = 'none'; }
+        function closeBatchUploadModal() { batchUploadModal.style.display = 'none'; }
+        function switchUploadTab(tabName) { document.querySelectorAll('.upload-tab').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.upload-tab-nav .btn').forEach(btn => { btn.classList.remove('btn-primary'); btn.classList.add('btn-secondary'); }); document.getElementById(`${tabName}UploadTab`).classList.add('active'); document.getElementById(`${tabName}TabBtn`).classList.add('btn-primary'); }
+        async function processBatchUpload() { const input = document.getElementById('batchPracticeInput').value.trim(); if (!input) return alert('请输入练习信息'); const lines = input.split('\n').filter(line => line.trim()); const newPractices = lines.map((line, index) => { const parts = line.split('|').map(p => p.trim()); if (parts.length < 2) return null; return { id: Date.now() + index, name: parts[0], documentContent: parts[1], type: sectionTypes[currentSection]?.[0] || '练习', difficulty: parts[2] || 'intermediate', estimatedTime: parseInt(parts[3]) || 30, status: 'not-started', dateAdded: new Date().toISOString().split('T')[0] }; }).filter(p => p); if (!practicesData[currentSection]) practicesData[currentSection] = []; practicesData[currentSection].push(...newPractices); await saveData(); closeBatchUploadModal(); alert(`成功批量添加 ${newPractices.length} 个练习！`); }
+        function downloadCSVTemplate() { const headers = "练习名称,类型,练习内容/链接,难度,预计时间(分钟)"; const example = "记叙文：我的爱好,记叙文,以我的爱好为题写一篇记叙文,intermediate,90"; const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers + "\n" + example; const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "华文练习导入模板.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
 
         // === 5. DOMContentLoaded: 初始化和事件绑定 ===
         document.addEventListener('DOMContentLoaded', () => {
@@ -395,12 +378,7 @@
             loginForm.addEventListener('submit', handleLogin);
             registerForm.addEventListener('submit', handleRegister);
             practiceForm.addEventListener('submit', handleFormSubmit);
-            statusFilterContainer.addEventListener('change', (e) => {
-                if (e.target.name === 'statusFilter') {
-                    currentStatusFilter = e.target.value;
-                    renderPractices();
-                }
-            });
+            statusFilterContainer.addEventListener('change', (e) => { if (e.target.name === 'statusFilter') { currentStatusFilter = e.target.value; renderPractices(); } });
             searchInput.addEventListener('input', renderPractices);
             
             setupEventListeners();
@@ -409,12 +387,8 @@
         function setupEventListeners() {
             practiceModal.addEventListener('click', (e) => { if (e.target === practiceModal) closePracticeModal(); });
             batchUploadModal.addEventListener('click', (e) => { if (e.target === batchUploadModal) closeBatchUploadModal(); });
-            practiceGrid.addEventListener('click', e => { const menuButton = e.target.closest('.card-actions-menu'); if (menuButton) { const currentMenu = menuButton.nextElementSibling; const isVisible = currentMenu.classList.contains('show'); document.querySelectorAll('.card-menu.show').forEach(menu => { menu.classList.remove('show'); }); if (!isVisible) { currentMenu.classList.add('show'); } } });
             window.addEventListener('click', e => { if (!e.target.closest('.practice-card')) { document.querySelectorAll('.card-menu.show').forEach(menu => menu.classList.remove('show')); } });
         }
-        
-        function closePracticeModal() { practiceModal.style.display = 'none'; }
-        // ... (其他未变函数)
     </script>
 </body>
 </html>
