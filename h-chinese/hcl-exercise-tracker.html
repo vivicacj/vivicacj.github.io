@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O水准高级华文练习平台</title>
+    <title>O水准高级华文练习平台 (云同步版)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --primary-color: #667eea;
@@ -18,9 +23,7 @@
             --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.15);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -28,346 +31,81 @@
             color: var(--text-color);
             padding-top: 90px;
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-
-        .header {
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 30px;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: white;
-            text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
-        }
-        
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 30px; }
+        .header { background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px); padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.2); position: fixed; top: 0; left: 0; right: 0; z-index: 100; }
+        .header-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; padding: 0 30px; }
+        .logo { font-size: 1.8rem; font-weight: 700; color: white; text-shadow: 1px 1px 5px rgba(0,0,0,0.2); }
         .main-content { padding: 40px 0; }
-        
-        .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--text-on-dark);
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
+        .content-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px; }
+        .section-title { font-size: 2.2rem; font-weight: 700; color: var(--text-on-dark); text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: white;
-            color: var(--primary-color);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
+        .btn { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-primary { background: white; color: var(--primary-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         .btn-primary:hover { background-color: #f8f9fa; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        
-        .btn-secondary {
-            background: rgba(255,255,255,0.2);
-            color: var(--text-on-dark);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: var(--text-on-dark); border: 1px solid rgba(255,255,255,0.3); }
         .btn-secondary:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        .btn-success:hover { background: #218838; transform: translateY(-2px); }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(5px);
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            background: #f1f3f5;
-            border-radius: 8px;
-            padding: 8px 12px;
-            min-width: 250px;
-        }
-        
-        .search-box input {
-            border: none;
-            outline: none;
-            flex: 1;
-            font-size: 14px;
-            background: transparent;
-        }
-        
+        .toolbar { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); border-radius: 12px; box-shadow: var(--shadow-md); margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .search-box { display: flex; align-items: center; background: #f1f3f5; border-radius: 8px; padding: 8px 12px; min-width: 250px; }
+        .search-box input { border: none; outline: none; flex: 1; font-size: 14px; background: transparent; }
         .filter-tabs { display: flex; gap: 8px; }
-        
-        .filter-tab {
-            padding: 8px 16px;
-            background: #e9ecef;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-light);
-        }
-        
-        .filter-tab.active {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .practice-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
-        
-        .practice-card {
-            background: var(--card-background);
-            border-radius: 16px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            overflow: visible;
-            position: relative;
-        }
+        .filter-tab { padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.9rem; font-weight: 500; color: var(--text-light); }
+        .filter-tab.active { background: var(--primary-color); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
+        .practice-card { background: var(--card-background); border-radius: 16px; box-shadow: var(--shadow-md); transition: all 0.3s ease; overflow: visible; position: relative; }
         .practice-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
-        
-        .card-header {
-            padding: 20px;
-            color: white;
-            position: relative;
-            border-radius: 16px 16px 0 0;
-        }
+        .card-header { padding: 20px; color: white; position: relative; border-radius: 16px 16px 0 0; }
         .card-header-practical-writing { background: linear-gradient(135deg, #2b8a3e, #51cf66); }
         .card-header-composition { background: linear-gradient(135deg, #e8590c, #fd7e14); }
         .card-header-language-application { background: linear-gradient(135deg, #c92a2a, #fa5252); }
         .card-header-reading-1 { background: linear-gradient(135deg, #1971c2, #339af0); }
         .card-header-reading-2 { background: linear-gradient(135deg, #0b7285, #15aabf); }
         .card-header-summary { background: linear-gradient(135deg, #a61e4d, #f06595); }
-
-        .card-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-        
+        .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 5px; }
         .card-meta { font-size: 0.85rem; opacity: 0.9; }
-        
         .card-content { padding: 25px; }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .info-item {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-        }
+        .info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .info-item { background: #f8f9fa; border-radius: 8px; padding: 10px; text-align: center; }
         .info-label { font-size: 0.8rem; color: var(--text-light); }
         .info-value { font-weight: 500; }
-
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: white;
-        }
+        .status-badge { padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; color: white; }
         .status-completed { background-color: #28a745; }
         .status-pending { background-color: #fd7e14; }
         .status-new { background-color: #1c7ed6; }
-
-        .difficulty-badge {
-            font-weight: 500;
-        }
+        .difficulty-badge { font-weight: 500; }
         .difficulty-beginner { color: #28a745; }
         .difficulty-intermediate { color: #fd7e14; }
         .difficulty-advanced { color: #c92a2a; }
-        
-        .card-actions-menu {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 1.5rem;
-            line-height: 1;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card-actions-menu:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-        .card-menu {
-            display: none;
-            position: absolute;
-            top: 55px;
-            right: 15px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-            z-index: 10;
-            overflow: hidden;
-            animation: fadeInMenu 0.2s ease-out;
-        }
+        .card-actions-menu { position: absolute; top: 15px; right: 15px; width: 36px; height: 36px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.2); color: white; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color 0.2s; display: flex; align-items: center; justify-content: center; }
+        .card-actions-menu:hover { background: rgba(255, 255, 255, 0.4); }
+        .card-menu { display: none; position: absolute; top: 55px; right: 15px; background: white; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); z-index: 10; overflow: hidden; animation: fadeInMenu 0.2s ease-out; }
         .card-menu.show { display: block; }
         @keyframes fadeInMenu { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 20px;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--text-color);
-        }
-        .card-menu-item:hover {
-            background-color: #f1f3f5;
-        }
+        .card-menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; border: none; background: none; width: 100%; text-align: left; cursor: pointer; font-size: 0.9rem; color: var(--text-color); }
+        .card-menu-item:hover { background-color: #f1f3f5; }
         .card-menu-item.delete { color: #e74c3c; }
-
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 1000;
-            align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 16px; width: 90%;
-            max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            max-height: 90vh; overflow-y: auto;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 1000; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 16px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); max-height: 90vh; overflow-y: auto; }
         .modal-header { font-size: 1.5rem; font-weight: 700; margin-bottom: 20px; }
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-input, .form-select {
-            width: 100%; padding: 12px; border: 1px solid #ced4da;
-            border-radius: 8px; font-size: 1rem; transition: all 0.2s ease;
-        }
-        .form-input:focus, .form-select:focus {
-            outline: none; border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        }
+        .form-input, .form-select { width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-size: 1rem; transition: all 0.2s ease; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2); }
         .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px; }
-        
         #batchUploadModal .modal-content { max-width: 700px; }
         .upload-tab-nav { display: flex; gap: 10px; margin-bottom: 20px; }
         .upload-tab { display: none; }
         .upload-tab.active { display: block; }
-
-        .sync-warning {
-            background: #d1ecf1;
-            border: 1px solid #b6d4da;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #0c5460;
-        }
-        .sync-warning strong { color: #055160; }
-
-        .share-info {
-            background: #d4edda;
-            border: 1px solid #c3e6cb;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #155724;
-        }
-
-        .url-input {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            padding: 10px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            word-break: break-all;
-            margin: 10px 0;
-        }
-        
     </style>
 </head>
 <body>
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">✍️ 高级华文・练习中枢</div>
+                <div class="logo">✍️ 高级华文・练习中枢 (云同步版)</div>
                 <div class="action-buttons">
                     <button class="btn btn-primary" onclick="openPracticeModal()">➕ 添加练习</button>
                     <button class="btn btn-secondary" onclick="openBatchUploadModal()">📁 批量上传</button>
                     <button class="btn btn-secondary" onclick="exportProgress()">📊 导出进度</button>
-                    <button class="btn btn-success" onclick="generateShareUrl()">🔗 生成分享链接</button>
-                    <button class="btn btn-secondary" onclick="clearData()">🗑️ 清空数据</button>
                 </div>
             </div>
         </div>
@@ -403,17 +141,16 @@
                 </div>
             </div>
 
-            <div class="practice-grid" id="practiceGrid"></div>
+            <div class="practice-grid" id="practiceGrid">
+                 <p style="color: white; text-align: center; grid-column: 1 / -1; font-size: 1.1rem; padding: 50px 0;">正在连接云端，请稍候...</p>
+            </div>
         </div>
     </main>
-
+    
     <div class="modal" id="practiceModal">
         <div class="modal-content">
-             <div class="modal-header" id="modalTitle">添加新练习</div>
-             <div class="sync-warning">
-                <strong>跨设备同步：</strong> 使用"生成分享链接"功能可以在不同设备间同步数据，无需注册账号。
-             </div>
-             <form id="practiceForm">
+            <div class="modal-header" id="modalTitle">添加新练习</div>
+            <form id="practiceForm">
                 <div class="form-group">
                     <label class="form-label" for="practiceName">练习名称 *</label>
                     <input type="text" class="form-input" id="practiceName" required>
@@ -436,7 +173,7 @@
                     </select>
                     <small style="color: #6c757d; font-size: 0.85rem;">如果自动检测不准确，请手动选择内容类型</small>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     <label class="form-label" for="practiceStatus">状态</label>
                     <select class="form-select" id="practiceStatus">
                         <option value="new">新题目</option>
@@ -458,18 +195,14 @@
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" onclick="closePracticeModal()">取消</button>
-                    <button type="submit" class="btn btn-primary" id="saveButton">保存</button>
+                    <button type="submit" class="btn btn-primary" id="saveButton">保存到云端</button>
                 </div>
-             </form>
+            </form>
         </div>
     </div>
-    
     <div class="modal" id="batchUploadModal">
         <div class="modal-content">
             <div class="modal-header">批量上传练习</div>
-            <div class="sync-warning">
-                <strong>跨设备同步：</strong> 数据保存后使用"生成分享链接"可在其他设备访问。
-            </div>
              <div class="upload-tab-nav">
                 <button class="btn btn-primary" id="manualTabBtn" onclick="switchUploadTab('manual')">手动输入</button>
                 <button class="btn btn-secondary" id="templateTabBtn" onclick="switchUploadTab('template')">使用模板</button>
@@ -482,125 +215,44 @@
                 <a href="javascript:void(0)" onclick="downloadCSVTemplate()" class="btn btn-secondary" style="margin-bottom: 15px;">📥 下载CSV模板</a>
                 <input type="file" class="form-input" id="csvFileUpload" accept=".csv">
             </div>
-             <div class="form-actions">
+            <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeBatchUploadModal()">取消</button>
                 <button type="button" class="btn btn-primary" onclick="processBatchUpload()">上传</button>
             </div>
         </div>
     </div>
-
-    <div class="modal" id="shareModal">
-        <div class="modal-content">
-            <div class="modal-header">分享数据链接</div>
-            <div class="share-info">
-                <strong>跨设备同步说明：</strong><br>
-                1. 复制下面的链接并保存好<br>
-                2. 在其他设备上访问这个链接即可获取所有数据<br>
-                3. 每次修改数据后需要重新生成新链接
-            </div>
-            <div class="form-group">
-                <label class="form-label">分享链接（点击复制）</label>
-                <div class="url-input" id="shareUrl" onclick="copyShareUrl()" style="cursor: pointer;"></div>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeShareModal()">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="copyShareUrl()">复制链接</button>
-            </div>
-        </div>
-    </div>
-
+    
     <script>
-        // 数据和状态变量
+        // 2. Firebase 配置信息
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+            authDomain: "emath-study-plan.firebaseapp.com",
+            projectId: "emath-study-plan",
+            storageBucket: "emath-study-plan.firebasestorage.app",
+            messagingSenderId: "589299697460",
+            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
+            measurementId: "G-09QVE4GLS0"
+        };
+
+        // 3. Firebase 同步逻辑
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        let user = null;
+        let userDocRef = null;
+
         const sectionTypes = {
-            'practical-writing': [
-                '私人电邮',
-                '公务电邮', 
-                '博客',
-                '网页',
-                '论坛'
-            ],
-            'composition': [
-                '记叙文',
-                '论说文', 
-                '演讲词',
-                '新闻/材料读后感'
-            ],
-            'language-application': [
-                'A. 短文填空',
-                'B. 病句修改'
-            ],
+            'practical-writing': ['私人电邮', '公务电邮', '博客', '网页', '论坛'],
+            'composition': ['记叙文', '论说文', '演讲词', '新闻/材料读后感'],
+            'language-application': ['A. 短文填空', 'B. 病句修改'],
             'reading-1': ['阅读理解一'],
-            'reading-2': ['阅读理解二'], 
+            'reading-2': ['阅读理解二'],
             'summary': ['片段缩写']
         };
 
         const defaultPracticesData = {
-            'practical-writing': [
-                { 
-                    id: 1, 
-                    name: '私人电邮：邀请朋友', 
-                    type: '私人电邮', 
-                    status: 'completed', 
-                    difficulty: 'beginner', 
-                    estimatedTime: 30, 
-                    documentContent: '写一封电邮邀请朋友参加你的生日聚会，包括时间、地点和活动安排。', 
-                    contentType: 'text',
-                    dateAdded: '2024-03-15', 
-                    completedDate: '2024-03-20' 
-                }
-            ],
-            'composition': [
-                { 
-                    id: 11, 
-                    name: '记叙文：难忘的一天', 
-                    type: '记叙文', 
-                    status: 'new', 
-                    difficulty: 'intermediate', 
-                    estimatedTime: 90, 
-                    documentContent: '以"难忘的一天"为题，写一篇记叙文，不少于400字。', 
-                    contentType: 'text',
-                    dateAdded: '2024-09-20' 
-                }
-            ],
-            'language-application': [
-                { 
-                    id: 31, 
-                    name: '短文填空练习（一）', 
-                    type: 'A. 短文填空', 
-                    status: 'new', 
-                    difficulty: 'intermediate', 
-                    estimatedTime: 25, 
-                    documentContent: '根据语境，在空格中填入合适的词语，使文章通顺连贯。', 
-                    contentType: 'text',
-                    dateAdded: '2024-09-28' 
-                },
-                { 
-                    id: 32, 
-                    name: '病句修改练习（一）', 
-                    type: 'B. 病句修改', 
-                    status: 'new', 
-                    difficulty: 'intermediate', 
-                    estimatedTime: 20, 
-                    documentContent: '找出下列句子中的语法错误并改正。', 
-                    contentType: 'text',
-                    dateAdded: '2024-09-28' 
-                }
-            ],
-            'reading-1': [
-                { 
-                    id: 21, 
-                    name: '2023年真题练习', 
-                    type: '阅读理解一', 
-                    status: 'pending', 
-                    difficulty: 'intermediate', 
-                    estimatedTime: 50, 
-                    documentContent: '完成2023年O水准华文阅读理解一的练习题目。', 
-                    contentType: 'text',
-                    dateAdded: '2024-09-25' 
-                }
-            ],
-            'reading-2': [],
-            'summary': []
+            'practical-writing': [], 'composition': [], 'language-application': [],
+            'reading-1': [], 'reading-2': [], 'summary': []
         };
 
         let practicesData = {};
@@ -609,23 +261,51 @@
         let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm;
         let modalTitle, sectionTitle, sectionSelect, practiceTypeSelect;
 
-        // 辅助函数
-        function getStatusText(status) { 
-            return { 'completed': '已完成', 'pending': '进行中', 'new': '新题目' }[status] || '未知'; 
-        }
-        
-        function getDifficultyText(difficulty) { 
-            return { 'beginner': '初级', 'intermediate': '中级', 'advanced': '高级' }[difficulty] || '中级'; 
+        auth.onAuthStateChanged(async (firebaseUser) => {
+            if (firebaseUser) {
+                user = firebaseUser;
+                userDocRef = db.collection('userPractices').doc(user.uid);
+                await loadData();
+            } else {
+                auth.signInAnonymously().catch(error => {
+                    console.error("Anonymous sign-in failed:", error);
+                    alert("无法连接到云端服务，请检查网络连接或 Firebase 配置。");
+                });
+            }
+        });
+
+        async function loadData() {
+            if (!userDocRef) return;
+            try {
+                const docSnap = await userDocRef.get();
+                if (docSnap.exists) {
+                    practicesData = docSnap.data();
+                    for (const key in sectionTypes) {
+                        if (!practicesData[key]) {
+                            practicesData[key] = [];
+                        }
+                    }
+                } else {
+                    practicesData = defaultPracticesData;
+                    await saveData();
+                }
+            } catch (error) {
+                console.error("Error loading data from Firestore:", error);
+                alert("从云端加载数据失败！");
+                practicesData = defaultPracticesData;
+            }
+            renderPractices();
         }
 
-        // 数据持久化
-        function loadData() {
-            const saved = JSON.parse(localStorage.getItem('hclPracticesData') || '{}');
-            practicesData = Object.keys(saved).length > 0 ? saved : defaultPracticesData;
-        }
-
-        function saveData() {
-            localStorage.setItem('hclPracticesData', JSON.stringify(practicesData));
+        async function saveData() {
+            if (!userDocRef) return;
+            try {
+                await userDocRef.set(practicesData, { merge: true });
+                console.log("Data saved to Firestore.");
+            } catch (error) {
+                console.error("Error saving data to Firestore:", error);
+                alert("保存数据到云端失败！");
+            }
         }
 
         function findPractice(id) {
@@ -636,73 +316,16 @@
             return null;
         }
 
-        // URL分享功能
-        function generateShareUrl() {
-            try {
-                const dataString = JSON.stringify(practicesData);
-                const encoded = btoa(encodeURIComponent(dataString));
-                const currentUrl = window.location.href.split('?')[0];
-                const shareUrl = `${currentUrl}?data=${encoded}`;
-                
-                document.getElementById('shareUrl').textContent = shareUrl;
-                document.getElementById('shareModal').style.display = 'flex';
-            } catch (error) {
-                alert('生成分享链接失败：数据太大，请尝试导出功能');
-            }
-        }
+        function getStatusText(status) { return { 'completed': '已完成', 'pending': '进行中', 'new': '新题目' }[status] || '未知'; }
+        function getDifficultyText(difficulty) { return { 'beginner': '初级', 'intermediate': '中级', 'advanced': '高级' }[difficulty] || '中级'; }
 
-        function copyShareUrl() {
-            const urlText = document.getElementById('shareUrl').textContent;
-            navigator.clipboard.writeText(urlText).then(() => {
-                alert('链接已复制到剪贴板！');
-            }).catch(() => {
-                // fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = urlText;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('链接已复制到剪贴板！');
-            });
-        }
-
-        function closeShareModal() {
-            document.getElementById('shareModal').style.display = 'none';
-        }
-
-        function loadFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const dataParam = urlParams.get('data');
-            
-            if (dataParam) {
-                try {
-                    const decoded = decodeURIComponent(atob(dataParam));
-                    const urlData = JSON.parse(decoded);
-                    practicesData = urlData;
-                    saveData(); // 保存到本地
-                    
-                    // 清除URL参数
-                    const newUrl = window.location.href.split('?')[0];
-                    window.history.replaceState({}, document.title, newUrl);
-                    
-                    alert('已从分享链接导入数据！');
-                    renderPractices();
-                } catch (error) {
-                    console.error('从URL加载数据失败:', error);
-                }
-            }
-        }
-
-        // 全局函数定义
-        function openPracticeModal(id = null) {
+        async function openPracticeModal(id = null) {
             practiceForm.reset();
             practiceForm.dataset.editingId = '';
             
             if (id) {
                 const practice = findPractice(id);
                 if (practice) {
-                    // 找到这个练习所属的分类
                     let practiceSection = currentSection;
                     if (currentSection === 'all-sections') {
                         for (const [sectionKey, practices] of Object.entries(practicesData)) {
@@ -713,7 +336,6 @@
                         }
                     }
                     
-                    // 根据练习所属分类更新练习类型选项
                     const types = sectionTypes[practiceSection] || [];
                     practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join('');
                     
@@ -726,10 +348,9 @@
                     document.getElementById('difficultyLevel').value = practice.difficulty;
                     document.getElementById('estimatedTime').value = practice.estimatedTime;
                     practiceForm.dataset.editingId = id;
-                    practiceForm.dataset.practiceSection = practiceSection; // 保存原始分类
+                    practiceForm.dataset.practiceSection = practiceSection;
                 }
             } else {
-                // 新增练习时，只在非全部题型视图中允许
                 if (currentSection === 'all-sections') {
                     alert('请先选择具体的练习分类，然后再添加练习。');
                     return;
@@ -746,8 +367,8 @@
             practiceModal.style.display = 'flex';
         }
 
-        function deletePractice(id) {
-            if (confirm('确定要删除这个练习吗？此操作无法撤销。')) {
+        async function deletePractice(id) {
+            if (confirm('确定要删除这个练习吗？此操作将从云端永久删除。')) {
                 for (const sectionKey in practicesData) {
                     const index = practicesData[sectionKey].findIndex(p => p.id == id);
                     if (index > -1) {
@@ -755,7 +376,7 @@
                         break;
                     }
                 }
-                saveData();
+                await saveData();
                 renderPractices();
             }
         }
@@ -765,7 +386,6 @@
             
             if (currentSection === 'all-sections') {
                 sectionTitle.textContent = '全部题型总览';
-                // 隐藏添加练习按钮，因为无法确定要添加到哪个分类
                 document.querySelector('.btn-primary').style.display = 'none';
             } else {
                 sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text;
@@ -781,16 +401,12 @@
             renderPractices();
         }
 
-        function openBatchUploadModal() { 
-            batchUploadModal.style.display = 'flex'; 
-        }
-
+        function openBatchUploadModal() { batchUploadModal.style.display = 'flex'; }
+        
         function exportProgress() {
-            const allPractices = Object.values(practicesData).flat();
+             const allPractices = Object.values(practicesData).flat();
             if(allPractices.length === 0) return alert('没有进度可以导出。');
-
             let content = `O水准高级华文练习进度报告\n生成时间：${new Date().toLocaleString('zh-CN')}\n==========================\n\n`;
-            
             Object.keys(sectionTypes).forEach(sectionKey => {
                 const sectionName = sectionSelect.querySelector(`option[value="${sectionKey}"]`).textContent;
                 content += `${sectionName}\n----------------\n`;
@@ -808,42 +424,28 @@
                     content += "暂无练习\n\n";
                 }
             });
-
             const totalPractices = allPractices.length;
             const completedPractices = allPractices.filter(p => p.status === 'completed').length;
             const pendingPractices = allPractices.filter(p => p.status === 'pending').length;
             const newPractices = allPractices.filter(p => p.status === 'new').length;
-            
             content += `\n统计信息\n----------------\n`;
             content += `总练习数：${totalPractices}\n`;
-            content += `已完成：${completedPractices} (${((completedPractices/totalPractices)*100).toFixed(1)}%)\n`;
+            content += `已完成：${completedPractices} (${((completedPractices/totalPractices)*100||0).toFixed(1)}%)\n`;
             content += `进行中：${pendingPractices}\n`;
             content += `新题目：${newPractices}\n`;
-            
-             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-             const url = URL.createObjectURL(blob);
-             const link = document.createElement("a");
-             link.setAttribute("href", url);
-             link.setAttribute("download", `华文练习进度报告_${new Date().toISOString().split('T')[0]}.txt`);
-             document.body.appendChild(link);
-             link.click();
-             document.body.removeChild(link);
-             alert("进度报告已导出为 TXT 文件。")
-        }
-
-        function clearData() {
-            if (confirm('确定要清空所有数据吗？此操作无法撤销。建议先导出备份。')) {
-                localStorage.removeItem('hclPracticesData');
-                practicesData = defaultPracticesData;
-                renderPractices();
-                alert('数据已清空并恢复为默认数据。');
-            }
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `华文练习进度报告_${new Date().toISOString().split('T')[0]}.txt`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function viewContent(id) {
             const practice = findPractice(id);
             if (!practice) return;
-            
             const modal = document.createElement('div');
             modal.className = 'modal';
             modal.style.display = 'flex';
@@ -875,24 +477,18 @@
             }
         }
 
-        function markAsCompleted(id) {
+        async function markAsCompleted(id) {
             const practice = findPractice(id);
             if (practice) {
                 practice.status = 'completed';
                 practice.completedDate = new Date().toISOString().split('T')[0];
-                saveData();
+                await saveData();
                 renderPractices();
             }
         }
 
-        function closePracticeModal() { 
-            practiceModal.style.display = 'none'; 
-        }
-
-        function closeBatchUploadModal() { 
-            batchUploadModal.style.display = 'none'; 
-        }
-
+        function closePracticeModal() { practiceModal.style.display = 'none'; }
+        function closeBatchUploadModal() { batchUploadModal.style.display = 'none'; }
         function switchUploadTab(tabName) {
             document.querySelectorAll('.upload-tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.upload-tab-nav .btn').forEach(btn => {
@@ -903,36 +499,34 @@
             document.getElementById(`${tabName}TabBtn`).classList.add('btn-primary');
         }
 
-        function processBatchUpload() {
+        async function processBatchUpload() {
             const input = document.getElementById('batchPracticeInput').value.trim();
-            if(!input) return alert('请输入练习信息');
-
+            if (!input) return alert('请输入练习信息');
             const lines = input.split('\n').filter(line => line.trim());
             const newPractices = lines.map((line, index) => {
-                 const parts = line.split('|').map(p => p.trim());
-                 if (parts.length < 2) return null;
-                 return {
-                    id: Date.now() + index, 
-                    name: parts[0], 
+                const parts = line.split('|').map(p => p.trim());
+                if (parts.length < 2) return null;
+                return {
+                    id: Date.now() + index,
+                    name: parts[0],
                     documentContent: parts[1],
-                    type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2]) 
-                        ? parts[2] 
+                    type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2])
+                        ? parts[2]
                         : sectionTypes[currentSection]?.[0] || '练习',
                     difficulty: parts[3] || 'intermediate',
                     estimatedTime: parseInt(parts[4]) || 30,
-                    status: 'new', 
+                    status: 'new',
                     dateAdded: new Date().toISOString().split('T')[0]
-                 };
+                };
             }).filter(p => p);
-
             if (!practicesData[currentSection]) practicesData[currentSection] = [];
             practicesData[currentSection].push(...newPractices);
-            saveData();
+            await saveData();
             renderPractices();
             closeBatchUploadModal();
             alert(`成功批量添加 ${newPractices.length} 个练习！`);
         }
-
+        
         function downloadCSVTemplate() {
              const headers = "练习名称,类型,练习内容/链接,难度,预计时间(分钟)";
              const example = "记叙文：我的爱好,记叙文,以我的爱好为题写一篇记叙文,intermediate,90";
@@ -954,14 +548,11 @@
         function getFilteredData() {
             const searchTerm = searchInput.value.toLowerCase();
             let practices = [];
-            
             if (currentSection === 'all-sections') {
-                // 显示所有分类的练习
                 practices = Object.values(practicesData).flat();
             } else {
                 practices = practicesData[currentSection] || [];
             }
-            
             if (currentFilter !== 'all') {
                 practices = practices.filter(p => p.status === currentFilter);
             }
@@ -975,11 +566,8 @@
             const card = document.createElement('div');
             card.className = 'practice-card';
             card.dataset.id = practice.id;
-
-            // 确定练习所属的分类
             let practiceSection = currentSection;
             if (currentSection === 'all-sections') {
-                // 在全部题型视图中，需要找到这个练习属于哪个分类
                 for (const [sectionKey, practices] of Object.entries(practicesData)) {
                     if (practices.some(p => p.id === practice.id)) {
                         practiceSection = sectionKey;
@@ -987,17 +575,13 @@
                     }
                 }
             }
-
             const headerClass = `card-header-${practiceSection}`;
-
-            // 判断内容类型 - 优先使用用户设置，其次自动检测
             let isLink = false;
             if (practice.contentType === 'link') {
                 isLink = true;
             } else if (practice.contentType === 'text') {
                 isLink = false;
             } else {
-                // 自动检测 (contentType === 'auto' 或 未设置)
                 isLink = practice.documentContent && (
                     practice.documentContent.trim().startsWith('http://') || 
                     practice.documentContent.trim().startsWith('https://') ||
@@ -1007,16 +591,12 @@
                     (practice.documentContent.includes('http') && practice.documentContent.trim().split('\n').length <= 3)
                 );
             }
-
             const actionButton = isLink 
                 ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>`
                 : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`;
-
-            // 在全部题型视图中显示所属分类
             const sectionBadge = currentSection === 'all-sections' 
                 ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>`
                 : '';
-
             card.innerHTML = `
                 <div class="card-header ${headerClass}">
                     <h3 class="card-title">${practice.name}${sectionBadge}</h3>
@@ -1038,12 +618,12 @@
                             <div class="info-value difficulty-badge difficulty-${practice.difficulty}">${getDifficultyText(practice.difficulty)}</div>
                         </div>
                         <div class="info-item">
-                             <div class="info-label">添加日期</div>
-                             <div class="info-value">${practice.dateAdded}</div>
+                            <div class="info-label">添加日期</div>
+                            <div class="info-value">${practice.dateAdded}</div>
                         </div>
                         <div class="info-item">
-                             <div class="info-label">预计时间</div>
-                             <div class="info-value">${practice.estimatedTime} 分钟</div>
+                            <div class="info-label">预计时间</div>
+                            <div class="info-value">${practice.estimatedTime} 分钟</div>
                         </div>
                     </div>
                     ${actionButton}
@@ -1054,12 +634,8 @@
 
         function getSectionName(sectionKey) {
             const sectionNames = {
-                'practical-writing': '实用文',
-                'composition': '作文',
-                'language-application': '语文应用',
-                'reading-1': '阅读理解一',
-                'reading-2': '阅读理解二',
-                'summary': '片段缩写'
+                'practical-writing': '实用文', 'composition': '作文', 'language-application': '语文应用',
+                'reading-1': '阅读理解一', 'reading-2': '阅读理解二', 'summary': '片段缩写'
             };
             return sectionNames[sectionKey] || sectionKey;
         }
@@ -1067,6 +643,7 @@
         function renderPractices() {
             const filteredData = getFilteredData();
             practiceGrid.innerHTML = '';
+            if (Object.keys(practicesData).length === 0) return;
             if (filteredData.length === 0) {
                 practiceGrid.innerHTML = '<p style="color: #7b8b9a; text-align: center; grid-column: 1 / -1; font-size: 1.1rem; padding: 50px 0;">该分类下没有练习。</p>';
                 return;
@@ -1076,7 +653,7 @@
             });
         }
 
-        function handleFormSubmit(e) {
+        async function handleFormSubmit(e) {
             e.preventDefault();
             const id = practiceForm.dataset.editingId;
             const formData = {
@@ -1090,7 +667,6 @@
             };
 
             if (id) {
-                // 编辑现有练习
                 const originalSection = practiceForm.dataset.practiceSection || currentSection;
                 const index = practicesData[originalSection].findIndex(p => p.id == id);
                 if (index !== -1) {
@@ -1098,23 +674,18 @@
                     practicesData[originalSection][index] = { ...existingPractice, ...formData };
                 }
             } else {
-                // 新增练习
-                if (currentSection === 'all-sections') {
-                    alert('请先选择具体的练习分类，然后再添加练习。');
-                    return;
-                }
+                if (currentSection === 'all-sections') return;
                 const newPractice = { ...formData, id: Date.now(), dateAdded: new Date().toISOString().split('T')[0] };
                 if (!practicesData[currentSection]) practicesData[currentSection] = [];
                 practicesData[currentSection].push(newPractice);
             }
-            saveData();
+            await saveData();
             renderPractices();
             closePracticeModal();
         }
 
         function setupEventListeners() {
             searchInput.addEventListener('input', renderPractices);
-
             document.querySelectorAll('.filter-tab').forEach(tab => {
                 tab.addEventListener('click', e => {
                     document.querySelector('.filter-tab.active').classList.remove('active');
@@ -1123,29 +694,21 @@
                     renderPractices();
                 });
             });
-
-            // 确保表单提交事件正确绑定
             practiceForm.addEventListener('submit', handleFormSubmit);
-            
-            // 也给保存按钮添加点击事件作为备用
             document.getElementById('saveButton').addEventListener('click', function(e) {
                 e.preventDefault();
                 handleFormSubmit(e);
             });
-
             practiceModal.addEventListener('click', (e) => { if (e.target === practiceModal) closePracticeModal(); });
             batchUploadModal.addEventListener('click', (e) => { if (e.target === batchUploadModal) closeBatchUploadModal(); });
-
             practiceGrid.addEventListener('click', e => {
                 const menuButton = e.target.closest('.card-actions-menu');
                 if (menuButton) {
                     const currentMenu = menuButton.nextElementSibling;
                     const isVisible = currentMenu.classList.contains('show');
-                    
                     document.querySelectorAll('.card-menu.show').forEach(menu => {
                         menu.classList.remove('show');
                     });
-                    
                     if (!isVisible) {
                         currentMenu.classList.add('show');
                     }
@@ -1158,7 +721,6 @@
             });
         }
 
-        // 初始化
         document.addEventListener('DOMContentLoaded', () => {
             practiceGrid = document.getElementById('practiceGrid');
             searchInput = document.getElementById('searchInput');
@@ -1169,13 +731,7 @@
             sectionTitle = document.getElementById('sectionTitle');
             sectionSelect = document.getElementById('sectionSelect');
             practiceTypeSelect = document.getElementById('practiceType');
-
-            // 检查URL中是否有分享数据
-            loadFromUrl();
             
-            // 加载本地数据
-            loadData();
-            renderPractices();
             setupEventListeners();
         });
     </script>
