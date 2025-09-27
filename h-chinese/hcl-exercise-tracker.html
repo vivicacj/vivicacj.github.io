@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O水准高级华文练习平台 (最终修复版)</title>
+    <title>O水准高级华文练习平台 (最终版)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -55,9 +55,9 @@
         .toolbar { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: rgba(255,255,255,0.9); backdrop-filter: blur(5px); border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
         .search-box { display: flex; align-items: center; background: #f1f3f5; border-radius: 8px; padding: 8px 12px; min-width: 250px; flex-grow: 1; }
         .search-box input { border: none; outline: none; flex: 1; font-size: 14px; background: transparent; }
-        .filter-tabs { display: flex; gap: 8px; }
-        .filter-tab { padding: 8px 16px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; font-size: 0.9rem; font-weight: 500; color: var(--text-light); }
-        .filter-tab.active { background: var(--primary-color); color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .filter-checkboxes { display: flex; gap: 15px; align-items: center; color: var(--text-color); font-size: 0.9rem;}
+        .filter-checkboxes label { cursor: pointer; display: flex; align-items: center; gap: 5px; user-select: none;}
+        .filter-checkboxes input { cursor: pointer; }
         .practice-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
         .practice-card { background: var(--card-background); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; overflow: visible; position: relative; }
         .practice-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); }
@@ -161,6 +161,11 @@
                         <span>🔍</span>
                         <input type="text" placeholder="按名称搜索..." id="searchInput">
                     </div>
+                    <div class="filter-checkboxes" id="statusFilters">
+                        <label><input type="checkbox" name="status" value="new" checked> 新题目</label>
+                        <label><input type="checkbox" name="status" value="pending" checked> 进行中</label>
+                        <label><input type="checkbox" name="status" value="completed" checked> 已完成</label>
+                    </div>
                     <select class="form-input" id="sectionSelect" onchange="changeSection()" style="max-width: 250px; min-width: 200px;">
                         <option value="practical-writing">专项考题一：实用文</option>
                         <option value="composition">专项考题二：作文</option>
@@ -232,8 +237,7 @@
         const defaultPracticesData = { 'practical-writing': [], 'composition': [], 'language-application': [], 'reading-1': [], 'reading-2': [], 'summary': [] };
         let practicesData = {};
         let currentSection = 'practical-writing';
-        let currentFilter = 'all';
-        let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm;
+        let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm, statusFilters;
         let modalTitle, sectionTitle, sectionSelect, practiceTypeSelect;
 
         auth.onAuthStateChanged(firebaseUser => {
@@ -274,25 +278,26 @@
         function findPractice(id) { for (const section in practicesData) { const practice = practicesData[section].find(p => p.id == id); if (practice) return practice; } return null; }
         function getStatusText(status) { return { 'completed': '已完成', 'pending': '进行中', 'new': '新题目' }[status] || '未知'; }
         function getDifficultyText(difficulty) { return { 'beginner': '初级', 'intermediate': '中级', 'advanced': '高级' }[difficulty] || '中级'; }
-        async function openPracticeModal(id = null) { practiceForm.reset(); practiceForm.dataset.editingId = ''; if (id) { const practice = findPractice(id); if (practice) { let practiceSection = currentSection; if (currentSection === 'all-sections') { for (const [sectionKey, practices] of Object.entries(practicesData)) { if (practices.some(p => p.id === practice.id)) { practiceSection = sectionKey; break; } } } const types = sectionTypes[practiceSection] || []; practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join(''); modalTitle.textContent = '编辑练习'; document.getElementById('practiceName').value = practice.name; document.getElementById('practiceType').value = practice.type; document.getElementById('documentContent').value = practice.documentContent; document.getElementById('contentType').value = practice.contentType || 'auto'; document.getElementById('practiceStatus').value = practice.status; document.getElementById('difficultyLevel').value = practice.difficulty; document.getElementById('estimatedTime').value = practice.estimatedTime; practiceForm.dataset.editingId = id; practiceForm.dataset.practiceSection = practiceSection; } } else { if (currentSection === 'all-sections') { alert('请先选择具体的练习分类，然后再添加练习。'); return; } updatePracticeTypeOptions(); modalTitle.textContent = '添加新练习'; document.getElementById('practiceStatus').value = 'new'; document.getElementById('difficultyLevel').value = 'intermediate'; document.getElementById('estimatedTime').value = 30; if (practiceTypeSelect.options.length > 0) { practiceTypeSelect.selectedIndex = 0; } } practiceModal.style.display = 'flex'; }
-        async function deletePractice(id) { if (confirm('确定要删除这个练习吗？此操作将从云端永久删除。')) { for (const sectionKey in practicesData) { const index = practicesData[sectionKey].findIndex(p => p.id == id); if (index > -1) { practicesData[sectionKey].splice(index, 1); break; } } await saveData(); } }
-        function changeSection() { currentSection = sectionSelect.value; if (currentSection === 'all-sections') { sectionTitle.textContent = '全部题型总览'; } else { sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text; } renderPractices(); }
-        function openBatchUploadModal() { batchUploadModal.style.display = 'flex'; }
-        function exportProgress() { const allPractices = Object.values(practicesData).flat(); if(allPractices.length === 0) return alert('没有进度可以导出。'); let content = `O水准高级华文练习进度报告\n生成时间：${new Date().toLocaleString('zh-CN')}\n==========================\n\n`; Object.keys(sectionTypes).forEach(sectionKey => { const sectionName = sectionSelect.querySelector(`option[value="${sectionKey}"]`).textContent; content += `${sectionName}\n----------------\n`; const sectionPractices = practicesData[sectionKey] || []; if (sectionPractices.length > 0) { sectionPractices.forEach(p => { content += `- [${p.status === 'completed' ? 'x' : ' '}] ${p.name} (${p.type})\n`; content += `  难度：${getDifficultyText(p.difficulty)} | 时间：${p.estimatedTime}分钟\n`; if (p.status === 'completed' && p.completedDate) { content += `  完成日期：${p.completedDate}\n`; } content += '\n'; }); } else { content += "暂无练习\n\n"; } }); const totalPractices = allPractices.length; const completedPractices = allPractices.filter(p => p.status === 'completed').length; const pendingPractices = allPractices.filter(p => p.status === 'pending').length; const newPractices = allPractices.filter(p => p.status === 'new').length; content += `\n统计信息\n----------------\n`; content += `总练习数：${totalPractices}\n`; content += `已完成：${completedPractices} (${((completedPractices/totalPractices)*100||0).toFixed(1)}%)\n`; content += `进行中：${pendingPractices}\n`; content += `新题目：${newPractices}\n`; const blob = new Blob([content], { type: 'text/plain;charset=utf-8' }); const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `华文练习进度报告_${new Date().toISOString().split('T')[0]}.txt`); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
-        function viewContent(id) { const practice = findPractice(id); if (!practice) return; const modal = document.createElement('div'); modal.className = 'modal'; modal.style.display = 'flex'; modal.innerHTML = ` <div class="modal-content"> <div class="modal-header">${practice.name}</div> <div style="margin-bottom: 20px;"> <strong>类型：</strong>${practice.type}<br> <strong>难度：</strong>${getDifficultyText(p.difficulty)}<br> <strong>预计时间：</strong>${practice.estimatedTime} 分钟 </div> <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; line-height: 1.6;"> ${practice.documentContent} </div> <div class="form-actions"> <button class="btn btn-secondary" onclick="closeContentModal(this)">关闭</button> <button class="btn btn-primary" onclick="markAsCompleted(${practice.id}); closeContentModal(this);">标记为已完成</button> </div> </div> `; document.body.appendChild(modal); modal.addEventListener('click', (e) => { if (e.target === modal) closeContentModal(modal); }); }
-        function closeContentModal(element) { const modal = element.closest ? element.closest('.modal') : element; if (modal) { document.body.removeChild(modal); } }
-        async function markAsCompleted(id) { const practice = findPractice(id); if (practice) { practice.status = 'completed'; practice.completedDate = new Date().toISOString().split('T')[0]; await saveData(); } }
-        function closePracticeModal() { practiceModal.style.display = 'none'; }
-        function closeBatchUploadModal() { batchUploadModal.style.display = 'none'; }
-        function switchUploadTab(tabName) { document.querySelectorAll('.upload-tab').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.upload-tab-nav .btn').forEach(btn => { btn.classList.remove('btn-primary'); btn.classList.add('btn-secondary'); }); document.getElementById(`${tabName}UploadTab`).classList.add('active'); document.getElementById(`${tabName}TabBtn`).classList.add('btn-primary'); }
-        async function processBatchUpload() { const input = document.getElementById('batchPracticeInput').value.trim(); if (!input) return alert('请输入练习信息'); const lines = input.split('\n').filter(line => line.trim()); const newPractices = lines.map((line, index) => { const parts = line.split('|').map(p => p.trim()); if (parts.length < 2) return null; return { id: Date.now() + index, name: parts[0], documentContent: parts[1], type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2]) ? parts[2] : sectionTypes[currentSection]?.[0] || '练习', difficulty: parts[3] || 'intermediate', estimatedTime: parseInt(parts[4]) || 30, status: 'new', dateAdded: new Date().toISOString().split('T')[0] }; }).filter(p => p); if (!practicesData[currentSection]) practicesData[currentSection] = []; practicesData[currentSection].push(...newPractices); await saveData(); closeBatchUploadModal(); alert(`成功批量添加 ${newPractices.length} 个练习！`); }
-        function downloadCSVTemplate() { const headers = "练习名称,类型,练习内容/链接,难度,预计时间(分钟)"; const example = "记叙文：我的爱好,记叙文,以我的爱好为题写一篇记叙文,intermediate,90"; const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers + "\n" + example; const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "华文练习导入模板.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
-        function updatePracticeTypeOptions() { const types = sectionTypes[currentSection] || []; practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join(''); }
-        function getFilteredData() { const searchTerm = searchInput.value.toLowerCase(); let practices = []; if (currentSection === 'all-sections') { practices = Object.values(practicesData).flat(); } else { practices = practicesData[currentSection] || []; } if (currentFilter !== 'all') { practices = practices.filter(p => p.status === currentFilter); } if (searchTerm) { practices = practices.filter(p => p.name.toLowerCase().includes(searchTerm)); } return practices.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded)); }
-        function createPracticeCard(practice) { const card = document.createElement('div'); card.className = 'practice-card'; card.dataset.id = practice.id; let practiceSection = currentSection; if (currentSection === 'all-sections') { for (const [sectionKey, practices] of Object.entries(practicesData)) { if (practices.some(p => p.id === practice.id)) { practiceSection = sectionKey; break; } } } const headerClass = `card-header-${practiceSection}`; let isLink = false; if (practice.contentType === 'link') { isLink = true; } else if (practice.contentType === 'text') { isLink = false; } else { isLink = practice.documentContent && ( practice.documentContent.trim().startsWith('http://') || practice.documentContent.trim().startsWith('https://') || practice.documentContent.includes('docs.google.com') || practice.documentContent.includes('onedrive.live.com') || practice.documentContent.includes('drive.google.com') || (practice.documentContent.includes('http') && practice.documentContent.trim().split('\n').length <= 3) ); } const actionButton = isLink ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>` : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`; const sectionBadge = currentSection === 'all-sections' ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>` : ''; card.innerHTML = ` <div class="card-header ${headerClass}"> <h3 class="card-title">${practice.name}${sectionBadge}</h3> <p class="card-meta">${practice.type}</p> <button class="card-actions-menu">⋮</button> <div class="card-menu"> <button class="card-menu-item edit" onclick="openPracticeModal(${practice.id})">✏️ 编辑</button> <button class="card-menu-item delete" onclick="deletePractice(${practice.id})">🗑️ 删除</button> </div> </div> <div class="card-content"> <div class="info-grid"> <div class="info-item"> <div class="info-label">状态</div> <div class="info-value"><span class="status-badge status-${practice.status}">${getStatusText(practice.status)}</span></div> </div> <div class="info-item"> <div class="info-label">难度</div> <div class="info-value difficulty-badge difficulty-${practice.difficulty}">${getDifficultyText(practice.difficulty)}</div> </div> <div class="info-item"> <div class="info-label">添加日期</div> <div class="info-value">${practice.dateAdded}</div> </div> <div class="info-item"> <div class="info-label">预计时间</div> <div class="info-value">${practice.estimatedTime} 分钟</div> </div> </div> ${actionButton} </div> `; return card; }
-        function getSectionName(sectionKey) { const sectionNames = { 'practical-writing': '实用文', 'composition': '作文', 'language-application': '语文应用', 'reading-1': '阅读理解一', 'reading-2': '阅读理解二', 'summary': '片段缩写' }; return sectionNames[sectionKey] || sectionKey; }
-        function renderPractices() { const filteredData = getFilteredData(); practiceGrid.innerHTML = ''; if (Object.keys(practicesData).length === 0 && !user) return; if (filteredData.length === 0) { practiceGrid.innerHTML = '<p style="color: #7b8b9a; text-align: center; grid-column: 1 / -1; font-size: 1.1rem; padding: 50px 0;">该分类下没有练习。</p>'; return; } filteredData.forEach(practice => { practiceGrid.appendChild(createPracticeCard(practice)); }); }
-        async function handleFormSubmit(e) { e.preventDefault(); const id = practiceForm.dataset.editingId; const formData = { name: document.getElementById('practiceName').value, type: document.getElementById('practiceType').value, documentContent: document.getElementById('documentContent').value, contentType: document.getElementById('contentType').value, status: document.getElementById('practiceStatus').value, difficulty: document.getElementById('difficultyLevel').value, estimatedTime: parseInt(document.getElementById('estimatedTime').value) || 30, }; if (id) { const originalSection = practiceForm.dataset.practiceSection || currentSection; const index = practicesData[originalSection].findIndex(p => p.id == id); if (index !== -1) { const existingPractice = practicesData[originalSection][index]; practicesData[originalSection][index] = { ...existingPractice, ...formData }; } } else { if (currentSection === 'all-sections') {alert('请先选择具体的练习分类，然后再添加练习。'); return;} const newPractice = { ...formData, id: Date.now(), dateAdded: new Date().toISOString().split('T')[0] }; if (!practicesData[currentSection]) practicesData[currentSection] = []; practicesData[currentSection].push(newPractice); } await saveData(); closePracticeModal(); }
+        
+        function getFilteredData() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const selectedStatuses = Array.from(statusFilters.querySelectorAll('input:checked')).map(cb => cb.value);
+            let practices = [];
+            if (currentSection === 'all-sections') {
+                practices = Object.values(practicesData).flat();
+            } else {
+                practices = practicesData[currentSection] || [];
+            }
+            if (selectedStatuses.length > 0) {
+                 practices = practices.filter(p => selectedStatuses.includes(p.status));
+            } else {
+                practices = [];
+            }
+            if (searchTerm) {
+                practices = practices.filter(p => p.name.toLowerCase().includes(searchTerm));
+            }
+            return practices.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+        }
         
         document.addEventListener('DOMContentLoaded', () => {
             practiceGrid = document.getElementById('practiceGrid');
@@ -304,24 +309,118 @@
             sectionTitle = document.getElementById('sectionTitle');
             sectionSelect = document.getElementById('sectionSelect');
             practiceTypeSelect = document.getElementById('practiceType');
+            statusFilters = document.getElementById('statusFilters');
             
             loginForm.addEventListener('submit', handleLogin);
             registerForm.addEventListener('submit', handleRegister);
-            
-            // 关键修复：将 practiceForm 的事件监听加回来！
             practiceForm.addEventListener('submit', handleFormSubmit);
-
+            statusFilters.addEventListener('change', renderPractices);
+            searchInput.addEventListener('input', renderPractices);
+            
             setupEventListeners();
         });
 
         function setupEventListeners() {
-            searchInput.addEventListener('input', renderPractices);
-            document.querySelectorAll('.filter-tab').forEach(tab => { tab.addEventListener('click', e => { document.querySelector('.filter-tab.active').classList.remove('active'); e.target.classList.add('active'); currentFilter = e.target.dataset.filter; renderPractices(); }); });
             practiceModal.addEventListener('click', (e) => { if (e.target === practiceModal) closePracticeModal(); });
             batchUploadModal.addEventListener('click', (e) => { if (e.target === batchUploadModal) closeBatchUploadModal(); });
             practiceGrid.addEventListener('click', e => { const menuButton = e.target.closest('.card-actions-menu'); if (menuButton) { const currentMenu = menuButton.nextElementSibling; const isVisible = currentMenu.classList.contains('show'); document.querySelectorAll('.card-menu.show').forEach(menu => { menu.classList.remove('show'); }); if (!isVisible) { currentMenu.classList.add('show'); } } });
             window.addEventListener('click', e => { if (!e.target.closest('.practice-card')) { document.querySelectorAll('.card-menu.show').forEach(menu => menu.classList.remove('show')); } });
         }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const id = practiceForm.dataset.editingId;
+            const formData = {
+                name: document.getElementById('practiceName').value,
+                type: document.getElementById('practiceType').value,
+                documentContent: document.getElementById('documentContent').value,
+                contentType: document.getElementById('contentType').value,
+                status: document.getElementById('practiceStatus').value,
+                difficulty: document.getElementById('difficultyLevel').value,
+                estimatedTime: parseInt(document.getElementById('estimatedTime').value) || 30,
+            };
+            if (id) {
+                const originalSection = practiceForm.dataset.practiceSection || currentSection;
+                const index = practicesData[originalSection].findIndex(p => p.id == id);
+                if (index !== -1) {
+                    const existingPractice = practicesData[originalSection][index];
+                    practicesData[originalSection][index] = { ...existingPractice, ...formData };
+                }
+            } else {
+                if (currentSection === 'all-sections') { alert('请先选择具体的练习分类，然后再添加练习。'); return; }
+                const newPractice = { ...formData, id: Date.now(), dateAdded: new Date().toISOString().split('T')[0] };
+                if (!practicesData[currentSection]) practicesData[currentSection] = [];
+                practicesData[currentSection].push(newPractice);
+            }
+            await saveData();
+            closePracticeModal();
+        }
+
+        function renderPractices() {
+            const filteredData = getFilteredData();
+            practiceGrid.innerHTML = '';
+            if (Object.keys(practicesData).length === 0 && !user) return;
+            if (filteredData.length === 0) {
+                practiceGrid.innerHTML = '<p style="color: #495057; text-align: center; grid-column: 1 / -1; font-size: 1.1rem; padding: 50px 0;">该分类下没有练习。</p>';
+                return;
+            }
+            filteredData.forEach(practice => {
+                practiceGrid.appendChild(createPracticeCard(practice));
+            });
+        }
+
+        function createPracticeCard(practice) {
+            const card = document.createElement('div');
+            card.className = 'practice-card';
+            card.dataset.id = practice.id;
+            let practiceSection = currentSection;
+            if (currentSection === 'all-sections') {
+                for (const [sectionKey, practices] of Object.entries(practicesData)) {
+                    if (practices.some(p => p.id === practice.id)) {
+                        practiceSection = sectionKey;
+                        break;
+                    }
+                }
+            }
+            const headerClass = `card-header-${practiceSection}`;
+            let isLink = false;
+            if (practice.contentType === 'link') { isLink = true; } 
+            else if (practice.contentType === 'text') { isLink = false; } 
+            else { isLink = practice.documentContent && ( practice.documentContent.trim().startsWith('http://') || practice.documentContent.trim().startsWith('https://') || practice.documentContent.includes('docs.google.com') || practice.documentContent.includes('onedrive.live.com') || practice.documentContent.includes('drive.google.com') || (practice.documentContent.includes('http') && practice.documentContent.trim().split('\n').length <= 3) ); }
+            const actionButton = isLink ? `<a href="${practice.documentContent}" target="_blank" class="btn btn-primary" style="width: 100%;">打开文档</a>` : `<button class="btn btn-primary" onclick="viewContent(${practice.id})" style="width: 100%;">查看内容</button>`;
+            const sectionBadge = currentSection === 'all-sections' ? `<span style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; margin-left: 10px;">${getSectionName(practiceSection)}</span>` : '';
+            card.innerHTML = `
+                <div class="card-header ${headerClass}">
+                    <h3 class="card-title">${practice.name}${sectionBadge}</h3>
+                    <p class="card-meta">${practice.type}</p>
+                    <button class="card-actions-menu">⋮</button>
+                    <div class="card-menu">
+                        <button class="card-menu-item edit" onclick="openPracticeModal(${practice.id})">✏️ 编辑</button>
+                        <button class="card-menu-item delete" onclick="deletePractice(${practice.id})">🗑️ 删除</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="info-grid">
+                        <div class="info-item"><div class="info-label">状态</div><div class="info-value"><span class="status-badge status-${practice.status}">${getStatusText(practice.status)}</span></div></div>
+                        <div class="info-item"><div class="info-label">难度</div><div class="info-value difficulty-badge difficulty-${practice.difficulty}">${getDifficultyText(practice.difficulty)}</div></div>
+                        <div class="info-item"><div class="info-label">添加日期</div><div class="info-value">${practice.dateAdded}</div></div>
+                        <div class="info-item"><div class="info-label">预计时间</div><div class="info-value">${practice.estimatedTime} 分钟</div></div>
+                    </div>
+                    ${actionButton}
+                </div>`;
+            return card;
+        }
+        
+        function getSectionName(sectionKey) { const sectionNames = { 'practical-writing': '实用文', 'composition': '作文', 'language-application': '语文应用', 'reading-1': '阅读理解一', 'reading-2': '阅读理解二', 'summary': '片段缩写' }; return sectionNames[sectionKey] || sectionKey; }
+        function updatePracticeTypeOptions() { const types = sectionTypes[currentSection] || []; practiceTypeSelect.innerHTML = types.map(type => `<option value="${type}">${type}</option>`).join(''); }
+        async function markAsCompleted(id) { const practice = findPractice(id); if (practice) { practice.status = 'completed'; practice.completedDate = new Date().toISOString().split('T')[0]; await saveData(); } }
+        function closePracticeModal() { practiceModal.style.display = 'none'; }
+        function closeBatchUploadModal() { batchUploadModal.style.display = 'none'; }
+        function switchUploadTab(tabName) { document.querySelectorAll('.upload-tab').forEach(tab => tab.classList.remove('active')); document.querySelectorAll('.upload-tab-nav .btn').forEach(btn => { btn.classList.remove('btn-primary'); btn.classList.add('btn-secondary'); }); document.getElementById(`${tabName}UploadTab`).classList.add('active'); document.getElementById(`${tabName}TabBtn`).classList.add('btn-primary'); }
+        async function processBatchUpload() { const input = document.getElementById('batchPracticeInput').value.trim(); if (!input) return alert('请输入练习信息'); const lines = input.split('\n').filter(line => line.trim()); const newPractices = lines.map((line, index) => { const parts = line.split('|').map(p => p.trim()); if (parts.length < 2) return null; return { id: Date.now() + index, name: parts[0], documentContent: parts[1], type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2]) ? parts[2] : sectionTypes[currentSection]?.[0] || '练习', difficulty: parts[3] || 'intermediate', estimatedTime: parseInt(parts[4]) || 30, status: 'new', dateAdded: new Date().toISOString().split('T')[0] }; }).filter(p => p); if (!practicesData[currentSection]) practicesData[currentSection] = []; practicesData[currentSection].push(...newPractices); await saveData(); closeBatchUploadModal(); alert(`成功批量添加 ${newPractices.length} 个练习！`); }
+        function downloadCSVTemplate() { const headers = "练习名称,类型,练习内容/链接,难度,预计时间(分钟)"; const example = "记叙文：我的爱好,记叙文,以我的爱好为题写一篇记叙文,intermediate,90"; const csvContent = "data:text/csv;charset=utf-8,\uFEFF" + headers + "\n" + example; const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "华文练习导入模板.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link); }
+        function viewContent(id) { const practice = findPractice(id); if (!practice) return; const modal = document.createElement('div'); modal.className = 'modal'; modal.style.display = 'flex'; modal.innerHTML = ` <div class="modal-content"> <div class="modal-header">${practice.name}</div> <div style="margin-bottom: 20px;"> <strong>类型：</strong>${practice.type}<br> <strong>难度：</strong>${getDifficultyText(practice.difficulty)}<br> <strong>预计时间：</strong>${practice.estimatedTime} 分钟 </div> <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; white-space: pre-wrap; line-height: 1.6;"> ${practice.documentContent} </div> <div class="form-actions"> <button class="btn btn-secondary" onclick="closeContentModal(this)">关闭</button> <button class="btn btn-primary" onclick="markAsCompleted(${practice.id}); closeContentModal(this);">标记为已完成</button> </div> </div> `; document.body.appendChild(modal); modal.addEventListener('click', (e) => { if (e.target === modal) closeContentModal(modal); }); }
+        function closeContentModal(element) { const modal = element.closest ? element.closest('.modal') : element; if (modal) { document.body.removeChild(modal); } }
     </script>
 </body>
 </html>
