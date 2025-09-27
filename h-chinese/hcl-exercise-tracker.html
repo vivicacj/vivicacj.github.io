@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O水准高级华文练习平台 (云同步版)</title>
+    <title>O水准高级华文练习平台 (实时云同步版)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -13,6 +13,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
 
     <style>
+        /* CSS样式部分保持不变 */
         :root {
             --primary-color: #667eea;
             --text-on-dark: rgba(255, 255, 255, 0.95);
@@ -101,7 +102,7 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <div class="logo">✍️ 高级华文・练习中枢 (云同步版)</div>
+                <div class="logo">✍️ 高级华文・练习中枢 (实时云同步版)</div>
                 <div class="action-buttons">
                     <button class="btn btn-primary" onclick="openPracticeModal()">➕ 添加练习</button>
                     <button class="btn btn-secondary" onclick="openBatchUploadModal()">📁 批量上传</button>
@@ -223,7 +224,7 @@
     </div>
     
     <script>
-        // 2. Firebase 配置信息
+        // Firebase 配置信息
         const firebaseConfig = {
             apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
             authDomain: "emath-study-plan.firebaseapp.com",
@@ -234,13 +235,15 @@
             measurementId: "G-09QVE4GLS0"
         };
 
-        // 3. Firebase 同步逻辑
+        // Firebase 初始化和逻辑
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
         let user = null;
         let userDocRef = null;
+        let unsubscribe; // 用于保存取消侦听的函数
 
+        // 页面其他变量...
         const sectionTypes = {
             'practical-writing': ['私人电邮', '公务电邮', '博客', '网页', '论坛'],
             'composition': ['记叙文', '论说文', '演讲词', '新闻/材料读后感'],
@@ -249,23 +252,49 @@
             'reading-2': ['阅读理解二'],
             'summary': ['片段缩写']
         };
-
         const defaultPracticesData = {
             'practical-writing': [], 'composition': [], 'language-application': [],
             'reading-1': [], 'reading-2': [], 'summary': []
         };
-
         let practicesData = {};
         let currentSection = 'practical-writing';
         let currentFilter = 'all';
         let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm;
         let modalTitle, sectionTitle, sectionSelect, practiceTypeSelect;
 
+        // ===============================================================
+        //  核心改动：使用 onSnapshot 实现实时侦听
+        // ===============================================================
         auth.onAuthStateChanged(async (firebaseUser) => {
+            if (unsubscribe) unsubscribe(); // 如果已有侦听器，先取消
+
             if (firebaseUser) {
                 user = firebaseUser;
                 userDocRef = db.collection('userPractices').doc(user.uid);
-                await loadData();
+                console.log("Logged in with UID:", user.uid);
+
+                // 设置实时侦听器
+                unsubscribe = userDocRef.onSnapshot(docSnap => {
+                    console.log("Received real-time update from Firestore.");
+                    if (docSnap.exists) {
+                        practicesData = docSnap.data();
+                        // 确保所有分类都存在
+                        for (const key in sectionTypes) {
+                            if (!practicesData[key]) {
+                                practicesData[key] = [];
+                            }
+                        }
+                    } else {
+                        console.log("No data for this user, initializing.");
+                        practicesData = defaultPracticesData;
+                        saveData(); // 为新用户创建文档
+                    }
+                    renderPractices(); // 每次云端数据变化时，重新渲染界面
+                }, error => {
+                    console.error("Error with real-time listener:", error);
+                    alert("与云端同步时发生错误！");
+                });
+
             } else {
                 auth.signInAnonymously().catch(error => {
                     console.error("Anonymous sign-in failed:", error);
@@ -274,32 +303,10 @@
             }
         });
 
-        async function loadData() {
-            if (!userDocRef) return;
-            try {
-                const docSnap = await userDocRef.get();
-                if (docSnap.exists) {
-                    practicesData = docSnap.data();
-                    for (const key in sectionTypes) {
-                        if (!practicesData[key]) {
-                            practicesData[key] = [];
-                        }
-                    }
-                } else {
-                    practicesData = defaultPracticesData;
-                    await saveData();
-                }
-            } catch (error) {
-                console.error("Error loading data from Firestore:", error);
-                alert("从云端加载数据失败！");
-                practicesData = defaultPracticesData;
-            }
-            renderPractices();
-        }
-
         async function saveData() {
             if (!userDocRef) return;
             try {
+                // 使用 set 和 merge:true 可以安全地更新或创建文档
                 await userDocRef.set(practicesData, { merge: true });
                 console.log("Data saved to Firestore.");
             } catch (error) {
@@ -307,6 +314,10 @@
                 alert("保存数据到云端失败！");
             }
         }
+
+        // ===============================================================
+        //  以下为界面操作函数，基本保持不变
+        // ===============================================================
 
         function findPractice(id) {
             for (const section in practicesData) {
@@ -377,20 +388,18 @@
                     }
                 }
                 await saveData();
-                renderPractices();
+                // renderPractices() 会被 onSnapshot 自动调用，所以这里可以省略
             }
         }
 
         function changeSection() {
             currentSection = sectionSelect.value;
-            
             if (currentSection === 'all-sections') {
                 sectionTitle.textContent = '全部题型总览';
                 document.querySelector('.btn-primary').style.display = 'none';
             } else {
                 sectionTitle.textContent = sectionSelect.options[sectionSelect.selectedIndex].text;
                 document.querySelector('.btn-primary').style.display = 'inline-flex';
-                
                 if (practiceModal.style.display === 'flex') {
                     updatePracticeTypeOptions();
                     if (practiceTypeSelect.options.length > 0) {
@@ -483,7 +492,6 @@
                 practice.status = 'completed';
                 practice.completedDate = new Date().toISOString().split('T')[0];
                 await saveData();
-                renderPractices();
             }
         }
 
@@ -510,9 +518,7 @@
                     id: Date.now() + index,
                     name: parts[0],
                     documentContent: parts[1],
-                    type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2])
-                        ? parts[2]
-                        : sectionTypes[currentSection]?.[0] || '练习',
+                    type: parts.length > 2 && parts[2] && sectionTypes[currentSection]?.includes(parts[2]) ? parts[2] : sectionTypes[currentSection]?.[0] || '练习',
                     difficulty: parts[3] || 'intermediate',
                     estimatedTime: parseInt(parts[4]) || 30,
                     status: 'new',
@@ -522,7 +528,6 @@
             if (!practicesData[currentSection]) practicesData[currentSection] = [];
             practicesData[currentSection].push(...newPractices);
             await saveData();
-            renderPractices();
             closeBatchUploadModal();
             alert(`成功批量添加 ${newPractices.length} 个练习！`);
         }
@@ -680,7 +685,6 @@
                 practicesData[currentSection].push(newPractice);
             }
             await saveData();
-            renderPractices();
             closePracticeModal();
         }
 
