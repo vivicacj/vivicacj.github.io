@@ -242,13 +242,18 @@
                 authContainer.classList.add('hidden');
                 mainAppContainer.classList.remove('hidden');
                 userEmailDisplay.textContent = user.email;
+
                 unsubscribe = userDocRef.onSnapshot(docSnap => {
-                    if (docSnap.exists) {
+                    if (docSnap.exists()) {
+                        // 如果文档存在，就加载数据
                         practicesData = docSnap.data();
-                        for (const key in sectionTypes) { if (!practicesData[key]) { practicesData[key] = []; } }
+                        for (const key in sectionTypes) { 
+                            if (!practicesData[key]) { practicesData[key] = []; } 
+                        }
                     } else {
+                        // 如果文档不存在，说明是全新用户，本地使用空模板
+                        // **重要修复：不再自动调用saveData()来创建文档，避免覆盖**
                         practicesData = defaultPracticesData;
-                        saveData();
                     }
                     renderPractices();
                 }, error => {
