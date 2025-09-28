@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>E-Math Link Library (Cloud Sync)</title>
     <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+      <!-- Firebase v9+ (更新的语法) -->
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,17 +18,31 @@
         .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: flex; align-items: center; justify-content: center; gap: 15px; }
         .header p { font-size: 1.1em; opacity: 0.9; }
         .sync-status { position: absolute; top: 15px; right: 20px; font-size: 0.9em; font-weight: 600; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; }
+        .user-info { position: absolute; top: 15px; left: 20px; font-size: 0.9em; background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; }
         .content { padding: 30px; background: white; border-radius: 0 0 20px 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); }
         .section-title { font-size: 1.5em; color: #343a40; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; }
         .section-title i { font-style: normal; color: #4facfe; }
         
+        /* Auth Styles */
+        .auth-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); text-align: center; }
+        .auth-title { font-size: 2em; color: #343a40; margin-bottom: 20px; }
+        .auth-subtitle { color: #6c757d; margin-bottom: 30px; }
+        .auth-input { width: 100%; max-width: 300px; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; margin: 10px auto; display: block; font-size: 1em; }
+        .auth-input:focus { outline: none; border-color: #4facfe; box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1); }
+        .auth-btn { padding: 12px 30px; background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: 600; margin: 10px; transition: all 0.3s ease; }
+        .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
+        .auth-btn.secondary { background: #6c757d; }
+        .auth-error { color: #e74c3c; margin-top: 15px; font-size: 0.9em; }
+        .hidden { display: none; }
+
         .add-link-section { background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 30px; }
         .link-input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
         .input-field { width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 10px; font-size: 1em; transition: all 0.3s ease; }
         .input-field:focus { outline: none; border-color: #4facfe; box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1); }
-        .notes-field { grid-column: 1 / -1; } /* Make notes field span full width */
+        .notes-field { grid-column: 1 / -1; }
         .add-btn { padding: 12px 25px; background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; border: none; border-radius: 10px; cursor: pointer; font-size: 1em; font-weight: 600; transition: all 0.3s ease; white-space: nowrap; grid-column: 1 / -1; }
         .add-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4); }
+        .logout-btn { position: absolute; top: 50px; left: 20px; padding: 8px 15px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 20px; cursor: pointer; font-size: 0.8em; }
 
         .files-list { margin-top: 30px; }
         .link-item { background: white; border: 1px solid #e9ecef; border-radius: 15px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
@@ -35,7 +51,6 @@
         .link-icon { width: 45px; height: 45px; background: linear-gradient(135deg, #4facfe, #00f2fe); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; flex-shrink: 0; font-size: 1.2em; }
         .link-details { display: flex; flex-direction: column; min-width: 0; }
         .link-name { font-weight: 600; font-size: 1.1em; color: #343a40; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        /* NEW: Notes style */
         .link-notes { font-size: 0.9em; color: #6c757d; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 8px; }
         .upload-date { font-size: 0.8em; color: #adb5bd; }
 
@@ -50,11 +65,29 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Authentication Container -->
+    <div id="authContainer" class="container">
+        <div class="auth-container">
+            <h2 class="auth-title">🔗 E-Math Link Library</h2>
+            <p class="auth-subtitle">Sign in to sync your links across all devices</p>
+            <input type="email" id="authEmail" class="auth-input" placeholder="Enter your email">
+            <input type="password" id="authPassword" class="auth-input" placeholder="Enter your password">
+            <div>
+                <button onclick="signIn()" class="auth-btn">Sign In</button>
+                <button onclick="signUp()" class="auth-btn secondary">Sign Up</button>
+            </div>
+            <div id="authError" class="auth-error"></div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="mainAppContainer" class="container hidden">
         <div class="header">
             <h1>🔗 E-Math Link Library</h1>
-            <p>Real-time sync for all your learning resources with Dennis</p>
+            <p>Real-time sync for all your learning resources</p>
+            <div id="userInfo" class="user-info">👤 Loading...</div>
             <div id="syncStatus" class="sync-status">⚪️ Connecting...</div>
+            <button onclick="signOut()" class="logout-btn">Sign Out</button>
         </div>
         
         <div class="content">
@@ -97,17 +130,109 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const linksRef = db.collection("emath-uploads").doc("links-v2"); // Using a new doc for the new structure
+        const auth = firebase.auth();
 
+        let user = null;
+        let linksRef = null;
         let selectedLinkType = 'notion';
+        let unsubscribe = null;
 
-        // --- 2. 实时监听与渲染 ---
+        // --- 2. AUTHENTICATION ---
+        function signIn() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const errorEl = document.getElementById('authError');
+            
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter both email and password.';
+                return;
+            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => {
+                    console.error('Sign in error:', error);
+                    errorEl.textContent = error.message;
+                });
+        }
+
+        function signUp() {
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const errorEl = document.getElementById('authError');
+            
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter both email and password.';
+                return;
+            }
+            
+            if (password.length < 6) {
+                errorEl.textContent = 'Password must be at least 6 characters.';
+                return;
+            }
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .catch(error => {
+                    console.error('Sign up error:', error);
+                    errorEl.textContent = error.message;
+                });
+        }
+
+        function signOut() {
+            auth.signOut();
+        }
+
+        // --- 3. AUTH STATE LISTENER ---
+        auth.onAuthStateChanged(async firebaseUser => {
+            const authContainer = document.getElementById('authContainer');
+            const mainAppContainer = document.getElementById('mainAppContainer');
+            const userInfo = document.getElementById('userInfo');
+            
+            if (unsubscribe) unsubscribe();
+            
+            if (firebaseUser) {
+                user = firebaseUser;
+                linksRef = db.collection('userLinks').doc(user.uid);
+                
+                authContainer.classList.add('hidden');
+                mainAppContainer.classList.remove('hidden');
+                userInfo.textContent = `👤 ${user.email}`;
+                
+                // Check and create user document if needed
+                try {
+                    const docSnap = await linksRef.get();
+                    const docExists = typeof docSnap.exists === 'function' ? docSnap.exists() : docSnap.exists;
+                    
+                    if (!docExists) {
+                        console.log("New user, creating initial document");
+                        await linksRef.set({ list: [] });
+                        console.log("Initial document created");
+                    }
+                } catch (error) {
+                    console.error("Error checking/creating user document:", error);
+                }
+                
+                listenToLinks();
+            } else {
+                user = null;
+                linksRef = null;
+                authContainer.classList.remove('hidden');
+                mainAppContainer.classList.add('hidden');
+                document.getElementById('linksList').innerHTML = '<div class="empty-state">Loading from cloud...</div>';
+            }
+        });
+
+        // --- 4. 实时监听与渲染 ---
         function listenToLinks() {
             const syncStatus = document.getElementById('syncStatus');
-            linksRef.onSnapshot(doc => {
-                const linksData = (doc.exists && doc.data().list) ? doc.data().list : [];
+            
+            if (!linksRef) return;
+            
+            unsubscribe = linksRef.onSnapshot(doc => {
+                const docExists = typeof doc.exists === 'function' ? doc.exists() : doc.exists;
+                const linksData = (docExists && doc.data().list) ? doc.data().list : [];
                 renderLinks(linksData);
                 syncStatus.textContent = '🟢 Synced';
+                console.log("Links loaded from Firebase:", linksData);
             }, error => {
                 console.error("Error listening to links:", error);
                 syncStatus.textContent = '🔴 Error';
@@ -135,15 +260,20 @@
             `).join('');
         }
         
-        // --- 3. 添加逻辑 ---
+        // --- 5. 添加逻辑 ---
         function addLink() {
+            if (!user || !linksRef) {
+                alert('Please sign in first');
+                return;
+            }
+            
             const nameInput = document.getElementById('linkName');
             const urlInput = document.getElementById('linkUrl');
             const notesInput = document.getElementById('linkNotes');
             
             const name = nameInput.value.trim();
             const url = urlInput.value.trim();
-            const notes = notesInput.value.trim(); // Get notes value
+            const notes = notesInput.value.trim();
             
             if (!name || !url || !isValidUrl(url)) {
                 alert('Please enter a valid Name and URL.');
@@ -155,36 +285,51 @@
                 name: name,
                 url: url,
                 type: selectedLinkType,
-                notes: notes, // Add notes to the data object
+                notes: notes,
                 uploadDate: Date.now()
             };
 
             linksRef.update({
                 list: firebase.firestore.FieldValue.arrayUnion(linkData)
+            }).then(() => {
+                console.log("Link added successfully");
+                nameInput.value = '';
+                urlInput.value = '';
+                notesInput.value = '';
             }).catch(err => {
+                console.error("Error adding link:", err);
                 if (err.code === 'not-found' || err.message.includes("No document to update")) {
-                    linksRef.set({ list: [linkData] });
+                    linksRef.set({ list: [linkData] }).then(() => {
+                        console.log("Link added with new document");
+                        nameInput.value = '';
+                        urlInput.value = '';
+                        notesInput.value = '';
+                    });
                 }
             });
-
-            nameInput.value = '';
-            urlInput.value = '';
-            notesInput.value = ''; // Clear notes input
         }
         
-        // --- 4. 删除逻辑 ---
+        // --- 6. 删除逻辑 ---
         async function removeLink(linkId) {
+            if (!user || !linksRef) {
+                alert('Please sign in first');
+                return;
+            }
+            
             if (!confirm("Are you sure you want to remove this link from the cloud?")) return;
+            
             try {
                 const doc = await linksRef.get();
-                if (doc.exists) {
+                const docExists = typeof doc.exists === 'function' ? doc.exists() : doc.exists;
+                
+                if (docExists) {
                     const currentList = doc.data().list || [];
                     const itemToRemove = currentList.find(l => l.id === linkId);
                     if (itemToRemove) {
                         await linksRef.update({
                             list: firebase.firestore.FieldValue.arrayRemove(itemToRemove)
                         });
-                        alert("Link removed successfully!");
+                        console.log("Link removed successfully");
                     }
                 }
             } catch (error) {
@@ -193,31 +338,56 @@
             }
         }
 
-        // --- 5. 辅助函数 ---
-        document.querySelectorAll('.link-type-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.link-type-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                selectedLinkType = this.dataset.type;
-                const urlInput = document.getElementById('linkUrl');
-                const placeholders = {
-                    'notion': 'Notion Page URL (e.g., https://notion.so/...)',
-                    'google-doc': 'Google Docs URL (e.g., https://docs.google.com/document/...)',
-                    'google-sheet': 'Google Sheets URL (e.g., https://docs.google.com/spreadsheets/...)',
-                    'google-slide': 'Google Slides URL (e.g., https://docs.google.com/presentation/...)',
-                    'other': 'Enter any valid URL'
-                };
-                urlInput.placeholder = placeholders[selectedLinkType];
+        // --- 7. 辅助函数 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Link type buttons
+            document.querySelectorAll('.link-type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.link-type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedLinkType = this.dataset.type;
+                    const urlInput = document.getElementById('linkUrl');
+                    const placeholders = {
+                        'notion': 'Notion Page URL (e.g., https://notion.so/...)',
+                        'google-doc': 'Google Docs URL (e.g., https://docs.google.com/document/...)',
+                        'google-sheet': 'Google Sheets URL (e.g., https://docs.google.com/spreadsheets/...)',
+                        'google-slide': 'Google Slides URL (e.g., https://docs.google.com/presentation/...)',
+                        'other': 'Enter any valid URL'
+                    };
+                    urlInput.placeholder = placeholders[selectedLinkType];
+                });
+            });
+
+            // Enter key handlers
+            document.getElementById('authEmail').addEventListener('keypress', (e) => { 
+                if (e.key === 'Enter') signIn(); 
+            });
+            document.getElementById('authPassword').addEventListener('keypress', (e) => { 
+                if (e.key === 'Enter') signIn(); 
+            });
+            document.getElementById('linkUrl').addEventListener('keypress', (e) => { 
+                if (e.key === 'Enter') addLink(); 
             });
         });
-        document.getElementById('linkUrl').addEventListener('keypress', (e) => { if (e.key === 'Enter') addLink(); });
-        function isValidUrl(url) { try { new URL(url); return true; } catch { return false; } }
-        function getLinkIcon(type) { switch(type) { case 'notion': return '📝'; case 'google-doc': return '📄'; case 'google-sheet': return '📊'; case 'google-slide': return '📽️'; default: return '🌐'; } }
 
-        // --- 6. 初始化 ---
-        document.addEventListener('DOMContentLoaded', () => {
-            listenToLinks();
-        });
+        function isValidUrl(url) { 
+            try { 
+                new URL(url); 
+                return true; 
+            } catch { 
+                return false; 
+            } 
+        }
+
+        function getLinkIcon(type) { 
+            switch(type) { 
+                case 'notion': return '📝'; 
+                case 'google-doc': return '📄'; 
+                case 'google-sheet': return '📊'; 
+                case 'google-slide': return '📽️'; 
+                default: return '🌐'; 
+            } 
+        }
     </script>
 </body>
 </html>
