@@ -234,7 +234,13 @@
         let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm, statusFilterContainer, modalTitle, sectionTitle, sectionSelect, practiceTypeSelect;
 
         // === 3. 核心认证和数据侦听逻辑 ===
-        auth.onAuthStateChanged(firebaseUser => {
+        // 在您的 <script> 标签顶部（firebase 初始化之后）添加这个辅助函数
+        function checkDocExists(docSnap) {
+            return typeof docSnap.exists === 'function' ? docSnap.exists() : docSnap.exists;
+        }
+
+        // 用下面这个新版本，完整替换掉旧的 auth.onAuthStateChanged 函数
+        auth.onAuthStateChanged(async (firebaseUser) => {
             if (unsubscribe) unsubscribe();
             if (firebaseUser) {
                 user = firebaseUser;
@@ -243,21 +249,31 @@
                 mainAppContainer.classList.remove('hidden');
                 userEmailDisplay.textContent = user.email;
 
+                // 使用 get() 检查文档是否存在，仅在首次登录时为新用户创建
+                try {
+                    const docSnap = await userDocRef.get();
+                    if (!checkDocExists(docSnap)) {
+                        console.log("新用户，正在云端创建初始文档...");
+                        await userDocRef.set(defaultPracticesData);
+                        console.log("初始文档创建成功。");
+                    }
+                } catch (error) {
+                    console.error("检查或创建用户文档时出错:", error);
+                }
+
+                // 设置实时侦听器
                 unsubscribe = userDocRef.onSnapshot(docSnap => {
-                    if (docSnap.exists()) {
-                        // 如果文档存在，就加载数据
+                    if (checkDocExists(docSnap)) {
                         practicesData = docSnap.data();
                         for (const key in sectionTypes) { 
                             if (!practicesData[key]) { practicesData[key] = []; } 
                         }
                     } else {
-                        // 如果文档不存在，说明是全新用户，本地使用空模板
-                        // **重要修复：不再自动调用saveData()来创建文档，避免覆盖**
                         practicesData = defaultPracticesData;
                     }
                     renderPractices();
                 }, error => {
-                    console.error("Error with real-time listener:", error);
+                    console.error("实时侦听器错误:", error);
                 });
             } else {
                 user = null;
