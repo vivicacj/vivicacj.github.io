@@ -234,40 +234,49 @@
         let practiceGrid, searchInput, practiceModal, batchUploadModal, practiceForm, statusFilterContainer, modalTitle, sectionTitle, sectionSelect, practiceTypeSelect;
 
         // === 3. 核心认证和数据侦听逻辑 ===
-        auth.onAuthStateChanged(firebaseUser => {
-            if (unsubscribe) unsubscribe();
-            if (firebaseUser) {
-                user = firebaseUser;
-                userDocRef = db.collection('userPractices').doc(user.uid);
-                authContainer.classList.add('hidden');
-                mainAppContainer.classList.remove('hidden');
-                userEmailDisplay.textContent = user.email;
+        // === 3. 核心认证和数据侦听逻辑 ===
+auth.onAuthStateChanged(firebaseUser => {
+    if (unsubscribe) unsubscribe();
+    if (firebaseUser) {
+        user = firebaseUser;
+        userDocRef = db.collection('userPractices').doc(user.uid);
+        authContainer.classList.add('hidden');
+        mainAppContainer.classList.remove('hidden');
+        userEmailDisplay.textContent = user.email;
 
-                unsubscribe = userDocRef.onSnapshot(docSnap => {
-                    if (docSnap.exists()) {
-                        // 如果文档存在，就加载数据
-                        practicesData = docSnap.data();
-                        for (const key in sectionTypes) { 
-                            if (!practicesData[key]) { practicesData[key] = []; } 
-                        }
-                    } else {
-                        // 如果文档不存在，说明是全新用户，本地使用空模板
-                        // **重要修复：不再自动调用saveData()来创建文档，避免覆盖**
-                        practicesData = defaultPracticesData;
-                    }
-                    renderPractices();
-                }, error => {
-                    console.error("Error with real-time listener:", error);
-                });
+        unsubscribe = userDocRef.onSnapshot(docSnap => {
+            if (docSnap.exists()) {
+                // 文档存在，正常加载云端数据
+                console.log("Document exists. Loading data from cloud.");
+                practicesData = docSnap.data();
+                // 确保所有分区都存在，防止后续操作出错
+                for (const key in sectionTypes) { 
+                    if (!practicesData[key]) { practicesData[key] = []; } 
+                }
             } else {
-                user = null;
-                userDocRef = null;
-                authContainer.classList.remove('hidden');
-                mainAppContainer.classList.add('hidden');
-                practicesData = {};
-                if(practiceGrid) practiceGrid.innerHTML = '';
+                // 文档不存在，说明是新用户或数据被清空
+                console.log("Document does not exist. Initializing for a new user.");
+                // 使用深拷贝，避免意外修改原始的 defaultPracticesData
+                practicesData = JSON.parse(JSON.stringify(defaultPracticesData)); 
+                
+                // **【核心修复】**
+                // 立即将这个初始化的空结构保存到云端，为该用户创建文档。
+                // 这确保了任何其他设备登录时都能找到这个文档。
+                saveData(); 
             }
+            renderPractices();
+        }, error => {
+            console.error("Error with real-time listener:", error);
         });
+    } else {
+        user = null;
+        userDocRef = null;
+        authContainer.classList.remove('hidden');
+        mainAppContainer.classList.add('hidden');
+        practicesData = {};
+        if(practiceGrid) practiceGrid.innerHTML = '';
+    }
+});
         
         // === 4. 辅助函数和业务逻辑函数 ===
         function toggleAuthView() { loginView.classList.toggle('hidden'); registerView.classList.toggle('hidden'); document.getElementById('login-error').textContent = ''; document.getElementById('register-error').textContent = ''; }
