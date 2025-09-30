@@ -75,17 +75,19 @@
             opacity: 0.8;
         }
 
+        /* --- MODIFIED LAYOUT FOR ACTION BAR --- */
         .action-bar {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
             margin-top: 30px;
+            padding: 0 20px;
         }
 
         .sprint-plan-btn {
             display: inline-block;
-            padding: 12px 30px;
+            padding: 12px 25px; 
+            text-align: center;
             background: linear-gradient(135deg, #f6e58d, #ffbe76);
             color: #2c3e50;
             text-decoration: none;
@@ -95,6 +97,7 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
             border: 2px solid rgba(255, 255, 255, 0.5);
+            white-space: nowrap; /* Prevent text from wrapping */
         }
 
         .sprint-plan-btn:hover {
@@ -585,6 +588,12 @@
             border-left: 5px solid #3498db;
         }
 
+        @media (max-width: 1200px) {
+            .action-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 992px) {
             .phased-path-container {
                 flex-direction: column;
@@ -602,6 +611,9 @@
                 flex-direction: column;
                 align-items: center;
                 gap: 15px;
+            }
+            .action-bar {
+                grid-template-columns: 1fr;
             }
             .topics-grid {
                 grid-template-columns: 1fr;
@@ -638,16 +650,16 @@
             </div>
             <div class="action-bar">
                 <a href="emath-revision-guide.html" class="sprint-plan-btn">
-                    🚀 前往 A1 冲刺计划 (3周)
+                    🚀 A1 Sprint Plan
                 </a>
                 <a href="dennis-final-sprint.html" class="sprint-plan-btn final-briefing-btn">
-                    🔥 Final Mission Briefing (24-Hour)
+                    🔥 Final Mission
                 </a>
-                <a href="e-math/final-sop-master.html" class="sprint-plan-btn sop-btn">
-                    📘 SOP Master Guide
+                <a href="final-sop-master.html" class="sprint-plan-btn sop-btn">
+                    📘 SOP Master
                 </a>
                 <a href="emath-upload.html" class="sprint-plan-btn upload-btn">
-                    📤 上传/查看资料库
+                    📤 Resource Upload
                 </a>
             </div>
         </div>
