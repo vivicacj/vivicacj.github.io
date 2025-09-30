@@ -238,9 +238,9 @@
         }
 
         .therapy-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
             margin-top: 20px;
         }
 
@@ -250,6 +250,8 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(141,153,174,0.15);
             border: 3px solid #8d99ae;
+            display: flex;
+            flex-direction: column;
         }
 
         .therapy-card h3 {
@@ -275,7 +277,7 @@
 
         .trigger-row > div {
             background: white;
-            padding: 14px;
+            padding: 18px; /* Increased padding */
         }
 
         .trigger-row .trigger {
@@ -289,6 +291,36 @@
             color: #2b2d42;
             font-weight: 600;
         }
+        
+        .dimension-list {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .dimension-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #2b2d42;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .dimension-quantity {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .dimension-example {
+            font-size: 0.95em;
+            color: #555;
+            font-family: 'Courier New', monospace;
+        }
+
 
         .checklist {
             background: #f5f3e7;
@@ -789,32 +821,35 @@
                     <h3>🔗 THERAPY 3: STRENGTHEN CONNECTIONS</h3>
                     <p>Build concept ↔ concept and concept ↔ procedure links.</p>
                     
-                    <table class="dimension-table">
-                        <thead>
-                            <tr>
-                                <th>Quantity</th>
-                                <th>Power Rule</th>
-                                <th>Example</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Length (1-D)</strong></td>
-                                <td><span class="power-badge">Power 1</span></td>
-                                <td>2:4 = 1:2</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Area (2-D)</strong></td>
-                                <td><span class="power-badge">Power 2</span></td>
-                                <td>4:16</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Volume (3-D)</strong></td>
-                                <td><span class="power-badge">Power 3</span></td>
-                                <td>8:64</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="dimension-list">
+                        <div class="dimension-item">
+                            <div class="dimension-quantity">
+                                <strong>Length (1-D)</strong>
+                                <span class="power-badge">Power 1</span>
+                            </div>
+                            <div class="dimension-example">
+                                Example: 2:4 = 1:2
+                            </div>
+                        </div>
+                        <div class="dimension-item">
+                            <div class="dimension-quantity">
+                                <strong>Area (2-D)</strong>
+                                <span class="power-badge">Power 2</span>
+                            </div>
+                            <div class="dimension-example">
+                                Example: 2²:4² = 4:16
+                            </div>
+                        </div>
+                        <div class="dimension-item">
+                            <div class="dimension-quantity">
+                                <strong>Volume (3-D)</strong>
+                                <span class="power-badge">Power 3</span>
+                            </div>
+                            <div class="dimension-example">
+                                Example: 2³:4³ = 8:64
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1142,4 +1177,9 @@
     </script>
 </body>
 </html>
+" and am asking you to edit it for my query.
+I have also provided you with the following image file: "Screenshot 2025-09-30 at 4.25.10 PM.jpg".
+
+(actual user query begins now)
+被遮盖,你是否调整一下1-3的整体布局,不要1-2三列,找更合适的布局
 
