@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Battle Plan - Final Sprint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .tagline {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .alert-box {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.15em;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .priority-card {
+            background: linear-gradient(135deg, #f6f9fc 0%, #e9ecef 100%);
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .priority-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .priority-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .weapon-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 25px;
+            margin: 8px 5px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .weapon-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .weapon-link::before {
+            content: "🎯 ";
+        }
+
+        .ultimate-plan {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .ultimate-plan h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .time-block {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 5px solid #fa709a;
+        }
+
+        .time-block h4 {
+            color: #fa709a;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .cheat-sheet {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .cheat-sheet table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .cheat-sheet th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+
+        .cheat-sheet td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .cheat-sheet tr:hover {
+            background: #e7f3ff;
+        }
+
+        .do-column {
+            background: #d4edda;
+        }
+
+        .dont-column {
+            background: #f8d7da;
+        }
+
+        .progress-tracker {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+
+        .progress-item {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .progress-item input {
+            margin-right: 10px;
+            transform: scale(1.5);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .progress-tracker {
+                position: static;
+                margin: 20px 0;
+            }
+        }
+
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible::after {
+            content: " ▼";
+            font-size: 0.8em;
+        }
+
+        .collapsible.active::after {
+            content: " ▲";
+        }
+
+        .content-collapse {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .content-collapse.active {
+            max-height: 2000px;
+        }
+
+        .check-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 172, 254, 0.6);
+        }
+
+        .check-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .check-content.active {
+            max-height: 3000px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>⚔️ Chemistry Battle Plan ⚔️</h1>
+            <p class="tagline">Final Sprint Strategy - Trust Your Preparation</p>
+            <div class="alert-box">
+                🚨 CRITICAL: Do NOT add new content. Focus on depth & speed of retrieval!
+            </div>
+        </div>
+
+        <div class="key-insight">
+            <strong>💎 KEY INSIGHT:</strong> You already possess the necessary tools and your strategic direction is correct. This is not a to-do list — it's a confirmation map showing which materials are most important.
+        </div>
+
+        <div class="section">
+            <h2>🎯 Strategic Core Targets</h2>
+            <p style="font-size: 1.2em; margin: 20px 0;"><strong>Allocate 50% of time (2 hours) to:</strong></p>
+            <div style="background: #fff3cd; padding: 20px; border-radius: 10px; font-size: 1.3em; text-align: center; font-weight: 600;">
+                Chapter 4: Chemical Bonding + Chapter 5: Structure & Properties
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ Map Priorities → Your Weapons</h2>
+            
+            <div class="priority-card" onclick="toggleCollapse(this)">
+                <h3 class="collapsible">Priority 1: Properties Comparison (Ionic, Covalent, Metallic)</h3>
+                <div class="content-collapse">
+                    <p><strong>🎖️ MOST IMPORTANT TASK TODAY</strong></p>
+                    <p style="margin: 15px 0;">Master the golden templates for melting/boiling points and conductivity until they become muscle memory.</p>
+                    <a href="https://quizlet.com/sg/1069566211/level-3-conceptual-explanation-cards-flash-cards/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Level 3: Conceptual & Explanation Cards</a>
+                    <p style="margin-top: 10px; font-style: italic; color: #666;">Contains all "golden templates" for explaining properties</p>
+                </div>
+            </div>
+
+            <div class="priority-card" onclick="toggleCollapse(this)">
+                <h3 class="collapsible">Priority 2: Dot-and-Cross Diagrams (LiF, Cl₂, Lone Pairs)</h3>
+                <div class="content-collapse">
+                    <p style="margin: 15px 0;">Use the Dot-and-Cross Checklist. Redraw Na₂O and CO₂, checking: charge, brackets, lone pairs.</p>
+                    <a href="https://quizlet.com/sg/1069565645/level-2-procedural-sop-cards-flash-cards/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Level 2: Procedural & SOP Cards</a>
+                    <p style="margin-top: 10px; font-style: italic; color: #666;">Includes "SOP for Ionic Compounds" and "SOP for Covalent Molecules"</p>
+                </div>
+            </div>
+
+            <div class="priority-card" onclick="toggleCollapse(this)">
+                <h3 class="collapsible">Priority 3: Ionic Charges & Polyatomic Ions</h3>
+                <div class="content-collapse">
+                    <p style="margin: 15px 0;">Rapidly review all core ions' formulas and charges.</p>
+                    <a href="https://quizlet.com/sg/1085597226/deck-0-chemical-formula-ion-sheet-flash-cards/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Deck 0: Chemical Formula & Ion Sheet</a>
+                    <a href="https://quizlet.com/sg/1069663106/flashcard-deck-11-core-topics-level-1-fact-definition-cards-diagram/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Deck 1.1: Fact & Definition Cards</a>
+                </div>
+            </div>
+
+            <div class="priority-card" onclick="toggleCollapse(this)">
+                <h3 class="collapsible">Priority 4: Apparatus & Gas Collection</h3>
+                <div class="content-collapse">
+                    <p style="margin: 15px 0;">Quick review of apparatus and separation techniques — easy marks on Paper 1!</p>
+                    <a href="https://quizlet.com/sg/1069661234/flashcard-deck-2-satellite-topics-experimental-chemistry-flash-cards/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Deck 2: Experimental Chemistry</a>
+                </div>
+            </div>
+
+            <div class="priority-card" onclick="toggleCollapse(this)">
+                <h3 class="collapsible">Priority 5: Stoichiometry (mass/Mᵣ = mol)</h3>
+                <div class="content-collapse">
+                    <p style="margin: 15px 0;">Confirm the three core formulae are memorized using the cheat sheet below.</p>
+                    <a href="https://quizlet.com/sg/1069663106/flashcard-deck-11-core-topics-level-1-fact-definition-cards-diagram/?i=118urv&x=1jqt" class="weapon-link" target="_blank">Deck 1.1: Fact & Definition Cards</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ultimate-plan">
+            <h3>⏰ Ultimate One-Hour Action Plan</h3>
+            <p style="text-align: center; margin-bottom: 20px; font-weight: 600;">Dennis, if only one hour remains, abandon everything else and do ONLY these three things:</p>
+            
+            <div class="time-block">
+                <h4>20 Minutes: Internalize Templates</h4>
+                <p><strong>Your Task:</strong> Write from memory and say aloud the "golden" explanation templates for melting/boiling point and electrical conductivity.</p>
+                <button class="check-button" onclick="toggleCheck('check1')">📋 Show Standard Answers to Verify</button>
+                <div id="check1" class="check-content">
+                    <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                        <h5 style="color: #667eea; margin-bottom: 15px;">✅ Golden Template for Melting/Boiling Points</h5>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>For HIGH Melting/Boiling Points (e.g., Ionic Compounds like NaCl):</strong>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li>"It has a <strong>giant ionic lattice structure</strong>."</li>
+                                <li>"There are <strong>strong electrostatic forces of attraction</strong> between the oppositely charged ions."</li>
+                                <li>"A <strong>large amount of energy</strong> is needed to overcome these strong forces."</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>For LOW Melting/Boiling Points (e.g., Simple Molecular substances like CO₂):</strong>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li>"It has a <strong>simple molecular structure</strong>."</li>
+                                <li>"There are <strong>weak intermolecular forces of attraction</strong> between the molecules."</li>
+                                <li>"Only a <strong>small amount of energy</strong> is needed to overcome these weak forces."</li>
+                            </ol>
+                        </div>
+
+                        <h5 style="color: #667eea; margin: 20px 0 15px 0;">✅ Golden Template for Electrical Conductivity</h5>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>For Ionic Compounds:</strong>
+                            <ul style="margin: 10px 0; padding-left: 25px;">
+                                <li><strong>Solid State:</strong> "In the solid state, the ions are held in <strong>fixed positions</strong> and are <strong>not free to move</strong>. Therefore, it cannot conduct electricity."</li>
+                                <li><strong>Molten/Aqueous State:</strong> "In the molten/aqueous state, the ions are <strong>free to move</strong> and can act as mobile charge carriers. Therefore, it can conduct electricity."</li>
+                            </ul>
+                            <p style="margin-top: 10px; color: #fa709a; font-weight: 600;">🔑 Core Principle Keyword: <strong>MOBILE CHARGE CARRIERS</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-block">
+                <h4>20 Minutes: Process Review</h4>
+                <p><strong>Your Task:</strong> Draw the decision tree for salt preparation on a blank sheet. Recite the SOPs for excess method and precipitation method. Recite the 4-step stoichiometry SOP.</p>
+                <button class="check-button" onclick="toggleCheck('check2')">📋 Show Standard Answers to Verify</button>
+                <div id="check2" class="check-content">
+                    <div style="background: #e7f3ff; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                        <h5 style="color: #667eea; margin-bottom: 15px;">✅ Salt Preparation Decision Tree</h5>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 15px; font-family: monospace; line-height: 2;">
+                            <strong>Is the Target Salt...?</strong><br>
+                            &nbsp;&nbsp;↓<br>
+                            <strong>Soluble?</strong><br>
+                            &nbsp;&nbsp;├─ NO → Use <strong style="color: #fa709a;">PRECIPITATION Method</strong><br>
+                            &nbsp;&nbsp;└─ YES → Are Both Reactants Soluble?<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ YES → Use <strong style="color: #fa709a;">TITRATION Method</strong><br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ NO → Use <strong style="color: #fa709a;">EXCESS REACTANT Method</strong>
+                        </div>
+
+                        <h5 style="color: #667eea; margin: 20px 0 15px 0;">✅ Key SOPs to Memorize</h5>
+                        
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Excess Reactant Method SOP (Key Steps):</strong>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li>Add <strong>excess</strong> insoluble solid to warm acid.</li>
+                                <li><strong>Filter</strong> to remove excess.</li>
+                                <li><strong>Heat</strong> filtrate to <strong>saturation</strong>, then <strong>cool</strong> to crystallise.</li>
+                                <li><strong>Filter</strong>, <strong>wash</strong>, and <strong>dry</strong> crystals.</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong>Precipitation Method SOP (Key Steps):</strong>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li><strong>Mix</strong> two suitable soluble solutions.</li>
+                                <li><strong>Filter</strong> to collect the precipitate.</li>
+                                <li><strong>Wash</strong> the precipitate with distilled water.</li>
+                                <li><strong>Dry</strong> the precipitate.</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <strong>4-Step Stoichiometry SOP (Key Steps):</strong>
+                            <ol style="margin: 10px 0; padding-left: 25px;">
+                                <li>Calculate <strong>Moles of Known</strong>.</li>
+                                <li>Find <strong>Mole Ratio</strong> from the balanced equation.</li>
+                                <li>Calculate <strong>Moles of Unknown</strong>.</li>
+                                <li><strong>Convert</strong> to the final answer (mass, volume, etc.).</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-block">
+                <h4>20 Minutes: Scan Traps</h4>
+                <p><strong>Your Task:</strong> Read ONLY the ❌ DON'Ts sections on all cheat sheets and mentally rehearse the high-frequency traps. This is your final defense against careless errors.</p>
+                <button class="check-button" onclick="toggleCheck('check3')">📋 Show Ultimate Pitfalls to Memorize</button>
+                <div id="check3" class="check-content">
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                        <h5 style="color: #fa709a; margin-bottom: 15px;">❌ Acids, Bases & Salts - Ultimate Pitfalls</h5>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <ul style="line-height: 1.8; padding-left: 20px;">
+                                <li>Forgetting an alkali <strong>must be soluble</strong>.</li>
+                                <li>Forgetting unreactive metals (like <strong>Cu</strong>) don't react with normal acids.</li>
+                                <li><strong>NEVER "evaporate to dryness"</strong> for crystallisation.</li>
+                                <li>Forgetting to <strong>acidify first</strong> before Cl⁻/SO₄²⁻ tests.</li>
+                                <li>Forgetting the key differentiator for <strong>Ca²⁺</strong> (no precipitate with NH₃).</li>
+                            </ul>
+                        </div>
+
+                        <h5 style="color: #fa709a; margin: 20px 0 15px 0;">❌ Stoichiometry - Ultimate Pitfalls</h5>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <ul style="line-height: 1.8; padding-left: 20px;">
+                                <li><strong style="color: #f5576c;">THE #1 ERROR:</strong> Forgetting to convert <strong>cm³ to dm³</strong> (divide by 1000).</li>
+                                <li>Using the <strong>wrong mole ratio</strong> from the equation.</li>
+                                <li>Using the moles of the <strong>excess reactant</strong> for calculations (use limiting reactant only!).</li>
+                                <li>Applying gas volume ratios to <strong>non-gases</strong> (solid, liquid, or aqueous).</li>
+                            </ul>
+                        </div>
+
+                        <h5 style="color: #fa709a; margin: 20px 0 15px 0;">❌ Chemical Bonding & Structure - Ultimate Pitfalls</h5>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <ul style="line-height: 1.8; padding-left: 20px;">
+                                <li>Forgetting <strong>brackets and charges</strong> for ionic diagrams.</li>
+                                <li>Forgetting <strong>lone pairs</strong> for covalent diagrams.</li>
+                                <li><strong style="color: #f5576c;">THE ULTIMATE ERROR:</strong> Saying <strong>"covalent bonds are broken"</strong> when explaining the melting of simple molecules. It is ALWAYS the <strong>"weak intermolecular forces"</strong>.</li>
+                                <li>Forgetting the keyword <strong>"mobile"</strong> when explaining conductivity.</li>
+                            </ul>
+                        </div>
+
+                        <h5 style="color: #fa709a; margin: 20px 0 15px 0;">❌ Redox & Reactivity - Ultimate Pitfalls</h5>
+                        <div style="background: white; padding: 15px; border-radius: 8px;">
+                            <ul style="line-height: 1.8; padding-left: 20px;">
+                                <li>Not memorising the <strong>reactivity series</strong> correctly.</li>
+                                <li>Confusing the <strong>agent</strong> with the <strong>process</strong> (the agent undergoes the <em>opposite</em> process).</li>
+                                <li>Incomplete explanation for sacrificial protection (must link "more reactive" to <strong>"preferentially oxidised"</strong>).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 25px; border-radius: 10px; margin-top: 25px; text-align: center; border: 3px solid #667eea;">
+                <h4 style="color: #667eea; margin-bottom: 15px;">💪 Dennis, You Are Now Fully Equipped</h4>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    You have the tools. You have the templates. You have the trap warnings.<br>
+                    Trust your preparation. Execute with confidence. You've got this! 🎯
+                </p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Stoichiometry & Mole Concept Cheat Sheet</h2>
+            <div class="cheat-sheet">
+                <table>
+                    <tr>
+                        <th class="do-column">✅ DOs: Core Logic & Scoring Phrases</th>
+                        <th class="dont-column">❌ DON'Ts: Common Pitfalls & Traps</th>
+                    </tr>
+                    <tr>
+                        <td class="do-column">
+                            <strong>MOLE DEFINITIONS & Mᵣ CALCULATION</strong><br>
+                            • Mᵣ: Sum of Aᵣs in formula<br>
+                            (e.g., Mᵣ of H₂SO₄ = 2(1)+32+4(16) = 98)<br>
+                            • Mole: The bridge between mass/volume & particles
+                        </td>
+                        <td class="dont-column">
+                            Forgetting to multiply by subscripts in Mᵣ calculation, especially outside brackets (e.g., in Ca(NO₃)₂, O is 3×2=6)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="do-column">
+                            <strong>CORE MOLE FORMULAE (The Mole Triangle)</strong><br>
+                            1. Mass (g): n = m / Mᵣ<br>
+                            2. Solution (mol/dm³): n = C × V<br>
+                            3. Gas (dm³ at r.t.p.): n = V / 24
+                        </td>
+                        <td class="dont-column">
+                            <strong>THE NO.1 ERROR:</strong> Forgetting to convert cm³ to dm³ (divide by 1000) for V in solution and gas formulas. <strong>ALWAYS CHECK UNITS FIRST!</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="do-column">
+                            <strong>UNIVERSAL 4-STEP CALCULATION SOP</strong><br>
+                            1. Moles of Known: Calculate n of given substance<br>
+                            2. Mole Ratio: Get ratio from BALANCED equation<br>
+                            3. Moles of Unknown: Use ratio to find n of target<br>
+                            4. Convert to Answer: Convert n to final quantity
+                        </td>
+                        <td class="dont-column">
+                            Using an unbalanced equation or the wrong mole ratio (e.g., using 1:1 when it's 1:2). This is a critical error that fails the entire question.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="do-column">
+                            <strong>LIMITING REACTANT (L.R.) SOP</strong><br>
+                            • When? When amounts of TWO or more reactants are given<br>
+                            • How?<br>
+                            1. Calculate n for ALL reactants<br>
+                            2. Use mole ratio to find which runs out first<br>
+                            3. Use ONLY the moles of the L.R. for all product calculations
+                        </td>
+                        <td class="dont-column">
+                            After finding the L.R., accidentally using the moles of the reactant in excess for the rest of the calculation.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="do-column">
+                            <strong>GAS VOLUME CALCULATION SHORTCUT</strong><br>
+                            • When? When reactants and products are gases at same T & P<br>
+                            • Rule: Volume Ratio = Mole Ratio (from coefficients)
+                        </td>
+                        <td class="dont-column">
+                            Applying this volume ratio shortcut to any substance that is NOT a gas (i.e., (s), (l), or (aq))
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="progress-tracker">
+            <h3 style="margin-bottom: 15px;">✓ Progress Tracker</h3>
+            <div class="progress-item">
+                <input type="checkbox" id="p1"> <label for="p1">Priority 1 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p2"> <label for="p2">Priority 2 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p3"> <label for="p3">Priority 3 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p4"> <label for="p4">Priority 4 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p5"> <label for="p5">Priority 5 Done</label>
+            </div>
+        </div>
+
+        <div class="hero" style="margin-top: 30px;">
+            <h2 style="color: #667eea; margin-bottom: 20px;">🔥 You Are Well Prepared 🔥</h2>
+            <p style="font-size: 1.2em; line-height: 1.8;">
+                Trust your system. Execute this refocused plan with confidence.<br>
+                This is not about making the warehouse bigger — it's about retrieving the right tool in one second.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCollapse(element) {
+            const content = element.querySelector('.content-collapse');
+            const header = element.querySelector('.collapsible');
+            
+            content.classList.toggle('active');
+            header.classList.toggle('active');
+        }
+
+        // Save checkbox states
+        document.querySelectorAll('.progress-item input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                localStorage.setItem(this.id, this.checked);
+            });
+            
+            // Load saved state
+            const saved = localStorage.getItem(checkbox.id);
+            if (saved === 'true') {
+                checkbox.checked = true;
+            }
+        });
+
+        function toggleCheck(id) {
+            const content = document.getElementById(id);
+            content.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
