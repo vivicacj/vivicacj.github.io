@@ -18,11 +18,62 @@
             padding: 20px;
         }
 
+        /* Navigation Bar Styles */
+        .nav-bar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-radius: 15px 15px 0 0;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #34495e;
+            border-color: white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+        /* End Navigation Bar Styles */
+
+
         .container {
-            max-width: 1200px;
+            max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 0 0 15px 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
@@ -541,10 +592,29 @@
             .flashcard-container {
                 grid-template-columns: 1fr;
             }
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+            .container {
+                border-radius: 15px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="nav-bar">
+        <div style="color: white; font-weight: bold; font-size: 1.2em;">🧪 Chemistry Exam Guide</div>
+        <div class="nav-buttons">
+            <a href="chemistry-final-sprint.html" class="nav-btn">⚔️ Battle Plan</a>
+            <a href="chemistry-final-sprint.html#notes" class="nav-btn">📖 Detailed Notes</a>
+            <a href="chemistry-first aid kit.html" class="nav-btn">📝 Golden Questions</a>
+            <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🧪 Chemical Equation Writing Diagnostic Tool</h1>
@@ -1025,5 +1095,21 @@
             return plan;
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Deactivate any potentially active button first
+            document.querySelectorAll('.nav-bar .nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activate the correct button for this page
+            const equationToolsButton = document.querySelector('a.nav-btn[href*="equation-writing-diagnostic-tool.html"]');
+            if(equationToolsButton) {
+                equationToolsButton.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
+
+
