@@ -23,7 +23,7 @@
             max-width: 900px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
+            border-radius: 0 0 15px 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
@@ -35,7 +35,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-radius: 15px 15px 0 0;
+            max-width: 900px;
+            margin: 0 auto;
         }
 
         .nav-buttons {
@@ -44,26 +47,34 @@
         }
 
         .nav-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: 2px solid white;
-            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 18px;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 0.9em;
+            white-space: nowrap;
             transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         .nav-btn:hover {
-            background: white;
-            color: #2c3e50;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
         .nav-btn.active {
             background: white;
-            color: #2c3e50;
+            color: #34495e;
+            border-color: white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
         }
 
         /* Pages */
@@ -540,23 +551,25 @@
                 flex-direction: column;
                 gap: 10px;
                 padding: 15px;
+                border-radius: 15px;
+            }
+            .container {
+                border-radius: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Navigation Bar -->
-        <div class="nav-bar">
-            <div style="color: white; font-weight: bold; font-size: 1.2em;">📚 Chemistry Exam Guide</div>
-            <div class="nav-buttons">
-                <button class="nav-btn active" onclick="showPage('battle-plan', event)">⚔️ Battle Plan</button>
-                <button class="nav-btn" onclick="showPage('notes', event)">📖 Detailed Notes</button>
-                <a href="chemistry-first aid kit.html" class="nav-btn">📝 Golden Questions</a>
-                 <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
-                </div>
+    <div class="nav-bar">
+        <div style="color: white; font-weight: bold; font-size: 1.2em;">🧪 Chemistry Exam Guide</div>
+        <div class="nav-buttons">
+            <a href="#" class="nav-btn active" onclick="showPage('battle-plan', event); return false;">⚔️ Battle Plan</a>
+            <a href="#" class="nav-btn" onclick="showPage('notes', event); return false;">📖 Detailed Notes</a>
+            <a href="chemistry-first aid kit.html" class="nav-btn">📝 Golden Questions</a>
+            <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
         </div>
-
+    </div>
+    <div class="container">
         <!-- Page 1: Battle Plan -->
         <div id="battle-plan" class="page active">
             <div class="header">
@@ -1215,25 +1228,19 @@
         
         // Page Navigation
         function showPage(pageId, event) {
+            // Deactivate all pages and nav buttons
             document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+
+            // Activate the target page
             document.getElementById(pageId).classList.add('active');
 
-            if (event && event.target) {
-                 event.target.classList.add('active');
-            } else {
-                document.querySelectorAll('.nav-btn').forEach(btn => {
-                    if (pageId === 'battle-plan' && btn.textContent.includes('Battle Plan')) {
-                        btn.classList.add('active');
-                    } else if (pageId === 'notes' && btn.textContent.includes('Detailed Notes')) {
-                        btn.classList.add('active');
-                    }
-                });
+            // Activate the clicked button (or the one passed in the event)
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
             }
             
-            if (!event) { // Only scroll to top if not initiated by a specific anchor link action
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             localStorage.setItem('currentPage', pageId);
         }
 
@@ -1455,3 +1462,7 @@
     </script>
 </body>
 </html>
+
+
+
+
