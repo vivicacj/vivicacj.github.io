@@ -3277,18 +3277,51 @@
             updateProgress();
             // NOTE: The alert() is also removed. The visual reset is the feedback.
         }
-        
         // --- Initial Load ---
-     window.addEventListener('load', function() {
+window.addEventListener('load', function() {
+    // Load saved progress first
+    loadProgress();
+    
     // Check if there's a hash in URL (anchor link from external page)
     const hash = window.location.hash;
     
     if (hash) {
-        // External link with anchor - go to notes page and navigate to AKM
+        // External link with anchor - force go to notes page first
         const targetId = hash.substring(1); // Remove the '#'
-        goToAKM(targetId);
+        
+        // First, show the notes page
+        showPage('notes');
+        
+        // Then, after a short delay, navigate to the specific AKM
+        setTimeout(() => {
+            const targetAKM = document.getElementById(targetId);
+            if (targetAKM) {
+                // Find and expand the parent domain
+                const domainContent = targetAKM.closest('.domain-content');
+                if (domainContent && !domainContent.classList.contains('expanded')) {
+                    toggleDomain(domainContent.id);
+                }
+                
+                // Expand the AKM module itself
+                const akmBody = document.getElementById('body-' + targetId);
+                if (akmBody && !akmBody.classList.contains('expanded')) {
+                    toggleAKM(targetId);
+                }
+                
+                // Scroll to the target
+                setTimeout(() => {
+                    targetAKM.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Add highlight effect
+                    targetAKM.style.boxShadow = '0 0 20px rgba(245, 87, 108, 0.6)';
+                    setTimeout(() => {
+                        targetAKM.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                    }, 2000);
+                }, 300);
+            }
+        }, 100);
     } else {
-        // Load saved page
+        // No hash - load saved page or default to battle-plan
         const savedPage = localStorage.getItem('currentPage');
         if (savedPage && savedPage === 'notes') {
             showPage('notes');
@@ -3296,10 +3329,8 @@
             showPage('battle-plan');
         }
     }
-    
-    // Load saved progress
-    loadProgress();
 });
+        
     </script>
 </body>
 </html>
