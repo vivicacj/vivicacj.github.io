@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemical Equation Writing Diagnostic Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .progress-container {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #66bb6a);
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .example-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .example-box code {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .level-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .level-card.answered {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .level-card.needs-help {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.05);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .status-badge.correct {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-badge.incorrect {
+            background: #f44336;
+            color: white;
+        }
+
+        .level-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .level-title {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .level-badge {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .diagnostic-question {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .diagnostic-question strong {
+            color: #f57c00;
+        }
+
+        .answer-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .answer-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-btn.yes {
+            background: #4caf50;
+            color: white;
+        }
+
+        .answer-btn.yes:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .answer-btn.no {
+            background: #f44336;
+            color: white;
+        }
+
+        .answer-btn.no:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .answer-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .treatment-section {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f5e9;
+            border-radius: 10px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .treatment-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .treatment-title {
+            color: #2e7d32;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-btn {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+
+        .copy-btn:hover {
+            background: #1976D2;
+            transform: scale(1.05);
+        }
+
+        .copy-btn.copied {
+            background: #4caf50;
+        }
+
+        .treatment-steps {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .treatment-steps li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .treatment-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #4caf50;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .formula-list {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 120px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .flashcard.flipped .card-front {
+            opacity: 0;
+        }
+
+        .flashcard.flipped .card-back {
+            opacity: 1;
+        }
+
+        .card-front, .card-back {
+            transition: opacity 0.3s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .card-back {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .flashcard-score {
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .summary-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .summary-section.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .summary-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .summary-points {
+            list-style: none;
+        }
+
+        .summary-points li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            font-size: 1.1em;
+        }
+
+        .summary-points li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.5em;
+        }
+
+        .generate-report-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .generate-report-btn.show {
+            display: inline-block;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .generate-report-btn:hover {
+            transform: scale(1.1) !important;
+            box-shadow: 0 5px 20px rgba(255,255,255,0.3);
+        }
+
+        .personal-report {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .personal-report.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        .personal-report h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .weakness-tag {
+            display: inline-block;
+            background: #f44336;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .strength-tag {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .celebration {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            font-size: 1.3em;
+        }
+
+        .celebration.show {
+            display: block;
+            animation: bounceIn 0.5s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .content {
+                padding: 20px;
+            }
+            .level-title {
+                font-size: 1.2em;
+            }
+            .flashcard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Chemical Equation Writing Diagnostic Tool</h1>
+            <p>Precision Diagnosis & Treatment for Equation Writing Problems</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-label">
+                <span>Diagnostic Progress</span>
+                <span id="progress-text">0 / 4 Levels Completed</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="example-box">
+                <h3>📝 Problem Example</h3>
+                <p>Student cannot write:</p>
+                <code>CuCO₃(s) + 2HCl(aq) → CuCl₂(aq) + H₂O(l) + CO₂(g)</code>
+            </div>
+
+            <div class="celebration" id="celebration">
+                🎉 Excellent! All diagnostics complete. Ready to generate your personalized report!
+            </div>
+
+            <h2 style="margin-bottom: 20px; color: #333;">Diagnostic SOP: Layer-by-Layer Screening</h2>
+
+            <!-- Level 1 -->
+            <div class="level-card" id="card-1">
+                <div class="status-badge" id="badge-1"></div>
+                <div class="level-header">
+                    <div class="level-title"><span class="icon">🎯</span>Level 1: C-Layer – Reaction Type Blindness</div>
+                    <div class="level-badge">Conceptual</div>
+                </div>
+                
+                <div class="diagnostic-question">
+                    <strong>Diagnostic Question:</strong> "When you see the words <em>carbonate</em> and <em>acid</em>, what comes to mind? Do you recall the three fixed types of products such reactions produce?"
+                    <p style="margin-top: 10px; color: #d32f2f;"><strong>⚠️ If the student cannot answer:</strong> The problem is at the top level—they don't know the rules of the 'game.'</p>
+                    
+                    <div class="answer-buttons">
+                        <button class="answer-btn yes" onclick="answerQuestion(1, true)">✅ I can answer this</button>
+                        <button class="answer-btn no" onclick="answerQuestion(1, false)">❌ I'm not sure</button>
+                    </div>
+                </div>
+
+                <div id="level1" class="treatment-section">
+                    <div class="treatment-title">
+                        <span>💊</span> Treatment 1: Model Implantation
+                        <button class="copy-btn" onclick="copyTreatment(1)">📋 Copy</button>
+                    </div>
+                    <ul class="treatment-steps">
+                        <li>
+                            <strong>Force-memorize the 3 Acid Reaction Models:</strong> Open <strong>AKM #201</strong> "Exam Answer Toolkit," copy the three golden rules 5 times, and recite aloud.
+                            <div class="formula-list" id="treatment-1">
+                                • Acid + Reactive Metal → Salt + Hydrogen<br>
+                                • Acid + Carbonate → Salt + Water + Carbon Dioxide<br>
+                                • Acid + Base/Oxide → Salt + Water
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Pattern recognition drill:</strong> Give 10 simple verbal prompts (e.g., "iron and sulfuric acid," "calcium carbonate and nitric acid"). Student only states the <strong>types of products</strong> ("salt + hydrogen," "salt + water + CO₂"), not full formulae.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Level 2 -->
+            <div class="level-card" id="card-2">
+                <div class="status-badge" id="badge-2"></div>
+                <div class="level-header">
+                    <div class="level-title"><span class="icon">📚</span>Level 2: M-Layer – Formula Blindness</div>
+                    <div class="level-badge">Memory</div>
+                </div>
+                
+                <div class="diagnostic-question">
+                    <strong>Diagnostic Question:</strong> "Good. Now you know the products are salt, water, and carbon dioxide. Can you write the formulae for <em>Copper(II) carbonate</em>, <em>Hydrochloric acid</em>, and <em>Copper(II) chloride</em>?"
+                    <p style="margin-top: 10px; color: #d32f2f;"><strong>⚠️ If errors appear:</strong> (e.g., CuCO₃ → CuCO₄, CuCl₂ → CuCl), the issue is with basic chemical language—they don't know the 'words.'</p>
+                    
+                    <div class="answer-buttons">
+                        <button class="answer-btn yes" onclick="answerQuestion(2, true)">✅ I can answer this</button>
+                        <button class="answer-btn no" onclick="answerQuestion(2, false)">❌ I'm not sure</button>
+                    </div>
+                </div>
+
+                <div id="level2" class="treatment-section">
+                    <div class="treatment-title">
+                        <span>💊</span> Treatment 2: Flashcard Attack
+                        <button class="copy-btn" onclick="copyTreatment(2)">📋 Copy</button>
+                    </div>
+                    <ul class="treatment-steps">
+                        <li>
+                            <strong>Target the weakness:</strong> Open <strong>Level 1 Flashcards</strong> and drill all <strong><a href="https://quizlet.com/sg/1085597226/deck-0-chemical-formula-ion-sheet-flash-cards/?i=118urv&x=1qqt" target="_blank" style="color: #667eea; text-decoration: underline;">ionic and acid formula cards on Quizlet →</a></strong>
+                        </li>
+                        <li id="treatment-2">
+                            <strong>Interactive Flashcard Practice:</strong> Click each card to reveal the formula. Click again to flip back!
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                                <div class="flashcard-score" id="flashcard-score" style="margin: 0;">Cards flipped: 0 / 6</div>
+                                <button onclick="resetFlashcards()" style="background: #667eea; color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.9em;">↻ Reset All</button>
+                            </div>
+                            <div class="flashcard-container" id="flashcard-container"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Level 3 -->
+            <div class="level-card" id="card-3">
+                <div class="status-badge" id="badge-3"></div>
+                <div class="level-header">
+                    <div class="level-title"><span class="icon">⚙️</span>Level 3: P-Layer – Construction Blindness</div>
+                    <div class="level-badge">Procedural</div>
+                </div>
+                
+                <div class="diagnostic-question">
+                    <strong>Diagnostic Question:</strong> "Now you've written all reactant and product formulae: <code style="background: white; padding: 5px;">CuCO₃ + HCl → CuCl₂ + H₂O + CO₂</code>. Please balance the equation."
+                    <p style="margin-top: 10px; color: #d32f2f;"><strong>⚠️ If balancing takes too long or fails:</strong> The student knows the 'words' but not the 'grammar rules.'</p>
+                    
+                    <div class="answer-buttons">
+                        <button class="answer-btn yes" onclick="answerQuestion(3, true)">✅ I can answer this</button>
+                        <button class="answer-btn no" onclick="answerQuestion(3, false)">❌ I'm not sure</button>
+                    </div>
+                </div>
+
+                <div id="level3" class="treatment-section">
+                    <div class="treatment-title">
+                        <span>💊</span> Treatment 3: SOP Implantation
+                        <button class="copy-btn" onclick="copyTreatment(3)">📋 Copy</button>
+                    </div>
+                    <ul class="treatment-steps">
+                        <li>
+                            <strong>Enforce the SOP:</strong> Open <strong>AKM #501</strong>, copy the "Balancing SOP" once.
+                        </li>
+                        <li id="treatment-3">
+                            <strong>Guided practice:</strong> Work through the equation step-by-step:
+                            <div class="formula-list">
+                                <strong>Step 1 (Pick the most complex):</strong> Start with CuCl₂, set coefficient 1.<br>
+                                <strong>Step 2 (Balance sequentially):</strong><br>
+                                • Right side has 1 Cu → Left CuCO₃ coefficient = 1.<br>
+                                • Right side has 2 Cl → Left HCl coefficient = 2.<br>
+                                <strong>Step 3 (Check leftovers):</strong> Left now has 2 H, 1 C, 3 O. Right: H₂O (2 H), CO₂ (1 C, 2 O). Total = 2 H, 1 C, 3 O. Perfectly balanced!
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Repetition drill:</strong> Provide 5 similar unbalanced equations. Student must follow SOP rigidly.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Level 4 -->
+            <div class="level-card" id="card-4">
+                <div class="status-badge" id="badge-4"></div>
+                <div class="level-header">
+                    <div class="level-title"><span class="icon">🔬</span>Level 4: M-Layer – State Symbol Blindness</div>
+                    <div class="level-badge">Memory</div>
+                </div>
+                
+                <div class="diagnostic-question">
+                    <strong>Diagnostic Question:</strong> "Equation is balanced. Now, assign correct state symbols (s, l, g, aq) to each substance."
+                    <p style="margin-top: 10px; color: #d32f2f;"><strong>⚠️ If errors occur:</strong> (e.g., CuCO₃ written as aq), it shows poor recall of typical states.</p>
+                    
+                    <div class="answer-buttons">
+                        <button class="answer-btn yes" onclick="answerQuestion(4, true)">✅ I can answer this</button>
+                        <button class="answer-btn no" onclick="answerQuestion(4, false)">❌ I'm not sure</button>
+                    </div>
+                </div>
+
+                <div id="level4" class="treatment-section">
+                    <div class="treatment-title">
+                        <span>💊</span> Treatment 4: Rule Flashcards
+                        <button class="copy-btn" onclick="copyTreatment(4)">📋 Copy</button>
+                    </div>
+                    <ul class="treatment-steps">
+                        <li id="treatment-4">
+                            <strong>Rule memorization:</strong> Learn the basic state rules:
+                            <div class="formula-list">
+                                <strong>(s):</strong> all metals (except mercury), insoluble salts, insoluble bases/oxides.<br>
+                                <strong>(l):</strong> water, bromine, mercury.<br>
+                                <strong>(g):</strong> H₂, O₂, CO₂, NH₃, Cl₂, etc.<br>
+                                <strong>(aq):</strong> all acids, all alkalis, all soluble salts.
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Context application:</strong> Revise <strong>AKM #102 (Solubility Rules)</strong>, since salt states depend directly on solubility.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="generate-report-btn" id="generate-report-btn" onclick="generateReport()">
+                📊 Generate My Personalized Diagnostic Report
+            </button>
+
+            <!-- Summary -->
+            <div class="summary-section" id="summary-section">
+                <h2>📋 Your Personalized Diagnostic Report</h2>
+                
+                <div class="personal-report" id="personal-report">
+                    <h3>Your Diagnostic Results:</h3>
+                    <div id="report-content"></div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h3>Universal Learning Framework</h3>
+                    <p style="margin: 15px 0; font-size: 1.1em;">Saying <em>"I can't write equations"</em> is like saying <em>"I can't write an English essay."</em> We need to ask:</p>
+                    <ul class="summary-points">
+                        <li>Do you not know the <strong>words (formulae)</strong>?</li>
+                        <li>Do you not know the <strong>grammar (reaction types)</strong>?</li>
+                        <li>Can you not <strong>build sentences (balance equations)</strong>?</li>
+                        <li>Or did you forget the <strong>punctuation (state symbols)</strong>?</li>
+                    </ul>
+                    <p style="margin-top: 20px; font-size: 1.1em;">By following this diagnostic flow, we can pinpoint the exact weakness and then apply the corresponding Atomic Notes modules and flashcards for <strong>surgical, precision repair.</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const diagnosticData = {
+            totalLevels: 4,
+            completed: 0,
+            answers: {},
+            weaknesses: [],
+            strengths: []
+        };
+
+        const flashcards = [
+            { front: "Copper(II) ion", back: "Cu²⁺" },
+            { front: "Sulfate ion", back: "SO₄²⁻" },
+            { front: "Ammonium ion", back: "NH₄⁺" },
+            { front: "Carbonate ion", back: "CO₃²⁻" },
+            { front: "Hydrochloric acid", back: "HCl" },
+            { front: "Copper(II) chloride", back: "CuCl₂" }
+        ];
+
+        let flippedCount = 0;
+
+        function initFlashcards() {
+            const container = document.getElementById('flashcard-container');
+            flashcards.forEach((card, index) => {
+                const cardEl = document.createElement('div');
+                cardEl.className = 'flashcard';
+                cardEl.innerHTML = `
+                    <div class="card-front">${card.front}</div>
+                    <div class="card-back">${card.back}</div>
+                `;
+                cardEl.onclick = () => flipCard(cardEl, index);
+                container.appendChild(cardEl);
+            });
+        }
+
+        function flipCard(cardEl, index) {
+            cardEl.classList.toggle('flipped');
+            
+            if (cardEl.classList.contains('flipped')) {
+                if (!cardEl.dataset.counted) {
+                    flippedCount++;
+                    cardEl.dataset.counted = 'true';
+                    document.getElementById('flashcard-score').textContent = 
+                        `Cards flipped: ${flippedCount} / ${flashcards.length}`;
+                }
+            }
+        }
+
+        function resetFlashcards() {
+            const cards = document.querySelectorAll('.flashcard');
+            cards.forEach(card => {
+                card.classList.remove('flipped');
+                delete card.dataset.counted;
+            });
+            flippedCount = 0;
+            document.getElementById('flashcard-score').textContent = 
+                `Cards flipped: 0 / ${flashcards.length}`;
+        }
+
+        function answerQuestion(level, canAnswer) {
+            if (diagnosticData.answers[level]) return;
+            
+            diagnosticData.answers[level] = canAnswer;
+            diagnosticData.completed++;
+            
+            const card = document.getElementById(`card-${level}`);
+            const badge = document.getElementById(`badge-${level}`);
+            const buttons = card.querySelectorAll('.answer-btn');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (canAnswer) {
+                card.classList.add('answered');
+                badge.textContent = '✓';
+                badge.classList.add('show', 'correct');
+                diagnosticData.strengths.push(level);
+                
+                setTimeout(() => {
+                    if (level < 4) {
+                        document.getElementById(`card-${level + 1}`).scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }
+                }, 500);
+            } else {
+                card.classList.add('needs-help');
+                badge.textContent = '✗';
+                badge.classList.add('show', 'incorrect');
+                diagnosticData.weaknesses.push(level);
+                
+                const treatment = document.getElementById(`level${level}`);
+                treatment.classList.add('show');
+                
+                if (level === 2) {
+                    initFlashcards();
+                }
+            }
+            
+            updateProgress();
+            
+            if (diagnosticData.completed === diagnosticData.totalLevels) {
+                document.getElementById('celebration').classList.add('show');
+                document.getElementById('generate-report-btn').classList.add('show');
+            }
+        }
+
+        function updateProgress() {
+            const percentage = (diagnosticData.completed / diagnosticData.totalLevels) * 100;
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `${diagnosticData.completed} / ${diagnosticData.totalLevels} Levels Completed`;
+            
+            if (percentage === 100) {
+                progressFill.textContent = '✓ Complete!';
+            }
+        }
+
+        function copyTreatment(level) {
+            const treatmentEl = document.getElementById(`treatment-${level}`);
+            const text = treatmentEl.innerText;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function generateReport() {
+            const reportContent = document.getElementById('report-content');
+            const summarySection = document.getElementById('summary-section');
+            const personalReport = document.getElementById('personal-report');
+            
+            let html = '';
+            
+            if (diagnosticData.weaknesses.length === 0) {
+                html = `
+                    <p style="font-size: 1.2em; color: #4caf50; font-weight: bold; margin-bottom: 15px;">
+                        🎉 Excellent! You have a solid foundation across all four diagnostic levels!
+                    </p>
+                    <p style="margin-bottom: 15px;">
+                        Your strengths cover all essential areas:
+                    </p>
+                    <div style="margin: 15px 0;">
+                        ${getLevelNames(diagnosticData.strengths).map(name => 
+                            `<span class="strength-tag">${name}</span>`
+                        ).join('')}
+                    </div>
+                    <p style="margin-top: 20px;">
+                        <strong>Recommendation:</strong> Continue practicing with increasingly complex equations to maintain and enhance your skills. Focus on speed and accuracy in exam conditions.
+                    </p>
+                `;
+            } else {
+                const weaknessNames = getLevelNames(diagnosticData.weaknesses);
+                const strengthNames = getLevelNames(diagnosticData.strengths);
+                
+                html = `
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">
+                        Based on your responses, here's your personalized learning path:
+                    </p>
+                    
+                    ${diagnosticData.weaknesses.length > 0 ? `
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #f44336; margin-bottom: 10px;">⚠️ Areas Needing Improvement:</h4>
+                        ${weaknessNames.map(name => `<span class="weakness-tag">${name}</span>`).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    ${diagnosticData.strengths.length > 0 ? `
+                    <div style="margin: 20px 0;">
+                        <h4 style="color: #4caf50; margin-bottom: 10px;">✓ Your Strengths:</h4>
+                        ${strengthNames.map(name => `<span class="strength-tag">${name}</span>`).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #667eea;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">📚 Your Personalized Action Plan:</h4>
+                        ${getActionPlan(diagnosticData.weaknesses)}
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #fff9e6; border-radius: 8px; border-left: 4px solid #ffc107;">
+                        <strong>💡 Pro Tip:</strong> Focus on one weakness at a time. Master each level before moving to the next. The treatment plans above provide specific, actionable steps for each area.
+                    </div>
+                `;
+            }
+            
+            reportContent.innerHTML = html;
+            personalReport.classList.add('show');
+            summarySection.classList.add('show');
+            
+            setTimeout(() => {
+                summarySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+
+        function getLevelNames(levels) {
+            const names = {
+                1: 'Reaction Type Recognition (C-Layer)',
+                2: 'Formula Knowledge (M-Layer)',
+                3: 'Equation Balancing (P-Layer)',
+                4: 'State Symbols (M-Layer)'
+            };
+            return levels.map(level => names[level]);
+        }
+
+        function getActionPlan(weaknesses) {
+            const plans = {
+                1: `
+                    <p><strong>Priority 1 - Master Reaction Types:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Memorize the 3 acid reaction models from AKM #201</li>
+                        <li>Practice pattern recognition with 10+ example scenarios daily</li>
+                        <li>Focus on identifying product types before writing formulas</li>
+                    </ul>
+                `,
+                2: `
+                    <p><strong>Priority - Build Formula Fluency:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Use Level 1 Flashcards for ionic and acid formulas</li>
+                        <li>Practice the valency cross-rule until it becomes automatic</li>
+                        <li>Drill name-to-formula conversions for common ions daily</li>
+                    </ul>
+                `,
+                3: `
+                    <p><strong>Priority - Master the Balancing SOP:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Study the step-by-step balancing procedure from AKM #501</li>
+                        <li>Practice with 5 equations daily following the SOP rigidly</li>
+                        <li>Focus on identifying the most complex molecule first</li>
+                    </ul>
+                `,
+                4: `
+                    <p><strong>Priority - Learn State Symbol Rules:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li>Memorize the 4 basic state rules: (s), (l), (g), (aq)</li>
+                        <li>Review AKM #102 Solubility Rules for salt states</li>
+                        <li>Practice assigning states to 10+ equations daily</li>
+                    </ul>
+                `
+            };
+            
+            if (weaknesses.length === 0) return '<p>Keep practicing to maintain your excellent skills!</p>';
+            
+            let plan = '';
+            weaknesses.sort((a, b) => a - b).forEach((level, index) => {
+                plan += `<div style="margin-bottom: ${index < weaknesses.length - 1 ? '20px' : '0'}">${plans[level]}</div>`;
+            });
+            
+            return plan;
+        }
+    </script>
+</body>
+</html>
