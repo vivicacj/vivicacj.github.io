@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chemistry Battle Plan - Final Sprint</title>
+    <title>Chemistry Battle Plan - Teacher Guide</title>
     <style>
         * {
             margin: 0;
@@ -19,6 +19,57 @@
             padding: 20px;
         }
 
+        /* Navigation Bar Styles */
+        .nav-bar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-radius: 15px 15px 0 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 12px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85em;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #34495e;
+            border-color: white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+        /* End Navigation Bar Styles */
+
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -26,7 +77,7 @@
 
         .hero {
             background: white;
-            border-radius: 20px;
+            border-radius: 0 0 20px 20px; /* Modified for nav bar */
             padding: 40px;
             margin-bottom: 30px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -64,7 +115,7 @@
             color: white;
             padding: 25px;
             border-radius: 15px;
-            margin: 20px 0;
+            margin: 20px auto;
             font-size: 1.15em;
             box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
         }
@@ -196,7 +247,7 @@
 
         .progress-tracker {
             position: fixed;
-            top: 20px;
+            top: 120px; /* Adjusted position */
             right: 20px;
             background: white;
             padding: 20px;
@@ -215,14 +266,26 @@
             transform: scale(1.5);
         }
 
+        @media (max-width: 992px) { /* Adjusted breakpoint */
+             .progress-tracker {
+                position: static;
+                margin: 20px 0;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2em;
             }
-            
-            .progress-tracker {
-                position: static;
-                margin: 20px 0;
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+            }
+            .hero {
+                border-radius: 20px; /* Revert on mobile */
             }
         }
 
@@ -281,12 +344,41 @@
     </style>
 </head>
 <body>
+    <div class="nav-bar">
+        <div style="color: white; font-weight: bold; font-size: 1.2em;">🧪 Chemistry Exam Guide</div>
+        <div class="nav-buttons">
+            <a href="chemistry-final-sprint.html" class="nav-btn">⚔️ Battle Plan</a>
+            <a href="chemistry-final-sprint.html#notes" class="nav-btn">📖 Detailed Notes</a>
+            <a href="chemistry-first-aid-kit.html" class="nav-btn">📝 Golden Questions</a>
+            <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
+            <a href="teacher-guide.html" class="nav-btn active">📝 Teacher Guide</a>
+        </div>
+    </div>
     <div class="container">
         <div class="hero">
             <h1>⚔️ Chemistry Battle Plan ⚔️</h1>
             <p class="tagline">Final Sprint Strategy - Trust Your Preparation</p>
             <div class="alert-box">
                 🚨 CRITICAL: Do NOT add new content. Focus on depth & speed of retrieval!
+            </div>
+        </div>
+
+        <div class="progress-tracker">
+            <h3 style="margin-bottom: 15px;">✓ Progress Tracker</h3>
+            <div class="progress-item">
+                <input type="checkbox" id="p1"> <label for="p1">Priority 1 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p2"> <label for="p2">Priority 2 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p3"> <label for="p3">Priority 3 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p4"> <label for="p4">Priority 4 Done</label>
+            </div>
+            <div class="progress-item">
+                <input type="checkbox" id="p5"> <label for="p5">Priority 5 Done</label>
             </div>
         </div>
 
@@ -573,26 +665,7 @@
                 </table>
             </div>
         </div>
-
-        <div class="progress-tracker">
-            <h3 style="margin-bottom: 15px;">✓ Progress Tracker</h3>
-            <div class="progress-item">
-                <input type="checkbox" id="p1"> <label for="p1">Priority 1 Done</label>
-            </div>
-            <div class="progress-item">
-                <input type="checkbox" id="p2"> <label for="p2">Priority 2 Done</label>
-            </div>
-            <div class="progress-item">
-                <input type="checkbox" id="p3"> <label for="p3">Priority 3 Done</label>
-            </div>
-            <div class="progress-item">
-                <input type="checkbox" id="p4"> <label for="p4">Priority 4 Done</label>
-            </div>
-            <div class="progress-item">
-                <input type="checkbox" id="p5"> <label for="p5">Priority 5 Done</label>
-            </div>
-        </div>
-
+        
         <div class="hero" style="margin-top: 30px;">
             <h2 style="color: #667eea; margin-bottom: 20px;">🔥 You Are Well Prepared 🔥</h2>
             <p style="font-size: 1.2em; line-height: 1.8;">
@@ -631,3 +704,4 @@
     </script>
 </body>
 </html>
+
