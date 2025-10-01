@@ -18,16 +18,7 @@
             line-height: 1.6;
             padding: 20px;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 0 0 15px 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
+        
         /* Navigation Bar */
         .nav-bar {
             background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
@@ -43,24 +34,24 @@
 
         .nav-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .nav-btn {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 18px;
+            padding: 8px 12px;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.85em;
             white-space: nowrap;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
@@ -75,6 +66,15 @@
             color: #34495e;
             border-color: white;
             box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         /* Pages */
@@ -563,17 +563,16 @@
     <div class="nav-bar">
         <div style="color: white; font-weight: bold; font-size: 1.2em;">🧪 Chemistry Exam Guide</div>
         <div class="nav-buttons">
-            <a href="#" class="nav-btn active" onclick="showPage('battle-plan', event); return false;">⚔️ Battle Plan</a>
+            <a href="#" class="nav-btn" onclick="showPage('battle-plan', event); return false;">⚔️ Battle Plan</a>
             <a href="#" class="nav-btn" onclick="showPage('notes', event); return false;">📖 Detailed Notes</a>
-            <a href="chemistry-first aid kit.html" class="nav-btn">📝 Golden Questions</a>
+            <a href="chemistry-first-aid-kit.html" class="nav-btn">📝 Golden Questions</a>
             <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
             <a href="teacher-guide.html" class="nav-btn">📝 Teacher Guide</a>
-
         </div>
     </div>
     <div class="container">
         <!-- Page 1: Battle Plan -->
-        <div id="battle-plan" class="page active">
+        <div id="battle-plan" class="page">
             <div class="header">
                 <h1>⚔️ Final 4-Hour Battle Plan ⚔️</h1>
                 <p>Ultimate Exam Preparation Guide for Dennis</p>
@@ -1237,9 +1236,15 @@
             // Activate the target page
             document.getElementById(pageId).classList.add('active');
 
-            // Activate the clicked button (or the one passed in the event)
+            // Activate the correct button
             if (event && event.currentTarget) {
                 event.currentTarget.classList.add('active');
+            } else {
+                // Handle initial load where there is no click event
+                const targetButton = document.querySelector(`.nav-btn[onclick*="'${pageId}'"]`);
+                if (targetButton) {
+                    targetButton.classList.add('active');
+                }
             }
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
