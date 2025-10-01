@@ -19,11 +19,60 @@
             line-height: 1.6;
         }
 
+        /* Navigation Bar */
+        .nav-bar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            border-radius: 15px 15px 0 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: white;
+            color: #34495e;
+            border-color: white;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 0 0 15px 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
@@ -243,19 +292,29 @@
                 margin-left: 0;
                 margin-top: 10px;
             }
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+            .container {
+                border-radius: 15px;
+            }
         }
     </style>
 </head>
 <body>
-    <script>
-        function toggleQuestion(element) {
-            const content = element.nextElementSibling;
-            const icon = element.querySelector('.expand-icon');
-            
-            content.classList.toggle('expanded');
-            icon.classList.toggle('expanded');
-        }
-    </script>
+    <div class="nav-bar">
+        <div style="color: white; font-weight: bold; font-size: 1.2em;">🧪 Chemistry Exam Guide</div>
+        <div class="nav-buttons">
+            <a href="chemistry-final-sprint.html" class="nav-btn">⚔️ Battle Plan</a>
+            <a href="chemistry-final-sprint.html#notes" class="nav-btn">📖 Detailed Notes</a>
+            <a href="chemistry-first-aid-kit.html" class="nav-btn active">📝 Golden Questions</a>
+            <a href="equation-writing-diagnostic-tool.html" class="nav-btn">📝 Equation Tools</a>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🧪 Final 4-Hour Sprint: The Golden Questions "First Aid Kit"</h1>
@@ -688,5 +747,40 @@
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // This script ensures the correct nav button is active on page load.
+            const currentPage = "chemistry-first-aid-kit.html";
+            document.querySelectorAll('.nav-bar .nav-btn').forEach(btn => {
+                const btnPage = btn.getAttribute('href');
+                if (btnPage && btnPage.includes(currentPage)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+             // Special handling for Battle Plan/Notes which are internal pages
+            if(window.location.pathname.includes("chemistry-final-sprint.html")) {
+                 const battlePlanButton = document.querySelector('.nav-btn[onclick*="battle-plan"]');
+                 const notesButton = document.querySelector('.nav-btn[onclick*="notes"]');
+                 const savedPage = localStorage.getItem('currentPage');
+                 if (savedPage === 'notes') {
+                     notesButton.classList.add('active');
+                     battlePlanButton.classList.remove('active');
+                 } else {
+                     battlePlanButton.classList.add('active');
+                     notesButton.classList.remove('active');
+                 }
+            }
+        });
+
+        function toggleQuestion(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.expand-icon');
+            
+            content.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
 </body>
 </html>
