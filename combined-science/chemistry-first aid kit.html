@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final 4-Hour Sprint: Chemistry First Aid Kit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .sprint-section {
+            margin-bottom: 50px;
+        }
+
+        .sprint-header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .sprint-header h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .sprint-header p {
+            opacity: 0.95;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .question-header {
+            background: white;
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .question-title {
+            flex: 1;
+        }
+
+        .question-title h3 {
+            color: #1e3c72;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin: 5px 5px 5px 0;
+        }
+
+        .expand-icon {
+            font-size: 1.5em;
+            color: #667eea;
+            transition: transform 0.3s ease;
+            margin-left: 20px;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .question-content {
+            padding: 0 25px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.5s ease;
+        }
+
+        .question-content.expanded {
+            max-height: 5000px;
+            padding: 25px;
+        }
+
+        .full-question {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .full-question h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        .answer-section {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .answer-section h4 {
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .answer-section h4:before {
+            content: "✓";
+            background: #4caf50;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .step {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .step-label {
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .formula {
+            background: #fff3e0;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 3px solid #ff9800;
+        }
+
+        .why-badge {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .why-badge strong {
+            color: #856404;
+        }
+
+        .doc-link {
+            display: inline-block;
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #1976d2;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .doc-link:hover {
+            background: #bbdefb;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .question-header {
+                flex-direction: column;
+            }
+            
+            .expand-icon {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function toggleQuestion(element) {
+            const content = element.nextElementSibling;
+            const icon = element.querySelector('.expand-icon');
+            
+            content.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+    </script>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Final 4-Hour Sprint: The Golden Questions "First Aid Kit"</h1>
+            <p>Strategic Goal: Activate your core skills, internalize scoring templates, and reinforce your pitfall-avoidance reflexes</p>
+        </div>
+
+        <div class="content">
+            <!-- SPRINT 1 -->
+            <div class="sprint-section">
+                <div class="sprint-header">
+                    <h2>SPRINT 1: Acids, Bases & Salts / QA (Focus: 60 mins)</h2>
+                    <p><strong>Tactical Goal:</strong> Master the core SOPs (Salt Prep, QA) and the "Explain Why" scoring phrases.</p>
+                    <a href="https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing" class="doc-link" target="_blank">📄 View Full Document</a>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>1. Pasir Ris Secondary School, Paper 2, Question 8</h3>
+                            <span class="topic-tag">Salt Preparation (Excess Method)</span>
+                            <span class="topic-tag">Stoichiometry Integration</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p><strong>(a)</strong> A student prepares crystals of copper(II) chloride by adding an excess of copper(II) carbonate to 50.0 cm³ of 2.00 mol/dm³ hydrochloric acid.</p>
+                            <p style="margin-top: 10px;"><strong>(i)</strong> Write a balanced chemical equation, including state symbols...</p>
+                            <p><strong>(ii)</strong> Explain why the student add an excess of copper(II) carbonate?</p>
+                            <p><strong>(iii)</strong> Describe how the student would obtain pure and dry crystals...</p>
+                            <p style="margin-top: 10px;"><strong>(b) (i)</strong> Calculate the number of moles of copper(II) chloride...</p>
+                            <p><strong>(ii)</strong> Hence, calculate the maximum mass...</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It's the perfect all-in-one. It tests equation writing, the #1 "Explain Why" rationale, the full crystallisation SOP, and links directly to a standard stoichiometry calculation. Mastering this one question covers 50% of this topic.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Answer Template:</h4>
+                            
+                            <div class="step">
+                                <p class="step-label">(a)(i) Write a balanced chemical equation...</p>
+                                <div class="formula">
+                                    CuCO₃(s) + 2HCl(aq) → CuCl₂(aq) + H₂O(l) + CO₂(g)
+                                </div>
+                                <p><em>Marks awarded for: Correct formulae, Correct balancing and state symbols</em></p>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(a)(ii) Explain why the student add an excess...</p>
+                                <p style="margin-top: 10px;">"To ensure that all the <strong>hydrochloric acid is completely reacted</strong>. If any acid remains, it will be an impurity in the final salt solution, making the crystals impure."</p>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(a)(iii) Describe how the student would obtain pure and dry crystals...</p>
+                                <ol style="margin-top: 10px; padding-left: 20px;">
+                                    <li>"Heat the filtrate in an evaporating dish until it becomes <strong>saturated</strong>."</li>
+                                    <li>"Allow the saturated solution to <strong>cool slowly</strong> at room temperature for crystals to form."</li>
+                                    <li>"<strong>Filter</strong> to collect the crystals, <strong>wash</strong> them with a small amount of cold distilled water, and <strong>dry</strong> them between pieces of filter paper."</li>
+                                </ol>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(b)(i) Calculate the number of moles of copper(II) chloride...</p>
+                                <p style="margin-top: 10px;"><strong>Step 1 (Moles of Known):</strong></p>
+                                <p>Moles of HCl = C × V = 2.00 mol/dm³ × (50.0 / 1000) dm³ = <strong>0.100 mol</strong></p>
+                                <p style="margin-top: 10px;"><strong>Step 2 & 3 (Mole Ratio & Moles of Unknown):</strong></p>
+                                <p>From the equation, mole ratio of HCl : CuCl₂ is <strong>2 : 1</strong></p>
+                                <p>Therefore, moles of CuCl₂ = 0.100 / 2 = <strong>0.0500 mol</strong></p>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(b)(ii) Hence, calculate the maximum mass...</p>
+                                <p style="margin-top: 10px;"><strong>Step 4 (Convert to Answer):</strong></p>
+                                <p>Mᵣ of CuCl₂ = 64 + 2(35.5) = 135</p>
+                                <p>Mass of CuCl₂ = moles × Mᵣ = 0.0500 mol × 135 g/mol = <strong>6.75 g</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>2. Bedok South Secondary School, Paper 2, Section C, Question 9</h3>
+                            <span class="topic-tag">Qualitative Analysis (Flowchart Deduction)</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>A green solution, <strong>A</strong>, is divided into three portions...</p>
+                            <p><strong>(i)</strong> ...aqueous sodium hydroxide is added... A green precipitate, <strong>B</strong>, is formed, which is insoluble in excess.</p>
+                            <p><strong>(ii)</strong> ...dilute nitric acid is added, followed by aqueous barium nitrate. A white precipitate, <strong>C</strong>, is formed.</p>
+                            <p><strong>(iii)</strong> ...dilute nitric acid is added, followed by aqueous silver nitrate. No visible reaction occurs.</p>
+                            <p style="margin-top: 15px;"><strong>(a)</strong> Identify the cation and anion present in solution A.</p>
+                            <p><strong>(b)</strong> Identify substances B and C.</p>
+                            <p><strong>(c)</strong> Write the ionic equation for the formation of precipitate C.</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It is a classic, high-stakes QA flowchart. It forces you to activate your memory of precipitate colours (Fe²⁺), anion tests (SO₄²⁻ present, Cl⁻ absent), and link them in a logical chain.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Answer Template:</h4>
+                            
+                            <div class="step">
+                                <p class="step-label">(a) Identify the cation and anion present in solution A.</p>
+                                <p style="margin-top: 10px;"><strong>Detective Work:</strong></p>
+                                <ul style="padding-left: 20px; margin-top: 10px;">
+                                    <li><strong>Clue 1:</strong> "A green solution" → Suspect is Fe²⁺</li>
+                                    <li><strong>Clue 2:</strong> "green precipitate, insoluble in excess" → Confirms cation is Fe²⁺</li>
+                                    <li><strong>Clue 3:</strong> "white precipitate with barium nitrate" → Confirms anion is SO₄²⁻</li>
+                                    <li><strong>Clue 4:</strong> "No reaction with silver nitrate" → Confirms Cl⁻ is absent</li>
+                                </ul>
+                                <div class="formula" style="margin-top: 15px;">
+                                    <strong>Cation:</strong> Iron(II) ion or Fe²⁺<br>
+                                    <strong>Anion:</strong> Sulfate ion or SO₄²⁻
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(b) Identify substances B and C.</p>
+                                <div class="formula" style="margin-top: 10px;">
+                                    <strong>Substance B:</strong> Iron(II) hydroxide or Fe(OH)₂<br>
+                                    <strong>Substance C:</strong> Barium sulfate or BaSO₄
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(c) Write the ionic equation for the formation of precipitate C.</p>
+                                <div class="formula" style="margin-top: 10px;">
+                                    Ba²⁺(aq) + SO₄²⁻(aq) → BaSO₄(s)
+                                </div>
+                                <p><em>Marks for: Correct ions, Correct formula and state symbols</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPRINT 2 -->
+            <div class="sprint-section">
+                <div class="sprint-header">
+                    <h2>SPRINT 2: Stoichiometry & The Mole Concept (Focus: 60 mins)</h2>
+                    <p><strong>Tactical Goal:</strong> Solidify the calculation SOPs for both standard and limiting reactant problems.</p>
+                    <a href="https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?tab=t.0" class="doc-link" target="_blank">📄 View Full Document</a>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>1. Broadrick Secondary School, Paper 3, Question 8</h3>
+                            <span class="topic-tag">Stoichiometry (Limiting Reactant)</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>Iron(II) carbonate reacts with dilute hydrochloric acid... FeCO₃ + 2HCl → ...</p>
+                            <p>2.32 g of iron(II) carbonate was reacted with 50 cm³ of 0.10 mol/dm³ of dilute hydrochloric acid.</p>
+                            <p style="margin-top: 10px;"><strong>(a)</strong> Calculate the number of moles of iron(II) carbonate present.</p>
+                            <p><strong>(b)</strong> Calculate the number of moles of dilute hydrochloric acid present.</p>
+                            <p><strong>(c) (i)</strong> Identify the limiting reactant... Show your reasoning.</p>
+                            <p><strong>(ii)</strong> Calculate the volume of carbon dioxide produced...</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> This is the quintessential Limiting Reactant problem. It forces you to execute the full SOP: calculate moles of both reactants, compare them using the mole ratio, identify the L.R., and then use the L.R. for the final product calculation.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Answer Template:</h4>
+                            
+                            <div class="step">
+                                <p class="step-label">(a) Calculate the number of moles of iron(II) carbonate...</p>
+                                <p style="margin-top: 10px;">Mᵣ of FeCO₃ = 56 + 12 + 3(16) = 116</p>
+                                <p>Moles of FeCO₃ = mass / Mᵣ = 2.32 g / 116 g/mol = <strong>0.0200 mol</strong></p>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(b) Calculate the number of moles of dilute hydrochloric acid...</p>
+                                <p style="margin-top: 10px;">Moles of HCl = C × V = 0.10 mol/dm³ × (50 / 1000) dm³ = <strong>0.00500 mol</strong></p>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(c)(i) Identify the limiting reactant...</p>
+                                <p style="margin-top: 10px;"><strong>Step 1 (Mole Ratio):</strong> From the equation FeCO₃ + 2HCl → ..., the mole ratio FeCO₃ : HCl is <strong>1 : 2</strong></p>
+                                <p style="margin-top: 10px;"><strong>Step 2 (Compare):</strong> To react with 0.0200 mol of FeCO₃, moles of HCl needed = 2 × 0.0200 = 0.0400 mol</p>
+                                <p style="margin-top: 10px;"><strong>Step 3 (Judge):</strong> We only have 0.00500 mol of HCl, which is less than the 0.0400 mol needed.</p>
+                                <div class="formula" style="margin-top: 10px;">
+                                    <strong>Conclusion: Hydrochloric acid (HCl) is the limiting reactant.</strong>
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(c)(ii) Calculate the volume of carbon dioxide produced...</p>
+                                <p style="margin-top: 10px;"><strong>Step 1 (Mole Ratio):</strong> From the equation, mole ratio HCl : CO₂ is <strong>2 : 1</strong></p>
+                                <p style="margin-top: 10px;"><strong>Step 2 (Moles of Product):</strong> Moles of CO₂ produced = Moles of HCl / 2 = 0.00500 / 2 = 0.00250 mol</p>
+                                <p style="margin-top: 10px;"><strong>Step 3 (Convert to Answer):</strong> Volume of CO₂ = moles × 24 = 0.00250 mol × 24 dm³/mol = <strong>0.0600 dm³</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>2. Meridian Secondary School, Paper 2, Section C, Question 8(d,e,f)</h3>
+                            <span class="topic-tag">Stoichiometry (Multi-step with unit conversion)</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>...Each antacid tablet contains 600 mg of calcium carbonate.</p>
+                            <p><strong>(d)</strong> Calculate the relative formula mass of calcium carbonate.</p>
+                            <p><strong>(e)</strong> ...Calculate the number of moles of hydrochloric acid that would have reacted with 1.5 antacid tablets.</p>
+                            <p><strong>(f)</strong> Calculate the volume of gas produced...</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It tests your ability to handle non-standard units (mg), work with real-world numbers (1.5 tablets), and execute a multi-step calculation chain. It's a great test of procedural accuracy.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Key Skills:</h4>
+                            <ul style="padding-left: 20px;">
+                                <li>Unit conversion: mg to g</li>
+                                <li>Working with fractional amounts (1.5 tablets)</li>
+                                <li>Multi-step stoichiometry chain</li>
+                                <li>Gas volume calculations at STP</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPRINT 3 -->
+            <div class="sprint-section">
+                <div class="sprint-header">
+                    <h2>SPRINT 3: Chemical Bonding & Structure (Focus: 60 mins)</h2>
+                    <p><strong>Tactical Goal:</strong> Master the "Golden Templates" for explaining properties and the detailed rules for dot-and-cross diagrams.</p>
+                    <a href="https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=sharing" class="doc-link" target="_blank">📄 View Full Document</a>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>1. Chua Chu Kang Secondary School, Paper 2, Question 10</h3>
+                            <span class="topic-tag">Ionic vs Covalent Comparison</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>Chlorine is a non-metallic element.</p>
+                            <p><strong>(a)</strong> State the type of bond... Explain your answer.</p>
+                            <p><strong>(b)</strong> Draw 'dot and cross' diagrams for <strong>sodium with chlorine</strong> and <strong>hydrogen with chlorine</strong>.</p>
+                            <p><strong>(c)</strong> Describe the differences in melting points... Explain, in terms of bonding, why this is so.</p>
+                            <p><strong>(d)</strong> Explain why both substances... can conduct electricity when dissolved in water.</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It's the ultimate comparison question. It forces you to construct diagrams for both ionic and covalent substances and then immediately apply the corresponding "Golden Templates" to explain the differences in their properties (melting point, conductivity). It covers 80% of this topic in a single question.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Key Concepts:</h4>
+                            <ul style="padding-left: 20px;">
+                                <li><strong>Ionic bonding:</strong> Metal + Non-metal → Electron transfer → High melting point, conducts when molten/aqueous</li>
+                                <li><strong>Covalent bonding:</strong> Non-metal + Non-metal → Electron sharing → Lower melting point, does not conduct (unless acidic)</li>
+                                <li><strong>Golden Templates:</strong> Always mention "strong ionic/covalent bonds" and "large amount of energy"</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>2. Pasir Ris Secondary School, Paper 2, Question 3</h3>
+                            <span class="topic-tag">Ionic Properties Focus</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>Magnesium chloride has a high melting point and is a conductor of electricity when molten.</p>
+                            <p><strong>(i)</strong> Name the type of chemical bonding...</p>
+                            <p><strong>(ii)</strong> Draw a 'dot and cross' diagram for magnesium chloride...</p>
+                            <p><strong>(iii)</strong> Explain why magnesium chloride is a conductor of electricity when molten but not in the solid state.</p>
+                            <p><strong>(b)</strong> ...Explain the difference in their boiling points (vs Chlorine)...</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It is a laser-focused test of the ionic bonding toolkit: drawing the diagram (with correct charges/brackets for a Group 2 metal) and explaining conductivity using the "mobile ions" keyword.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Critical Keywords:</h4>
+                            <div class="formula">
+                                <strong>For conductivity:</strong> "mobile ions" / "free to move" / "carry charge"<br>
+                                <strong>For melting point:</strong> "strong ionic bonds" / "large amount of energy to overcome"<br>
+                                <strong>For diagram:</strong> Always include charges, brackets for polyatomic ions, 2+ for Group 2 metals
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPRINT 4 -->
+            <div class="sprint-section">
+                <div class="sprint-header">
+                    <h2>SPRINT 4: Redox & Reactivity + Final Review (Focus: 45 mins)</h2>
+                    <p><strong>Tactical Goal:</strong> Activate your knowledge of the reactivity series and the core redox definitions.</p>
+                    <a href="https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?tab=t.0" class="doc-link" target="_blank">📄 View Full Document</a>
+                </div>
+
+                <!-- Question 1 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>1. Deyi Secondary School, Paper 2, Section B, Question 10(b)</h3>
+                            <span class="topic-tag">Redox & Reactivity (Deducing Reactivity Series)</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>Three experiments were carried out to find the order of reactivity of three metals. The metals used were zinc, tin and unknown metal <strong>Q</strong>.</p>
+                            <p style="margin-top: 10px;"><strong>(i)</strong> Suggest the name of metal Q.</p>
+                            <p><strong>(iii)</strong> List the three metals in the order of increasing reactivity.</p>
+                            <p><strong>(iv)</strong> Write a chemical equation for the reaction involving zinc and tin(II) chloride.</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It is the best single question for testing your ability to apply the displacement rule and deduce the reactivity series from experimental evidence, which is a core C-level skill.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Key Concepts:</h4>
+                            <ul style="padding-left: 20px;">
+                                <li><strong>Displacement Rule:</strong> A more reactive metal can displace a less reactive metal from its salt solution</li>
+                                <li><strong>Reactivity Series:</strong> Use experimental results to arrange metals in order</li>
+                                <li><strong>Evidence Analysis:</strong> If metal X displaces metal Y, then X is more reactive than Y</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-title">
+                            <h3>2. Pasir Ris Secondary School, Paper 2, Question 4</h3>
+                            <span class="topic-tag">Redox (Identifying Agents)</span>
+                        </div>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="question-content">
+                        <div class="full-question">
+                            <h4>📋 Full Question:</h4>
+                            <p>In each of these redox equations, identify the oxidising agent and the reducing agent.</p>
+                            <p style="margin-top: 10px;"><strong>(a)</strong> Zn + Fe²⁺ → Zn²⁺ + Fe</p>
+                            <p><strong>(b)</strong> 2Cu₂O + C → 4Cu + CO₂</p>
+                        </div>
+
+                        <div class="why-badge">
+                            <strong>💡 Why this question?</strong> It's a direct, no-frills test of your ability to apply the OIL RIG principle and the "Agent" model. It's a quick and effective way to activate this fundamental concept.
+                        </div>
+
+                        <div class="answer-section">
+                            <h4>Answer Template:</h4>
+                            
+                            <div class="step">
+                                <p class="step-label">(a) Zn + Fe²⁺ → Zn²⁺ + Fe</p>
+                                <p style="margin-top: 10px;"><strong>Analysis:</strong></p>
+                                <ul style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Zn → Zn²⁺ (loses electrons → <strong>oxidation</strong> → Zn is <strong>reducing agent</strong>)</li>
+                                    <li>Fe²⁺ → Fe (gains electrons → <strong>reduction</strong> → Fe²⁺ is <strong>oxidising agent</strong>)</li>
+                                </ul>
+                                <div class="formula" style="margin-top: 10px;">
+                                    <strong>Oxidising agent:</strong> Fe²⁺ or iron(II) ion<br>
+                                    <strong>Reducing agent:</strong> Zn or zinc
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">(b) 2Cu₂O + C → 4Cu + CO₂</p>
+                                <p style="margin-top: 10px;"><strong>Analysis:</strong></p>
+                                <ul style="padding-left: 20px; margin-top: 10px;">
+                                    <li>Cu₂O → Cu (copper reduced from +1 to 0 → Cu₂O is <strong>oxidising agent</strong>)</li>
+                                    <li>C → CO₂ (carbon oxidized from 0 to +4 → C is <strong>reducing agent</strong>)</li>
+                                </ul>
+                                <div class="formula" style="margin-top: 10px;">
+                                    <strong>Oxidising agent:</strong> Cu₂O or copper(I) oxide<br>
+                                    <strong>Reducing agent:</strong> C or carbon
+                                </div>
+                            </div>
+
+                            <div class="step">
+                                <p class="step-label">🔑 Remember: OIL RIG</p>
+                                <div class="formula" style="margin-top: 10px;">
+                                    <strong>O</strong>xidation <strong>I</strong>s <strong>L</strong>oss (of electrons)<br>
+                                    <strong>R</strong>eduction <strong>I</strong>s <strong>G</strong>ain (of electrons)<br><br>
+                                    The substance that gets <strong>oxidized</strong> is the <strong>reducing agent</strong><br>
+                                    The substance that gets <strong>reduced</strong> is the <strong>oxidising agent</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
