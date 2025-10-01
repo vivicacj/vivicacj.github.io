@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final 4-Hour Battle Plan - Dennis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        /* Navigation Bar */
+        .nav-bar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .nav-btn:hover {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .nav-btn.active {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        /* Pages */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .mission-statement {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .mission-statement p {
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        
+        h4 {
+            color: #f5576c;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .sprint {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 6px solid #667eea;
+        }
+        
+        .sprint-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .action-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid #f5576c;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .flashcard-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 10px 10px 10px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+        }
+        
+        .flashcard-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        .flashcard-link::before {
+            content: "🎯";
+            font-size: 1.2em;
+        }
+        
+        .akm-box {
+            background: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .akm-title {
+            color: #1976d2;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .akm-link-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .akm-link-btn:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+        
+        ul, ol {
+            margin-left: 25px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        strong {
+            color: #f5576c;
+        }
+        
+        .strategy-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .checkmark {
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        /* Notes Page Styles */
+        .notes-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .domain-section {
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .domain-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .domain-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+        }
+        
+        .domain-content {
+            background: #f8f9fa;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .domain-content.expanded {
+            max-height: 5000px;
+            padding: 25px;
+        }
+        
+        .akm-module {
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            scroll-margin-top: 100px;
+        }
+        
+        .akm-header {
+            background: #e3f2fd;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid #2196f3;
+        }
+        
+        .akm-header:hover {
+            background: #bbdefb;
+        }
+        
+        .akm-body {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .akm-body.expanded {
+            max-height: 3000px;
+            padding: 20px;
+        }
+        
+        .akm-section {
+            margin: 15px 0;
+        }
+        
+        .akm-section-title {
+            color: #f5576c;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+        
+        .back-to-top.visible {
+            display: flex;
+        }
+        
+        .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1, .notes-header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .flashcard-link {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation Bar -->
+        <div class="nav-bar">
+            <div style="color: white; font-weight: bold; font-size: 1.2em;">📚 Chemistry Exam Guide</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage('battle-plan')">⚔️ Battle Plan</button>
+                <button class="nav-btn" onclick="showPage('notes')">📖 Detailed Notes</button>
+            </div>
+        </div>
+        
+        <!-- Page 1: Battle Plan -->
+        <div id="battle-plan" class="page active">
+            <div class="header">
+                <h1>⚔️ Final 4-Hour Battle Plan ⚔️</h1>
+                <p>Ultimate Exam Preparation Guide for Dennis</p>
+            </div>
+            
+            <div class="content">
+                <div class="mission-statement">
+                    <p><strong>Dennis,</strong> The final hours are here. Your mission now is not to learn, but to <strong>activate and weaponize</strong> your existing knowledge. This is your definitive guide for the next 4 hours. Every action is designed for maximum impact.</p>
+                </div>
+                
+                <h2>🎯 The Grand Strategy (First 15 Minutes)</h2>
+                <div class="strategy-box">
+                    <p><strong>Read this first. Your mindset is your primary weapon.</strong></p>
+                    <ol>
+                        <li><strong>Trust Your System:</strong> Do not try to recall random facts. Trust the SOPs and Golden Templates in this guide. They are your automated scoring machines.</li>
+                        <li><strong>Slow is Fast:</strong> Read every question twice. Underline the command verb (<code>Explain</code>, <code>Calculate</code>, <code>Describe</code>). This 5-second action prevents 50% of careless mistakes.</li>
+                        <li><strong>Aim for Keywords, Not Perfection:</strong> Your goal is to hit the key scoring phrases. Clarity and precision over complex sentences.</li>
+                    </ol>
+                </div>
+                
+                <h2>⚡ The Tactical Execution (3h 45m Sprint)</h2>
+                <p style="font-style: italic; color: #666;">This plan is divided into four focused sprints. Follow it precisely.</p>
+                
+                <!-- SPRINT 1 -->
+                <div class="sprint">
+                    <div class="sprint-title">SPRINT 1: Acids, Bases & Salts / QA (60 minutes)</div>
+                    <p style="font-style: italic; margin-bottom: 20px;">This is the highest-weighted topic. Mastering this sprint sets the tone for an A1.</p>
+                    
+                    <h4>Activate & Internalize (30 mins):</h4>
+                    
+                    <div class="action-item">
+                        <strong>Action 1: Master the "Why" & "How"</strong>
+                        <p><strong>Drill this deck:</strong> <span class="checkmark">✅</span> Flashcard Deck 1.3: Core Topics - Level 3: Conceptual & Explanation Cards (17 terms)</p>
+                        <a href="https://quizlet.com/sg/1069664568/flashcard-deck-13-core-topics-level-3-conceptual-explanation-cards-flash-cards/?i=118urv&x=1jqt" target="_blank" class="flashcard-link">Open Flashcards</a>
+                        <p><strong>Why?</strong> This deck contains the "Golden Templates" for explaining melting points, conductivity, and crucial experimental rationales (why use excess, why wash). This is the key to scoring high on Paper 2 explanation questions.</p>
+                    </div>
+                    
+                    <div class="action-item">
+                        <strong>Action 2: Solidify the Procedures</strong>
+                        <p><strong>Drill this deck:</strong> <span class="checkmark">✅</span> Flashcard Deck 1.2: Core Topics - Level 2: Procedural & SOP Cards (11 terms)</p>
+                        <a href="https://quizlet.com/sg/1069663936/flashcard-deck-12-core-topics-level-2-procedural-sop-cards-flash-cards/?i=118urv&x=1jqt" target="_blank" class="flashcard-link">Open Flashcards</a>
+                        <p><strong>Why?</strong> This deck contains the SOPs for the three methods of Salt Preparation and for writing Ionic Equations. This is your script for any "Describe the steps..." question.</p>
+                    </div>
+                    
+                    <h4>Weaponize (30 mins):</h4>
+                    <p>Study these specific AKMs from your atomic notes. Read them, cover them, and recite the key points out loud.</p>
+                    
+                    <div class="akm-box" id="akm-202-preview">
+                        <div class="akm-title">
+                            🧬 AKM #202: Salt Preparation Methods
+                            <a href="#" onclick="goToAKM('akm-202'); return false;" class="akm-link-btn">📖 View Details</a>
+                        </div>
+                        <p><strong>Your Brain's GPS (The Decision Tree):</strong></p>
+                        <ol>
+                            <li><strong>Insoluble Salt?</strong> ➡️ <strong>Precipitation.</strong></li>
+                            <li><strong>Soluble Salt + Soluble Reactants?</strong> ➡️ <strong>Titration.</strong></li>
+                            <li><strong>Soluble Salt + Insoluble Reactant?</strong> ➡️ <strong>Excess Reactant.</strong></li>
+                        </ol>
+                        <p><strong>Your "Describe" Script (Excess Reactant SOP):</strong></p>
+                        <ol>
+                            <li>Add <strong>excess</strong> insoluble solid to <strong>warm acid</strong>.</li>
+                            <li><strong>Filter</strong> to remove excess solid.</li>
+                            <li><strong>Heat</strong> filtrate until <strong>saturated</strong>, then <strong>cool</strong> to crystallise.</li>
+                            <li><strong>Filter</strong>, <strong>wash</strong> with cold water, and <strong>dry</strong>.</li>
+                        </ol>
+                        <p><strong>Your "Explain Why" Scoring Phrases:</strong></p>
+                        <ul>
+                            <li><strong>Why add excess?</strong> ➡️ "To ensure all the acid is completely reacted, so the final salt is pure."</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="akm-box" id="akm-204-preview">
+                        <div class="akm-title">
+                            🧬 AKM #204: QA Tests for Ions & Gases
+                            <a href="#" onclick="goToAKM('akm-204'); return false;" class="akm-link-btn">📖 View Details</a>
+                        </div>
+                        <p><strong>Your "Instant Recall" List:</strong></p>
+                        <ul>
+                            <li><strong>Gases:</strong> CO₂→Limewater→White Ppt; NH₃→Moist Red Litmus→Blue.</li>
+                            <li><strong>Anions:</strong> <strong>ACIDIFY FIRST!</strong> Cl⁻+AgNO₃→White Ppt; SO₄²⁻+Ba(NO₃)₂→White Ppt.</li>
+                            <li><strong>Cations:</strong> Cu²⁺→Blue Ppt; Fe²⁺→Green Ppt; Fe³⁺→Red-Brown Ppt.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- SPRINT 2 -->
+                <div class="sprint">
+                    <div class="sprint-title">SPRINT 2: Stoichiometry & Pitfall Annihilation (60 minutes)</div>
+                    <p style="font-style: italic; margin-bottom: 20px;">This sprint is about ensuring zero careless mistakes in calculations and knowing every trap.</p>
+                    
+                    <h4>Activate & Internalize (30 mins):</h4>
+                    
+                    <div class="action-item">
+                        <strong>Action 1: Master the Traps</strong>
+                        <p><strong>Drill this deck:</strong> <span class="checkmark">✅</span> Flashcard Deck 1.4: Core Topics - Level 4: Pitfall & Error Cards (16 terms)</p>
+                        <a href="https://quizlet.com/sg/1069665062/flashcard-deck-14-core-topics-level-4-pitfall-error-cards-flash-cards/?i=118urv&x=1jqt" target="_blank" class="flashcard-link">Open Flashcards</a>
+                        <p><strong>Why?</strong> <strong>This is the most important deck for today.</strong> It's your pre-battle briefing on enemy tactics. Knowing what <em>not</em> to do is more valuable than learning a new fact now. Pay special attention to the pitfalls for bonding explanations.</p>
+                    </div>
+                    
+                    <div class="action-item">
+                        <strong>Action 2: Review the Calculation Engine</strong>
+                        <p><strong>Quickly review</strong> the Stoichiometry cards within <span class="checkmark">✅</span> Flashcard Deck 1.2 (Level 2).</p>
+                        <p><strong>Why?</strong> To ensure the 4-step calculation SOP and the Limiting Reactant SOP are fresh in your mind.</p>
+                    </div>
+                    
+                    <h4>Weaponize (30 mins):</h4>
+                    <p>Study these specific AKMs. This is your pre-flight checklist for all calculations.</p>
+                    
+                    <div class="akm-box" id="akm-calc-preview">
+                        <div class="akm-title">
+                            🧬 AKM #402 & #502 & #601: The Calculation Engine
+                            <a href="#" onclick="goToAKM('akm-calc'); return false;" class="akm-link-btn">📖 View Details</a>
+                        </div>
+                        <p><strong>Your Toolbox (The Holy Trinity):</strong></p>
+                        <ol>
+                            <li><code>n = m / Mᵣ</code></li>
+                            <li><code>n = C × V</code> <strong>(V must be in dm³!)</strong></li>
+                            <li><code>n = V / 24</code> <strong>(V must be in dm³!)</strong></li>
+                        </ol>
+                        <p><strong>THE GOLDEN RULE:</strong> <strong>1 dm³ = 1000 cm³.</strong> <strong>Always divide cm³ by 1000.</strong></p>
+                        <p><strong>Your Main SOP (The 4-Step Process):</strong></p>
+                        <ol>
+                            <li>Moles of <strong>Known</strong>.</li>
+                            <li><strong>Mole Ratio</strong> (from BALANCED equation).</li>
+                            <li>Moles of <strong>Unknown</strong>.</li>
+                            <li><strong>Convert</strong> to Final Answer.</li>
+                        </ol>
+                        <p><strong>Your "Pre-Check" SOP (Limiting Reactant):</strong></p>
+                        <p><em>(IF two reactant amounts are given):</em></p>
+                        <ol>
+                            <li>Calculate moles of <strong>BOTH</strong>.</li>
+                            <li>Compare to ratio to find the one that runs out first.</li>
+                            <li><strong>Use ONLY the moles of the limiting reactant</strong> for all further steps.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <!-- SPRINT 3 -->
+                <div class="sprint">
+                    <div class="sprint-title">SPRINT 3: Chemical Bonding & Structure (45 minutes)</div>
+                    <p style="font-style: italic; margin-bottom: 20px;">This sprint is a high-speed reinforcement of the most challenging explanation topic.</p>
+                    
+                    <h4>Activate & Internalize (15 mins):</h4>
+                    
+                    <div class="action-item">
+                        <strong>Action 1:</strong> Re-drill the Chemical Bonding cards from <span class="checkmark">✅</span> Deck 1.3 (Conceptual).
+                    </div>
+                    
+                    <div class="action-item">
+                        <strong>Action 2:</strong> Re-drill the Chemical Bonding cards from <span class="checkmark">✅</span> Deck 1.4 (Pitfalls).
+                        <p><strong>Why?</strong> Repetition is key. You are reinforcing the templates and pitfalls you reviewed in the previous sprint.</p>
+                    </div>
+                    
+                    <h4>Weaponize (30 mins):</h4>
+                    <p>Study this specific AKM. This is where A1 answers are made.</p>
+                    
+                    <div class="akm-box" id="akm-bonding-preview">
+                        <div class="akm-title">
+                            🧬 AKM #901 & #902: Explaining Physical Properties
+                            <a href="#" onclick="goToAKM('akm-bonding'); return false;" class="akm-link-btn">📖 View Details</a>
+                        </div>
+                        <p><strong>Your "Explain High/Low Melting Point" Script:</strong></p>
+                        <ol>
+                            <li><strong>Structure:</strong> "X has a <strong>giant ionic lattice / simple molecular</strong> structure."</li>
+                            <li><strong>Forces:</strong> "There are <strong>strong electrostatic forces of attraction</strong> / <strong>weak intermolecular forces of attraction</strong>."</li>
+                            <li><strong>Energy:</strong> "A <strong>large / small</strong> amount of energy is needed to overcome these forces."</li>
+                        </ol>
+                        <p><strong>Your "Explain Conductivity" Script:</strong></p>
+                        <ul>
+                            <li><strong>Core Principle:</strong> Requires <strong>MOBILE CHARGE CARRIERS</strong>.</li>
+                            <li><strong>Ionic Solid:</strong> "Ions are in <strong>fixed positions</strong>... <strong>not free to move</strong>."</li>
+                            <li><strong>Ionic Molten/Aqueous:</strong> "Ions are <strong>free to move</strong>."</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- SPRINT 4 -->
+                <div class="sprint">
+                    <div class="sprint-title">SPRINT 4: Final Activation & Mental Cooldown (60 minutes)</div>
+                    
+                    <h4>Activate (30 mins):</h4>
+                    
+                    <div class="action-item">
+                        <strong>Action 1: Rapid-Fire Fact Recall</strong>
+                        <p><strong>Drill this deck:</strong> <span class="checkmark">✅</span> Flashcard Deck 1.1: Core Topics - Level 1: Fact & Definition Cards (48 terms)</p>
+                        <a href="https://quizlet.com/sg/1069663106/flashcard-deck-11-core-topics-level-1-fact-definition-cards-diagram/?i=118urv&x=1jqt" target="_blank" class="flashcard-link">Open Flashcards</a>
+                        <p><strong>How?</strong> Do not study. This is a speed run. See the front, say the back, check, and move on. If you know it, swipe. If you hesitate, pause for 5 seconds, then swipe.</p>
+                    </div>
+                    
+                    <div class="action-item">
+                        <strong>Action 2: Reinforce Experimental Knowledge</strong>
+                        <p><strong>Quickly scan:</strong> <span class="checkmark">✅</span> Flashcard Deck 2: Satellite Topics - Experimental Chemistry (25 terms)</p>
+                        <a href="https://quizlet.com/sg/1069661234/flashcard-deck-2-satellite-topics-experimental-chemistry-flash-cards/?i=118urv&x=1jqt" target="_blank" class="flashcard-link">Open Flashcards</a>
+                        <p><strong>Why?</strong> Apparatus and separation techniques are common, easy marks in Paper 1 and Section A of Paper 2.</p>
+                    </div>
+                    
+                    <h4>Internalize & Cool Down (30 mins):</h4>
+                    
+                    <div class="action-item">
+                        <p><strong>(15 mins)</strong> Take out the Quick-Look Cheat Sheets for all four Core Topics. Read them through one last time. This is your final summary.</p>
+                    </div>
+                    
+                    <div class="action-item">
+                        <p><strong>(15 mins)</strong> <strong>Close everything.</strong> Walk around. In your mind, visualize the Salt Prep Decision Tree. Recite the Golden Template for explaining melting points. Recall the 4-step Stoichiometry SOP.</p>
+                        <p><strong>Then, you are done.</strong></p>
+                    </div>
+                </div>
+                
+                <div class="strategy-box" style="text-align: center; margin-top: 40px;">
+                    <h3 style="color: #28a745; margin-top: 0;">🎯 Mission Complete</h3>
+                    <p><strong>Your mission is complete. You have activated the most critical knowledge and skills. Trust your preparation. Good luck tomorrow.</strong></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Page 2: Detailed Notes -->
+        <div id="notes" class="page">
+            <div class="notes-header">
+                <h1>📖 Ultimate Atomic Notes</h1>
+                <p>Detailed Knowledge Modules Referenced in Your Battle Plan</p>
+            </div>
+            
+            <div class="content">
+                <div class="mission-statement">
+                    <p><strong>Quick Navigation:</strong> Click on any domain to expand and view the detailed AKM modules. Each module contains the complete framework with academic concepts, exam toolkits, and common pitfalls.</p>
+                </div>
+                
+                <!-- Domain 1: Acids, Bases & Salts -->
+                <div class="domain-section">
+                    <div class="domain-header" onclick="toggleDomain('domain1')">
+                        <span>🧪 Domain 1: Acids, Bases & Salts</span>
+                        <span class="toggle-icon" id="icon-domain1">▼</span>
+                    </div>
+                    <div class="domain-content" id="domain1">
+                        
+                        <!-- AKM #202 -->
+                        <div class="akm-module" id="akm-202">
+                            <div class="akm-header" onclick="toggleAKM('akm-202')">
+                                <div>
+                                    <strong>🧬 AKM #202: Salt Preparation Methods</strong>
+                                    <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                        📍 Used in: Sprint 1 | Syllabus: 7.1(e-g) | Priority: ★★★ Critical
+                                    </div>
+                                </div>
+                                <span class="toggle-icon" id="icon-akm-202">▼</span>
+                            </div>
+                            <div class="akm-body" id="body-akm-202">
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">1️⃣ Academic Core Concept</div>
+                                    <p><strong>🧠 Conceptual Framework:</strong> Salt preparation is governed by the <strong>solubility principle</strong>. The method chosen depends on whether the salt and reactants are soluble or insoluble in water.</p>
+                                    <p><strong>The Three-Path Decision Tree:</strong></p>
+                                    <ol>
+                                        <li><strong>Precipitation:</strong> For preparing <strong>insoluble salts</strong> from two soluble reactants.</li>
+                                        <li><strong>Titration:</strong> For preparing <strong>soluble salts</strong> from two soluble reactants (alkali + acid).</li>
+                                        <li><strong>Excess Reactant Method:</strong> For preparing <strong>soluble salts</strong> from a soluble acid and an insoluble reactant (metal, metal oxide, metal carbonate).</li>
+                                    </ol>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">2️⃣ Exam Answer Toolkit</div>
+                                    
+                                    <p><strong>📋 Method Selection SOP:</strong></p>
+                                    <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                                        <p><strong>STEP 1:</strong> Identify if the salt is soluble or insoluble (use solubility rules)</p>
+                                        <p><strong>STEP 2:</strong> If insoluble → Use Precipitation</p>
+                                        <p><strong>STEP 3:</strong> If soluble, check reactants:</p>
+                                        <ul>
+                                            <li>Both soluble (alkali + acid) → Titration</li>
+                                            <li>One insoluble → Excess Reactant Method</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <p><strong>✍️ Excess Reactant Method - Complete Procedure:</strong></p>
+                                    <ol>
+                                        <li>Add <strong>excess</strong> insoluble reactant to <strong>warm dilute acid</strong> in a beaker.</li>
+                                        <li>Stir until the reaction stops (no more fizzing/no more solid dissolves).</li>
+                                        <li><strong>Filter</strong> the mixture to remove excess unreacted solid.</li>
+                                        <li>Collect the filtrate and <strong>heat gently</strong> to evaporate until the solution becomes <strong>saturated</strong> (crystals start to form at the edge).</li>
+                                        <li><strong>Cool</strong> the solution to allow crystals to form.</li>
+                                        <li><strong>Filter</strong> to collect the crystals.</li>
+                                        <li><strong>Wash</strong> the crystals with cold distilled water.</li>
+                                        <li><strong>Dry</strong> the crystals between filter papers or in a warm oven.</li>
+                                    </ol>
+                                    
+                                    <p><strong>🎯 Key Scoring Phrases:</strong></p>
+                                    <ul>
+                                        <li><strong>"Why add excess?"</strong> → "To ensure all the acid is completely neutralized/reacted, so no acid remains in the final salt."</li>
+                                        <li><strong>"Why filter?"</strong> → "To remove the excess unreacted solid from the salt solution."</li>
+                                        <li><strong>"Why wash with cold water?"</strong> → "To remove impurities on the surface of the crystals without dissolving them."</li>
+                                        <li><strong>"Why heat until saturated?"</strong> → "To concentrate the solution so crystals can form upon cooling."</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">3️⃣ Common Errors & Pitfalls</div>
+                                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                        <p><strong>❌ ERROR 1:</strong> Saying "add excess to ensure complete reaction" without specifying <em>what</em> reacts completely.</p>
+                                        <p><strong>✅ CORRECTION:</strong> "Add excess to ensure all the <strong>acid</strong> is completely reacted."</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 2:</strong> Confusing which substance is in excess (student adds excess acid).</p>
+                                        <p><strong>✅ CORRECTION:</strong> Always add excess <strong>insoluble reactant</strong> (metal/metal oxide/metal carbonate), not acid.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 3:</strong> Saying "wash with hot water."</p>
+                                        <p><strong>✅ CORRECTION:</strong> Wash with <strong>cold</strong> distilled water to minimize dissolving the salt crystals.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">4️⃣ Knowledge Links</div>
+                                    <p><strong>🔗 Connected Concepts:</strong></p>
+                                    <ul>
+                                        <li>→ AKM #201: Solubility Rules (determines which method to use)</li>
+                                        <li>→ AKM #203: Writing Ionic Equations (needed for precipitation)</li>
+                                        <li>→ Experimental Chemistry: Filtration & Crystallization techniques</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AKM #204 -->
+                        <div class="akm-module" id="akm-204">
+                            <div class="akm-header" onclick="toggleAKM('akm-204')">
+                                <div>
+                                    <strong>🧬 AKM #204: Qualitative Analysis - Tests for Ions & Gases</strong>
+                                    <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                        📍 Used in: Sprint 1 | Syllabus: 7.2(a-d) | Priority: ★★★ Critical
+                                    </div>
+                                </div>
+                                <span class="toggle-icon" id="icon-akm-204">▼</span>
+                            </div>
+                            <div class="akm-body" id="body-akm-204">
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">1️⃣ Academic Core Concept</div>
+                                    <p><strong>🧠 Conceptual Framework:</strong> Qualitative analysis identifies ions through <strong>characteristic reactions</strong> that produce visible changes (color changes, precipitates, gas evolution).</p>
+                                    <p><strong>Key Principle:</strong> Each ion has a unique "fingerprint" - a specific reagent produces a specific observable result.</p>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">2️⃣ Exam Answer Toolkit</div>
+                                    
+                                    <p><strong>🔬 Gas Tests (Most Common in Exams):</strong></p>
+                                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Gas</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Test</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Positive Result</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>CO₂</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Bubble through limewater</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Limewater turns cloudy/milky white</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>NH₃</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Hold moist red litmus paper in gas</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Red litmus turns blue</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>H₂</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Apply lighted splint</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">"Pop" sound</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>O₂</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Apply glowing splint</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Splint relights</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Cl₂</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Hold moist blue litmus paper</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Blue litmus bleached white</td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <p><strong>💧 Anion Tests (CRITICAL: Must acidify first!):</strong></p>
+                                    <div style="background: #fff3cd; padding: 15px; border-radius: 5px; margin: 10px 0;">
+                                        <p><strong>⚠️ THE GOLDEN RULE:</strong> Always <strong>acidify with dilute HNO₃</strong> before testing for Cl⁻, Br⁻, I⁻, or SO₄²⁻!</p>
+                                        <p><strong>Why?</strong> To prevent false positives from carbonate ions.</p>
+                                    </div>
+                                    
+                                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Anion</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Reagent</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Result</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Cl⁻</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Acidify + AgNO₃(aq)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Br⁻</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Acidify + AgNO₃(aq)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Cream precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>I⁻</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Acidify + AgNO₃(aq)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Yellow precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>SO₄²⁻</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Acidify + Ba(NO₃)₂(aq)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>CO₃²⁻</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Add dilute acid</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Effervescence (CO₂ gas)</td>
+                                        </tr>
+                                    </table>
+                                    
+                                    <p><strong>⚛️ Cation Tests (Using Aqueous NaOH or NH₃):</strong></p>
+                                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Cation</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">With NaOH(aq)</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">With NH₃(aq)</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Cu²⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Blue precipitate</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Blue ppt, soluble in excess → deep blue solution</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Fe²⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Green precipitate</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Green precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Fe³⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Red-brown precipitate</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Red-brown precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Zn²⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White ppt, soluble in excess → colorless solution</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White ppt, soluble in excess → colorless solution</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Al³⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White ppt, soluble in excess → colorless solution</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White precipitate (insoluble in excess)</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Ca²⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">White precipitate</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">No precipitate</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>NH₄⁺</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Heat → NH₃ gas evolved (turns moist red litmus blue)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">-</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">3️⃣ Common Errors & Pitfalls</div>
+                                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                        <p><strong>❌ ERROR 1:</strong> Forgetting to acidify before testing for anions with AgNO₃ or Ba(NO₃)₂.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Always write "acidify with dilute HNO₃" in your procedure.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 2:</strong> Confusing Fe²⁺ (green) with Fe³⁺ (red-brown) precipitates.</p>
+                                        <p><strong>✅ MEMORY TIP:</strong> Fe²⁺ = 2 letters = GREEN (5 letters). Fe³⁺ = RED-BROWN (longer).</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 3:</strong> Not specifying "moist" litmus paper for NH₃ test.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Must be <strong>moist red</strong> litmus paper.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 4:</strong> Confusing Zn²⁺ and Al³⁺ (both give white ppt soluble in excess NaOH).</p>
+                                        <p><strong>✅ DISTINCTION:</strong> Use NH₃ - Al³⁺ ppt is <strong>insoluble</strong> in excess NH₃, but Zn²⁺ ppt dissolves.</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">4️⃣ Knowledge Links</div>
+                                    <p><strong>🔗 Connected Concepts:</strong></p>
+                                    <ul>
+                                        <li>→ AKM #202: Salt Preparation (uses these tests to confirm products)</li>
+                                        <li>→ Acids & Bases: Understanding why acidification is necessary</li>
+                                        <li>→ Chemical Reactions: Precipitation reactions and solubility</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Domain 2: Stoichiometry -->
+                <div class="domain-section">
+                    <div class="domain-header" onclick="toggleDomain('domain2')">
+                        <span>⚖️ Domain 2: Stoichiometry & Quantitative Chemistry</span>
+                        <span class="toggle-icon" id="icon-domain2">▼</span>
+                    </div>
+                    <div class="domain-content" id="domain2">
+                        
+                        <!-- AKM #402, #502, #601 Combined -->
+                        <div class="akm-module" id="akm-calc">
+                            <div class="akm-header" onclick="toggleAKM('akm-calc')">
+                                <div>
+                                    <strong>🧬 AKM #402, #502, #601: The Calculation Engine</strong>
+                                    <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                        📍 Used in: Sprint 2 | Syllabus: 4.1-4.3, 5.2, 6.1 | Priority: ★★★ Critical
+                                    </div>
+                                </div>
+                                <span class="toggle-icon" id="icon-akm-calc">▼</span>
+                            </div>
+                            <div class="akm-body" id="body-akm-calc">
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">1️⃣ Academic Core Concept</div>
+                                    <p><strong>🧠 Conceptual Framework:</strong> All stoichiometry calculations are based on the <strong>mole</strong> as the central unit. The mole connects mass, volume, and concentration through three fundamental equations.</p>
+                                    <p><strong>The Unifying Principle:</strong> Convert everything to moles first, use the balanced equation to find mole ratios, then convert to the desired unit.</p>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">2️⃣ Exam Answer Toolkit</div>
+                                    
+                                    <div style="background: #fff3cd; padding: 20px; border-radius: 5px; margin: 15px 0; border-left: 5px solid #ffc107;">
+                                        <p style="font-size: 1.2em; font-weight: bold; margin-bottom: 15px;">⚡ THE HOLY TRINITY OF EQUATIONS</p>
+                                        <ol style="font-size: 1.1em;">
+                                            <li><strong>n = m / Mᵣ</strong> (for solids)</li>
+                                            <li><strong>n = C × V</strong> (for solutions, <strong>V in dm³</strong>)</li>
+                                            <li><strong>n = V / 24</strong> (for gases at r.t.p., <strong>V in dm³</strong>)</li>
+                                        </ol>
+                                        <p style="margin-top: 15px; font-size: 1.1em; color: #d32f2f;"><strong>🚨 THE GOLDEN RULE: 1 dm³ = 1000 cm³</strong></p>
+                                        <p><strong>Always divide cm³ by 1000 before using in equations 2 or 3!</strong></p>
+                                    </div>
+                                    
+                                    <p><strong>📋 The Universal 4-Step SOP:</strong></p>
+                                    <div style="background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                                        <p><strong>STEP 1:</strong> Calculate moles of the <strong>Known</strong> substance (given in the question)</p>
+                                        <p><strong>STEP 2:</strong> Find the <strong>Mole Ratio</strong> from the balanced chemical equation</p>
+                                        <p><strong>STEP 3:</strong> Calculate moles of the <strong>Unknown</strong> substance (what you're solving for)</p>
+                                        <p><strong>STEP 4:</strong> <strong>Convert</strong> moles to the required unit (mass, volume, concentration)</p>
+                                    </div>
+                                    
+                                    <p><strong>🎯 Worked Example:</strong></p>
+                                    <div style="background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; font-family: monospace;">
+                                        <p><strong>Q:</strong> 25.0 cm³ of 0.100 mol/dm³ HCl reacts with CaCO₃. Find mass of CaCO₃ needed.</p>
+                                        <p style="margin-top: 10px;"><strong>Equation:</strong> 2HCl + CaCO₃ → CaCl₂ + H₂O + CO₂</p>
+                                        <p style="margin-top: 10px; color: #1976d2;"><strong>STEP 1:</strong> n(HCl) = C × V = 0.100 × (25.0/1000) = 0.00250 mol</p>
+                                        <p style="color: #1976d2;"><strong>STEP 2:</strong> Ratio HCl : CaCO₃ = 2 : 1</p>
+                                        <p style="color: #1976d2;"><strong>STEP 3:</strong> n(CaCO₃) = 0.00250 / 2 = 0.00125 mol</p>
+                                        <p style="color: #1976d2;"><strong>STEP 4:</strong> m = n × Mᵣ = 0.00125 × 100 = 0.125 g</p>
+                                    </div>
+                                    
+                                    <p><strong>⚠️ LIMITING REACTANT SOP (when two reactant quantities given):</strong></p>
+                                    <div style="background: #ffe0b2; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                                        <p><strong>STEP 1:</strong> Calculate moles of <strong>BOTH</strong> reactants</p>
+                                        <p><strong>STEP 2:</strong> Divide each by its coefficient in the balanced equation</p>
+                                        <p><strong>STEP 3:</strong> The reactant with the <strong>smaller value</strong> is the limiting reactant</p>
+                                        <p><strong>STEP 4:</strong> Use <strong>ONLY</strong> the limiting reactant's moles for all further calculations</p>
+                                        <p style="margin-top: 10px; color: #d32f2f;"><strong>⚠️ CRITICAL:</strong> Never use the excess reactant for calculations - it doesn't fully react!</p>
+                                    </div>
+                                    
+                                    <p><strong>🎯 Key Conversion Factors (Memorize These!):</strong></p>
+                                    <ul>
+                                        <li><strong>Volume:</strong> 1 dm³ = 1000 cm³ | 1 m³ = 1000 dm³</li>
+                                        <li><strong>Concentration:</strong> 1 mol/dm³ = 1 M</li>
+                                        <li><strong>Gas Volume:</strong> 1 mole of gas = 24 dm³ at r.t.p. (room temperature and pressure)</li>
+                                        <li><strong>Percentage Yield:</strong> (Actual yield / Theoretical yield) × 100%</li>
+                                        <li><strong>Percentage Purity:</strong> (Mass of pure substance / Total mass of sample) × 100%</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">3️⃣ Common Errors & Pitfalls</div>
+                                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                        <p><strong>❌ ERROR 1:</strong> Forgetting to convert cm³ to dm³ before calculating moles.</p>
+                                        <p><strong>✅ CORRECTION:</strong> <strong>ALWAYS</strong> divide cm³ by 1000. Write this step clearly: "V = 25.0 cm³ = 25.0/1000 = 0.0250 dm³"</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 2:</strong> Using the wrong mole ratio or forgetting to balance the equation first.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Always balance the equation before starting calculations. Double-check your ratio.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 3:</strong> In limiting reactant problems, using the excess reactant for calculations.</p>
+                                        <p><strong>✅ CORRECTION:</strong> After identifying the limiting reactant, use ONLY its moles for all subsequent steps.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 4:</strong> Mixing up Mᵣ (relative molecular mass) with n (number of moles).</p>
+                                        <p><strong>✅ CORRECTION:</strong> Mᵣ is a constant (found from periodic table). n varies based on the amount of substance.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 5:</strong> Wrong significant figures in final answer.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Match the significant figures of the given data (usually 3 s.f. in exams).</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">4️⃣ Knowledge Links</div>
+                                    <p><strong>🔗 Connected Concepts:</strong></p>
+                                    <ul>
+                                        <li>→ AKM #401: Relative Atomic/Molecular Mass calculations</li>
+                                        <li>→ AKM #202: Salt Preparation (uses stoichiometry for titration calculations)</li>
+                                        <li>→ Chemical Equations: Balancing and interpreting coefficients</li>
+                                        <li>→ Electrolysis: Calculating masses of products at electrodes</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Domain 3: Chemical Bonding -->
+                <div class="domain-section">
+                    <div class="domain-header" onclick="toggleDomain('domain3')">
+                        <span>🔗 Domain 3: Chemical Bonding & Structure</span>
+                        <span class="toggle-icon" id="icon-domain3">▼</span>
+                    </div>
+                    <div class="domain-content" id="domain3">
+                        
+                        <!-- AKM #901 & #902 -->
+                        <div class="akm-module" id="akm-bonding">
+                            <div class="akm-header" onclick="toggleAKM('akm-bonding')">
+                                <div>
+                                    <strong>🧬 AKM #901 & #902: Explaining Physical Properties via Bonding</strong>
+                                    <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
+                                        📍 Used in: Sprint 3 | Syllabus: 9.1-9.3 | Priority: ★★★ Critical
+                                    </div>
+                                </div>
+                                <span class="toggle-icon" id="icon-akm-bonding">▼</span>
+                            </div>
+                            <div class="akm-body" id="body-akm-bonding">
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">1️⃣ Academic Core Concept</div>
+                                    <p><strong>🧠 Conceptual Framework:</strong> Physical properties (melting/boiling points, conductivity, solubility) are determined by:</p>
+                                    <ol>
+                                        <li><strong>Structure:</strong> Giant (lattice) vs Simple (molecular)</li>
+                                        <li><strong>Type of Forces:</strong> Strong (ionic/covalent bonds) vs Weak (intermolecular forces)</li>
+                                        <li><strong>Mobility:</strong> Whether particles can move to carry charge</li>
+                                    </ol>
+                                    
+                                    <div style="background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                                        <p><strong>The Master Framework:</strong></p>
+                                        <p><strong>Giant Structures:</strong> High m.p./b.p. (strong forces need lots of energy to break)</p>
+                                        <p><strong>Simple Molecular:</strong> Low m.p./b.p. (weak intermolecular forces need little energy)</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">2️⃣ Exam Answer Toolkit</div>
+                                    
+                                    <p><strong>📋 The "Explain Melting/Boiling Point" Template (3-Step Script):</strong></p>
+                                    <div style="background: #fff3cd; padding: 20px; border-radius: 5px; margin: 15px 0; border-left: 5px solid #ffc107;">
+                                        <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">🎯 GOLDEN TEMPLATE (USE FOR ALL QUESTIONS!):</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>STEP 1 - State the Structure:</strong></p>
+                                        <p>"[Substance X] has a <strong>[giant ionic lattice / giant covalent / simple molecular]</strong> structure."</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>STEP 2 - Identify the Forces:</strong></p>
+                                        <ul>
+                                            <li><strong>Giant Ionic:</strong> "There are <strong>strong electrostatic forces of attraction</strong> between oppositely charged ions."</li>
+                                            <li><strong>Giant Covalent:</strong> "There are many <strong>strong covalent bonds</strong> throughout the structure."</li>
+                                            <li><strong>Simple Molecular:</strong> "There are <strong>weak intermolecular forces of attraction</strong> between molecules."</li>
+                                        </ul>
+                                        
+                                        <p style="margin-top: 15px;"><strong>STEP 3 - Link to Energy:</strong></p>
+                                        <ul>
+                                            <li><strong>High m.p.:</strong> "A <strong>large amount of energy</strong> is needed to overcome these forces."</li>
+                                            <li><strong>Low m.p.:</strong> "Only a <strong>small amount of energy</strong> is needed to overcome these forces."</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <p><strong>⚡ The "Explain Electrical Conductivity" Template:</strong></p>
+                                    <div style="background: #e8f5e9; padding: 20px; border-radius: 5px; margin: 15px 0; border-left: 5px solid #4caf50;">
+                                        <p style="font-weight: bold; font-size: 1.1em; margin-bottom: 10px;">🔌 CORE PRINCIPLE: Conductivity requires MOBILE CHARGE CARRIERS</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>For IONIC COMPOUNDS:</strong></p>
+                                        <p><strong>Solid state (does NOT conduct):</strong></p>
+                                        <p>"Ions are held in <strong>fixed positions</strong> in the lattice and are <strong>not free to move</strong>, so cannot carry charge."</p>
+                                        
+                                        <p style="margin-top: 10px;"><strong>Molten/Aqueous state (CONDUCTS):</strong></p>
+                                        <p>"Ions are <strong>free to move</strong> and can carry charge through the liquid."</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>For SIMPLE MOLECULAR (does NOT conduct):</strong></p>
+                                        <p>"The molecule has <strong>no free electrons or ions</strong> to carry charge."</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>For METALS (CONDUCTS):</strong></p>
+                                        <p>"Metals have a 'sea' of <strong>delocalized electrons</strong> that are <strong>free to move</strong> and carry charge."</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>For GRAPHITE (CONDUCTS - special case!):</strong></p>
+                                        <p>"Graphite has <strong>delocalized electrons between layers</strong> that are <strong>free to move</strong> and carry charge."</p>
+                                    </div>
+                                    
+                                    <p><strong>📊 Quick Reference Table:</strong></p>
+                                    <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                                        <tr style="background: #e3f2fd;">
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Structure Type</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">M.P./B.P.</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Conducts?</th>
+                                            <th style="border: 1px solid #ddd; padding: 10px;">Examples</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Giant Ionic</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">High</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Only when molten/aqueous</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">NaCl, MgO, CuSO₄</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Giant Covalent</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Very High</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">No (except graphite)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Diamond, SiO₂, Graphite</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Simple Molecular</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Low</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">No</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">H₂O, CO₂, CH₄, I₂</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 10px;"><strong>Giant Metallic</strong></td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">High</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Yes (solid & liquid)</td>
+                                            <td style="border: 1px solid #ddd; padding: 10px;">Fe, Cu, Al, Na</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">3️⃣ Common Errors & Pitfalls</div>
+                                    <div style="background: #f8d7da; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                                        <p><strong>❌ ERROR 1:</strong> Saying "strong bonds are broken" for simple molecular substances.</p>
+                                        <p><strong>✅ CORRECTION:</strong> For simple molecular, only <strong>weak intermolecular forces</strong> are overcome during melting/boiling. The strong covalent bonds <strong>within</strong> molecules remain intact!</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 2:</strong> Incomplete explanation - only mentioning structure without forces and energy.</p>
+                                        <p><strong>✅ CORRECTION:</strong> <strong>ALWAYS</strong> include all 3 steps: Structure → Forces → Energy. This is non-negotiable for full marks!</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 3:</strong> Saying ionic compounds conduct "because they have ions."</p>
+                                        <p><strong>✅ CORRECTION:</strong> Must specify that ions are <strong>"free to move"</strong> (molten/aqueous) or <strong>"not free to move"</strong> (solid).</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 4:</strong> Confusing "intermolecular forces" with "covalent bonds."</p>
+                                        <p><strong>✅ DISTINCTION:</strong></p>
+                                        <ul>
+                                            <li><strong>Intermolecular forces:</strong> Weak attractions <strong>between</strong> molecules (broken during melting/boiling)</li>
+                                            <li><strong>Covalent bonds:</strong> Strong bonds <strong>within</strong> molecules (NOT broken during melting/boiling of simple molecular)</li>
+                                        </ul>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 5:</strong> Forgetting that graphite is the exception - it conducts despite being covalent.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Graphite has <strong>delocalized electrons between layers</strong> - this must be mentioned to explain conductivity.</p>
+                                        
+                                        <p style="margin-top: 15px;"><strong>❌ ERROR 6:</strong> Using vague terms like "strong forces" without specifying the type.</p>
+                                        <p><strong>✅ CORRECTION:</strong> Be specific:</p>
+                                        <ul>
+                                            <li>Ionic: "strong <strong>electrostatic</strong> forces of attraction"</li>
+                                            <li>Covalent: "strong <strong>covalent bonds</strong>"</li>
+                                            <li>Metallic: "strong <strong>metallic bonds</strong>"</li>
+                                            <li>Simple molecular: "weak <strong>intermolecular</strong> forces"</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="akm-section">
+                                    <div class="akm-section-title">4️⃣ Knowledge Links</div>
+                                    <p><strong>🔗 Connected Concepts:</strong></p>
+                                    <ul>
+                                        <li>→ AKM #801: Types of Chemical Bonding (ionic, covalent, metallic)</li>
+                                        <li>→ AKM #803: Dot-and-cross diagrams for bonding</li>
+                                        <li>→ Kinetic Particle Theory: Understanding energy and particle movement</li>
+                                        <li>→ Electrolysis: Requires mobile ions (connects to conductivity)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="strategy-box" style="text-align: center; margin-top: 40px;">
+                    <h3 style="color: #28a745; margin-top: 0;">📚 Notes Complete</h3>
+                    <p><strong>You now have access to all the detailed AKM modules referenced in your Battle Plan. Use the navigation to switch between pages, and click the "View Details" buttons in the Battle Plan to jump directly to specific modules.</strong></p>
+                    <button class="nav-btn" onclick="showPage('battle-plan')" style="margin-top: 15px; display: inline-block;">⬅️ Back to Battle Plan</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back to Top Button -->
+        <button class="back-to-top" id="backToTopBtn" onclick="scrollToTop()">↑</button>
+    </div>
+    
+    <script>
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Highlight active nav button
+            event.target.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Save current page
+            localStorage.setItem('currentPage', pageId);
+        }
+        
+        // Domain Toggle
+        function toggleDomain(domainId) {
+            const content = document.getElementById(domainId);
+            const icon = document.getElementById('icon-' + domainId);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.classList.remove('rotated');
+            } else {
+                content.classList.add('expanded');
+                icon.classList.add('rotated');
+            }
+        }
+        
+        // AKM Module Toggle
+        function toggleAKM(akmId) {
+            const body = document.getElementById('body-' + akmId);
+            const icon = document.getElementById('icon-' + akmId);
+            
+            if (body.classList.contains('expanded')) {
+                body.classList.remove('expanded');
+                icon.classList.remove('rotated');
+            } else {
+                body.classList.add('expanded');
+                icon.classList.add('rotated');
+            }
+        }
+        
+        // Navigate to AKM from Battle Plan
+        function goToAKM(akmId) {
+            // Switch to notes page
+            document.getElementById('battle-plan').classList.remove('active');
+            document.getElementById('notes').classList.add('active');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.includes('Notes')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Wait for page transition, then scroll to AKM
+            setTimeout(() => {
+                const targetAKM = document.getElementById(akmId);
+                if (targetAKM) {
+                    // Expand the parent domain if not expanded
+                    const domainContent = targetAKM.closest('.domain-content');
+                    if (domainContent && !domainContent.classList.contains('expanded')) {
+                        domainContent.classList.add('expanded');
+                        const domainIcon = domainContent.previousElementSibling.querySelector('.toggle-icon');
+                        if (domainIcon) domainIcon.classList.add('rotated');
+                    }
+                    
+                    // Expand the AKM module
+                    const akmBody = document.getElementById('body-' + akmId);
+                    const akmIcon = document.getElementById('icon-' + akmId);
+                    if (akmBody && !akmBody.classList.contains('expanded')) {
+                        akmBody.classList.add('expanded');
+                        if (akmIcon) akmIcon.classList.add('rotated');
+                    }
+                    
+                    // Scroll to the AKM
+                    targetAKM.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Highlight the AKM briefly
+                    targetAKM.style.boxShadow = '0 0 20px rgba(245, 87, 108, 0.6)';
+                    setTimeout(() => {
+                        targetAKM.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+                    }, 2000);
+                }
+            }, 100);
+        }
+        
+        // Back to Top Button
+        window.onscroll = function() {
+            const btn = document.getElementById('backToTopBtn');
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        };
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Load saved page on startup
+        window.addEventListener('load', function() {
+            const savedPage = localStorage.getItem('currentPage');
+            if (savedPage && savedPage === 'notes') {
+                document.getElementById('battle-plan').classList.remove('active');
+                document.getElementById('notes').classList.add('active');
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent.includes('Notes')) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
