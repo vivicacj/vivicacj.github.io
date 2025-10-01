@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POA G3 Atomic Knowledge Modules</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .header-icon {
+            width: 2.25rem;
+            height: 2.25rem;
+            flex-shrink: 0;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8492a6;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            padding: 0.6rem 0.75rem;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background: #f0f4ff;
+            color: #667eea;
+        }
+
+        .nav-item.active {
+            background: #667eea;
+            color: white;
+            font-weight: 500;
+        }
+
+        .priority-badge {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: auto;
+        }
+
+        .priority-must {
+            background: #fee;
+            color: #c33;
+        }
+
+        .priority-secondary {
+            background: #fef3e0;
+            color: #d97706;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+        }
+
+        .akm-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .akm-title {
+            font-size: 1.8rem;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .akm-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .concept-box {
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .definition {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .term {
+            color: #667eea;
+            cursor: help;
+            border-bottom: 2px dotted #667eea;
+            font-weight: 600;
+        }
+
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Flip Card for Pitfalls */
+        .pitfall-card {
+            background: white;
+            border: 2px solid #fef3e0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .pitfall-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .pitfall-front {
+            background: #fff9f0;
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .flip-prompt {
+            margin-top: 0.5rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .pitfall-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .pitfall-back {
+            background: #f0fdf4;
+            padding: 1.25rem;
+            border-top: 2px solid #d1fae5;
+            display: none;
+        }
+
+        .pitfall-card.flipped .pitfall-back {
+            display: block;
+        }
+
+        /* Static Card for Pitfalls (AKM 4.1) */
+        .pitfall-static-card {
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .pitfall-mistake {
+            background-color: #fff9f0;
+            padding: 1.25rem;
+            border-left: 4px solid #f97316;
+        }
+        .pitfall-correction {
+            background-color: #f0fdf4;
+            padding: 1.25rem;
+            border-top: 1px solid #e2e8f0;
+            border-left: 4px solid #22c55e;
+        }
+
+        .qa-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .question {
+            background: #f8fafc;
+            padding: 1.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question:hover {
+            background: #f1f5f9;
+        }
+
+        .answer {
+            padding: 1.25rem;
+            display: none;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .qa-item.open .answer {
+            display: block;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .qa-item.open .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .links-section {
+            background: #fafbfc;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .link-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+        }
+
+        .link-arrow {
+            margin-left: auto;
+            color: #667eea;
+        }
+
+        .sop-container {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .sop-step {
+            padding: 1.25rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sop-step:last-child {
+            border-bottom: none;
+        }
+        
+        /* New SOP Style from Image */
+        .sop-box-item {
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .sop-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 0.15rem 0.3rem;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                POA G3 Atomic Knowledge Modules
+            </h1>
+            <p>Ultimate Knowledge Notes System for Secondary 3 Principles of Accounts</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <input type="text" class="search-box" placeholder="Search modules..." id="searchBox">
+            
+            <div class="nav-section">
+                <h3>Batch 1: Foundational Concepts</h3>
+                <div class="nav-item active" data-module="akm-1-1">
+                    <span>AKM #1.1 Role of Accounting</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-1-2">
+                    <span>AKM #1.2 Business Entities</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-1-3">
+                    <span>AKM #1.3 Professional Ethics</span>
+                    <span class="priority-badge priority-secondary">☆</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Batch 2: Building Blocks</h3>
+                <div class="nav-item" data-module="akm-3-1">
+                    <span>AKM #3.1 Elements (A,L,E,I,X)</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-3-2">
+                    <span>AKM #3.2 Accounting Equation</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Batch 3: Mechanics</h3>
+                <div class="nav-item" data-module="akm-4-1">
+                    <span>AKM #4.1 Double Entry & DEAD CLIC</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Batch 4: System</h3>
+                <div class="nav-item" data-module="akm-5">
+                    <span>AKM #5 Source Docs & Journals</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-6">
+                    <span>AKM #6 Trial Balance</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area" id="contentArea">
+            <!-- AKM #1.1 Content -->
+            <div class="akm-content" id="akm-1-1">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🧬</span>
+                        AKM #1.1: The Role of Accounting & Stakeholders
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 1.1, 1.2</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">
+                            <strong class="term">Accounting</strong> is the "language of business." It is an information system that 
+                            <strong class="term">identifies, records, and communicates</strong> the economic events of a business to 
+                            interested users, known as <strong class="term">stakeholders</strong>. The primary role is to provide 
+                            information for <strong class="term">decision-making</strong>.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <div class="concept-box">
+                        <p><strong>To define the role of accounting:</strong></p>
+                        <p class="definition">"The role of accounting is to provide financial information that is useful for decision-making by various stakeholders, such as owners and managers."</p>
+                        
+                        <p style="margin-top: 1.5rem;"><strong>To identify stakeholders:</strong></p>
+                        <p class="definition">Stakeholders are groups or individuals with an interest in the performance of a business. They can be <span class="highlight">internal</span> (e.g., managers, employees) or <span class="highlight">external</span> (e.g., investors, banks, suppliers, government).</p>
+                    </div>
+
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Stakeholder Decision-Making Table:</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Stakeholder</th>
+                                    <th>Example Decision</th>
+                                    <th>Information Needed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Owner</strong></td>
+                                    <td>Should I continue to invest in the business? Is the business profitable?</td>
+                                    <td>Profit for the year, Owner's Equity</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Manager</strong></td>
+                                    <td>How can we improve performance? Which products are most profitable?</td>
+                                    <td>Sales figures, Cost of sales, Expenses</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Bank/Lender</strong></td>
+                                    <td>Should we approve a loan for the business? Can it repay its debts?</td>
+                                    <td>Existing liabilities, Profitability, Liquidity ratios</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Supplier</strong></td>
+                                    <td>Should we sell goods on credit to this business? Will they pay on time?</td>
+                                    <td>Current liabilities, Cash/Bank balance</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Simply listing stakeholders without explaining their specific interest.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> You must link the stakeholder to the type of decision they need to make. For example, "A supplier is interested in the business's liquidity to assess if the business can pay its debts on time."
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> State two stakeholders of a business and explain why each is interested in its financial information.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>A:</strong></p>
+                            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li><strong>Stakeholder: The owner.</strong> <strong>Reason:</strong> The owner is interested in the profitability of the business to decide whether to continue investing in it or to withdraw their capital. They would look at the Profit for the Year.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Stakeholder: A bank.</strong> <strong>Reason:</strong> A bank is interested in the business's ability to repay loans. It would look at the business's existing liabilities and its cash position to assess the risk of lending money.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> None. This is the starting point.
+                            </div>
+                        </div>
+                        <div class="link-item" onclick="navigateToModule('akm-5')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> Leads to the entire purpose of creating Financial Statements (AKM #13, #14) and conducting Ratio Analysis (AKM #15)
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #1.2 Content -->
+            <div class="akm-content" id="akm-1-2" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🏢</span>
+                        AKM #1.2: Business Entities & Types
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 2.1, 2.2</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition"><strong>Forms of Business Ownership:</strong></p>
+                        <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                            <li><strong>Sole Proprietorship:</strong> A business owned by one person. The owner has unlimited liability, and the business is not a separate legal entity.</li>
+                            <li><strong>Partnership:</strong> A business owned by two to twenty partners. Partners typically have unlimited liability.</li>
+                            <li><strong>Private Limited Company (Pte Ltd):</strong> A business owned by shareholders (1 to 50). It is a <strong class="term">separate legal entity</strong>, and shareholders have <strong class="term">limited liability</strong>.</li>
+                        </ul>
+                        <p class="definition" style="margin-top: 1.5rem;"><strong>Types of Business Activities:</strong></p>
+                        <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                            <li><strong>Trading Business:</strong> Buys and sells goods (e.g., a retail shop). Its main income is Sales Revenue, and it has Cost of Sales.</li>
+                            <li><strong>Service Business:</strong> Provides services (e.g., a hair salon, a law firm). Its main income is Service Fee Revenue and it has no Cost of Sales.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                     <h3 style="margin-bottom: 1rem;">Sole Proprietorship vs. Private Limited Company:</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Sole Proprietorship</th>
+                                    <th>Private Limited Company</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Liability</strong></td>
+                                    <td>Unlimited liability (Owner's personal assets are at risk)</td>
+                                    <td>Limited liability (Shareholders' personal assets are protected)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Legal Status</strong></td>
+                                    <td>Not a separate legal entity</td>
+                                    <td>A separate legal entity</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Owner's Claim</strong></td>
+                                    <td>Capital / Owner's Equity</td>
+                                    <td>Share Capital & Retained Earnings</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Profit Distribution</strong></td>
+                                    <td>Profit is added to Capital</td>
+                                    <td>Profit is added to Retained Earnings; may be distributed as Dividends</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Withdrawal</strong></td>
+                                    <td>Drawings</td>
+                                    <td>Dividends (formal)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Confusing "unlimited liability" with "separate legal entity".
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong>
+                            <ul style="margin-left: 1.5rem;">
+                                <li><strong>Liability is about risk:</strong> Are the owner's personal assets (car, house) at risk if the business fails? (Unlimited = Yes; Limited = No).</li>
+                                <li><strong>Legal Entity is about identity:</strong> Can the business sue or be sued in its own name? (Separate Legal Entity = Yes).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> John wants to start a small bakery. He is worried about losing his personal savings if the business fails. Which form of business ownership would you recommend and why?</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>A:</strong> I would recommend a Private Limited Company. The key feature is <strong class="term">limited liability</strong>, which means that if the business fails, John is only at risk of losing the amount he invested in the company's shares. His personal savings would be protected.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item" onclick="navigateToModule('akm-1-1')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> AKM #1.1 (Stakeholders).
+                            </div>
+                             <span class="link-arrow">←</span>
+                        </div>
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> Determines the structure of the Equity section in the Statement of Financial Position (AKM #14).
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- AKM #1.3 Content -->
+            <div class="akm-content" id="akm-1-3" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">⚖️</span>
+                        AKM #1.3: Professional Ethics (Integrity & Objectivity)
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 1.1</span>
+                        <span><strong>Priority:</strong> ☆ Secondary</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                         <p class="definition">
+                            <strong class="term">Integrity</strong>: The quality of being straightforward and honest in all professional and business relationships. It implies fair dealing and truthfulness.
+                         </p>
+                         <p class="definition" style="margin-top: 1rem;">
+                            <strong class="term">Objectivity</strong>: The quality of not allowing bias, conflict of interest, or the undue influence of others to override professional judgments. Decisions must be based on facts.
+                         </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                     <div class="concept-box">
+                         <p class="definition">"An accountant must show <strong class="term">integrity</strong> by ensuring that all financial reports are truthful and do not mislead users."</p>
+                         <p class="definition">"An accountant must maintain <strong class="term">objectivity</strong> by not letting their personal relationship with a manager influence their decision to, for example, overstate the company's assets."</p>
+                     </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Giving a vague definition like "being a good person."
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> You must use the keywords. <strong>Integrity = Honesty.</strong> <strong>Objectivity = No Bias.</strong>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q (Meridian Paper 1):</strong> State and explain one accounting ethic accountants must uphold.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>A:</strong> One ethic is <strong class="term">Integrity</strong>. This means an accountant must be straightforward and honest in all professional relationships. For example, they should not knowingly prepare a financial statement with false figures to deceive a bank.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> None. This is a foundational value.
+                            </div>
+                        </div>
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> Connects directly to AKM #2.6 (Objectivity Principle) and underpins the reliability of all financial reporting.
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #3.1 Content -->
+            <div class="akm-content" id="akm-3-1" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🧱</span>
+                        AKM #3.1: Elements of Financial Statements
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 2.3</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+            
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">The five elements of accounting are the building blocks used to record all business transactions:</p>
+                        <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                            <li><strong class="term">Assets</strong> (A): Economic resources controlled by the business as a result of past events, from which future economic benefits are expected to flow to the business. (What the business <strong class="term">owns</strong>).</li>
+                            <li><strong class="term">Liabilities</strong> (L): Present obligations of the business arising from past events, the settlement of which is expected to result in an outflow of economic benefits. (What the business <strong class="term">owes</strong>).</li>
+                            <li><strong class="term">Equity</strong> (E): The residual interest in the assets of the business after deducting all its liabilities. E = A - L. (The <strong class="term">owner's claim</strong> on the assets).</li>
+                            <li><strong class="term">Income</strong> (I): Increases in economic benefits during the accounting period in the form of inflows or enhancements of assets, or decreases of liabilities, that result in increases in equity, other than those relating to contributions from equity participants. (What the business <strong class="term">earns</strong>).</li>
+                            <li><strong class="term">Expenses</strong> (X): Decreases in economic benefits during the accounting period in the form of outflows or depletions of assets, or incurrences of liabilities, that result in decreases in equity, other than those relating to distributions to equity participants. (<strong class="term">Costs incurred</strong> to earn income).</li>
+                        </ol>
+                    </div>
+                </section>
+            
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <h3 style="margin-bottom: 1rem;">Common Examples for G3:</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Element</th>
+                                    <th>Sub-category</th>
+                                    <th>Examples</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2"><strong>Assets</strong></td>
+                                    <td>Non-current Assets (> 1 year)</td>
+                                    <td>Office Equipment, Motor Vehicles, Fixtures & Fittings, Premises</td>
+                                </tr>
+                                <tr>
+                                    <td>Current Assets (< 1 year)</td>
+                                    <td>Inventory, Trade Receivables, Cash at Bank, Cash in Hand</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"><strong>Liabilities</strong></td>
+                                    <td>Non-current Liabilities (> 1 year)</td>
+                                    <td>Long-term Bank Loan</td>
+                                </tr>
+                                <tr>
+                                    <td>Current Liabilities (< 1 year)</td>
+                                    <td>Trade Payables, Bank Overdraft</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Equity</strong></td>
+                                    <td>Sole Proprietorship</td>
+                                    <td>Capital</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan="2"><strong>Income</strong></td>
+                                    <td>Revenue from main activity</td>
+                                    <td>Sales revenue, Service fee revenue</td>
+                                </tr>
+                                <tr>
+                                    <td>Other Income</td>
+                                    <td>Rent income, Commission income, Discount received</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Expenses</strong></td>
+                                    <td>Cost of running the business</td>
+                                    <td>Cost of sales, Rent expense, Salaries, Utilities, Discount allowed</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Confusing Trade Receivables and Trade Payables.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong>
+                            <ul style="margin-left: 1.5rem;">
+                                <li><strong>Receivables:</strong> We are going to <strong>Receive</strong> cash from customers who owe us. It's an Asset.</li>
+                                <li><strong>Payables:</strong> We have to <strong>Pay</strong> cash to our suppliers whom we owe. It's a Liability.</li>
+                            </ul>
+                        </div>
+                    </div>
+                     <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Confusing Discount Allowed with Discount Received.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong>
+                            <ul style="margin-left: 1.5rem;">
+                                <li><strong>Allowed:</strong> We <strong>allowed</strong> a customer to pay less. This reduces our income. It's an Expense.</li>
+                                <li><strong>Received:</strong> Our supplier <strong>allowed us</strong> to pay less. This reduces our expense. It's Other Income.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> Classify the following items into Asset, Liability, Equity, Income, or Expense: (a) Motor vehicle, (b) A loan from the bank, (c) Goods sold on credit.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>A:</strong></p>
+                            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li>(a) <strong>Motor vehicle:</strong> Asset (specifically, a Non-current Asset).</li>
+                                <li>(b) <strong>A loan from the bank:</strong> Liability.</li>
+                                <li>(c) <strong>Goods sold on credit:</strong> This transaction involves two elements. The sale itself is <strong>Income</strong> (Sales revenue), and the amount owed by the customer (Trade receivable) is an <strong>Asset</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> None. This is a foundational vocabulary module.
+                            </div>
+                        </div>
+                        <div class="link-item" onclick="navigateToModule('akm-3-2')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> Leads directly to AKM #3.2 (The Accounting Equation) and AKM #4 (Double Entry & DEAD CLIC).
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #3.2 Content -->
+            <div class="akm-content" id="akm-3-2" style="display: none;">
+                 <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">⚖️</span>
+                        AKM #3.2: The Accounting Equation in Practice
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 2.4</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">Every transaction creates a dual effect that keeps the equation <strong class="term">Assets</strong> = <strong class="term">Liabilities</strong> + <strong class="term">Equity</strong> in balance. The four possible types of effects are:</p>
+                        <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                            <li>One Asset ↑, another Asset ↓ (e.g., Buy equipment with cash)</li>
+                            <li>Asset ↑, Liability or Equity ↑ (e.g., Buy goods on credit)</li>
+                            <li>Asset ↓, Liability or Equity ↓ (e.g., Pay a supplier)</li>
+                            <li>One L/E item ↑, another L/E item ↓ (e.g., Convert a loan to owner's capital)</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <h3 style="margin-bottom: 1rem;">SOP: Analyzing a Transaction's Effect</h3>
+                    <div class="concept-box">
+                        <strong>Question Format:</strong> "State the effect of the following transaction on the accounting equation."
+                    </div>
+                    <div class="sop-box-item">
+                        <div class="sop-number">1</div>
+                        <div>Name the first account affected and its element type (A, L, or E). State whether it increases or decreases and by how much.</div>
+                    </div>
+                    <div class="sop-box-item">
+                        <div class="sop-number">2</div>
+                        <div>Name the second account affected and its element type. State whether it increases or decreases and by how much.</div>
+                    </div>
+                    <div class="sop-box-item">
+                        <div class="sop-number">3</div>
+                        <div>Conclude by stating that "The accounting equation remains balanced."</div>
+                    </div>
+                    
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Example Application:</h3>
+                    <div class="concept-box">
+                        <p><strong>Transaction:</strong> The business bought a motor vehicle for $20,000, paying by cheque.</p>
+                        <p style="margin-top: 1rem;"><strong>Answer:</strong></p>
+                        <ol style="margin-left: 1.5rem;">
+                             <li>The asset <strong>Motor Vehicles</strong> will increase by $20,000.</li>
+                             <li>The asset <strong>Cash at Bank</strong> will decrease by $20,000.</li>
+                             <li>The accounting equation remains balanced.</li>
+                        </ol>
+                        <hr style="margin: 1.5rem 0; border: 1px solid #e2e8f0;">
+                        <p><strong>Transaction:</strong> The business took a loan of $10,000 from the bank.</p>
+                        <p style="margin-top: 1rem;"><strong>Answer:</strong></p>
+                        <ol style="margin-left: 1.5rem;">
+                             <li>The asset <strong>Cash at Bank</strong> will increase by $10,000.</li>
+                             <li>The liability <strong>Bank Loan</strong> will increase by $10,000.</li>
+                             <li>The accounting equation remains balanced.</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Forgetting that Expenses and Revenues are part of Equity.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> When a transaction involves an expense or revenue, the effect on Equity must be stated.
+                            <p style="margin-top: 1rem;"><strong>Transaction:</strong> Received $500 cash for services provided.</p>
+                            <p style="margin-top: 0.5rem;"><strong>Correct Answer:</strong> "The asset Cash in hand will increase by $500. <strong>Equity will increase by $500</strong> because income increases profit."</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> A business has Assets of $50,000 and Capital of $30,000. Calculate liabilities. The business then buys inventory worth $5,000 on credit. Calculate the new values for A, L, and E.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                           <p><strong>A:</strong></p>
+                           <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                               <li><strong>Initial Liabilities:</strong> Using A = L + E, $50,000 = L + $30,000. Therefore, <strong>Liabilities = $20,000</strong>.</li>
+                               <li><strong>Transaction Analysis:</strong>
+                                   <ul style="margin-left: 1.5rem;">
+                                       <li>Buying inventory (Asset) increases Assets.</li>
+                                       <li>Buying on credit (Trade Payable) increases Liabilities.</li>
+                                   </ul>
+                               </li>
+                               <li><strong>New Values:</strong>
+                                   <ul style="margin-left: 1.5rem;">
+                                       <li>New Assets: $50,000 + $5,000 = <strong>$55,000</strong>.</li>
+                                       <li>New Liabilities: $20,000 + $5,000 = <strong>$25,000</strong>.</li>
+                                       <li>New Equity: Remains unchanged at <strong>$30,000</strong>.</li>
+                                   </ul>
+                               </li>
+                               <li style="margin-top: 0.5rem;"><strong>Check:</strong> $55,000 (A) = $25,000 (L) + $30,000 (E). It balances.</li>
+                           </ol>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item" onclick="navigateToModule('akm-3-1')">
+                             <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> AKM #3.1 (Elements of Financial Statements).
+                            </div>
+                             <span class="link-arrow">←</span>
+                        </div>
+                        <div class="link-item" onclick="navigateToModule('akm-4-1')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> This is the direct theoretical foundation for AKM #4.1 (Double Entry & T-Accounts).
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #4.1 Content -->
+            <div class="akm-content" id="akm-4-1" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🔄</span>
+                        AKM #4.1: The Double-Entry System & DEAD CLIC
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 2.4, 3.3</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">
+                            <strong class="term">The Double-Entry Rule</strong>: Every transaction affects at least two accounts. To keep the accounting equation in balance, the total amount debited must equal the total amount credited for every transaction.
+                        </p>
+                    </div>
+                     <div class="concept-box">
+                        <p class="definition">
+                            <strong class="term">T-Account</strong>: The visual representation of a ledger account, with a debit (Dr) side on the left and a credit (Cr) side on the right.
+                        </p>
+                    </div>
+                     <div class="concept-box">
+                        <p class="definition">
+                           <strong>The Modern Golden Rule (DEAD CLIC)</strong>: A memory aid to determine whether to debit or credit an account.
+                        </p>
+                    </div>
+
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">DEAD CLIC Table:</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Acronym</th>
+                                    <th>Stands For</th>
+                                    <th>To INCREASE</th>
+                                    <th>To DECREASE</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>D.E.A.D.</strong></td>
+                                    <td>Drawings, Expenses, Assets</td>
+                                    <td><span class="highlight">DEBIT (Dr)</span></td>
+                                    <td>Credit (Cr)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>C.L.I.C.</strong></td>
+                                    <td>Capital, Liabilities, Income</td>
+                                    <td><span class="highlight">CREDIT (Cr)</span></td>
+                                    <td>Debit (Dr)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    
+                    <h3 style="margin-bottom: 1rem;">SOP: The 4-Step Process for Recording Any Transaction</h3>
+                    <div class="sop-container">
+                        <div class="sop-step">
+                            <span class="sop-number">1</span>
+                            <strong>Identify the Two Accounts:</strong> Read the transaction and name the two accounts involved. (e.g., "Cash at Bank", "Sales Revenue").
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">2</span>
+                            <strong>Classify Each Account:</strong> Use your knowledge from AKM #3.1. Is it an Asset, Liability, Equity, Income, or Expense?
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">3</span>
+                            <strong>Determine the Effect & Apply DEAD CLIC:</strong>
+                            <ul style="margin-left: 2rem; margin-top: 0.5rem; line-height: 1.8;">
+                                <li>Is the first account increasing or decreasing? Based on its classification, should you Debit or Credit it?</li>
+                                <li>Is the second account increasing or decreasing? Based on its classification, should you Debit or Credit it?</li>
+                            </ul>
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">4</span>
+                            <strong>Construct the Journal Entry:</strong> Write the Debit entry on the first line and the Credit entry indented on the second line.
+                        </div>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Example Application:</h3>
+                    <div class="concept-box">
+                        <p><strong>Transaction:</strong> Paid rent of $1,200 by cheque.</p>
+                        <ol style="margin-left: 1.5rem; margin-top: 1rem; line-height: 1.8;">
+                            <li><strong>Identify:</strong> "Rent Expense" and "Cash at Bank".</li>
+                            <li><strong>Classify:</strong> "Rent Expense" is an Expense. "Cash at Bank" is an Asset.</li>
+                            <li><strong>Apply DEAD CLIC:</strong>
+                                <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    <li>Rent Expense is increasing. To increase an Expense, you Debit. → Dr Rent Expense $1,200.</li>
+                                    <li>Cash at Bank is decreasing. To decrease an Asset, you Credit. → Cr Cash at Bank $1,200.</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <div class="code-block" style="margin-top: 1rem;">
+<pre style="white-space: pre;">Dr  Rent Expense        1,200
+    Cr  Cash at Bank          1,200</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    
+                    <div class="pitfall-static-card">
+                        <div class="pitfall-mistake">
+                            <strong>Mistake:</strong> Reversing the debit and credit entries. This is the most common error for beginners.
+                        </div>
+                        <div class="pitfall-correction">
+                            <strong>✓ Correction:</strong> Slow down and rigorously apply the 4-step process. Do not guess. Write down "A, L, E, I, or X" next to each account name as you analyze it. Say the DEAD CLIC rule out loud.
+                        </div>
+                    </div>
+
+                    <div class="pitfall-static-card">
+                        <div class="pitfall-mistake">
+                           <strong>Mistake:</strong> Confusing the business's books with your personal bank account. Thinking "Credit" always means "plus money."
+                        </div>
+                        <div class="pitfall-correction">
+                            <strong>✓ Correction:</strong> In accounting, "Credit" does not mean "good" or "plus." It is simply the name for the right-hand side of a T-account. Its effect (increase or decrease) depends entirely on the account type (DEAD or CLIC).
+                        </div>
+                    </div>
+                    
+                     <div class="pitfall-static-card">
+                        <div class="pitfall-mistake">
+                           <strong>Mistake:</strong> When a transaction involves cash, students often only think about the cash account and forget the other side of the transaction.
+                        </div>
+                        <div class="pitfall-correction">
+                            <strong>✓ Correction:</strong> Force yourself to always identify two accounts. The question is never just "What happens to cash?" It's "What did we get, or what did we give up, in exchange for the cash?"
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                         <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                     <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> For each transaction, state the account to be debited and the account to be credited: (a) Bought equipment for $3,000 on credit. (b) Owner took $200 cash for personal use.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                           <p><strong>A:</strong></p>
+                           <p><strong>(a) Analysis:</strong></p>
+                           <ul style="margin-left: 1.5rem;">
+                               <li><strong>Accounts:</strong> "Office Equipment" (Asset) and "Trade Payables" (Liability).</li>
+                               <li><strong>Effect:</strong> Office Equipment is increasing. Trade Payables is increasing.</li>
+                               <li><strong>DEAD CLIC:</strong> To increase an Asset, you Debit. To increase a Liability, you Credit.</li>
+                               <li><strong>Answer: Debit Office Equipment, Credit Trade Payables.</strong></li>
+                           </ul>
+                           <p style="margin-top: 1rem;"><strong>(b) Analysis:</strong></p>
+                           <ul style="margin-left: 1.5rem;">
+                               <li><strong>Accounts:</strong> "Drawings" (Equity) and "Cash in hand" (Asset).</li>
+                               <li><strong>Effect:</strong> Drawings is increasing. Cash in hand is decreasing.</li>
+                               <li><strong>DEAD CLIC:</strong> To increase Drawings, you Debit. To decrease an Asset, you Credit.</li>
+                               <li><strong>Answer: Debit Drawings, Credit Cash in hand.</strong></li>
+                           </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item" onclick="navigateToModule('akm-3-1')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> Depends on AKM #3.1 (Elements) and AKM #3.2 (The Accounting Equation)
+                            </div>
+                            <span class="link-arrow">←</span>
+                        </div>
+                        <div class="link-item" onclick="navigateToModule('akm-5')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> This is the engine that drives the entire accounting system. It is the practical application required to create Journals (AKM #5), post to Ledgers, and prepare a Trial Balance (AKM #6)
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- AKM #5 Content -->
+            <div class="akm-content" id="akm-5" style="display: none;">
+                 <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🧾</span>
+                        AKM #5: Source Documents & Journals
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 1.3, 2.4, 3.2</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition"><strong>The Accounting Information System Cycle:</strong> A structured process to ensure transactions are recorded accurately. For G3, the key sequence is:</p>
+                        <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                           <li>Transaction Occurs → Evidenced by a <strong class="term">Source Document</strong>.</li>
+                           <li>Analyze Source Document → Record in the <strong class="term">Journal</strong> (Book of Prime Entry).</li>
+                           <li>Post Journal Entries → Transfer to individual <strong class="term">Ledger Accounts</strong> (T-Accounts).</li>
+                           <li>Balance Ledgers → Prepare a <strong class="term">Trial Balance</strong>.</li>
+                        </ol>
+                         <p class="definition" style="margin-top: 1rem;">
+                            <strong class="term">The General Journal</strong>: The primary book for recording all transactions before posting to the ledger. It shows the date, the accounts to be debited and credited, the amounts, and a brief explanation (narration).
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <h3 style="margin-bottom: 1rem;">General Journal Template:</h3>
+                     <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Particulars / Details</th>
+                                    <th>Debit ($)</th>
+                                    <th>Credit ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>[Date]</td>
+                                    <td>
+                                        [Account to be Debited]
+                                        <br>
+                                        <span style="padding-left: 2em;">[Account to be Credited]</span>
+                                        <br>
+                                        <em style="padding-left: 2em;">(Narration: A brief explanation)</em>
+                                    </td>
+                                    <td>[Amount]</td>
+                                    <td>[Amount]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">SOP: Writing a Narration</h3>
+                    <div class="sop-container">
+                        <div class="sop-step">
+                            <span class="sop-number">1</span>
+                             <strong>Be Brief and Clear:</strong> State what happened.
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">2</span>
+                             <strong>Mention the Source Document:</strong> If known, reference the invoice or receipt number.
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">✓</span>
+                             <strong>Example:</strong> (Being goods purchased on credit from Supplier XYZ, as per invoice 456)
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Forgetting the narration in a journal entry.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> Unless the question explicitly states "Narration is not required," you should always include a brief one. It explains the "story" behind the numbers.
+                        </div>
+                    </div>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Mixing up the format, putting the credit account name before the debit account name.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> The convention is strict: Debit entry first, then the indented credit entry below it.
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                     <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q (Fuhua Paper 1, Q4c):</strong> Prepare journal entries without narrations to record the expenditures (Purchase of delivery truck $70,000, Import tax $6,500, Freight charges $1,400, Annual road tax $700, Petrol $100).</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                           <p><strong>A (Applying Capital vs. Revenue expenditure rules):</strong></p>
+                           <div class="code-block" style="margin-top: 1rem;">
+<pre style="white-space: pre; line-height: 1.5;">
+<strong>Journal</strong>
+Date | Particulars             | Debit ($) | Credit ($)
+-----|-------------------------|-----------|-----------
+Jan 1| Motor Vehicles          |    77,900 |
+     | Road Tax                |       700 |
+     | Petrol                  |       100 |
+     |   Cash at Bank          |           |     78,700
+     | (Working: Capital cost = 70000+6500+1400)
+</pre>
+                           </div>
+                        </div>
+                    </div>
+                </section>
+
+                 <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item" onclick="navigateToModule('akm-4-1')">
+                             <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> AKM #2.6 (Objectivity Principle), AKM #4.1 (Double Entry).
+                            </div>
+                             <span class="link-arrow">←</span>
+                        </div>
+                        <div class="link-item" onclick="navigateToModule('akm-6')">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> Leads to: Posting to Ledgers and preparing the AKM #6 (Trial Balance).
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #6 Content -->
+            <div class="akm-content" id="akm-6" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">📊</span>
+                        AKM #6: Trial Balance Construction
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> 2.5, 3.2</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">
+                           The <strong class="term">Trial Balance</strong> is a list of all ledger account balances at a specific date. It is prepared to verify the arithmetical accuracy of the double-entry system. A correctly prepared trial balance will have equal total debits and total credits.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <h3 style="margin-bottom: 1rem;">SOP: Preparing a Trial Balance</h3>
+                    <div class="sop-container">
+                        <div class="sop-step">
+                            <span class="sop-number">1</span>
+                            <strong>Create the Format:</strong> Title (Trial Balance as at [Date]) and two columns: Debit ($) and Credit ($).
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">2</span>
+                            <strong>Go Through the List of Accounts:</strong> For each account, determine its normal balance.
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">3</span>
+                            <strong>Apply DEAD CLIC to Balances:</strong>
+                             <ul style="margin-left: 2rem; margin-top: 0.5rem; line-height: 1.8;">
+                                <li>Does the account fall under <strong>Drawings, Expenses, or Assets</strong>? Place its balance in the <strong>DEBIT</strong> column.</li>
+                                <li>Does the account fall under <strong>Capital, Liabilities, or Income</strong>? Place its balance in the <strong>CREDIT</strong> column.</li>
+                            </ul>
+                        </div>
+                        <div class="sop-step">
+                             <span class="sop-number">4</span>
+                            <strong>Handle Special Cases (Contra Accounts):</strong>
+                             <ul style="margin-left: 2rem; margin-top: 0.5rem; line-height: 1.8;">
+                                <li><strong>Sales Returns</strong> is an expense-like account → Debit.</li>
+                                <li><strong>Purchase Returns</strong> is an income-like account → Credit.</li>
+                                <li><strong>Accumulated Depreciation</strong> is a contra-asset → Credit.</li>
+                                <li><strong>Allowance for Impairment</strong> is a contra-asset → Credit.</li>
+                            </ul>
+                        </div>
+                        <div class="sop-step">
+                            <span class="sop-number">5</span>
+                            <strong>Total Both Columns:</strong> Sum up the Debit column and the Credit column. The two totals must be equal.
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                     <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Placing an account balance in the wrong column. (e.g., putting Sales in Debit or Purchases in Credit).
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> Drill the DEAD CLIC rule relentlessly. Purchases is an Expense (Debit). Sales is an Income (Credit).
+                        </div>
+                    </div>
+                    <div class="pitfall-card">
+                        <div class="pitfall-front">
+                            <span class="pitfall-icon">⚠️</span>
+                            <div>
+                                <strong>Mistake:</strong> Incorrectly placing contra accounts like Sales Returns or Accumulated Depreciation.
+                                <div class="flip-prompt">Click to see correction →</div>
+                            </div>
+                        </div>
+                        <div class="pitfall-back">
+                            <strong>✓ Correction:</strong> Memorize the special cases. Sales Returns behaves like an expense (reduces income), so it has a Debit balance. Accumulated Depreciation reduces an asset, so it has a Credit balance (the opposite of an asset).
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Typical G3 Practice Questions & Answers
+                    </h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> From the following list of balances, prepare a trial balance for ABC Trading as at 31 Dec 2023: Capital $20,000; Cash at Bank $5,000; Equipment $15,000; Sales $30,000; Purchases $25,000; Trade Payables $5,000.</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>A:</strong></p>
+                            <h4 style="text-align: center; margin-bottom: 1rem;">ABC Trading<br>Trial Balance as at 31 December 2023</h4>
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Account</th>
+                                            <th>Debit ($)</th>
+                                            <th>Credit ($)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Capital</td><td></td><td>20,000</td></tr>
+                                        <tr><td>Cash at Bank</td><td>5,000</td><td></td></tr>
+                                        <tr><td>Equipment</td><td>15,000</td><td></td></tr>
+                                        <tr><td>Sales</td><td></td><td>30,000</td></tr>
+                                        <tr><td>Purchases</td><td>25,000</td><td></td></tr>
+                                        <tr><td>Trade Payables</td><td></td><td>5,000</td></tr>
+                                        <tr><td><strong>Total</strong></td><td><strong>45,000</strong></td><td><strong>45,000</strong></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                     <div class="links-section">
+                        <div class="link-item" onclick="navigateToModule('akm-4-1')">
+                             <span>🔗</span>
+                            <div>
+                                <strong>Prerequisite:</strong> All previous bookkeeping modules, especially AKM #4.1.
+                            </div>
+                             <span class="link-arrow">←</span>
+                        </div>
+                        <div class="link-item">
+                            <span>🔗</span>
+                            <div>
+                                <strong>Application:</strong> The Trial Balance is the direct source of information used to prepare the financial statements (AKM #13 & #14).
+                            </div>
+                            <span class="link-arrow">→</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Placeholder message for other modules -->
+            <div class="akm-content" id="placeholder-content" style="display: none;">
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <h2 style="color: #64748b; margin-bottom: 1rem;">Module Content Coming Soon</h2>
+                    <p style="color: #94a3b8;">This module's detailed content will be added in the full implementation.</p>
+                    <p style="color: #94a3b8; margin-top: 0.5rem;">The structure follows the same format as the other modules.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Custom Tooltip Element -->
+    <div id="custom-tooltip" style="display: none; position: fixed; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9em; z-index: 1000; max-width: 300px; pointer-events: none; transition: opacity 0.2s;"></div>
+
+    <script>
+        // --- DOM Elements ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentArea = document.getElementById('contentArea');
+        const allAkmContent = document.querySelectorAll('.akm-content');
+        const placeholderContent = document.getElementById('placeholder-content');
+        const searchBox = document.getElementById('searchBox');
+        const tooltipElement = document.getElementById('custom-tooltip');
+
+        // --- Data ---
+        const implementedModules = [
+            'akm-1-1', 'akm-1-2', 'akm-1-3', 'akm-3-1', 'akm-3-2', 'akm-4-1', 'akm-5', 'akm-6'
+        ];
+        const definitions = {
+            'Accounting': 'An information system that records and communicates business transactions.',
+            'identifies, records, and communicates': 'The three core functions of accounting.',
+            'stakeholders': 'Parties with an interest in the business performance.',
+            'decision-making': 'The process of choosing between alternative courses of action.',
+            'limited liability': 'Owners are only liable up to their investment amount.',
+            'separate legal entity': 'The business can sue/be sued in its own name.',
+            'Integrity': 'The quality of being straightforward and honest in all professional and business relationships.',
+            'Objectivity': 'The quality of not allowing bias or conflict of interest to override professional judgments.',
+            'integrity': 'The quality of being straightforward and honest.',
+            'objectivity': 'The quality of not allowing bias to override professional judgments.',
+            'Assets': 'Economic resources controlled by the business from which future economic benefits are expected.',
+            'Liabilities': 'Present obligations of the business, the settlement of which is expected to result in an outflow of economic benefits.',
+            'Equity': "The residual interest in the assets of the business after deducting all its liabilities.",
+            'Income': 'Increases in economic benefits that result in increases in equity.',
+            'Expenses': 'Decreases in economic benefits that result in decreases in equity.',
+            'owns': 'Refers to Assets, the resources controlled by the business.',
+            'owes': 'Refers to Liabilities, the obligations of the business to external parties.',
+            "owner's claim": "Refers to Equity, the owner's residual interest in the assets.",
+            'earns': "Refers to Income, which increases the business's equity.",
+            'Costs incurred': "Refers to Expenses, which decrease the business's equity.",
+            'The Double-Entry Rule': 'Every transaction affects at least two accounts, with total debits equaling total credits.',
+            'T-Account': 'A visual tool showing debits on the left and credits on the right.',
+            'The General Journal': 'The primary book for recording all transactions before posting to the ledger.',
+            'Source Document': 'The original record containing the details to substantiate a transaction.',
+            'Journal': 'The book of prime entry where transactions are first recorded chronologically.',
+            'Ledger Accounts': 'The individual accounts that keep a record of increases and decreases in a specific item.',
+            'Trial Balance': 'A list of all ledger account balances to verify the arithmetical accuracy of the double-entry system.'
+        };
+
+        // --- Functions ---
+        
+        function navigateToModule(moduleId) {
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.module === moduleId);
+            });
+
+            allAkmContent.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            const targetContent = document.getElementById(moduleId);
+            if (targetContent && implementedModules.includes(moduleId)) {
+                targetContent.style.display = 'block';
+            } else {
+                placeholderContent.style.display = 'block';
+            }
+            
+            if (window.innerWidth <= 1024) {
+                 contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateTooltipPosition(e) {
+            let x = e.clientX + 15;
+            let y = e.clientY + 15;
+            
+            if (x + tooltipElement.offsetWidth > window.innerWidth) {
+                x = window.innerWidth - tooltipElement.offsetWidth - 15;
+            }
+            if (y + tooltipElement.offsetHeight > window.innerHeight) {
+                y = e.clientY - tooltipElement.offsetHeight - 15;
+            }
+
+            tooltipElement.style.left = `${x}px`;
+            tooltipElement.style.top = `${y}px`;
+        }
+
+
+        // --- Event Listeners ---
+        
+        // Sidebar Navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navigateToModule(this.dataset.module);
+            });
+        });
+
+        // Search Box
+        searchBox.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            navItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+
+        // Global Click Handler (for Q&A, Pitfalls)
+        document.addEventListener('click', function(e) {
+            const questionHeader = e.target.closest('.question');
+            if (questionHeader) {
+                questionHeader.parentElement.classList.toggle('open');
+            }
+
+            const pitfallCard = e.target.closest('.pitfall-card');
+            if (pitfallCard) {
+                pitfallCard.classList.toggle('flipped');
+            }
+        });
+
+        // Custom Tooltip Handlers
+        document.addEventListener('mouseover', function(e) {
+            if (e.target.classList.contains('term')) {
+                const term = e.target.textContent.trim();
+                if (definitions[term]) {
+                    tooltipElement.textContent = definitions[term];
+                    tooltipElement.style.display = 'block';
+                    updateTooltipPosition(e);
+                }
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.classList.contains('term')) {
+                tooltipElement.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (tooltipElement.style.display === 'block') {
+                updateTooltipPosition(e);
+            }
+        });
+
+        // --- Initial Load ---
+        navigateToModule('akm-1-1');
+    </script>
+</body>
+</html>
+" between the  and  tags.
+I am asking a question about the code that I have selected.
+I am not asking to edit the code.
+I would like a direct answer to my question.
+The user wants to know if there are any infinite loops in the provided Javascript code.
+My thinking process to answer the user's question is:
+1.  **Analyze the JavaScript code provided.** I need to look at all the loops and recursive calls to identify any potential infinite loops.
+2.  **Identify all loops and event listeners:**
+    * `navItems.forEach(...)`: This iterates through a static NodeList. It will terminate.
+    * `allAkmContent.forEach(...)`: Same as above, iterates through a static NodeList. It will terminate.
+    * `searchBox.addEventListener('input', ...)`: This is an event listener. The callback function contains a `navItems.forEach(...)` loop, which is finite. The listener itself doesn't cause a loop; it just waits for user input.
+    * `document.addEventListener('click', ...)`: Another event listener. The callback contains `if` statements and DOM traversal (`.closest`, `.parentElement`). No loops here. It's triggered by user clicks.
+    * `document.addEventListener('mouseover', ...)`: Event listener. The callback has an `if` statement. No loops.
+    * `document.addEventListener('mouseout', ...)`: Event listener. An `if` statement. No loops.
+    * `document.addEventListener('mousemove', ...)`: Event listener. An `if` statement. No loops.
+3.  **Identify function calls:**
+    * `MapsToModule(moduleId)`: This function is called on page load and when a nav item is clicked. It contains two `forEach` loops over static lists. It doesn't call itself or any other function that would lead to a recursive loop.
+    * `updateTooltipPosition(e)`: This function is called on `mouseover` and `mousemove`. It performs calculations and sets CSS properties. It does not contain any loops or recursive calls.
+4.  **Synthesize the analysis:**
+    * The code primarily uses `forEach` loops to iterate over collections of DOM elements (`navItems`, `allAkmContent`). These collections are fixed at the time the script runs. The loops will execute a finite number of times (equal to the number of elements in the collection) and then terminate.
+    * The rest of the code consists of event listeners (`click`, `input`, `mouseover`, `mouseout`, `mousemove`). These listeners execute their callback functions only when the corresponding event occurs (e.g., a user clicks the mouse or types in the search box). The callbacks themselves do not contain any constructs that would cause them to run indefinitely. There are no `while(true)` loops, `for(;;)` loops, or unterminated recursive function calls.
+5.  **Formulate the answer:**
+    * Start with a direct "No".
+    * Explain *why*. The code doesn't have any infinite loops.
+    * Break down the reasoning:
+        * The loops used (`forEach`) are finite because they iterate over a fixed number of HTML elements on the page.
+        * The other parts of the code are event listeners, which only run in response to specific user actions (like clicking or moving the mouse). They don't run continuously on their own.
+    * Conclude by stating that the code is event-driven and appears to be safe from infinite loops.好的，我检查了您在 Canvas 中提供的 JavaScript 代码。
+
+代码中**没有无限循环**。
+
+具体原因如下：
+
+1.  **循环结构**：代码中使用的循环都是 `forEach` 循环，它们遍历的是页面上固定数量的 HTML 元素（如导航项）。这种循环会执行固定次数后自动结束，不会无限进行。
+2.  **事件驱动**：代码的主要逻辑由事件监听器（如 `addEventListener`）构成。这些函数（例如处理点击、鼠标悬停、搜索框输入等）只在用户执行相应操作时才会触发一次，并不会持续运行。
+
+因此，这段脚本的结构是安全的，不会导致浏览器因无限循环而卡死。
+
