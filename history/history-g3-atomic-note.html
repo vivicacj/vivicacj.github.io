@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History G3 Atomic Knowledge Modules</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f5f7fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .header-icon {
+             width: 2.25rem;
+            height: 2.25rem;
+            flex-shrink: 0;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e6ed;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #4b6cb7;
+        }
+
+        .nav-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-section h3 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8492a6;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            padding: 0.6rem 0.75rem;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-item:hover {
+            background: #eef2ff;
+            color: #4b6cb7;
+        }
+
+        .nav-item.active {
+            background: #4b6cb7;
+            color: white;
+            font-weight: 500;
+        }
+
+        .priority-badge {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            margin-left: auto;
+        }
+
+        .priority-must {
+            background: #fee;
+            color: #c33;
+        }
+
+        .priority-secondary {
+            background: #fef3e0;
+            color: #d97706;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+        }
+
+        .akm-header {
+            border-bottom: 3px solid #4b6cb7;
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .akm-title {
+            font-size: 1.8rem;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .akm-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .concept-box {
+            background: #f8fafc;
+            border-left: 4px solid #4b6cb7;
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .definition {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .term {
+            color: #4b6cb7;
+            cursor: help;
+            border-bottom: 2px dotted #4b6cb7;
+            font-weight: 600;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: #4b6cb7;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .pitfall-card {
+            border: 1px solid #fef3c7;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: #fffbeb;
+            padding: 1.25rem;
+        }
+
+        .qa-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .question {
+            background: #f8fafc;
+            padding: 1.25rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .question:hover {
+            background: #f1f5f9;
+        }
+
+        .answer {
+            padding: 1.25rem;
+            display: none;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .qa-item.open .answer {
+            display: block;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+        }
+
+        .qa-item.open .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .links-section {
+            background: #fafbfc;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .link-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 6px;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="header-icon"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                History G3 Atomic Knowledge Modules
+            </h1>
+            <p>Exam-focused Revision Tool for The Making of the 20th Century World</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <aside class="sidebar">
+            <input type="text" class="search-box" placeholder="Search modules..." id="searchBox">
+            
+            <div class="nav-section">
+                <h3>Unit 1: 1910–1942</h3>
+                <div class="nav-item active" data-module="akm-s1">
+                    <span>AKM #S1: Chronology & Timeline</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-s2">
+                    <span>AKM #S2: Key Concepts</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+                <div class="nav-item" data-module="akm-s3">
+                    <span>AKM #S3: Interpretations</span>
+                    <span class="priority-badge priority-secondary">☆</span>
+                </div>
+                <div class="nav-item" data-module="akm-s4">
+                    <span>AKM #S4: Comparative Analysis</span>
+                    <span class="priority-badge priority-secondary">☆</span>
+                </div>
+                 <div class="nav-item" data-module="akm-s5">
+                    <span>AKM #S5: Exam Question Walkthrough</span>
+                    <span class="priority-badge priority-must">★</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="content-area" id="contentArea">
+            <!-- AKM #S1 Content -->
+            <div class="akm-content" id="akm-s1">
+                <div class="akm-header">
+                    <h1 class="akm-title">
+                        <span class="section-icon">🧬</span>
+                        AKM #S1: Chronology & Timeline Skills for Unit 1
+                    </h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> Unit 1: Versailles, Authoritarianism, WWII Outbreak</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🧠</span>
+                        1. Academic Core Concept
+                    </h2>
+                    <div class="concept-box">
+                        <p class="definition">
+                            For this unit, chronology is the logic that connects the humiliation of the <strong class="term">Treaty of Versailles</strong> to the rise of aggressive dictators and finally to the outbreak of a second global conflict. Understanding the sequence allows you to build powerful arguments about cause and consequence.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        2. Exam Answer Toolkit
+                    </h2>
+                    <h3 style="margin-bottom: 1rem;">Master Timeline: The Interwar Years & Roads to War (1919-1941)</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Event in Europe (Germany)</th>
+                                    <th>Event in Asia-Pacific (Japan)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>1919</strong></td><td><strong>Treaty of Versailles signed.</strong> Weimar Republic established.</td><td></td></tr>
+                                <tr><td><strong>1923</strong></td><td><strong>Hyperinflation Crisis</strong>. Hitler's failed Munich Putsch.</td><td>Great Kantō Earthquake.</td></tr>
+                                <tr><td><strong>1929</strong></td><td><strong>Wall Street Crash</strong> → The Great Depression begins, devastating the German economy.</td><td>The Great Depression hits Japan; silk exports collapse.</td></tr>
+                                <tr><td><strong>1931</strong></td><td></td><td><strong>Manchurian Incident.</strong> Shows military dominance & League weakness.</td></tr>
+                                <tr><td><strong>1933</strong></td><td><strong>Hitler appointed Chancellor.</strong> End of Weimar democracy.</td><td>Japan withdraws from the League of Nations.</td></tr>
+                                <tr><td><strong>1935</strong></td><td>Hitler announces **German rearmament**, violating the TOV.</td><td></td></tr>
+                                <tr><td><strong>1936</strong></td><td>**Remilitarisation of the Rhineland.** A successful gamble that emboldens Hitler.</td><td>Anti-Comintern Pact signed with Germany.</td></tr>
+                                <tr><td><strong>1937</strong></td><td></td><td>**Marco Polo Bridge Incident** → Full-scale invasion of China begins.</td></tr>
+                                <tr><td><strong>1938</strong></td><td>**Anschluss with Austria** (March). **Munich Agreement** (Sept). High point of appeasement.</td><td></td></tr>
+                                <tr><td><strong>1939</strong></td><td>**Invasion of Czechoslovakia** (March). **Nazi-Soviet Pact** (Aug). **Invasion of Poland** (1 Sept) → WWII begins in Europe.</td><td></td></tr>
+                                <tr><td><strong>1941</strong></td><td></td><td>US oil embargo. **Attack on Pearl Harbor** (7 Dec) → War in the Pacific begins.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">⚠️</span>
+                        3. Common Errors & Pitfalls
+                    </h2>
+                    <div class="pitfall-card">
+                       <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                           <li><strong>Confusing the Chronology of Appeasement:</strong> Students often mix up the order of Hitler's aggressions. Remember the logical progression: Rhineland → Austria → Sudetenland → Czechoslovakia → Poland.</li>
+                           <li><strong>Misplacing the Great Depression:</strong> Placing the Depression *after* Hitler's rise to power. The Depression is the **key cause** that created the conditions for his rise.</li>
+                           <li><strong>Separating Europe and Asia:</strong> Failing to see that events were happening concurrently (e.g., Appeasement in 1938, while Japan was already at war with China).</li>
+                       </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">❓</span>
+                        4. Linked Exam Q&A
+                    </h2>
+                     <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> "'Hitler alone is to be blamed for Germany's road to World War II in Europe.' How far do these sources support this view?"</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>Chronological Answer Framework:</strong></p>
+                            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li><strong>Argument for 'Hitler is to blame':</strong> Trace Hitler's actions chronologically from **1933-1939**, showing a clear pattern of planned aggression: rearmament, Rhineland, Anschluss, and finally the invasion of Poland. This sequence demonstrates intent.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Argument against 'Hitler alone is to blame':</strong> Use chronology to show the failures of other actors. The League's weakness was clear from the Manchurian Incident (**1931**). British and French appeasement (**1936-1938**) emboldened Hitler. The Nazi-Soviet Pact (**1939**) was Stalin's crucial action that gave Hitler the final green light.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔗</span>
+                        5. Knowledge Links
+                    </h2>
+                    <div class="links-section">
+                        <div class="link-item"><span>🔗</span><div><strong>Prerequisite:</strong> Familiarity with the major events listed.</div></div>
+                        <div class="link-item"><span>🔗</span><div><strong>Application:</strong> Essential for constructing logical arguments for all Unit 1 topics.</div></div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- AKM #S2 Content -->
+            <div class="akm-content" id="akm-s2" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title"><span class="section-icon">🧬</span> AKM #S2: Key Concepts & Definitions for Unit 1</h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> Unit 1: Versailles, Authoritarianism, WWII Outbreak</span>
+                        <span><strong>Priority:</strong> ★ Must-Know</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🧠</span> 1. Academic Core Concept</h2>
+                    <div class="concept-box">
+                        <p>The period 1919-1942 is defined by powerful, interlocking concepts. Mastering these terms allows you to explain complex situations with precision and analytical depth, moving beyond simple storytelling to historical analysis.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">✍️</span> 2. Exam Answer Toolkit</h2>
+                    <h3 style="margin-bottom: 1rem;">Unit 1 Essential Glossary:</h3>
+                    <div class="concept-box">
+                        <p><strong class="term">Treaty of Versailles (TOV)</strong>: The 1919 peace treaty ending WWI. Key punitive terms against Germany:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem; line-height: 1.8;">
+                            <li><strong class="term">War Guilt Clause (Article 231)</strong>: Forced Germany to accept sole blame for the war (national humiliation).</li>
+                            <li><strong class="term">Reparations</strong>: Required Germany to pay massive sums (£6.6 billion) for war damages (crippling the economy).</li>
+                            <li><strong>Territorial Losses</strong>: Lost Alsace-Lorraine, Saar, all overseas colonies. Forbidden from <strong class="term">Anschluss</strong> (unifying with Austria).</li>
+                            <li><strong>Disarmament</strong>: Army limited to 100,000 men; no air force; demilitarised Rhineland.</li>
+                        </ul>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong class="term">League of Nations</strong>: International organization for peace via <strong class="term">collective security</strong>. Key weaknesses: major powers absent (USA), no army, unanimous decisions needed.</p>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong class="term">Weimar Republic</strong>: Germany's democratic government (1919-1933). Key weaknesses: <strong class="term">Proportional Representation</strong> (led to weak coalitions) and <strong class="term">Article 48</strong> (emergency powers, a backdoor to dictatorship).</p>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong class="term">Lebensraum</strong> (Living Space): Core Nazi ideology for eastward expansion into Slavic lands (Poland, Russia) for the "superior" Aryan race. Primary justification for Hitler's foreign policy.</p>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong class="term">Appeasement</strong>: Policy of granting concessions to an aggressor to avoid war, practiced by Britain towards Hitler (1937-1939). The <strong class="term">Munich Agreement (1938)</strong> is the ultimate example.</p>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong class="term">Ultranationalism</strong>: Extreme nationalism. In Japan, this meant a belief in Japanese racial superiority, emperor worship, and a destiny to dominate Asia.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">⚠️</span> 3. Common Errors & Pitfalls</h2>
+                    <div class="pitfall-card">
+                       <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                           <li><strong>Generic "Harsh Treaty":</strong> Simply stating the TOV was "harsh" is not enough. You must cite specific terms like the **War Guilt Clause** or **Reparations** and explain *why* they caused resentment.</li>
+                           <li><strong>Misunderstanding Appeasement:</strong> Portraying it as simple cowardice. You must explain its motivations: fear of another war, belief TOV was too harsh, threat of Communism, military unpreparedness.</li>
+                           <li><strong>Confusing Nationalism and Ultranationalism:</strong> **Ultranationalism** in Japan was more aggressive and militaristic, tied to a divine mission and racial hierarchy.</li>
+                       </ul>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">❓</span> 4. Linked Exam Q&A</h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> "Explain how the Treaty of Versailles contributed to Germany's struggles after World War I."</span><span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>Answer Framework using Key Concepts:</strong></p>
+                            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li><strong>Point 1: Economic Struggle due to Reparations.</strong> Define **Reparations** and explain how this burden crippled the economy, leading to crises like the **1923 Hyperinflation**.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Point 2: Political Instability due to the 'Diktat'.</strong> Explain how the **War Guilt Clause** made the **Weimar Republic** appear treacherous, fueling the "stab-in-the-back" myth used by extremists.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Point 3: National Humiliation from Disarmament/Territorial Clauses.</strong> Detail these losses, explaining how they stripped Germany of its great power status and fueled a desire for revenge.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🔗</span> 5. Knowledge Links</h2>
+                    <div class="links-section">
+                        <div class="link-item"><span>🔗</span><div><strong>Prerequisite:</strong> A basic understanding of the end of WWI.</div></div>
+                        <div class="link-item"><span>🔗</span><div><strong>Application:</strong> These concepts are the essential vocabulary for any SBQ or SEQ on this Unit.</div></div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- AKM #S3 Content -->
+            <div class="akm-content" id="akm-s3" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title"><span class="section-icon">🧬</span> AKM #S3: Interpretations & Historiography for Unit 1</h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> Unit 1: Versailles, Authoritarianism, WWII Outbreak</span>
+                        <span><strong>Priority:</strong> ☆ Secondary</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🧠</span> 1. Academic Core Concept</h2>
+                    <div class="concept-box">
+                        <p>History is a debate. For the outbreak of WWII, there is no single agreed-upon cause. Different historians emphasize different factors, creating competing interpretations. Understanding these debates is key to writing a sophisticated, balanced essay.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">✍️</span> 2. Exam Answer Toolkit</h2>
+                    <h3 style="margin-bottom: 1rem;">Key Historical Debates for Unit 1:</h3>
+                    
+                    <h4>Debate 1: Who was to blame for WWII in Europe?</h4>
+                    <div class="concept-box">
+                        <p><strong>Interpretation A: The 'Hitler-Centric' View (Intentionalist School).</strong></p>
+                        <p>Argues Hitler was the primary cause, with a clear, long-term plan for war (*Mein Kampf*, *Lebensraum*). His actions were premeditated.</p>
+                    </div>
+                    <div class="concept-box">
+                        <p><strong>Interpretation B: The Failure of Appeasement & the Allies (Structuralist School).</strong></p>
+                        <p>Argues blame lies with Britain and France. Their policy of appeasement failed to check Hitler and emboldened him, making war more likely.</p>
+                    </div>
+                    <div class="concept-box">
+                        <p><strong>Interpretation C: The Treaty of Versailles.</strong></p>
+                        <p>Argues the harsh TOV is the root cause. It created resentment and economic instability in Germany, making Hitler's rise and a war of revenge inevitable.</p>
+                    </div>
+
+                    <h4 style="margin-top: 2rem;">Debate 2: Why did militarism rise in Japan?</h4>
+                    <div class="concept-box">
+                        <p><strong>Interpretation A: Internal Factors.</strong> Focuses on failures within Japan: weak government, economic devastation of the Great Depression, and the appeal of ultranationalist groups.</p>
+                    </div>
+                     <div class="concept-box">
+                        <p><strong>Interpretation B: External Factors.</strong> Focuses on pressures from outside: Western protectionism, perceived racism in US immigration policies, and the desire to resist Western imperialism by creating their own empire.</p>
+                    </div>
+                </section>
+
+                 <section class="section">
+                    <h2 class="section-title"><span class="section-icon">❓</span> 4. Linked Exam Q&A</h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> "'The Germans resented the Treaty of Versailles because of the territorial terms.' How far do you agree?"</span><span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                           <p><strong>Answer Framework using Interpretations:</strong></p>
+                            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li><strong>Agree (Territorial Terms):</strong> Explain why territorial losses (Alsace-Lorraine) were humiliating. This is one valid interpretation.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Disagree (Other Terms were More Important):</strong> Introduce other interpretations.
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li><strong>The 'Humiliation' Interpretation:</strong> Argue the **War Guilt Clause** was most hated as a moral condemnation.</li>
+                                        <li><strong>The 'Economic' Interpretation:</strong> Argue **Reparations** were most significant due to their devastating impact on daily life (hyperinflation, poverty).</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-top: 0.75rem;"><strong>Conclusion:</strong> Weigh the interpretations. While territory mattered, the combination of moral blame and economic hardship created a deeper resentment critical for the rise of Nazism.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🔗</span> 5. Knowledge Links</h2>
+                    <div class="links-section">
+                        <div class="link-item"><span>🔗</span><div><strong>Application:</strong> High-scoring essays often acknowledge and engage with these different historical interpretations.</div></div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- AKM #S4 Content -->
+            <div class="akm-content" id="akm-s4" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title"><span class="section-icon">🧬</span> AKM #S4: Comparative Analysis for Unit 1</h1>
+                    <div class="akm-meta">
+                        <span><strong>Syllabus:</strong> Unit 1: Rise of Authoritarian Regimes</span>
+                        <span><strong>Priority:</strong> ☆ Secondary</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🧠</span> 1. Academic Core Concept</h2>
+                    <div class="concept-box">
+                        <p>Comparative analysis is best applied to the **Rise of Authoritarian Regimes**. By comparing Nazi Germany and Militarist Japan, you can identify common patterns (e.g., economic crises) and critical differences (e.g., single dictator vs. military faction), deepening your understanding of why democracy failed in the 1930s.</p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">✍️</span> 2. Exam Answer Toolkit</h2>
+                    <h3 style="margin-bottom: 1rem;">Comparative Framework: Rise of Authoritarianism in Germany vs. Japan</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Criterion</th>
+                                    <th>Nazi Germany</th>
+                                    <th>Militarist Japan</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Political Weakness</strong></td>
+                                    <td>Weak Weimar Republic (flawed constitution, unstable coalitions).</td>
+                                    <td>Weak Taisho Democracy (military was independent of civilian control).</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Impact of Great Depression</strong></td>
+                                    <td>Catastrophic mass unemployment, creating desperation and support for extremists.</td>
+                                    <td>Devastating collapse of silk trade, destroying faith in politicians and business elites.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Leadership Structure</strong></td>
+                                    <td>The Führerprinzip: A single, charismatic dictator (Hitler) with absolute power.</td>
+                                    <td>No single dictator. Power was held by competing military factions.</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Methods of Gaining Power</strong></td>
+                                    <td>'Legal' means (elections, appointment) combined with propaganda and violence.</td>
+                                    <td>Intimidation and assassination of political opponents (e.g., Prime Ministers).</td>
+                                </tr>
+                                 <tr>
+                                    <td><strong>Core Ideology</strong></td>
+                                    <td>Nazism: *Lebensraum*, racial purity (Aryan supremacy), overturning TOV.</td>
+                                    <td>Ultranationalism: Expel West, establish Japanese empire in Asia, secure resources.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                 <section class="section">
+                    <h2 class="section-title"><span class="section-icon">❓</span> 4. Linked Exam Q&A</h2>
+                    <div class="qa-item">
+                        <div class="question">
+                            <span><strong>Q:</strong> "'Economic problems were the main reason for the establishment of authoritarian regimes in the 1930s.' How far do you agree with this statement with reference to Germany and Japan?"</span><span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="answer">
+                            <p><strong>Comparative Answer Framework:</strong></p>
+                            <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                                <li><strong>Agree (Economic Problems):</strong> Explain how the **Great Depression** similarly devastated both Germany and Japan, destroying faith in their democratic governments and making authoritarian promises attractive.</li>
+                                <li style="margin-top: 0.75rem;"><strong>Disagree (Other Factors were More Important):</strong>
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>**In Germany,** argue that Hitler's **charisma and propaganda**, plus resentment over the **TOV**, were more significant factors that the depression merely ignited.</li>
+                                        <li>**In Japan,** argue that pre-existing **political weakness** (the military's constitutional independence) and a culture of **ultranationalism** were key factors, allowing the military to exploit the crisis.</li>
+                                    </ul>
+                                </li>
+                                <li style="margin-top: 0.75rem;"><strong>Conclusion:</strong> Conclude that while economic problems were a crucial *catalyst* in both nations, the unique political weaknesses and ideological currents in each country determined the specific form of authoritarianism that emerged.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🔗</span> 5. Knowledge Links</h2>
+                    <div class="links-section">
+                        <div class="link-item"><span>🔗</span><div><strong>Application:</strong> Provides a higher level of analysis for essays, allowing you to draw broader conclusions about the collapse of democracy.</div></div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- AKM #S5 Content -->
+            <div class="akm-content" id="akm-s5" style="display: none;">
+                <div class="akm-header">
+                    <h1 class="akm-title"><span class="section-icon">🎓</span> AKM #S5: Full Exam Question Walkthrough</h1>
+                    <div class="akm-meta">
+                        <span><strong>Topic:</strong> Rise of Authoritarian Regimes</span>
+                        <span><strong>Skills:</strong> Interpretation, Comparison, Argumentation</span>
+                    </div>
+                </div>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🎯</span>
+                        The Question
+                    </h2>
+                    <div class="concept-box" style="text-align: center;">
+                        <p style="font-size: 1.2em; font-weight: 500;">"'Economic problems were the main reason for the establishment of authoritarian regimes in the 1930s.' How far do you agree with this statement with reference to Germany and Japan?"</p>
+                    </div>
+                </section>
+                
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔍</span>
+                        1. Deconstructing the Question (解构题目)
+                    </h2>
+                    <div class="concept-box">
+                       <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                           <li><strong>"Economic problems":</strong> This is the given factor. You MUST address it. Specifically, this refers to the Great Depression.</li>
+                           <li><strong>"main reason":</strong> This requires you to EVALUATE. Was it the most important reason, or were there others that were more significant? This is where different interpretations come in.</li>
+                           <li><strong>"authoritarian regimes":</strong> You need to discuss both Nazi Germany AND Militarist Japan.</li>
+                           <li><strong>"Germany and Japan":</strong> This is a comparative question. You cannot just write about one country.</li>
+                           <li><strong>"How far do you agree":</strong> This requires a balanced argument. You need to present points that AGREE with the statement and points that DISAGREE, before reaching a final judgment.</li>
+                       </ul>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🗺️</span>
+                        2. Planning the Essay (文章规划)
+                    </h2>
+                     <div class="concept-box">
+                        <p>A strong essay needs a clear structure. Here is a plan that directly answers the question:</p>
+                        <ol style="margin-left: 1.5rem; margin-top: 1rem; line-height: 1.8;">
+                           <li><strong>Introduction:</strong> State your overall argument (your thesis). For example: "While the Great Depression was a crucial catalyst that destabilised both Germany and Japan, it was not the sole 'main reason'. Pre-existing political weaknesses and unique ideological factors in each country were ultimately more decisive in shaping their paths towards authoritarianism."</li>
+                           <li><strong>Paragraph 1 (Agree - The Similarity):</strong> Explain how the Great Depression (economic problem) acted as a powerful trigger in BOTH countries. Detail the specific economic impact (e.g., German unemployment, collapse of Japanese silk trade) and explain how this destroyed public faith in their democratic governments. This paragraph shows the statement is partially true.</li>
+                           <li><strong>Paragraph 2 (Disagree - Alternative Interpretation for Germany):</strong> Argue that in Germany, political factors like the deep national resentment over the <strong class="term">Treaty of Versailles</strong> and the specific ideological appeal of Hitler and Nazism were more fundamental causes. The economic crisis was the spark that lit a pre-existing powder keg.</li>
+                           <li><strong>Paragraph 3 (Disagree - Alternative Interpretation for Japan):</strong> Argue that in Japan, the key factor was its unique political structure where the military was constitutionally independent and powerful. This, combined with a rising tide of <strong class="term">Ultranationalism</strong>, allowed the military to exploit the economic crisis to seize power. This is a key point of comparison.</li>
+                           <li><strong>Conclusion:</strong> Summarise your points and deliver a final judgment. Reiterate that economic problems were a universal trigger, but the specific outcomes (Nazism in Germany vs. Militarism in Japan) were determined by the unique historical and political contexts of each nation.</li>
+                        </ol>
+                    </div>
+                </section>
+                
+                 <section class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✍️</span>
+                        3. Sample Paragraph - Putting it into Practice (范文段落)
+                    </h2>
+                     <div class="concept-box">
+                        <p>Here is an example of what Paragraph 3 could look like, focusing on **comparison** and offering an **alternative interpretation** for Japan:</p>
+                        <p class="definition" style="margin-top: 1rem; border-left: 3px solid #ccc; padding-left: 1rem; font-style: italic;">
+                        "Furthermore, the case of Japan illustrates that pre-existing political weaknesses were a more decisive factor than the economic crisis itself. Unlike Germany, which saw the rise of a new political party led by a charismatic figure, Japan's path to authoritarianism was driven by an established institution: the military. The Taisho democratic government was fundamentally flawed because the military was constitutionally independent of civilian control and answered only to the Emperor. This unique political structure meant that when the Great Depression discredited the civilian politicians, the military was perfectly positioned to step into the power vacuum. They did not need to win mass support in the same way as the Nazis; instead, they used intimidation and assassination to co-opt the state from within. Therefore, this comparison reveals that while the economic crisis provided the opportunity, it was Japan's unique political fragility and the military's entrenched power that served as the main reason for its descent into militarism, a path distinctly different from that of Germany."
+                        </p>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <h2 class="section-title"><span class="section-icon">🔗</span> 4. How this Links to Other AKMs</h2>
+                    <div class="links-section">
+                        <div class="link-item"><span>🧠</span><div><strong>AKM #S2 & #S3 (Concepts & Interpretations):</strong> We weighed the 'Economic problems' interpretation against other interpretations (political, ideological) using key concepts like 'TOV' and 'Ultranationalism'.</div></div>
+                        <div class="link-item"><span>🌏</span><div><strong>AKM #S4 (Comparative Analysis):</strong> We directly compared Germany and Japan using consistent criteria (impact of depression, political structure) to highlight crucial similarities and differences.</div></div>
+                         <div class="link-item"><span>⏳</span><div><strong>AKM #S1 (Chronology):</strong> Our understanding that the Great Depression (1929) preceded Hitler's rise to power (1933) is crucial to framing it as a cause.</div></div>
+                    </div>
+                </section>
+            </div>
+
+
+        </main>
+    </div>
+
+    <!-- Custom Tooltip Element -->
+    <div id="custom-tooltip" style="display: none; position: fixed; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9em; z-index: 1000; max-width: 300px; pointer-events: none; transition: opacity 0.2s;"></div>
+
+    <script>
+        // --- DOM Elements ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentArea = document.getElementById('contentArea');
+        const allAkmContent = document.querySelectorAll('.akm-content');
+        const searchBox = document.getElementById('searchBox');
+        const tooltipElement = document.getElementById('custom-tooltip');
+
+        // --- Data ---
+        const implementedModules = ['akm-s1', 'akm-s2', 'akm-s3', 'akm-s4', 'akm-s5'];
+        const definitions = {
+            'Treaty of Versailles': 'The 1919 peace treaty that formally ended WWI, imposing harsh terms on Germany.',
+            'Treaty of Versailles (TOV)': 'The 1919 peace treaty that formally ended WWI, imposing harsh terms on Germany.',
+            'War Guilt Clause (Article 231)': 'A term in the TOV forcing Germany to accept sole blame for WWI, causing immense national humiliation.',
+            'Reparations': 'Massive payments (£6.6 billion) Germany was required to pay for war damages, crippling its economy.',
+            'Anschluss': 'The unification of Germany and Austria, which was forbidden by the Treaty of Versailles.',
+            'League of Nations': 'An international organization founded in 1920 to maintain world peace through collective security.',
+            'collective security': 'The principle that an attack on one member of an organization is an attack on all members.',
+            'Weimar Republic': "Germany's democratic government from 1919 to 1933, plagued by constitutional weaknesses.",
+            'Proportional Representation': 'An electoral system in the Weimar Republic that led to many small parties and unstable coalition governments.',
+            'Article 48': 'A clause in the Weimar constitution that allowed the President to rule by decree in an emergency, effectively a backdoor to dictatorship.',
+            'Lebensraum': '"Living Space" - a core Nazi ideology justifying eastward expansion for the German people.',
+            'Appeasement': 'The policy of granting concessions to an aggressor to avoid war, famously used by Britain towards Hitler.',
+            'Munich Agreement (1938)': 'An agreement where Britain and France allowed Hitler to annex the Sudetenland from Czechoslovakia; the high point of appeasement.',
+            'Ultranationalism': 'An extreme form of nationalism promoting one state\'s interests as supreme, a key ideology in militarist Japan.',
+        };
+
+        // --- Functions ---
+        
+        function navigateToModule(moduleId) {
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.dataset.module === moduleId);
+            });
+
+            allAkmContent.forEach(content => {
+                content.style.display = 'none';
+            });
+
+            const targetContent = document.getElementById(moduleId);
+            if (targetContent && implementedModules.includes(moduleId)) {
+                targetContent.style.display = 'block';
+            }
+            
+            if (window.innerWidth <= 1024) {
+                 contentArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function updateTooltipPosition(e) {
+            let x = e.clientX + 15;
+            let y = e.clientY + 15;
+            
+            if (x + tooltipElement.offsetWidth > window.innerWidth) {
+                x = window.innerWidth - tooltipElement.offsetWidth - 15;
+            }
+            if (y + tooltipElement.offsetHeight > window.innerHeight) {
+                y = e.clientY - tooltipElement.offsetHeight - 15;
+            }
+
+            tooltipElement.style.left = `${x}px`;
+            tooltipElement.style.top = `${y}px`;
+        }
+
+
+        // --- Event Listeners ---
+        
+        // Sidebar Navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navigateToModule(this.dataset.module);
+            });
+        });
+
+        // Search Box
+        searchBox.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            navItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+
+        // Global Click Handler (for Q&A)
+        document.addEventListener('click', function(e) {
+            const questionHeader = e.target.closest('.question');
+            if (questionHeader) {
+                questionHeader.parentElement.classList.toggle('open');
+            }
+        });
+
+        // Custom Tooltip Handlers
+        document.addEventListener('mouseover', function(e) {
+            const termElement = e.target.closest('.term');
+            if (termElement) {
+                const term = termElement.textContent.trim();
+                if (definitions[term]) {
+                    tooltipElement.textContent = definitions[term];
+                    tooltipElement.style.display = 'block';
+                    updateTooltipPosition(e);
+                }
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            const termElement = e.target.closest('.term');
+            if (termElement) {
+                tooltipElement.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (tooltipElement.style.display === 'block') {
+                updateTooltipPosition(e);
+            }
+        });
+
+        // --- Initial Load ---
+        navigateToModule('akm-s1');
+    </script>
+</body>
+</html>
+
