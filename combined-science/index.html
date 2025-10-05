@@ -138,87 +138,205 @@
     <a href="phys-knowledge-matrix.html" class="planner-link">♚ Phys Knowledge Matrix</a>  
     <a href="chemistry-final-sprint.html" class="planner-link" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: 1px solid rgba(255, 255, 255, 0.6);">⚔️ Final 4-Hour Battle Plan</a>
 </div>
-        <div class="dashboard">
-            <div class="main-panel">
-                 <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
-              <!-- 新增的状态图例 -->
-<!-- 新增的状态图例 (圆形版本) -->
-<div class="status-legend">
-    <div class="legend-item">
-        <div class="status-btn-mock status-not-started"></div>
-        <span>Not Started</span>
-    </div>
-    <div class="legend-item">
-        <div class="status-btn-mock status-in-progress">●</div>
-        <span>In Progress</span>
-    </div>
-    <div class="legend-item">
-        <div class="status-btn-mock status-practicing">P</div>
-        <span>Practicing</span>
-    </div>
-    <div class="legend-item">
-        <div class="status-btn-mock status-mastered">✓</div>
-        <span>Mastered</span>
-    </div>
-</div>
-                <div class="subject-section" id="chemistry-section">
-                    <div class="subject-header"><div class="subject-title">🧪 Chemistry</div><div><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><div class="progress-text">Mastered: 0 / 9</div></div></div>
-                    <div class="topic-category"><div class="category-title">🎯 Core Topics (81% of marks)</div><div class="topic-item"><div><div class="topic-name">Acids, Bases & Salts / QA</div><div class="topic-description">The most comprehensive and highest-weighted topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Stoichiometry & The Mole Concept</div><div class="topic-description">The most calculation-intensive and procedural topic</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Chemical Bonding & Structure</div><div class="topic-description">A major source of explanation and diagram-based questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Redox Reactions & Reactivity of Metals</div><div class="topic-description">The core of logical reasoning and prediction questions</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
-                    <div class="topic-category"><div class="category-title">🛰️ Satellite Topics (19% of marks)</div><div class="topic-item"><div><div class="topic-name">Experimental Chemistry</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Particulate Nature of Matter</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Atomic Structure</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">The Periodic Table</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div></div>
-                    <div class="topic-item"><div><div class="topic-name">Air & The Environment</div></div><div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div></div></div>
+     <div class="dashboard">
+    <!-- ======================= 左侧主面板 START ======================= -->
+    <div class="main-panel">
+        <h2 class="section-title">📚 Study Path & Progress Tracking</h2>
+
+        <!-- 状态图例 -->
+        <div class="status-legend">
+            <div class="legend-item">
+                <div class="status-btn-mock status-not-started"></div>
+                <span>Not Started</span>
+            </div>
+            <div class="legend-item">
+                <div class="status-btn-mock status-in-progress">●</div>
+                <span>In Progress</span>
+            </div>
+            <div class="legend-item">
+                <div class="status-btn-mock status-practicing">P</div>
+                <span>Practicing</span>
+            </div>
+            <div class="legend-item">
+                <div class="status-btn-mock status-mastered">✓</div>
+                <span>Mastered</span>
+            </div>
+        </div>
+
+        <!-- Chemistry Section START -->
+        <div class="subject-section" id="chemistry-section">
+            <div class="subject-header">
+                <div class="subject-title">🧪 Chemistry</div>
+                <div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">Mastered: 0 / 9</div>
                 </div>
-                <div class="topic-category">
-    <div class="category-title">🎯 Core Archetypes (The "Big Four")</div>
-    
-    <!-- 原有的4个主题 -->
-    <div class="topic-item">...</div>
-    <div class="topic-item">...</div>
-    <div class="topic-item">...</div>
-    <div class="topic-item">
-        <div><div class="topic-name">The Particle Storytelling (Thermal Physics)</div></div>
-        <div class="topic-controls">...</div>
+            </div>
+            <div class="topic-category">
+                <div class="category-title">🎯 Core Topics (81% of marks)</div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Acids, Bases & Salts / QA</div>
+                        <div class="topic-description">The most comprehensive and highest-weighted topic</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('qa-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/13kkgejzhLaRmPElxBktaZJMb-cLDHufqvrKdJwkAroY/edit?usp=sharing', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Stoichiometry & The Mole Concept</div>
+                        <div class="topic-description">The most calculation-intensive and procedural topic</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('stoichiometry-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1GAjOG7i8Ay9W3235LWwtbg2A6p2z0Y8me81PPjTQM8w/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Chemical Bonding & Structure</div>
+                        <div class="topic-description">A major source of explanation and diagram-based questions</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('bonding-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1XBwPW4yl52IaxJlyxEcT01l_l-IgnUi-4Nb75flZ_tU/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Redox Reactions & Reactivity of Metals</div>
+                        <div class="topic-description">The core of logical reasoning and prediction questions</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('redox-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1teFXYmCtshBsCw5CFhBxQ0jT_ItYpYD13-gPw7RlIPg/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+            </div>
+            <div class="topic-category">
+                <div class="category-title">🛰️ Satellite Topics (19% of marks)</div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Experimental Chemistry</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('experimental-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/182GL6T_h1hQn_uRYqTTaL3hzUrxhwh0s-S2QxUlsuu4/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Particulate Nature of Matter</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('matter-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1fD4a29M5m1twBNMmCd8JwaVC14aXTGrkZza0d5BvOJ8/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Atomic Structure</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('atomic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1oNBuqDYOpI3GW6WSHaE8ixxhc9D0SgSsMwQpmgLWVZw/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Periodic Table</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('periodic-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1jAxaZeswXrmMJXtjuMMFI9ne4KJ8G3KoJ7CQm6ZbFHY/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Air & The Environment</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showChemistryFramework('environment-framework')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1ZBnhucfdNPcZjb5LaEKfh9ZFwRzTEKFLxl85ioguSLc/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+            </div>
+        </div>
+        <!-- Chemistry Section END -->
+
+        <!-- Physics Section START -->
+        <div class="subject-section" id="physics-section">
+            <div class="subject-header">
+                <div class="subject-title">⚡ Physics</div>
+                <div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text">Mastered: 0 / 9</div>
+                </div>
+            </div>
+            <div class="topic-category">
+                <div class="category-title">🎯 Core Archetypes (The "Big Five")</div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Kinematics Graph Saga</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('kinematics')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1qDLUzRLwvqSofKnvvQbD2DoKtdX_tkP73-UL4i9BcKY/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Balancing Act (Moments & Equilibrium)</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1Xdh3DoB2UjPHIGpL4vcTRR5AGHxwCocTvN5fsrYtH7U/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Energy Conversion Trail</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('energy')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1hre1cJO-ya60dBkteMFe2quBY8Ac3hRAQP9efveVdbI/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">The Particle Storytelling (Thermal Physics)</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('thermal')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1z7UGZ71aNo57NG5Q-m384KA2_YmLnCPybPTzKipriYQ/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Circuit Analysis Saga</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('circuit')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1HcjVrf50xCtg9KZw_O_PK72zf_WWvnTfjSwSzzqlPJA/edit?usp=sharing', '_blank')">Practice</button></div>
+                </div>
+            </div>
+            <div class="topic-category">
+                <div class="category-title">🛰️ Satellite Archetypes</div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Stability (Centre of Gravity & Base Area)</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('stability')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1zUDZD90Lge9KdqCkgA7SPIWc2w0qKgK2puRUvSNzRpY/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Vector Drawing & Dynamics</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="framework-btn" onclick="showFramework('equilibrium')">🧠</button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1y2e3CKutRQVF8krx5HH_VNgmaPPHYvqKzpi-3srC-bo/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Density & Pressure Calculation</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1c3yPKiqNiW3ayzNwO8jXOaCETFGCEa-9MFQXo85vGws/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+                <div class="topic-item">
+                    <div>
+                        <div class="topic-name">Light Ray Tracing & Optics Calculation</div>
+                    </div>
+                    <div class="topic-controls"><button class="status-btn status-not-started" title="Not Started"></button><button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1JbXc39hdg7e0liPzMd0fQMUY92tWn0tmu17wqfEKaPA/edit?usp=drive_link', '_blank')">Practice</button></div>
+                </div>
+            </div>
+        </div>
+        <!-- Physics Section END -->
+
     </div>
-    
-    <!-- ✅ 正确：新主题应该放在这里 -->
-    <div class="topic-item">
-        <div><div class="topic-name">Circuit Analysis Saga</div></div>
-        <div class="topic-controls">
-            <button class="status-btn status-not-started" title="Not Started"></button>
-            <button class="framework-btn" onclick="showFramework('circuit')">🧠</button>
-            <button class="practice-btn" onclick="window.open('https://docs.google.com/document/d/1HcjVrf50xCtg9KZw_O_PK72zf_WWvnTfjSwSzzqlPJA/edit?usp=sharing', '_blank')">Practice</button>
+    <!-- ======================= 左侧主面板 END (这个 </div> 的位置至关重要！) ======================= -->
+
+    <!-- ======================= 右侧边栏 START ======================= -->
+    <div class="side-panel">
+        <div class="widget" id="strengths-widget">
+            <h3 class="section-title">📊 Strengths & Weaknesses</h3>
+            <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
+            <div id="analytics-content">
+                <div id="loading-analytics" class="loading-text">Loading analytics data...</div>
+            </div>
+        </div>
+        <div class="widget">
+            <h3 class="section-title">🎯 This Week's Sprint Goals</h3>
+            <div id="goals-module-content">
+                <p class="loading-text">Loading weekly goals...</p>
+            </div>
         </div>
     </div>
-    
-</div> <!-- 这里才是 category 的结束标签 -->
-
-<!-- 然后是 Satellite Archetypes -->
-<div class="topic-category">
-    <div class="category-title">🛰️ Satellite Archetypes</div>
-    ...
+    <!-- ======================= 右侧边栏 END ======================= -->
 </div>
-            <div class="side-panel">
-                <div class="widget" id="strengths-widget">
-                    <h3 class="section-title">📊 Strengths & Weaknesses</h3>
-                    <div class="subject-toggle"><button class="toggle-btn active" onclick="updateAnalytics('Chemistry')">🧪 Chemistry</button><button class="toggle-btn" onclick="updateAnalytics('Physics')">⚡ Physics</button></div>
-                    <div id="analytics-content">
-                        <div id="loading-analytics" class="loading-text">Loading analytics data...</div>
-                         <!-- Dynamic content will be injected here -->
-                    </div>
-                </div>
-                     <!-- =========== 核心修改点：更新 Goals 模块 =========== -->
-                <div class="widget">
-                    <h3 class="section-title">🎯 This Week's Sprint Goals</h3>
-                    <div id="goals-module-content">
-                        <p class="loading-text">Loading weekly goals...</p>
-                    </div>
-                 </div>
-    </div>
+        
     <div id="frameworkModal" class="modal"><div class="modal-content"><span class="close" onclick="closeFramework()">&times;</span><div id="frameworkDetails"></div></div></div>
     <script>
         // --- 1. FIREBASE CONFIGURATION & INITIALIZATION ---
