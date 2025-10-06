@@ -1,625 +1,494 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geography Ultimate Learning OS</title>
-    <!-- Tailwind CSS for modern, utility-first styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom styles for modal transitions and other small tweaks -->
+    <title>G3 Geography Syllabus 2279 - Study Notes</title>
     <style>
+        /* General styling for the page */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
         }
-        .modal {
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
-        .modal.hidden {
-            opacity: 0;
-            visibility: hidden;
+
+        /* Header styling */
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
         }
-        .toast {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateY(20px);
-            opacity: 0;
-        }
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .confidence-selector .star-btn {
+
+        header h1 {
             font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        /* Tab navigation styling */
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #dee2e6;
+            overflow-x: auto; /* Allows horizontal scrolling on small screens */
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
             cursor: pointer;
-            transition: all 0.2s;
-            opacity: 0.3;
-            color: #ffc107;
+            border: none;
+            background: transparent;
+            font-size: 1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+            white-space: nowrap;
         }
-        .confidence-selector .star-btn:hover,
-        .confidence-selector .star-btn.active {
-            opacity: 1;
-            transform: scale(1.2);
+
+        .nav-tab:hover {
+            background: #e9ecef;
+            color: #3498db;
         }
-        /* A few custom styles can remain for complex selectors or states if needed */
-        .stat-pill {
-            @apply bg-gray-100 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-sm px-3 py-1.5 rounded-full flex items-center gap-2;
+
+        .nav-tab.active {
+            background: white;
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            margin-bottom: -3px;
         }
-        .stat-pill .stat-label {
-            @apply font-medium;
+        
+        /* Main content area styling */
+        .content {
+            padding: 30px;
         }
-        .stat-pill .stat-value {
-            @apply font-bold text-blue-600 dark:text-blue-400;
+
+        .cluster {
+            display: none;
+        }
+
+        .cluster.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Topic and note styling */
+        .topic {
+            margin-bottom: 40px;
+            border-left: 4px solid #3498db;
+            padding-left: 20px;
+        }
+
+        .topic h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .note {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .note:hover {
+            background: #e9ecef;
+            border-left-color: #3498db;
+            transform: translateX(5px);
+        }
+
+        .note-title {
+            color: #3498db;
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .note-content {
+            color: #495057;
+            line-height: 1.8;
+        }
+        
+        .note-content strong {
+            color: #2c3e50;
+        }
+
+        .note-content ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .note-content li {
+            margin-bottom: 5px;
+        }
+
+        /* Search box styling */
+        .search-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        /* Footer styling */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .nav-tab {
+                padding: 12px 15px;
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 20px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
-        <!-- Main Header -->
-        <header class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8 text-center">
-            <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 text-transparent bg-clip-text mb-2">🌍 Geography Ultimate Learning OS</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-lg">Your Complete System for Mastering O-Level Geography</p>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 G3 O-Level Geography Syllabus 2279</h1>
+            <p>Comprehensive Study Notes by Cluster and Topic</p>
         </header>
 
-        <!-- Stats Bar -->
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-green-500" id="topicsGreen">0</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">🟢 Topics Mastered</div>
-            </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-blue-500" id="casesTotal">47</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">📚 Cases in Deck</div>
-            </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-yellow-500" id="flashcardsDue">0</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">🔄 Cards Due Today</div>
-            </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-purple-500" id="weekProgress">0%</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">✅ Week Progress</div>
-            </div>
-        </section>
-
-        <!-- Dashboard Grid -->
-        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Left: Module Cards -->
-            <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="window.openAtomicNotes()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-                        <span>Atomic Notes</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Deep understanding of concepts with detailed explanations.</p>
-                    <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openQuizletManager()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                        <span>Flashcards</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Manage your Quizlet study plan and track progress.</p>
-                    <div class="mt-4">
-                       <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openCaseDeck()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
-                        <span>Case Deck</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Evidence database for perfect arguments.</p>
-                    <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
-                    </div>
-                </div>
-                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Practice module - Import past papers and track performance!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" /></svg>
-                        <span>Practice</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Past papers, model answers, and application exercises.</p>
-                     <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Archetype Hub - Learn to decode 6 question types!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        <span>Archetype Hub</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Question pattern recognition and signal word identification.</p>
-                    <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 self-start">Layer 2: Strategy</span>
-                    </div>
-                </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Framework Library - Master P.E.E.L.+, C.E.M., and more!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                        <span>Framework Library</span>
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Writing frameworks, templates, and self-correction checklists.</p>
-                    <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 self-start">Layer 2: Strategy</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Sidebar -->
-            <aside class="space-y-6">
-                <!-- This Week's Mission -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                    <h3 class="flex items-center gap-3 text-lg font-bold text-blue-500 dark:text-blue-400 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                        <span>This Week's Mission</span>
-                    </h3>
-                    <div class="flex gap-2 mb-4">
-                        <input type="text" id="newMissionInput" placeholder="Add a new mission..." class="flex-grow bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition">
-                        <button onclick="addMission()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors whitespace-nowrap">➕ Add</button>
-                    </div>
-                    <div id="missionList" class="space-y-2"></div>
-                    <div class="flex gap-2 mt-4">
-                        <button onclick="confirmClearCompleted()" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800 text-sm font-semibold py-2 px-3 rounded-lg transition">🗑️ Clear Completed</button>
-                        <button onclick="confirmResetWeek()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 text-sm font-semibold py-2 px-3 rounded-lg transition">🔄 New Week</button>
-                    </div>
-                </div>
-
-                <!-- Quizlet Study Queue -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                    <h3 class="flex items-center gap-3 text-lg font-bold text-blue-500 dark:text-blue-400 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A8.003 8.003 0 0112 2c2.21 0 4.21.896 5.657 2.343a8 8 0 010 11.314z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12l2 4-2 2-2-4 2-2z" /></svg>
-                        <span>Quizlet Study Queue</span>
-                    </h3>
-                    <div id="quizletQueue" class="space-y-2">
-                        <!-- Dynamic content here -->
-                    </div>
-                     <button class="w-full text-center mt-4 py-2 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-lg transition" onclick="openQuizletManager()">
-                        Manage Quizlet Sets →
-                    </button>
-                </div>
-            </aside>
-        </main>
-
-        <!-- Knowledge Heatmap -->
-        <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8">
-             <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">📊 Knowledge Heatmap</h2>
-                    <p class="text-gray-500 dark:text-gray-400">Rate your confidence from 1 to 5 stars.</p>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                    <div class="stat-pill"><span class="stat-label">Progress:</span> <span class="stat-value" id="overallProgress">0%</span></div>
-                    <div class="stat-pill"><span class="stat-label">Ready:</span> <span class="stat-value" id="readyTopics">0/0</span></div>
-                    <div class="stat-pill"><span class="stat-label">Review:</span> <span class="stat-value" id="needsReview">0</span></div>
-                </div>
-            </div>
-            <div class="priority-banner bg-yellow-50 border border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-500/30 text-yellow-800 dark:text-yellow-300 p-4 rounded-lg mb-6" id="priorityBanner" style="display: none;">
-                <strong class="font-bold">🔥 Priority This Week:</strong> <span id="priorityList"></span>
-            </div>
-            <div id="heatmapGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Heatmap columns generated by JS -->
-            </div>
-        </section>
-    </div>
-
-    <!-- Modals -->
-    <div id="confirmationModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm">
-            <h3 id="modalTitle" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Confirmation</h3>
-            <p id="modalMessage" class="text-gray-600 dark:text-gray-300 mb-6">Are you sure?</p>
-            <div class="flex justify-end gap-3">
-                <button id="modalCancel" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold transition">Cancel</button>
-                <button id="modalConfirm" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">Confirm</button>
-            </div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showCluster(1)">Cluster 1: Geography in Everyday Life</button>
+            <button class="nav-tab" onclick="showCluster(2)">Cluster 2: Tourism</button>
+            <button class="nav-tab" onclick="showCluster(3)">Cluster 3: Climate</button>
+            <button class="nav-tab" onclick="showCluster(4)">Cluster 4: Tectonics</button>
+            <button class="nav-tab" onclick="showCluster(5)">Cluster 5: Singapore</button>
         </div>
-    </div>
-    
-    <div id="topicModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div id="topicModalContent" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md relative">
-             <button onclick="closeTopicModal()" class="absolute top-3 right-3 text-2xl text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition">&times;</button>
-            <div id="topicModalBody"></div>
-        </div>
-    </div>
-    
-    <div id="caseDeckModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-40 p-4">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-4xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">🗃️ Case Deck</h2>
-                <button onclick="closeCaseDeck()" class="text-2xl text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition">&times;</button>
+
+        <div class="content">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="🔍 Search notes..." onkeyup="searchNotes()">
             </div>
-            <div class="p-6 overflow-y-auto flex-grow">
-                <p class="text-gray-700 dark:text-gray-300">This is a placeholder for the Case Deck content.</p>
-            </div>
-        </div>
-    </div>
 
-    <!-- Quizlet Manager Modal -->
-    <div id="quizletManagerModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">📚 Quizlet Set Manager</h2>
-                <button onclick="closeQuizletManager()" class="text-2xl text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition">&times;</button>
-            </div>
-            <div id="quizletManagerBody" class="p-6 overflow-y-auto flex-grow space-y-4">
-                <!-- Dynamic Content Here -->
-            </div>
-        </div>
-    </div>
-    
-    <!-- Mark as Studied Modal -->
-    <div id="studyFeedbackModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center">
-            <h3 id="studyFeedbackTitle" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Great work!</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">How did the study session go?</p>
-            <div class="grid grid-cols-3 gap-3 mb-4">
-                <button id="feedbackBtnHard" class="p-3 bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900 rounded-lg">
-                    <span class="text-2xl">😰</span><br><span class="text-xs font-semibold">Hard</span>
-                </button>
-                 <button id="feedbackBtnGood" class="p-3 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/50 dark:hover:bg-yellow-900 rounded-lg">
-                    <span class="text-2xl">😊</span><br><span class="text-xs font-semibold">Good</span>
-                </button>
-                 <button id="feedbackBtnEasy" class="p-3 bg-green-100 hover:bg-green-200 dark:bg-green-900/50 dark:hover:bg-green-900 rounded-lg">
-                    <span class="text-2xl">🎉</span><br><span class="text-xs font-semibold">Easy</span>
-                </button>
-            </div>
-             <input type="number" id="studyTimeInput" placeholder="Study time (optional, in minutes)" class="w-full text-center bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition mb-4">
-             <button onclick="closeStudyFeedbackModal()" class="w-full px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold transition">Cancel</button>
-        </div>
-    </div>
-
-
-    <!-- Toast Notifications Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"></div>
-    
-    <script type="module">
-        // Firebase SDK imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
-        // --- App State, Config & UI Elements ---
-        let missions = [];
-        let topicMetadata = {};
-        let quizletTrackingData = {};
-        
-        // YOUR FIREBASE CONFIG IS PASTED HERE
-        const localFirebaseConfig = {
-            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
-            authDomain: "emath-study-plan.firebaseapp.com",
-            projectId: "emath-study-plan",
-            storageBucket: "emath-study-plan.appspot.com",
-            messagingSenderId: "589299697460",
-            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
-            measurementId: "G-09QVE4GLS0"
-        };
-
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : localFirebaseConfig;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'geography-os-local';
-        let userId, db, auth, missionsDocRef, heatmapDocRef, quizletDocRef;
-
-        const missionListEl = document.getElementById('missionList');
-        const newMissionInput = document.getElementById('newMissionInput');
-        const weekProgressEl = document.getElementById('weekProgress');
-        const heatmapGridEl = document.getElementById('heatmapGrid');
-        const quizletQueueEl = document.getElementById('quizletQueue');
-        
-        // --- TOPICS DATABASE ---
-        const TOPICS_DATABASE = {
-            'C1': { name: 'Everyday Life', topics: [{ id: 'T1.1', name: 'Thinking Geographically', weight: 1.0 }, { id: 'T1.2', name: 'Sustainable Development', weight: 1.2 }, { id: 'T1.3', name: 'Fieldwork Methods', weight: 1.0 }] },
-            'C2': { name: 'Tourism', topics: [{ id: 'T2.1', name: 'Tourism as a System', weight: 1.2 }, { id: 'T2.2', name: 'Tourism Development', weight: 1.5 }, { id: 'T2.3', name: 'Sustainable Tourism', weight: 1.3 }] },
-            'C3': { name: 'Climate', topics: [{ id: 'T3.1', name: 'Climate Change', weight: 1.4 }, { id: 'T3.2', name: 'Climate Impacts', weight: 1.3 }, { id: 'T3.3', name: 'Climate Adaptation', weight: 1.2 }] },
-            'C4': { name: 'Tectonics', topics: [{ id: 'T4.1', name: 'Plate Tectonics', weight: 1.2 }, { id: 'T4.2', name: 'Earthquakes & Volcanoes', weight: 1.4 }, { id: 'T4.3', name: 'Disaster Risk Management', weight: 1.5 }] },
-            'C5': { name: 'Singapore', topics: [{ id: 'T5.1', name: 'Urban Planning', weight: 1.3 }, { id: 'T5.2', name: 'Environmental Sustainability', weight: 1.2 }, { id: 'T5.3', name: 'Future Challenges', weight: 1.1 }] }
-        };
-
-        // --- Initialization ---
-        async function initialize() {
-            // **FIX 1: Immediate UI rendering from local data**
-            // Create a default state for the heatmap instantly
-            const defaultMetadata = {};
-            Object.values(TOPICS_DATABASE).forEach(cluster => {
-                cluster.topics.forEach(topic => {
-                    defaultMetadata[topic.id] = {
-                        id: topic.id, name: topic.name, cluster: cluster.name, weight: topic.weight,
-                        confidence: 1, lastReviewed: null,
-                    };
-                });
-            });
-            topicMetadata = defaultMetadata;
-            renderHeatmap(); // Render the heatmap immediately with default data
-
-            try {
-                if (!firebaseConfig.apiKey || firebaseConfig.apiKey.startsWith("AIzaSyDdtQYfOC87IvpTZP")) {
-                     console.warn("Using placeholder Firebase config. Using local mode. Progress will not be saved across sessions.");
-                }
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                
-                onAuthStateChanged(auth, user => {
-                    if (user) {
-                        userId = user.uid;
-                        setupFirestoreListeners();
-                    }
-                });
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                    } catch (error) {
-                        console.error("Anonymous sign-in failed:", error);
-                        showToast("Authentication failed. Please enable Anonymous sign-in in your Firebase project.", "error");
-                    }
-                }
-            } catch (e) {
-                console.error("Firebase initialization failed:", e.message);
-                showToast("Could not connect to database. Check your Firebase config.", "error");
-            }
-        }
-
-        async function setupFirestoreListeners() {
-            if (!userId) return;
-            
-            missionsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'missions');
-            heatmapDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'heatmap');
-            quizletDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'quizlet');
-
-            // Robust listener for Missions
-            onSnapshot(missionsDocRef, async (docSnap) => {
-                if (!docSnap.exists()) {
-                    const defaultMissions = [{ id: Date.now(), text: 'Setup Quizlet Links', completed: false }];
-                    await setDoc(missionsDocRef, { tasks: defaultMissions });
-                } else {
-                    missions = docSnap.data()?.tasks || [];
-                    renderMissions();
-                }
-            }, (error) => console.error("Missions listener error:", error));
-
-            // Robust listener for Heatmap
-            onSnapshot(heatmapDocRef, async (docSnap) => {
-                if (!docSnap.exists()) {
-                    // We already rendered a default, so we just create the doc for the next session
-                    await setDoc(heatmapDocRef, { metadata: topicMetadata });
-                } else {
-                    topicMetadata = docSnap.data()?.metadata || {};
-                    renderHeatmap();
-                    renderQuizletQueue();
-                }
-            }, (error) => console.error("Heatmap listener error:", error));
-            
-            // Quizlet listener
-            onSnapshot(quizletDocRef, (docSnap) => {
-                quizletTrackingData = docSnap.data()?.tracking || {};
-                renderQuizletQueue();
-            }, (error) => console.error("Quizlet listener error:", error));
-        }
-        
-        // --- QUIZLET MODULE LOGIC ---
-        async function saveQuizletData() {
-            if (!quizletDocRef) return;
-            try {
-                await setDoc(quizletDocRef, { tracking: quizletTrackingData });
-            } catch (e) {
-                console.error("Error saving Quizlet data:", e);
-                showToast("Failed to save Quizlet link.", "error");
-            }
-        }
-
-        const getDaysSince = (dateString) => {
-            if (!dateString) return 999;
-            const diff = new Date() - new Date(dateString);
-            return Math.floor(diff / (1000 * 60 * 60 * 24));
-        };
-
-        function getQuizletPriority() {
-            if (Object.keys(topicMetadata).length === 0) return [];
-            // **FIX 2.1: Get ALL linked topics, score them, then sort.**
-            return Object.values(topicMetadata)
-                .filter(topic => quizletTrackingData[topic.id]?.quizletSetUrl) // Only consider topics with a URL
-                .map(topic => {
-                    const quizlet = quizletTrackingData[topic.id];
-                    let score = 0;
-                    if (topic.confidence <= 2) score += 50;
-                    else if (topic.confidence === 3) score += 30;
+            <!-- Cluster 1 -->
+            <div class="cluster active" id="cluster1">
+                <div class="topic">
+                    <h2>Topic 1.1: Thinking Geographically</h2>
                     
-                    const daysSince = getDaysSince(quizlet.lastStudied);
-                    if (daysSince >= (quizlet.studyFrequency || 7)) score += 40;
-                    
-                    if ((quizlet.studyCount || 0) < 3) score += 20;
+                    <div class="note"><div class="note-title">1.1.1: Interdependence of People & Nature</div><div class="note-content">Local communities and nearby nature areas are mutually dependent. People rely on nature for recreation and resources, while nature areas benefit from community protection and conservation efforts.</div></div>
+                    <div class="note"><div class="note-title">1.1.2: Mutual Impacts of People & Nature</div><div class="note-content">The relationship is two-way. Human activities (e.g., pollution) can degrade nature. Natural phenomena (e.g., wildlife intrusion) can impact human communities.</div></div>
+                    <div class="note"><div class="note-title">1.1.3: Benefits from Nature (Ecosystem Services)</div><div class="note-content">Nature provides tangible benefits to urban areas, including lowering air temperatures, removing air pollutants, and offering spaces for recreation.</div></div>
+                    <div class="note"><div class="note-title">1.1.4: Negative Impacts of Humans on Nature</div><div class="note-content">Human presence in natural areas can be harmful. Visitors can cause soil erosion, damage vegetation, increase pollution, and disturb wildlife habitats.</div></div>
+                    <div class="note"><div class="note-title">1.1.5: Defining 'Sense of Place'</div><div class="note-content">'Sense of place' is the personal connection (meanings, memories, importance) that people associate with specific locations in their neighbourhoods, shaped by their experiences.</div></div>
+                    <div class="note"><div class="note-title">1.1.6: Acquiring 'Sense of Place'</div><div class="note-content">This is formed through two main ways: 1) Routine and repetition (e.g., encountering the same people and objects on a daily commute) and 2) Memorable events that occur at local landmarks or gathering places.</div></div>
+                    <div class="note"><div class="note-title">1.1.7: Representing 'Sense of Place'</div><div class="note-content">Individuals and organisations use various media (photos, stories, art, maps) to express their sense of place. These representations can either enhance or contradict an individual's personal feelings about that place.</div></div>
+                    <div class="note"><div class="note-title">1.1.8: Geographical Concept: Regions</div><div class="note-content">A region is an area defined by similar physical or human characteristics (e.g., a housing estate) or by the sphere of influence of a service (e.g., the delivery area of a pizza shop).</div></div>
+                    <div class="note"><div class="note-title">1.1.9: Geographical Concept: Spatial Patterns</div><div class="note-content">This refers to the non-random arrangement of objects, services, or events in an area. They can be arranged in recognisable shapes, clusters, or at regular intervals (e.g., bus stops along a road).</div></div>
+                    <div class="note"><div class="note-title">1.1.10: Geographical Concept: Spatial Associations</div><div class="note-content">This is the tendency for two or more different services or features to be located near each other, suggesting a connection between them (e.g., a school and a stationery shop).</div></div>
+                    <div class="note">
+                        <div class="note-title">1.1.11: Singapore's Spatial Organisation: Towns</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Singapore is organised into numerous self-sufficient towns, each designed with a hierarchical structure to serve the needs of its residents efficiently.<br><br><strong>Key Process:</strong> Each town typically has a central hub for major commercial and transport services. This is supported by smaller neighbourhood centres and local precincts, creating a nested system that minimizes travel for daily necessities and fosters community interaction.<br><br><strong>Case Anchor:</strong> <strong>Toa Payoh</strong>, as Singapore's first satellite town planned in the 1960s, exemplifies this model. Its iconic circular town centre was designed to house a library, cinema, and department stores, while surrounding residential blocks were served by local markets and shops, creating a blueprint for subsequent HDB towns.</div>
+                    </div>
+                    <div class="note"><div class="note-title">1.1.12: Singapore's Spatial Hierarchy</div><div class="note-content">Singapore's urban structure is nested. Individual residential units form clusters, which form a precinct. Precincts combine to form a neighbourhood, and neighbourhoods combine to form a town.</div></div>
+                </div>
 
-                    // Ensure even newly added items that are not due have some score to be considered
-                    if (score === 0 && !quizlet.lastStudied) score += 10;
-                    
-                    return { 
-                        topic, 
-                        quizlet, 
-                        priorityScore: score, 
-                        daysOverdue: Math.max(0, daysSince - (quizlet.studyFrequency || 7)) 
-                    };
-                })
-                .sort((a, b) => b.priorityScore - a.priorityScore);
+                <div class="topic">
+                    <h2>Topic 1.2: Sustainable Development</h2>
+                    <div class="note"><div class="note-title">1.2.1: Defining Sustainable Development</div><div class="note-content">Meeting the needs of the present population (achieving high living standards) without compromising the ability of future generations to meet their own needs.</div></div>
+                    <div class="note"><div class="note-title">1.2.2: Economic & Social Sustainability</div><div class="note-content">Requires a population density high enough to support local businesses and keep infrastructure costs low, but a population size small enough to foster regular interaction and community decision-making.</div></div>
+                    <div class="note"><div class="note-title">1.2.3: Environmental Sustainability</div><div class="note-content">Involves protecting nature, providing facilities for waste minimisation and recycling, and using energy- and water-efficient designs for buildings and landscapes.</div></div>
+                    <div class="note"><div class="note-title">1.2.4: Urban Neighbourhoods as Ecosystems</div><div class="note-content">Neighbourhoods are ecosystems where living communities (people, plants, animals) interact with the non-living environment (buildings, ponds, parks).</div></div>
+                    <div class="note"><div class="note-title">1.2.5: Ecosystem Services in Neighbourhoods</div><div class="note-content"><strong>Provisioning/Regulating:</strong> Providing fresh water and food; regulating microclimate, mitigating floods, and controlling air/water quality.<br><strong>Cultural/Supporting:</strong> Providing aesthetic value, education, and recreation; supporting soil formation, pollination, and photosynthesis.</div></div>
+                    <div class="note"><div class="note-title">1.2.6: Common Urban Hazards</div><div class="note-content"><strong>Fire:</strong> Caused by faulty wiring, unattended cooking. Leads to injuries and property damage.<br><strong>Air Pollution:</strong> Caused by vehicle emissions, industry. Leads to respiratory and heart diseases.<br><strong>Traffic Accidents:</strong> Caused by speeding, drink driving. Leads to serious injury and death.</div></div>
+                    <div class="note"><div class="note-title">1.2.7: Building Sustainability: Environmental Stewardship</div><div class="note-content">Promoting volunteerism and partnerships between public and private stakeholders to share knowledge and protect ecosystems.</div></div>
+                    <div class="note"><div class="note-title">1.2.8: Building Sustainability: Disaster Risk Management</div><div class="note-content">Reducing a neighbourhood's exposure and vulnerability to hazards, and improving residents' preparedness through monitoring and warning systems.</div></div>
+                    <div class="note">
+                        <div class="note-title">1.2.9: Building Community Resilience</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Community resilience is the ability of a community to utilize its available resources to withstand, adapt to, and recover from adverse situations, such as natural hazards.<br><br><strong>Key Process:</strong> This is built through two main avenues: 1) Strengthening social capital (e.g., neighbours knowing and trusting each other) for mutual support, and 2) Increasing preparedness through education, awareness campaigns, and access to timely information and warning systems.<br><br><strong>Case Anchor:</strong> In response to recurrent flash floods in areas like the <strong>Bukit Timah canal corridor in Singapore</strong>, national water agency PUB has implemented the <strong>myENV app and Telegram channels</strong> to issue real-time flood alerts. This increases preparedness, while local community groups and school programmes can educate residents on necessary precautions, fostering a more resilient response to such events.</div>
+                    </div>
+                </div>
+
+                <div class="topic">
+                    <h2>Topic 1.3: Geographical Methods</h2>
+                    <div class="note"><div class="note-title">1.3.1: Designing Fieldwork: Research Questions</div><div class="note-content">Fieldwork begins by identifying a topic and crafting a specific research question and a measurable hypothesis (a testable statement).</div></div>
+                    <div class="note"><div class="note-title">1.3.2: Designing Fieldwork: Data Collection Sequence</div><div class="note-content">A mixed-methods approach is common. Either collect quantitative (numerical) data first to identify patterns, then qualitative (descriptive) data to explain them; or vice-versa to verify observations.</div></div>
+                    <div class="note"><div class="note-title">1.3.3: Designing Fieldwork: Limitations & Risks</div><div class="note-content">Practical fieldwork requires adjusting the research aim, study area, and sample size based on available resources. It also requires implementing safety measures.</div></div>
+                    <div class="note"><div class="note-title">1.3.4: Primary Data Collection: Sampling</div><div class="note-content"><strong>Probability Sampling:</strong> Every member has an equal chance of being selected (e.g., simple random, stratified).<br><strong>Non-Probability Sampling:</strong> Selection is based on convenience or specific quotas (e.g., convenience, quota).</div></div>
+                    <div class="note"><div class="note-title">1.3.5: Primary Data Collection: Surveys & Maps</div><div class="note-content"><strong>Closed-ended Surveys:</strong> Use pre-defined, short answers or rating scales (Likert, frequency).<br><strong>Mental Maps:</strong> Participants draw and label a map of an area to visualise their experiences, often explained further in semi-structured interviews.</div></div>
+                    <div class="note"><div class="note-title">1.3.6: Data Analysis: Surveys & Maps</div><div class="note-content"><strong>Survey Data:</strong> Interpreted using frequency (counts, percentages) and central tendency (mean, mode, median).<br><strong>Mental Maps:</strong> Analysed for how accurately they represent reality and how memories of experiences are shown.</div></div>
+                    <div class="note"><div class="note-title">1.3.7: Data Analysis: Relationships & Patterns</div><div class="note-content">Use scatter plots with best-fit lines to visualise positive and negative correlations. Identify geometric shapes, clusters, and repetition in spatial data.</div></div>
+                    <div class="note"><div class="note-title">1.3.8: Data Presentation: Maps & Graphs</div><div class="note-content"><strong>Maps:</strong> Use dots, lines, and polygons to show spatial information. Must include Title, Orientation, Scale, Legend, Author, Date (TOSLAD).<br><strong>Graphs:</strong> Use bar/pie charts for distributions and line graphs for trends over time.</div></div>
+                    <div class="note"><div class="note-title">1.3.9: Data Presentation: Visuals & Text</div><div class="note-content">Use satellite/aerial photos for spatial information. Use colour-coded quotes or word clouds to represent qualitative findings.</div></div>
+                </div>
+            </div>
+
+            <!-- Cluster 2 -->
+            <div class="cluster" id="cluster2">
+                <div class="topic">
+                    <h2>Topic 2.1: Tourism Activity</h2>
+                    <div class="note"><div class="note-title">2.1.1: The Tourism System Components</div><div class="note-content">Tourism is a system with three key components: 1) <strong>Tourist Generating Regions</strong> (where tourists originate), 2) <strong>Tourist Destination Regions</strong> (where they visit), and 3) <strong>Transit Routes</strong> (the paths they travel).</div></div>
+                    <div class="note"><div class="note-title">2.1.2: Push and Pull Factors in Tourism</div><div class="note-content"><strong>Push Factors:</strong> Conditions in the generating region that encourage people to leave (e.g., stress, cold weather, work).<br><strong>Pull Factors:</strong> Attractions in the destination region that draw people in (e.g., beaches, cultural sites, good weather).</div></div>
+                    <div class="note"><div class="note-title">2.1.3: Factors Driving Tourism Growth</div><div class="note-content"><strong>Motivation:</strong> Desire for relaxation, self-fulfilment, unique experiences.<br><strong>Ability:</strong> Growth in disposable income and increased paid leisure time.<br><strong>Mobility:</strong> Expansion of transport infrastructure (airports, highways) and increased private car ownership.</div></div>
+                    <div class="note"><div class="note-title">2.1.4: Tourist Destination Development Stages</div><div class="note-content">Destinations evolve over time:<br>1. <strong>Exploration/Involvement:</strong> Small numbers of tourists, minimal impact.<br>2. <strong>Development/Consolidation:</strong> Rapid growth, construction of facilities, tourism-dependent economy.<br>3. <strong>Stagnation:</strong> Peak numbers, carrying capacity reached, negative impacts emerge.<br>4. <strong>Decline or Rejuvenation:</strong> The destination either loses its appeal or reinvents itself with new attractions.</div></div>
+                    <div class="note"><div class="note-title">2.1.5: Tourist Personality Spectrum</div><div class="note-content">Tourists exist on a spectrum from <strong>Dependables</strong> (prefer familiarity, pre-planned tours) to <strong>Venturers</strong> (seek novelty, travel independently). Most tourists are in the middle.</div></div>
+                    <div class="note"><div class="note-title">2.1.6: Influence of Tourist Personality</div><div class="note-content">Different types of destinations appeal to different personalities. Venturers often "discover" new destinations, which later become popular with more Dependable tourists.</div></div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 2.2: Tourism Development</h2>
+                    <div class="note"><div class="note-title">2.2.1: Modern Trends in Tourism</div><div class="note-content"><strong>Globalization:</strong> Continued growth in international tourist arrivals and diversity of destinations.<br><strong>Demand Diversity:</strong> Growing popularity of lesser-known destinations and new experiences (adventure, health, heritage tourism).<br><strong>Supply Diversity:</strong> Rise of small specialist operators and a shift from traditional to online marketing.</div></div>
+                    <div class="note"><div class="note-title">2.2.2: Positive Economic Impacts of Tourism</div><div class="note-content">Creates employment in both formal (hotels) and informal (souvenir stalls) sectors. Generates income for the destination region from tourist spending.</div></div>
+                    <div class="note"><div class="note-title">2.2.3: Negative Economic Impacts of Tourism</div><div class="note-content"><strong>Economic Leakage:</strong> Revenue leaves the local economy when tourism is dominated by foreign companies (e.g., international hotel chains).<br><strong>Overdependence:</strong> The economy becomes vulnerable to sudden drops in tourist numbers (e.g., due to a pandemic or political instability).</div></div>
+                    <div class="note"><div class="note-title">2.2.4: Positive Socio-Cultural Impacts of Tourism</div><div class="note-content">Can increase interest in preserving traditional cultural practices and art forms. Funds from tourism can be used for environmental protection, which enhances cultural ecosystem services.</div></div>
+                    <div class="note"><div class="note-title">2.2.5: Negative Socio-Cultural Impacts of Tourism</div><div class="note-content"><strong>Commodification:</strong> Cultural practices become performances for tourists, losing their original meaning.<br><strong>Cultural Clashes:</strong> Can lead to negative attitudes between locals and tourists, and crime.</div></div>
+                    <div class="note"><div class="note-title">2.2.6: Positive Environmental Impacts of Tourism</div><div class="note-content">Promotes the conservation of natural environments and biodiversity to maintain attractions. Can fund the restoration of degraded ecosystems.</div></div>
+                    <div class="note"><div class="note-title">2.2.7: Negative Environmental Impacts of Tourism</div><div class="note-content">Causes pollution (greenhouse gas emissions from travel, improper waste disposal). Construction of facilities can deplete natural resources, encroach on nature, and threaten wildlife.</div></div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 2.3: Sustainable Tourism Development</h2>
+                    <div class="note"><div class="note-title">2.3.1: Defining Sustainable Tourism</div><div class="note-content">Tourism development that balances economic, social, and environmental dimensions to guarantee long-term sustainability. It respects local communities, conserves heritage and biodiversity, and provides stable employment.</div></div>
+                    <div class="note"><div class="note-title">2.3.2: Role of Stakeholders</div><div class="note-content"><strong>Governments:</strong> Create policies and regulations.<br><strong>International Organisations:</strong> Offer consultancy and financial aid.<br><strong>Businesses & Local Communities:</strong> Participate in decision-making.<br><strong>Tourists:</strong> Act responsibly and show genuine interest in the destination.</div></div>
+                    <div class="note"><div class="note-title">2.3.3: Challenges for Stakeholders</div><div class="note-content">Stakeholders often have conflicting priorities (e.g., profit vs. conservation). They have different levels of power and may measure "sustainability" in different ways.</div></div>
+                    <div class="note"><div class="note-title">2.3.4: Approach 1: Ecotourism</div><div class="note-content">Tourism focused on conserving nature and involving local communities. <strong>Limitation:</strong> Efforts may be inconsistent; ensuring genuine local involvement can be difficult.</div></div>
+                    <div class="note">
+                        <div class="note-title">2.3.5: Community-Based Tourism (CBT)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> A form of sustainable tourism where the local community has substantial control over, and involvement in, its development and management, and a major proportion of the benefits remain within the community.<br><br><strong>Key Process:</strong> CBT operates on a small scale, focusing on authentic cultural and environmental experiences. Decisions are often made collectively, and infrastructure (like homestays) is typically owned by residents. The goal is empowerment and direct economic benefit, reducing leakage.<br><br><strong>Case Anchor:</strong> The village of <strong>Candirejo, near Borobudur Temple in Java, Indonesia</strong>, has a successful community-based tourism programme. Villagers offer homestays, guide traditional farming tours, and sell local crafts. A village cooperative manages the revenue, funding social services and ensuring the economic benefits are distributed widely, rather than being captured by external tour operators.</div>
+                    </div>
+                    <div class="note">
+                        <div class="note-title">2.3.6: Pro-Poor Tourism (PPT)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Tourism that is not a specific product but an approach, designed to generate net economic, social, and environmental benefits for the poorest people in a destination.<br><br><strong>Key Process:</strong> PPT strategies focus on creating opportunities for the poor to participate in the tourism value chain. This can include providing training for jobs (e.g., guides, hotel staff), creating markets for local goods (e.g., crafts, food supplies), or developing micro-enterprises. The key is to directly link tourism revenue to poverty reduction.<br><br><strong>Case Anchor:</strong> In <strong>Bwindi Impenetrable National Park, Uganda</strong>, a key destination for gorilla trekking, pro-poor tourism initiatives have been established. A portion of the park entry fees is shared with adjacent local communities. Furthermore, local people, including former poachers, are trained and employed as rangers and trackers, providing a sustainable livelihood that is directly linked to the conservation of the gorillas and their habitat.</div>
+                    </div>
+                    <div class="note"><div class="note-title">2.3.7: Principles for Sustainable Tourism Future</div><div class="note-content"><strong>Sustainable Production:</strong> Ensure demand on ecosystem services does not exceed supply.<br><strong>Sustainable Consumption:</strong> Destinations manage demand, and tourists consume responsibly.<br><strong>Equitable Distribution:</strong> Manage tourism effectively so that benefits are enjoyed by all, minimizing negative trade-offs.</div></div>
+                </div>
+            </div>
+
+            <!-- Cluster 3 -->
+            <div class="cluster" id="cluster3">
+                <div class="topic">
+                    <h2>Topic 3.1: Weather and Climate</h2>
+                    <div class="note"><div class="note-title">3.1.1: Weather vs. Climate</div><div class="note-content"><strong>Weather:</strong> The state of the atmosphere at a particular time and place (e.g., temperature, cloud cover, wind).<br><strong>Climate:</strong> The average state of atmospheric conditions over a long period (e.g., tropical equatorial climate).</div></div>
+                    <div class="note"><div class="note-title">3.1.2: Factors Affecting Air Temperature</div><div class="note-content"><strong>Earth's Rotation/Revolution:</strong> Rotation causes daily temperature changes (day/night); revolution causes seasons.<br><strong>Latitude/Altitude:</strong> Temperatures are lower at higher latitudes (lower solar angle) and higher altitudes (lower air pressure).<br><strong>Surface/Proximity to Sea:</strong> Dark surfaces absorb more heat; coastal areas have smaller temperature ranges (maritime effect) than inland areas (continental effect).</div></div>
+                    <div class="note"><div class="note-title">3.1.3: The Water Cycle</div><div class="note-content">The continuous movement of water between the atmosphere and Earth's surface through processes like evapotranspiration, condensation, and precipitation.</div></div>
+                    <div class="note"><div class="note-title">3.1.4: Precipitation Formation</div><div class="note-content">Condensation occurs when the amount of water vapour in the air exceeds what it can hold at a given temperature (relative humidity reaches 100%). Water droplets coalesce around condensation nuclei to form clouds, leading to precipitation like convectional and relief rainfall.</div></div>
+                    <div class="note">
+                        <div class="note-title">3.1.5: Monsoons (Regional Wind Systems)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Monsoons are seasonal winds that reverse direction between summer and winter, caused by the differential heating of large landmasses and oceans.<br><br><strong>Key Process:</strong> In summer, the land heats up faster than the sea, creating a large area of low pressure over the land. This draws in moist, high-pressure air from the ocean, leading to a wet season with heavy rainfall. In winter, the process reverses: the land cools faster, creating high pressure that pushes dry air out towards the warmer, low-pressure ocean, resulting in a dry season.<br><br><strong>Case Anchor:</strong> The <strong>Indian Summer Monsoon</strong> is a classic example. During the summer months, the intense heating of the <strong>Tibetan Plateau and the Indian subcontinent</strong> creates a massive low-pressure system. This draws in warm, moisture-laden winds from the Indian Ocean, causing torrential rainfall that is vital for agriculture across South Asia.</div>
+                    </div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 3.2: Climate Change</h2>
+                    <div class="note"><div class="note-title">3.2.1: Natural Climate Variability</div><div class="note-content">Earth's climate has always changed due to natural processes like:<br>1. <strong>Orbital Changes:</strong> Variations in Earth's orbit and tilt.<br>2. <strong>Solar Activity:</strong> Changes in sunspot occurrences.<br>3. <strong>Volcanic Eruptions:</strong> Large-scale eruptions release gases that can cool the planet temporarily.</div></div>
+                    <div class="note"><div class="note-title">3.2.2: The Greenhouse Effect (Natural vs. Enhanced)</div><div class="note-content"><strong>Natural:</strong> A natural process where greenhouse gases trap some of the Earth's outgoing longwave radiation, keeping the planet habitable.<br><strong>Enhanced:</strong> Human activities(burning fossil fuels, land use change) release excess greenhouse gases (CO₂, methane), trapping more heat and causing global warming.</div></div>
+                    <div class="note"><div class="note-title">3.2.3: Impact of Climate Change on Natural Systems</div><div class="note-content"><strong>Aquatic:</strong> Increases in ocean surface temperatures threaten coral reefs (bleaching) and disrupt marine food webs. Increased CO₂ absorption causes ocean acidification.<br><strong>Terrestrial:</strong> Threatens flora and fauna, and leads to an increase in extreme weather events like droughts and excessive rainfall.</div></div>
+                    <div class="note">
+                        <div class="note-title">3.2.4: Impact of Climate Change on Human Systems (Sea-Level Rise)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Anthropogenic climate change leads to global sea-level rise, which poses a significant and direct threat to low-lying coastal populations and nations.<br><br><strong>Key Process:</strong> Sea-level rise is caused by two main factors: 1) The thermal expansion of seawater as it warms, and 2) The melting of land-based ice sheets (like in Greenland and Antarctica) and glaciers, which adds water to the ocean.<br><br><strong>Case Anchor:</strong> The Pacific island nation of <strong>Tuvalu</strong>, with its highest point just 4.6 metres above sea level, faces an existential threat. Rising seas are already causing more frequent coastal flooding ("king tides"), saltwater intrusion into its limited freshwater aquifers (affecting drinking water and agriculture), and significant land erosion, raising the prospect of the entire population becoming climate refugees.</div>
+                    </div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 3.3: Climate Action</h2>
+                    <div class="note"><div class="note-title">3.3.1: Climate Action & Sustainable Development</div><div class="note-content">Climate change is a "threat multiplier" that constrains development, especially for disadvantaged communities. Climate action (adaptation and mitigation) is necessary to achieve sustainable development.</div></div>
+                    <div class="note"><div class="note-title">3.3.2: Defining Climate Risks</div><div class="note-content">Risk is the interaction between three factors:<br>1. <strong>Hazard:</strong> The climate-related event (e.g., cyclone, sea-level rise).<br>2. <strong>Vulnerability:</strong> A community's susceptibility to harm (e.g., lack of resources).<br>3. <strong>Exposure:</strong> The presence of people and property in hazard-prone areas.</div></div>
+                    <div class="note">
+                        <div class="note-title">3.3.3: Mitigation Strategies for Climate Change (Energy Transition)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Mitigation strategies aim to reduce the sources or enhance the sinks of greenhouse gases. A primary strategy is the transition from a fossil fuel-based energy system to one based on renewable and low-carbon sources.<br><br><strong>Key Process:</strong> This involves a combination of government policy, technological innovation, and investment. Policies can include carbon pricing, subsidies for renewables, and phasing out coal-fired power plants. Technology includes improving the efficiency and reducing the cost of solar panels, wind turbines, and energy storage systems.<br><br><strong>Case Anchor:</strong> <strong>Germany's "Energiewende" (Energy Transition)</strong> is a comprehensive national policy initiated in the early 2000s. It aims to simultaneously phase out nuclear power and drastically reduce fossil fuel consumption while massively scaling up renewable energy sources. Despite challenges, it has made Germany a world leader in solar and wind power generation.</div>
+                    </div>
+                    <div class="note"><div class="note-title">3.3.4: Mitigation Strategies (Enhancing Carbon Sinks)</div><div class="note-content">Protecting and enhancing natural systems that absorb CO₂. <strong>Examples:</strong> Protection of oceans and forests through preventing land-use change and promoting forest regeneration.</div></div>
+                    <div class="note"><div class="note-title">3.3.5: Adaptation Strategies (Reducing Harm)</div><div class="note-content">Actions to lessen the harm caused by climate change impacts.<br><strong>Structural/Technological:</strong> Water and flood management systems (e.g., sea walls), using technology to produce drought-resistant crops.<br><strong>Social/Institutional:</strong> Raising public awareness and education, implementing national and regional policies for climate resilience.</div></div>
+                </div>
+            </div>
+
+            <!-- Cluster 4 -->
+            <div class="cluster" id="cluster4">
+                <div class="topic">
+                    <h2>Topic 4.1: Plate Tectonics</h2>
+                    <div class="note"><div class="note-title">4.1.1: Plate Tectonic Theory</div><div class="note-content">The Earth's crust (lithosphere) is broken into large plates that are constantly moving, driven by forces within the hot, softened mantle below.</div></div>
+                    <div class="note"><div class="note-title">4.1.2: Driving Forces of Plate Movement</div><div class="note-content"><strong>Convection Currents:</strong> Circular motion of semi-molten rock in the mantle drags the overlying plates.<br><strong>Slab-Pull Force:</strong> At a subduction zone, the force of gravity pulls the denser, sinking oceanic plate downwards, dragging the rest of the plate along.</div></div>
+                    <div class="note"><div class="note-title">4.1.3: Evidence for Plate Tectonics</div><div class="note-content"><strong>Seafloor Spreading:</strong> New oceanic crust is formed at mid-ocean ridges as magma rises and pushes older crust away. Evidence includes younger rocks near the ridge and older rocks further away.<br><strong>Magnetic Striping:</strong> Rocks on the seafloor show a striped pattern of alternating magnetic polarity, symmetrical on either side of mid-ocean ridges, recording reversals in Earth's magnetic field.</div></div>
+                    <div class="note"><div class="note-title">4.1.4: Divergent Plate Boundaries</div><div class="note-content">Plates move <strong>away</strong> from each other. This results in mid-ocean ridges, rift systems (on land), and submarine volcanoes. Causes earthquakes.</div></div>
+                    <div class="note"><div class="note-title">4.1.5: Convergent Plate Boundaries</div><div class="note-content">Plates move <strong>towards</strong> each other. This results in fold mountains, oceanic trenches, and volcanoes. Causes powerful earthquakes.</div></div>
+                    <div class="note">
+                        <div class="note-title">4.1.6: Transform Plate Boundaries</div>
+                        <div class="note-content"><strong>Concept Core:</strong> A boundary where two tectonic plates slide past each other horizontally.<br><br><strong>Key Process:</strong> The movement is not smooth. The jagged edges of the plates lock together due to immense friction, causing strain and stress to accumulate in the crust over decades or centuries. When the stress finally overcomes the friction, the plates slip suddenly and violently, releasing the stored energy as seismic waves, resulting in an earthquake. Volcanic activity is absent as no crust is being created or destroyed.<br><br><strong>Case Anchor:</strong> The <strong>San Andreas Fault</strong> in California is a classic example, marking the boundary between the Pacific Plate (moving northwest) and the North American Plate (moving southeast). It is responsible for significant seismic activity in the region, including the major 1906 San Francisco earthquake.</div>
+                    </div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 4.2: Earthquakes and Volcanoes</h2>
+                    <div class="note"><div class="note-title">4.2.1: Tectonic Processes & Earthquake Magnitude</div><div class="note-content">Stress builds up along a fault until it exceeds the rock's strength, causing a sudden release of energy in the form of seismic waves. The amount of energy released determines the earthquake's magnitude, measured by scales like the Richter or Moment Magnitude scale.</div></div>
+                    <div class="note"><div class="note-title">4.2.2: Tectonic Processes & Volcanic Eruption Magnitude</div><div class="note-content">The magnitude of a volcanic eruption is determined by the amount of dissolved gas and the viscosity (thickness) of the magma. High gas/high viscosity magma (in stratovolcanoes) leads to violent eruptions, while low gas/low viscosity magma (in shield volcanoes) leads to gentle eruptions. Measured by the Volcanic Explosivity Index (VEI).</div></div>
+                    <div class="note"><div class="note-title">4.2.3: Global Distribution of Earthquakes & Volcanoes</div><div class="note-content">Earthquakes occur along all plate boundaries. Volcanoes are typically located near convergent and divergent boundaries. Both are highly concentrated along the <strong>Pacific Ring of Fire</strong>. Hot spot volcanoes are an exception, found away from plate boundaries.</div></div>
+                    <div class="note"><div class="note-title">4.2.4: Earthquake Hazards & Impacts</div><div class="note-content"><strong>Hazards:</strong> Ground shaking, soil liquefaction, landslides, tsunamis.<br><strong>Impacts:</strong> Destruction of ecosystems and infrastructure, disruption of services, injury, and loss of life.</div></div>
+                    <div class="note">
+                        <div class="note-title">4.2.5: Volcanic Hazards (Lahars)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> A lahar is a type of violent, fast-moving mudflow or debris flow composed of a slurry of pyroclastic material, rocky debris, and water.<br><br><strong>Key Process:</strong> Lahars can be triggered during an eruption by the rapid melting of snow and ice on a volcano's summit, or when heavy rainfall mobilizes loose volcanic ash and debris on its slopes long after an eruption has ended. They are extremely destructive as they can travel dozens of kilometres, burying everything in their path.<br><br><strong>Case Anchor:</strong> The 1985 eruption of the <strong>Nevado del Ruiz volcano in Colombia</strong> triggered catastrophic lahars. A relatively small eruption melted the summit's glaciers, sending enormous mudflows down river valleys. These flows completely engulfed the town of <strong>Armero</strong>, located 48 km away, killing more than 23,000 of its 29,000 inhabitants.</div>
+                    </div>
+                    <div class="note"><div class="note-title">4.2.6: Benefits of Living Near Volcanoes</div><div class="note-content">Volcanic materials weather to form fertile soil for farming. Valuable minerals and building materials are brought to the surface. Opportunities for harnessing geothermal energy and for tourism.</div></div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 4.3: Disaster Risk Management</h2>
+                    <div class="note"><div class="note-title">4.3.1: Disaster Risk Management & Sustainable Development</div><div class="note-content">Disaster risk management aims to prevent and reduce disaster risks, strengthening resilience. This is crucial for sustainable development, as disasters can cause serious economic and social losses that hinder progress.</div></div>
+                    <div class="note"><div class="note-title">4.3.2: Factors Influencing Tectonic Disaster Risk</div><div class="note-content">Risk varies based on the interaction of the <strong>hazard</strong> (e.g., duration of shaking, magma composition), <strong>vulnerability</strong> (e.g., building quality, water availability for lahars), and <strong>exposure</strong> (e.g., population density, distance from epicentre).</div></div>
+                    <div class="note"><div class="note-title">4.3.3: Strengthening Community Resilience</div><div class="note-content">This is the ability of a community to resist, adapt, and recover from disasters. It depends on the community's resources and its capability to self-organise.</div></div>
+                    <div class="note"><div class="note-title">4.3.4: Strategies for Building Resilience</div><div class="note-content"><strong>Reducing Exposure:</strong> Land use planning to avoid building in high-risk zones.<br><strong>Reducing Vulnerability:</strong> Implementing hazard-resistant building designs.<br><strong>Increasing Preparedness:</strong> Developing monitoring and warning systems, and educating the public.</div></div>
+                    <div class="note"><div class="note-title">4.3.5: Post-Disaster Management Strategies</div><div class="note-content"><strong>Disaster Response:</strong> Immediate actions like search and rescue, timely evacuation, and provision of basic social services.<br><strong>Disaster Recovery:</strong> Longer-term actions like restoring and improving facilities and living conditions.</div></div>
+                    <div class="note"><div class="note-title">4.3.6: Challenges in Disaster Management</div><div class="note-content">Lack of domestic resources (technological, financial). Difficulty in engaging all relevant stakeholders to collaborate effectively.</div></div>
+                </div>
+            </div>
+
+            <!-- Cluster 5 -->
+            <div class="cluster" id="cluster5">
+                <div class="topic">
+                    <h2>Topic 5.1: Small Island City State</h2>
+                    <div class="note"><div class="note-title">5.1.1: Singapore's Natural Characteristics</div><div class="note-content">Small landmass with limited natural resources; low-lying island. Tropical equatorial climate with Northeast and Southwest monsoons. High biodiversity in its land-based (rainforests) and coastal (mangroves, coral reefs) ecosystems.</div></div>
+                    <div class="note"><div class="note-title">5.1.2: Singapore's Human Characteristics</div><div class="note-content"><strong>Economic:</strong> Diversified, with strong service and manufacturing industries.<br><strong>Social:</strong> Open, globalised, densely populated, and well-connected internationally.<br><strong>Political:</strong> An independent sovereign state and an active contributor to global initiatives.</div></div>
+                    <div class="note"><div class="note-title">5.1.3: Singapore's Vulnerabilities</div><div class="note-content"><strong>Resource Insecurity:</strong> Limited land, leading to vulnerability in food, water, and energy supply.<br><strong>Demographic Changes:</strong> An ageing population and decreasing birth rate create risks of labour shortages and economic slowdown.<br><strong>External Shocks:</strong> High exposure to global environmental (climate change), social (pandemics), and economic (financial crises) uncertainties.</div></div>
+                    <div class="note">
+                        <div class="note-title">5.1.4: National Resilience (Water Security)</div>
+                        <div class="note-content"><strong>Concept Core:</strong> National resilience is the capacity of a country to withstand, adapt, and thrive in the face of its inherent vulnerabilities and external shocks.<br><br><strong>Key Process:</strong> For Singapore, a key vulnerability is the lack of natural water resources. Resilience was built through a long-term strategy of diversifying its water supply, investing in technology, and managing demand.<br><br><strong>Case Anchor:</strong> Singapore's <strong>Four National Taps</strong> strategy is a prime example of building resilience. Instead of relying solely on imported water and local catchments, Singapore heavily invested in technology to develop <strong>NEWater</strong> (high-grade reclaimed water) and <strong>desalination</strong>. NEWater, in particular, showcases the ability to turn a vulnerability (water scarcity) into a strength through innovation, ensuring a sustainable and weather-resilient water supply.</div>
+                    </div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 5.2: Challenges and Opportunities</h2>
+                    <div class="note"><div class="note-title">5.2.1: Climate Change Impacts on Singapore</div><div class="note-content"><strong>Challenges:</strong> Rising sea levels threaten the low-lying coast. Increased temperatures worsen the urban heat island effect. Changing weather patterns can cause floods and increase vector-borne diseases.<br><strong>Opportunities:</strong> Drives innovation in coastal management, high-tech farming, and water technologies.</div></div>
+                    <div class="note"><div class="note-title">5.2.2: Tectonic Hazard Impacts on Singapore</div><div class="note-content"><strong>Challenges:</strong> Though not directly on a plate boundary, major tectonic movements on the nearby Sunda Megathrust could cause tremors (affecting reclaimed land) and tsunamis. Ash clouds from regional volcanic eruptions can disrupt air travel and affect health.<br><strong>Opportunities:</strong> Prompts investment in national preparedness plans, monitoring technology, and regional partnerships for disaster response.</div></div>
+                    <div class="note"><div class="note-title">5.2.3: Tourism Impacts on Singapore</div><div class="note-content"><strong>Challenges:</strong> Faces intense regional competition, resource constraints, an ageing population (labour), and threats from global uncertainties that affect travel.<br><strong>Opportunities:</strong> Benefits from a growing Asian market; can develop partnerships to spearhead place-making initiatives and develop a skilled workforce in sustainability solutions.</div></div>
+                </div>
+                <div class="topic">
+                    <h2>Topic 5.3: Sustainable and Resilient Singapore</h2>
+                    <div class="note"><div class="note-title">5.3.1: Importance of Sustainable Development for Singapore</div><div class="note-content">To ensure a <strong>competitive economy</strong> (attracting investment, providing jobs). To ensure a <strong>sustainable environment</strong> (clean air and water). To achieve a <strong>high quality of life</strong> (fostering community spirit and participation).</div></div>
+                    <div class="note"><div class="note-title">5.3.2: Singapore's Approach to Sustainable Development</div><div class="note-content"><strong>Integrated Master Planning:</strong> A long-term approach to balancing economic, social, and environmental needs in land-use plans.<br><strong>Dynamic Urban Governance:</strong> Strong political leadership and effective cooperation between government agencies to execute policies.</div></div>
+                    <div class="note">
+                        <div class="note-title">5.3.3: Climate Change Adaptation Strategies</div>
+                        <div class="note-content"><strong>Concept Core:</strong> Adaptation strategies are actions taken to manage the unavoidable impacts of climate change, reducing harm and building resilience to future changes.<br><br><strong>Key Process:</strong> For a low-lying, coastal city like Singapore, adaptation involves a multi-pronged approach: protecting the coastline from sea-level rise, managing storm water from more intense rainfall, and mitigating the urban heat island effect. This requires significant long-term planning and investment in infrastructure.<br><br><strong>Case Anchor:</strong> The <strong>Marina Barrage</strong> is a flagship example of Singapore's multi-purpose adaptation strategy. Functionally, it is a dam across the Marina Channel that serves three key purposes: 1) <strong>Flood Control</strong> for the low-lying city centre by acting as a tidal barrier, 2) <strong>Water Supply</strong> by creating the Marina Reservoir, a freshwater source, and 3) <strong>Lifestyle Attraction</strong> by providing a venue for recreation. It simultaneously addresses multiple climate change risks.</div>
+                    </div>
+                    <div class="note"><div class="note-title">5.3.4: Considerations for Continued Sustainable Development</div><div class="note-content"><strong>Environmental:</strong> Acknowledging reliance on global ecosystem services and the limitations of Singapore's physical environment.<br><strong>Economic/Social:</strong> Relying on the ability of its society to advance its economy and the commitment of all stakeholders.<br><strong>Political:</strong> Maintaining good governance and a strong political will to execute long-term sustainable development plans.</div></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📖 G3 O-Level Geography Syllabus 2279 Study Notes</p>
+            <p style="margin-top: 10px; opacity: 0.8;">Created for comprehensive exam preparation</p>
+        </footer>
+    </div>
+
+    <script>
+        function showCluster(num) {
+            // Hide all clusters
+            const clusters = document.querySelectorAll('.cluster');
+            clusters.forEach(cluster => cluster.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected cluster
+            document.getElementById('cluster' + num).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Clear search when switching clusters
+            document.getElementById('searchInput').value = '';
+            clearHighlights();
         }
 
-        function renderQuizletQueue() {
-            const allPriorityItems = getQuizletPriority();
+        function searchNotes() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const notes = document.querySelectorAll('.note');
             
-            // **FIX 2.2: Filter for what is actually 'due' to be shown in the queue**
-            const dueItems = allPriorityItems.filter(p => p.daysOverdue >= 0);
+            clearHighlights();
             
-            document.getElementById('flashcardsDue').textContent = dueItems.length;
-            if (!quizletQueueEl) return;
-
-            if (dueItems.length === 0) {
-                 if(Object.keys(quizletTrackingData).length > 0) {
-                    quizletQueueEl.innerHTML = `<div class="text-center text-sm text-gray-500 dark:text-gray-400 p-2 italic">All caught up! Nothing to review today. 🎉</div>`;
-                 } else {
-                    quizletQueueEl.innerHTML = `<div class="text-center text-sm text-gray-500 dark:text-gray-400 p-2 italic">Nothing to review. Set up your Quizlet links!</div>`;
-                 }
+            if (searchTerm === '') {
+                notes.forEach(note => note.style.display = 'block');
                 return;
             }
-
-            quizletQueueEl.innerHTML = dueItems.slice(0, 3).map(item => {
-                const isUrgent = item.daysOverdue > 0;
-                return `
-                    <div class="p-2.5 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
-                        <div class="flex justify-between items-center">
-                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200">${item.topic.id} ${item.topic.name}</span>
-                            ${isUrgent ? `<span class="text-xs font-bold text-red-500">${item.daysOverdue}d overdue</span>` : `<span class="text-xs text-green-600 dark:text-green-400">Due today</span>`}
-                        </div>
-                        <div class="flex gap-2 mt-2">
-                             <button onclick="window.openQuizlet('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md transition">📱 Open</button>
-                             <button onclick="window.markStudied('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-white hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 font-semibold rounded-md transition">✅ Studied</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // --- Heatmap UI Rendering ---
-        function renderHeatmap() {
-            if (!heatmapGridEl || Object.keys(topicMetadata).length === 0) return;
-            heatmapGridEl.innerHTML = Object.entries(TOPICS_DATABASE).map(([clusterId, cluster]) => {
-                const clusterTopics = cluster.topics.map(t => topicMetadata[t.id]).filter(Boolean);
-                const readyCount = clusterTopics.filter(t => t.confidence >= 4).length;
-                return `
-                    <div class="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-4 flex flex-col">
-                        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-3 text-sm flex justify-between">${clusterId}: ${cluster.name} <span class="text-blue-500">${readyCount}/${cluster.topics.length}</span></h4>
-                        <div class="space-y-3 flex-grow">
-                            ${cluster.topics.map(t => renderTopicCard(topicMetadata[t.id])).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            updateStatistics();
-            updatePriorityBanner();
-        }
-
-        function renderTopicCard(topic) {
-            if (!topic) return '';
-            const daysSince = getDaysSince(topic.lastReviewed);
-            const isUrgent = daysSince > 7;
-            const isPriority = topic.confidence <= 2 || isUrgent;
-            const stars = Array.from({ length: 5 }, (_, i) => i < topic.confidence ? '⭐' : '☆').join('');
-
-            return `
-                <div onclick="window.openTopicModal('${topic.id}')" class="topic-card bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-blue-500 border-2 border-transparent transition-all cursor-pointer ${isPriority ? 'border-l-4 border-l-yellow-500' : ''}">
-                    <div class="flex justify-between items-start">
-                        <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 pr-2">${topic.id} ${topic.name}</span>
-                        ${isPriority ? '<span class="text-xs bg-yellow-400 text-white font-bold px-1.5 py-0.5 rounded-full" title="Priority">🔥</span>' : ''}
-                    </div>
-                    <div class="flex justify-between items-center mt-2">
-                        <span class="text-lg leading-none" title="Confidence: ${topic.confidence}/5">${stars}</span>
-                        <span class="text-xs font-medium px-2 py-1 rounded-full ${isUrgent ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' : 'bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300'}">
-                            ${topic.lastReviewed ? (daysSince === 0 ? 'Today' : `${daysSince}d ago`) : 'Never'}
-                        </span>
-                    </div>
-                </div>
-            `;
-        }
-        
-        function updateStatistics() {
-            const topics = Object.values(topicMetadata);
-            if (topics.length === 0) return;
-            const readyTopics = topics.filter(t => t.confidence >= 4).length;
-            const totalTopics = topics.length;
-            document.getElementById('overallProgress').textContent = `${totalTopics > 0 ? Math.round((readyTopics / totalTopics) * 100) : 0}%`;
-            document.getElementById('readyTopics').textContent = `${readyTopics}/${totalTopics}`;
-            document.getElementById('needsReview').textContent = topics.filter(t => getDaysSince(t.lastReviewed) > 7).length;
-            document.getElementById('topicsGreen').textContent = readyTopics;
-        }
-
-        function calculatePriorityScore(topicData) {
-            if (!topicData) return 0;
-            let score = 0;
-            if (topicData.confidence <= 2) score += 50;
-            else if (topicData.confidence === 3) score += 30;
-            if (topicData.lastReviewed) {
-                const daysSince = getDaysSince(topicData.lastReviewed);
-                if (daysSince > 14) score += 40;
-                else if (daysSince > 7) score += 25;
-                else if (daysSince > 3) score += 10;
-            } else {
-                score += 60;
-            }
-            score *= topicData.weight || 1.0;
-            return Math.round(score);
-        }
-
-        function updatePriorityBanner() {
-            const banner = document.getElementById('priorityBanner');
-            const listEl = document.getElementById('priorityList');
-            if (!banner || !listEl || Object.keys(topicMetadata).length === 0) return;
             
-            const priorityTopics = Object.values(topicMetadata)
-                .map(t => ({ ...t, score: calculatePriorityScore(t) }))
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 3);
-            
-            if (priorityTopics.length > 0 && priorityTopics[0].score > 40) {
-                listEl.textContent = priorityTopics.map(t => t.id).join(', ');
-                banner.style.display = 'block';
-            } else {
-                banner.style.display = 'none';
-            }
-        }
-        
-        async function saveHeatmapState() {
-            if (!heatmapDocRef) return;
-            try {
-                await setDoc(heatmapDocRef, { metadata: topicMetadata });
-            } catch (e) {
-                console.error("Error saving heatmap state:", e);
-                showToast("Failed to save progress.", "error");
-            }
+            notes.forEach(note => {
+                const title = note.querySelector('.note-title').textContent.toLowerCase();
+                const content = note.querySelector('.note-content').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || content.includes(searchTerm)) {
+                    note.style.display = 'block';
+                    highlightText(note, searchTerm);
+                } else {
+                    note.style.display = 'none';
+                }
+            });
         }
 
-        // --- All Modals and Interactions ---
-        const topicModal = document.getElementById('topicModal');
-        const topicModalBody = document.getElementById('topicModalBody');
-        window.openTopicModal = (topicId) => {
-            const topic = topicMetadata[topicId]; if (!topic) return;
-            topicModalBody.innerHTML = `<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">${topic.id}: ${topic.name}</h3><p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Cluster: ${topic.cluster}</p><div class="bg-gray-100 dark:bg-gray-700/50 p-4 rounded-lg mb-4"><p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Update Confidence:</p><div class="confidence-selector flex justify-center">${[1, 2, 3, 4, 5].map(level => `<span class="star-btn ${level <= topic.confidence ? 'active' : ''}" onclick="window.setConfidence('${topicId}', ${level})">⭐</span>`).join('')}</div></div><button onclick="window.quickReview('${topicId}')" class="w-full text-center py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition mb-4">Mark as Reviewed Now</button>`;
-            topicModal.classList.remove('hidden');
-        };
-        window.closeTopicModal = () => topicModal.classList.add('hidden');
-        window.setConfidence = (topicId, level) => { topicMetadata[topicId].confidence = level; topicMetadata[topicId].lastReviewed = new Date().toISOString(); showToast(`Confidence for ${topicId} set to ${level} stars!`, "success"); saveHeatmapState(); closeTopicModal(); };
-        window.quickReview = (topicId) => { topicMetadata[topicId].lastReviewed = new Date().toISOString(); showToast(`${topicId} marked as reviewed!`, "success"); saveHeatmapState(); closeTopicModal(); };
-        
-        async function saveMissions() { if (missionsDocRef) await setDoc(missionsDocRef, { tasks: missions }); }
-        function renderMissions() { if (!missionListEl) return; if (missions.length === 0) { missionListEl.innerHTML = `<div class="text-center text-sm text-gray-500 dark:text-gray-400 p-4 italic">No missions yet. Add one! 🎯</div>`; } else { missionListEl.innerHTML = missions.map(m => `<div class="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg group"><div onclick="window.toggleMission(${m.id})" class="w-6 h-6 rounded-md border-2 ${m.completed ? 'bg-blue-500 border-blue-500' : 'border-gray-300 dark:border-gray-500'} flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">${m.completed ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><span onclick="window.toggleMission(${m.id})" class="flex-grow text-sm text-gray-800 dark:text-gray-200 ${m.completed ? 'line-through opacity-50' : ''} cursor-pointer">${m.text}</span><button onclick="window.confirmDeleteMission(${m.id})" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-lg">&times;</button></div>`).join(''); } updateWeekProgress(); }
-        window.addMission = () => { const text = newMissionInput.value.trim(); if (text) { missions.push({ id: Date.now(), text, completed: false }); newMissionInput.value = ''; saveMissions(); } };
-        window.toggleMission = (id) => { const mission = missions.find(m => m.id === id); if (mission) { mission.completed = !mission.completed; saveMissions(); } };
-        window.confirmDeleteMission = (id) => showConfirmation("Delete Mission", "Are you sure you want to delete this mission?", () => { missions = missions.filter(m => m.id !== id); saveMissions(); showToast("Mission deleted.", "success"); });
-        window.confirmClearCompleted = () => { const completedCount = missions.filter(m => m.completed).length; if (completedCount === 0) { showToast("No completed missions to clear.", "info"); return; } showConfirmation("Clear Completed", `Clear ${completedCount} completed mission(s)?`, () => { missions = missions.filter(m => !m.completed); saveMissions(); showToast("Completed missions cleared.", "success"); }); };
-        window.confirmResetWeek = () => { if (missions.length === 0) { showToast("No missions to reset.", "info"); return; } showConfirmation("Start New Week", "This will clear all current missions.", () => { missions = []; saveMissions(); showToast("New week started!", "success"); }); };
-        function updateWeekProgress() { const total = missions.length; const completed = missions.filter(m => m.completed).length; if(weekProgressEl) weekProgressEl.textContent = `${total > 0 ? Math.round((completed / total) * 100) : 0}%`; }
-        const modal = document.getElementById('confirmationModal'); const modalTitle = document.getElementById('modalTitle'); const modalMessage = document.getElementById('modalMessage'); const modalConfirm = document.getElementById('modalConfirm'); const modalCancel = document.getElementById('modalCancel'); let confirmCallback = null;
-        function showConfirmation(title, message, onConfirm) { modalTitle.textContent = title; modalMessage.textContent = message; confirmCallback = onConfirm; modal.classList.remove('hidden'); }
-        modalConfirm.addEventListener('click', () => { if (confirmCallback) confirmCallback(); modal.classList.add('hidden'); });
-        modalCancel.addEventListener('click', () => { modal.classList.add('hidden'); });
-        window.showToast = (message, type = 'info') => { const container = document.getElementById('toastContainer'); const toast = document.createElement('div'); const colors = { info: 'bg-blue-500', success: 'bg-green-500', error: 'bg-red-500' }; toast.className = `toast text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-lg ${colors[type]}`; toast.textContent = message; container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); toast.addEventListener('transitionend', () => toast.remove()); }, 3000); };
-        const caseDeckModal = document.getElementById('caseDeckModal');
-        window.openCaseDeck = () => caseDeckModal.classList.remove('hidden');
-        window.closeCaseDeck = () => caseDeckModal.classList.add('hidden');
-        window.openAtomicNotes = () => window.open('geography-atomic-note.html', '_blank');
-        newMissionInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addMission(); });
-        
-        const quizletManagerModal = document.getElementById('quizletManagerModal');
-        const quizletManagerBody = document.getElementById('quizletManagerBody');
-        const studyFeedbackModal = document.getElementById('studyFeedbackModal');
-        window.openQuizlet = (topicId) => { const url = quizletTrackingData[topicId]?.quizletSetUrl; if (url) { window.open(url, '_blank'); } else { showToast("No Quizlet URL set for this topic.", "error"); } };
-        window.openQuizletManager = () => { quizletManagerBody.innerHTML = Object.values(TOPICS_DATABASE).flatMap(cluster => cluster.topics).map(topic => { const tracking = quizletTrackingData[topic.id] || {}; return `<div class="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg"><span class="font-semibold text-sm w-28 flex-shrink-0">${topic.id}</span><input type="url" id="quizlet-url-${topic.id}" class="flex-grow bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition" value="${tracking.quizletSetUrl || ''}" placeholder="Paste Quizlet Set URL here..."><button onclick="window.saveQuizletLink('${topic.id}')" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition">Save</button></div>`; }).join(''); quizletManagerModal.classList.remove('hidden'); };
-        window.closeQuizletManager = () => quizletManagerModal.classList.add('hidden');
-        window.saveQuizletLink = (topicId) => { const urlInput = document.getElementById(`quizlet-url-${topicId}`); if (!quizletTrackingData[topicId]) { quizletTrackingData[topicId] = { studyFrequency: 7, studyCount: 0, lastStudied: null, history: [] }; } quizletTrackingData[topicId].quizletSetUrl = urlInput.value.trim(); saveQuizletData().then(() => showToast("Quizlet link saved!", "success")); };
-        window.markStudied = (topicId) => { document.getElementById('studyFeedbackTitle').textContent = `Great! You studied ${topicId} 🎉`; document.getElementById('feedbackBtnHard').onclick = () => window.saveStudy(topicId, 1); document.getElementById('feedbackBtnGood').onclick = () => window.saveStudy(topicId, 3); document.getElementById('feedbackBtnEasy').onclick = () => window.saveStudy(topicId, 5); studyFeedbackModal.classList.remove('hidden'); };
-        window.saveStudy = (topicId, rating) => { const time = document.getElementById('studyTimeInput').value || 15; const data = quizletTrackingData[topicId]; if (!data) return; data.lastStudied = new Date().toISOString(); data.studyCount = (data.studyCount || 0) + 1; if (!data.history) data.history = []; data.history.push({ date: data.lastStudied, duration: parseInt(time), selfRating: rating }); const intervals = {1: 1, 3: 3, 5: 7}; data.studyFrequency = intervals[rating] || 3; saveQuizletData().then(() => { showToast(`${topicId} marked as studied! Next review in ${data.studyFrequency} days`, "success"); }); topicMetadata[topicId].lastReviewed = data.lastStudied; saveHeatmapState(); closeStudyFeedbackModal(); };
-        window.closeStudyFeedbackModal = () => { document.getElementById('studyTimeInput').value = ''; studyFeedbackModal.classList.add('hidden'); };
-        
-        // --- INITIALIZE ---
-        document.addEventListener('DOMContentLoaded', initialize);
+        function highlightText(element, searchTerm) {
+            const title = element.querySelector('.note-title');
+            const content = element.querySelector('.note-content');
+            
+            [title, content].forEach(el => {
+                const text = el.textContent;
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                el.innerHTML = text.replace(regex, '<span class="highlight">$1</span>');
+            });
+        }
+
+        function clearHighlights() {
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
     </script>
 </body>
 </html>
-
