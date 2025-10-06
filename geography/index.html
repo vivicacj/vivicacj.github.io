@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geography Ultimate Learning OS</title>
-    <!-- Tailwind CSS for modern, utility-first styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Custom styles for modal transitions and other small tweaks -->
     <style>
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -32,148 +30,153 @@
             cursor: pointer;
             transition: all 0.2s;
             opacity: 0.3;
-            color: #ffc107;
+            color: #f59e0b; /* Amber-500 */
         }
         .confidence-selector .star-btn:hover,
         .confidence-selector .star-btn.active {
             opacity: 1;
             transform: scale(1.2);
         }
-        /* A few custom styles can remain for complex selectors or states if needed */
         .stat-pill {
-            @apply bg-gray-100 dark:bg-gray-700/50 text-gray-600 dark:text-gray-300 text-sm px-3 py-1.5 rounded-full flex items-center gap-2;
+            background: #f1f5f9; /* Slate-100 */
+            color: #475569; /* Slate-600 */
+            font-size: 0.875rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         .stat-pill .stat-label {
-            @apply font-medium;
+            font-weight: 500;
         }
         .stat-pill .stat-value {
-            @apply font-bold text-blue-600 dark:text-blue-400;
+            font-weight: 700;
+            color: #0d9488; /* Teal-600 */
         }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
+<body class="bg-slate-100">
+    <!-- Firebase Config Warning Banner -->
+    <div id="firebaseWarning" class="bg-rose-500 text-white p-4 text-center font-semibold" style="display: none;">
+        ⚠️ Firebase not configured. Please add your Firebase config below to enable data sync.
+    </div>
+
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
-        <!-- Main Header -->
-        <header class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-8 text-center">
-            <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 text-transparent bg-clip-text mb-2">🌍 Geography Ultimate Learning OS</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-lg">Your Complete System for Mastering O-Level Geography</p>
+        <header class="bg-white rounded-2xl shadow-lg p-8 mb-8 text-center">
+            <h1 class="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 text-transparent bg-clip-text mb-2">🌍 Geography Ultimate Learning OS</h1>
+            <p class="text-slate-500 text-lg">Your Complete System for Mastering O-Level Geography</p>
         </header>
 
         <!-- Stats Bar -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-green-500" id="topicsGreen">0</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">🟢 Topics Mastered</div>
+            <div class="stat-card bg-white p-5 rounded-2xl shadow-md text-center">
+                <div class="text-4xl font-bold text-emerald-500" id="topicsGreen">0</div>
+                <div class="text-sm text-slate-500 mt-1">🟢 Topics Mastered</div>
             </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-blue-500" id="casesTotal">47</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">📚 Cases in Deck</div>
+            <div class="stat-card bg-white p-5 rounded-2xl shadow-md text-center">
+                <div class="text-4xl font-bold text-teal-500" id="casesTotal">47</div>
+                <div class="text-sm text-slate-500 mt-1">📚 Cases in Deck</div>
             </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-yellow-500" id="flashcardsDue">0</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">🔄 Cards Due Today</div>
+            <div class="stat-card bg-white p-5 rounded-2xl shadow-md text-center">
+                <div class="text-4xl font-bold text-amber-500" id="flashcardsDue">0</div>
+                <div class="text-sm text-slate-500 mt-1">🔄 Cards Due Today</div>
             </div>
-            <div class="stat-card bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-md text-center">
-                <div class="text-4xl font-bold text-purple-500" id="weekProgress">0%</div>
-                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">✅ Week Progress</div>
+            <div class="stat-card bg-white p-5 rounded-2xl shadow-md text-center">
+                <div class="text-4xl font-bold text-cyan-500" id="weekProgress">0%</div>
+                <div class="text-sm text-slate-500 mt-1">✅ Week Progress</div>
             </div>
         </section>
 
         <!-- Dashboard Grid -->
         <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Left: Module Cards -->
             <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="window.openAtomicNotes()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                 <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="window.openAtomicNotes()">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                         <span>Atomic Notes</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Deep understanding of concepts with detailed explanations.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Deep understanding of concepts with detailed explanations.</p>
                     <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 self-start">Layer 1: Knowledge</span>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openQuizletManager()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openQuizletManager()">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                         <span>Flashcards</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Manage your Quizlet study plan and track progress.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Manage your Quizlet study plan and track progress.</p>
                     <div class="mt-4">
-                       <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
+                       <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 self-start">Layer 1: Knowledge</span>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openCaseDeck()">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
+                <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="openCaseDeck()">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" /></svg>
                         <span>Case Deck</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Evidence database for perfect arguments.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Evidence database for perfect arguments.</p>
                     <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 self-start">Layer 1: Knowledge</span>
                     </div>
                 </div>
-                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Practice module - Import past papers and track performance!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" /></svg>
+                 <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Practice module - Import past papers and track performance!', 'info')">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-teal-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536l12.232-12.232z" /></svg>
                         <span>Practice</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Past papers, model answers, and application exercises.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Past papers, model answers, and application exercises.</p>
                      <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 self-start">Layer 1: Knowledge</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-100 text-teal-800 self-start">Layer 1: Knowledge</span>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Archetype Hub - Learn to decode 6 question types!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Archetype Hub - Learn to decode 6 question types!', 'info')">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
                         <span>Archetype Hub</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Question pattern recognition and signal word identification.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Question pattern recognition and signal word identification.</p>
                     <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 self-start">Layer 2: Strategy</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 self-start">Layer 2: Strategy</span>
                     </div>
                 </div>
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Framework Library - Master P.E.E.L.+, C.E.M., and more!', 'info')">
-                    <div class="flex items-center gap-3 text-lg font-bold text-gray-800 dark:text-white">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                <div class="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer" onclick="showToast('Framework Library - Master P.E.E.L.+, C.E.M., and more!', 'info')">
+                    <div class="flex items-center gap-3 text-lg font-bold text-slate-800">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         <span>Framework Library</span>
                     </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex-grow">Writing frameworks, templates, and self-correction checklists.</p>
+                    <p class="text-sm text-slate-500 mt-2 flex-grow">Writing frameworks, templates, and self-correction checklists.</p>
                     <div class="mt-4">
-                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300 self-start">Layer 2: Strategy</span>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 self-start">Layer 2: Strategy</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Sidebar -->
             <aside class="space-y-6">
-                <!-- This Week's Mission -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                    <h3 class="flex items-center gap-3 text-lg font-bold text-blue-500 dark:text-blue-400 mb-4">
+                <div class="bg-white p-6 rounded-2xl shadow-md">
+                    <h3 class="flex items-center gap-3 text-lg font-bold text-teal-500 mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                         <span>This Week's Mission</span>
                     </h3>
                     <div class="flex gap-2 mb-4">
-                        <input type="text" id="newMissionInput" placeholder="Add a new mission..." class="flex-grow bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition">
-                        <button onclick="addMission()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors whitespace-nowrap">➕ Add</button>
+                        <input type="text" id="newMissionInput" placeholder="Add a new mission..." class="flex-grow bg-slate-100 border-2 border-transparent focus:border-teal-500 rounded-lg p-2 text-sm outline-none transition">
+                        <button onclick="addMission()" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition-colors whitespace-nowrap">➕ Add</button>
                     </div>
                     <div id="missionList" class="space-y-2"></div>
                     <div class="flex gap-2 mt-4">
-                        <button onclick="confirmClearCompleted()" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800 text-sm font-semibold py-2 px-3 rounded-lg transition">🗑️ Clear Completed</button>
-                        <button onclick="confirmResetWeek()" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 text-sm font-semibold py-2 px-3 rounded-lg transition">🔄 New Week</button>
+                        <button onclick="confirmClearCompleted()" class="flex-1 bg-rose-100 hover:bg-rose-200 text-rose-700 text-sm font-semibold py-2 px-3 rounded-lg transition">🗑️ Clear Completed</button>
+                        <button onclick="confirmResetWeek()" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold py-2 px-3 rounded-lg transition">🔄 New Week</button>
                     </div>
                 </div>
 
-                <!-- Quizlet Study Queue -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                    <h3 class="flex items-center gap-3 text-lg font-bold text-blue-500 dark:text-blue-400 mb-4">
+                <div class="bg-white p-6 rounded-2xl shadow-md">
+                    <h3 class="flex items-center gap-3 text-lg font-bold text-teal-500 mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7.014A8.003 8.003 0 0112 2c2.21 0 4.21.896 5.657 2.343a8 8 0 010 11.314z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 12l2 4-2 2-2-4 2-2z" /></svg>
                         <span>Quizlet Study Queue</span>
                     </h3>
-                    <div id="quizletQueue" class="space-y-2">
-                        <!-- Dynamic content here -->
-                    </div>
-                     <button class="w-full text-center mt-4 py-2 px-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm font-semibold rounded-lg transition" onclick="openQuizletManager()">
+                    <div id="quizletQueue" class="space-y-2"></div>
+                     <button class="w-full text-center mt-4 py-2 px-4 bg-slate-200 hover:bg-slate-300 text-slate-700 text-sm font-semibold rounded-lg transition" onclick="openQuizletManager()">
                         Manage Quizlet Sets →
                     </button>
                 </div>
@@ -181,11 +184,11 @@
         </main>
 
         <!-- Knowledge Heatmap -->
-        <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 sm:p-8">
+        <section class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
              <div class="flex flex-wrap justify-between items-start gap-4 mb-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-1">📊 Knowledge Heatmap</h2>
-                    <p class="text-gray-500 dark:text-gray-400">Rate your confidence from 1 to 5 stars.</p>
+                    <h2 class="text-2xl font-bold text-slate-800 mb-1">📊 Knowledge Heatmap</h2>
+                    <p class="text-slate-500">Rate your confidence from 1 to 5 stars.</p>
                 </div>
                 <div class="flex flex-wrap gap-3">
                     <div class="stat-pill"><span class="stat-label">Progress:</span> <span class="stat-value" id="overallProgress">0%</span></div>
@@ -193,97 +196,133 @@
                     <div class="stat-pill"><span class="stat-label">Review:</span> <span class="stat-value" id="needsReview">0</span></div>
                 </div>
             </div>
-            <div class="priority-banner bg-yellow-50 border border-yellow-200 dark:bg-yellow-900/20 dark:border-yellow-500/30 text-yellow-800 dark:text-yellow-300 p-4 rounded-lg mb-6" id="priorityBanner" style="display: none;">
+            <div class="priority-banner bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-lg mb-6" id="priorityBanner" style="display: none;">
                 <strong class="font-bold">🔥 Priority This Week:</strong> <span id="priorityList"></span>
             </div>
-            <div id="heatmapGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Heatmap columns generated by JS -->
-            </div>
+            <div id="heatmapGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
         </section>
     </div>
 
     <!-- Modals -->
     <div id="confirmationModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm">
-            <h3 id="modalTitle" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Confirmation</h3>
-            <p id="modalMessage" class="text-gray-600 dark:text-gray-300 mb-6">Are you sure?</p>
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+            <h3 id="modalTitle" class="text-lg font-bold text-slate-900 mb-2">Confirmation</h3>
+            <p id="modalMessage" class="text-slate-600 mb-6">Are you sure?</p>
             <div class="flex justify-end gap-3">
-                <button id="modalCancel" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold transition">Cancel</button>
-                <button id="modalConfirm" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-semibold transition">Confirm</button>
+                <button id="modalCancel" class="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold transition">Cancel</button>
+                <button id="modalConfirm" class="px-4 py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white font-semibold transition">Confirm</button>
             </div>
         </div>
     </div>
     
     <div id="topicModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div id="topicModalContent" class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-md relative">
-             <button onclick="closeTopicModal()" class="absolute top-3 right-3 text-2xl text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition">&times;</button>
+        <div id="topicModalContent" class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative">
+             <button onclick="closeTopicModal()" class="absolute top-3 right-3 text-2xl text-slate-400 hover:text-slate-700 transition">&times;</button>
             <div id="topicModalBody"></div>
         </div>
     </div>
     
     <div id="caseDeckModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-40 p-4">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-4xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">🗃️ Case Deck</h2>
-                <button onclick="closeCaseDeck()" class="text-2xl text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition">&times;</button>
+        <div class="bg-white w-full max-w-4xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center flex-shrink-0">
+                <h2 class="text-xl font-bold text-slate-900">🗃️ Case Deck</h2>
+                <button onclick="closeCaseDeck()" class="text-2xl text-slate-500 hover:text-slate-800 transition">&times;</button>
             </div>
             <div class="p-6 overflow-y-auto flex-grow">
-                <p class="text-gray-700 dark:text-gray-300">This is a placeholder for the Case Deck content.</p>
+                <p class="text-slate-700">This is a placeholder for the Case Deck content.</p>
             </div>
         </div>
     </div>
 
-    <!-- Quizlet Manager Modal -->
     <div id="quizletManagerModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 w-full max-w-2xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center flex-shrink-0">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">📚 Quizlet Set Manager</h2>
-                <button onclick="closeQuizletManager()" class="text-2xl text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition">&times;</button>
+        <div class="bg-white w-full max-w-2xl h-[90vh] rounded-2xl shadow-2xl flex flex-col">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center flex-shrink-0">
+                <h2 class="text-xl font-bold text-slate-900">📚 Quizlet Set Manager</h2>
+                <button onclick="closeQuizletManager()" class="text-2xl text-slate-500 hover:text-slate-800 transition">&times;</button>
             </div>
-            <div id="quizletManagerBody" class="p-6 overflow-y-auto flex-grow space-y-4">
-                <!-- Dynamic Content Here -->
-            </div>
+            <div id="quizletManagerBody" class="p-6 overflow-y-auto flex-grow space-y-4"></div>
         </div>
     </div>
     
-    <!-- Mark as Studied Modal -->
     <div id="studyFeedbackModal" class="modal hidden fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center">
-            <h3 id="studyFeedbackTitle" class="text-lg font-bold text-gray-900 dark:text-white mb-2">Great work!</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-4">How did the study session go?</p>
+        <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm text-center">
+            <h3 id="studyFeedbackTitle" class="text-lg font-bold text-slate-900 mb-2">Great work!</h3>
+            <p class="text-slate-600 mb-4">How did the study session go?</p>
             <div class="grid grid-cols-3 gap-3 mb-4">
-                <button id="feedbackBtnHard" class="p-3 bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-900 rounded-lg">
+                <button id="feedbackBtnHard" class="p-3 bg-rose-100 hover:bg-rose-200 rounded-lg">
                     <span class="text-2xl">😰</span><br><span class="text-xs font-semibold">Hard</span>
                 </button>
-                 <button id="feedbackBtnGood" class="p-3 bg-yellow-100 hover:bg-yellow-200 dark:bg-yellow-900/50 dark:hover:bg-yellow-900 rounded-lg">
+                 <button id="feedbackBtnGood" class="p-3 bg-amber-100 hover:bg-amber-200 rounded-lg">
                     <span class="text-2xl">😊</span><br><span class="text-xs font-semibold">Good</span>
                 </button>
-                 <button id="feedbackBtnEasy" class="p-3 bg-green-100 hover:bg-green-200 dark:bg-green-900/50 dark:hover:bg-green-900 rounded-lg">
+                 <button id="feedbackBtnEasy" class="p-3 bg-emerald-100 hover:bg-emerald-200 rounded-lg">
                     <span class="text-2xl">🎉</span><br><span class="text-xs font-semibold">Easy</span>
                 </button>
             </div>
-             <input type="number" id="studyTimeInput" placeholder="Study time (optional, in minutes)" class="w-full text-center bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition mb-4">
-             <button onclick="closeStudyFeedbackModal()" class="w-full px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold transition">Cancel</button>
+             <input type="number" id="studyTimeInput" placeholder="Study time (optional, in minutes)" class="w-full text-center bg-slate-100 border-2 border-transparent focus:border-teal-500 rounded-lg p-2 text-sm outline-none transition mb-4">
+             <button onclick="closeStudyFeedbackModal()" class="w-full px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold transition">Cancel</button>
         </div>
     </div>
 
-
-    <!-- Toast Notifications Container -->
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"></div>
     
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2 text-center">Geography Learning OS</h2>
+            <p class="text-slate-500 text-center mb-6">Sign in to sync your progress</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Email</label>
+                    <input type="email" id="loginEmail" placeholder="your@email.com" 
+                           class="w-full bg-slate-100 border-2 border-transparent focus:border-teal-500 rounded-lg p-3 text-sm outline-none transition">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password"
+                           class="w-full bg-slate-100 border-2 border-transparent focus:border-teal-500 rounded-lg p-3 text-sm outline-none transition"
+                           onkeypress="if(event.key==='Enter') handleLogin()">
+                </div>
+                
+                <div id="loginError" class="bg-rose-50 border border-rose-200 text-rose-700 px-4 py-2 rounded-lg text-sm" style="display: none;"></div>
+                
+                <button id="loginBtn" onclick="handleLogin()" 
+                        class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">
+                    Login
+                </button>
+                
+                <p class="text-xs text-slate-500 text-center mt-4">
+                    Don't have an account? Create one in Firebase Authentication first.
+                </p>
+            </div>
+        </div>
+    </div>
+    
     <script type="module">
-        // Firebase SDK imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
         
-        // --- App State, Config & UI Elements ---
+        // ========================================
+        // 🔧 FIREBASE CONFIGURATION - EDIT HERE
+        // ========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+            authDomain: "emath-study-plan.firebaseapp.com",
+            projectId: "emath-study-plan",
+            storageBucket: "emath-study-plan.firebasestorage.app",
+            messagingSenderId: "589299697460",
+            appId: "1:589299697460:web:df1e0bb0586b3740c04761",
+            measurementId: "G-09QVE4GLS0"
+        };
+        
+        // App State
         let missions = [];
         let topicMetadata = {};
         let quizletTrackingData = {};
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'geography-os-demo';
-        let userId, db, auth, missionsDocRef, heatmapDocRef, quizletDocRef;
+        let userId, db, auth;
 
         const missionListEl = document.getElementById('missionList');
         const newMissionInput = document.getElementById('newMissionInput');
@@ -291,7 +330,6 @@
         const heatmapGridEl = document.getElementById('heatmapGrid');
         const quizletQueueEl = document.getElementById('quizletQueue');
         
-        // --- TOPICS DATABASE ---
         const TOPICS_DATABASE = {
             'C1': { name: 'Everyday Life', topics: [{ id: 'T1.1', name: 'Thinking Geographically', weight: 1.0 }, { id: 'T1.2', name: 'Sustainable Development', weight: 1.2 }, { id: 'T1.3', name: 'Fieldwork Methods', weight: 1.0 }] },
             'C2': { name: 'Tourism', topics: [{ id: 'T2.1', name: 'Tourism as a System', weight: 1.2 }, { id: 'T2.2', name: 'Tourism Development', weight: 1.5 }, { id: 'T2.3', name: 'Sustainable Tourism', weight: 1.3 }] },
@@ -300,52 +338,107 @@
             'C5': { name: 'Singapore', topics: [{ id: 'T5.1', name: 'Urban Planning', weight: 1.3 }, { id: 'T5.2', name: 'Environmental Sustainability', weight: 1.2 }, { id: 'T5.3', name: 'Future Challenges', weight: 1.1 }] }
         };
 
-        // --- Initialization ---
+        // Initialize Firebase
         async function initialize() {
             try {
-                if (!firebaseConfig || Object.keys(firebaseConfig).length === 0) throw new Error("Firebase config not available.");
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 
+                // Check if user is already logged in
                 onAuthStateChanged(auth, user => {
                     if (user) {
                         userId = user.uid;
                         setupFirestoreListeners();
+                        document.getElementById('firebaseWarning').style.display = 'none';
+                        hideLoginModal();
+                        showToast("Connected! Data syncing across devices.", "success");
+                    } else {
+                        // Show login modal
+                        showLoginModal();
                     }
                 });
-
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
             } catch (e) {
-                console.error("Firebase initialization failed:", e.message);
-                showToast("Could not connect to database. Progress will not be saved.", "error");
+                console.error("Firebase initialization failed:", e);
+                document.getElementById('firebaseWarning').style.display = 'block';
+                showToast("Failed to connect to Firebase: " + e.message, "error");
             }
         }
 
-        async function setupFirestoreListeners() {
+        // Login Modal Functions
+        function showLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            if (loginModal) {
+                loginModal.classList.remove('hidden');
+            }
+        }
+
+        function hideLoginModal() {
+            const loginModal = document.getElementById('loginModal');
+            if (loginModal) {
+                loginModal.classList.add('hidden');
+            }
+        }
+
+        window.handleLogin = async () => {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+
+            if (!email || !password) {
+                errorEl.textContent = 'Please enter both email and password';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            try {
+                errorEl.style.display = 'none';
+                document.getElementById('loginBtn').disabled = true;
+                document.getElementById('loginBtn').textContent = 'Logging in...';
+                
+                await signInWithEmailAndPassword(auth, email, password);
+                // onAuthStateChanged will handle the rest
+            } catch (error) {
+                console.error('Login error:', error);
+                let errorMessage = 'Login failed. ';
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorMessage += 'No account found with this email.';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorMessage += 'Incorrect password.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage += 'Invalid email address.';
+                } else if (error.code === 'auth/invalid-credential') {
+                    errorMessage += 'Invalid email or password.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                errorEl.textContent = errorMessage;
+                errorEl.style.display = 'block';
+                document.getElementById('loginBtn').disabled = false;
+                document.getElementById('loginBtn').textContent = 'Login';
+            }
+        };
+
+        function setupFirestoreListeners() {
             if (!userId) return;
             
-            missionsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'missions');
-            heatmapDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'heatmap');
-            quizletDocRef = doc(db, 'artifacts', appId, 'users', userId, 'data', 'quizlet');
+            // Updated Firestore path structure: geography-os collection
+            const missionsDocRef = doc(db, 'geography-os', userId, 'data', 'missions');
+            const heatmapDocRef = doc(db, 'geography-os', userId, 'data', 'heatmap');
+            const quizletDocRef = doc(db, 'geography-os', userId, 'data', 'quizlet');
 
-            // Robust listener for Missions
             onSnapshot(missionsDocRef, async (docSnap) => {
                 if (!docSnap.exists()) {
                     const defaultMissions = [{ id: Date.now(), text: 'Setup Quizlet Links', completed: false }];
                     await setDoc(missionsDocRef, { tasks: defaultMissions });
-                    // The listener will automatically re-fire with the new data, so no need to manually set `missions` here.
                 } else {
                     missions = docSnap.data()?.tasks || [];
                     renderMissions();
                 }
             }, (error) => console.error("Missions listener error:", error));
 
-            // Robust listener for Heatmap
             onSnapshot(heatmapDocRef, async (docSnap) => {
                 if (!docSnap.exists()) {
                     const defaultMetadata = {};
@@ -365,18 +458,94 @@
                 }
             }, (error) => console.error("Heatmap listener error:", error));
             
-            // Quizlet listener (no default data needed)
             onSnapshot(quizletDocRef, (docSnap) => {
                 quizletTrackingData = docSnap.data()?.tracking || {};
                 renderQuizletQueue();
             }, (error) => console.error("Quizlet listener error:", error));
         }
+
+        function displaySetupInstructions() {
+            const instructions = document.createElement('div');
+            instructions.className = 'bg-teal-50 border-2 border-teal-300 rounded-xl p-6 m-8 max-w-4xl mx-auto';
+            instructions.innerHTML = `
+                <h2 class="text-2xl font-bold text-teal-900 mb-4">🔧 Firebase Setup Instructions</h2>
+                <div class="space-y-4 text-slate-700">
+                    <div class="bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Step 1: Create a Firebase Project</h3>
+                        <ol class="list-decimal list-inside space-y-2 ml-2">
+                            <li>Go to <a href="https://console.firebase.google.com/" target="_blank" class="text-teal-600 underline">Firebase Console</a></li>
+                            <li>Click "Add project" and follow the setup wizard</li>
+                            <li>Give your project a name (e.g., "geography-learning-os")</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Step 2: Enable Firestore Database</h3>
+                        <ol class="list-decimal list-inside space-y-2 ml-2">
+                            <li>In Firebase Console, go to "Build" → "Firestore Database"</li>
+                            <li>Click "Create database"</li>
+                            <li>Choose "Start in <strong>test mode</strong>" for easier setup</li>
+                            <li>Select a Cloud Firestore location near you</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Step 3: Enable Anonymous Authentication</h3>
+                        <ol class="list-decimal list-inside space-y-2 ml-2">
+                            <li>Go to "Build" → "Authentication"</li>
+                            <li>Click "Get started"</li>
+                            <li>Go to "Sign-in method" tab</li>
+                            <li>Enable "Anonymous" provider</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Step 4: Get Your Config</h3>
+                        <ol class="list-decimal list-inside space-y-2 ml-2">
+                            <li>In Firebase Console, click the gear icon → "Project settings"</li>
+                            <li>Scroll down to "Your apps" section</li>
+                            <li>Click the web icon (<code>&lt;/&gt;</code>) to add a web app</li>
+                            <li>Register your app with a nickname</li>
+                            <li>Copy the <code>firebaseConfig</code> object</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="bg-amber-50 border-2 border-amber-300 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">Step 5: Update This HTML File</h3>
+                        <p class="mb-2">Find this section in the code (around line 317) and replace with your values:</p>
+                        <pre class="bg-slate-800 text-emerald-400 p-3 rounded overflow-x-auto text-sm">const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};</pre>
+                    </div>
+                    
+                    <div class="bg-emerald-50 border-2 border-emerald-300 p-4 rounded-lg">
+                        <h3 class="font-bold text-lg mb-2">✅ Security Rules (Optional but Recommended)</h3>
+                        <p class="mb-2">For better security, update your Firestore rules to:</p>
+                        <pre class="bg-slate-800 text-emerald-400 p-3 rounded overflow-x-auto text-sm">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            `;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(instructions, container.firstChild.nextSibling);
+        }
         
-        // --- QUIZLET MODULE LOGIC ---
         async function saveQuizletData() {
-            if (!quizletDocRef) return;
+            if (!userId || !db) return;
             try {
-                await setDoc(quizletDocRef, { tracking: quizletTrackingData });
+                await setDoc(doc(db, 'geography-os', userId, 'data', 'quizlet'), { tracking: quizletTrackingData });
             } catch (e) {
                 console.error("Error saving Quizlet data:", e);
                 showToast("Failed to save Quizlet link.", "error");
@@ -413,36 +582,35 @@
             if (!quizletQueueEl) return;
 
             if (priorityList.length === 0) {
-                quizletQueueEl.innerHTML = `<div class="text-center text-sm text-gray-500 dark:text-gray-400 p-2 italic">Nothing to review. Set up your Quizlet links!</div>`;
+                quizletQueueEl.innerHTML = `<div class="text-center text-sm text-slate-500 p-2 italic">Nothing to review. Set up your Quizlet links!</div>`;
                 return;
             }
 
             quizletQueueEl.innerHTML = priorityList.slice(0, 3).map(item => {
                 const isUrgent = item.daysOverdue > 0;
                 return `
-                    <div class="p-2.5 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
+                    <div class="p-2.5 bg-slate-100 rounded-lg">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm font-semibold text-gray-800 dark:text-gray-200">${item.topic.id} ${item.topic.name}</span>
-                            ${isUrgent ? `<span class="text-xs font-bold text-red-500">${item.daysOverdue}d overdue</span>` : `<span class="text-xs text-green-600 dark:text-green-400">Due today</span>`}
+                            <span class="text-sm font-semibold text-slate-800">${item.topic.id} ${item.topic.name}</span>
+                            ${isUrgent ? `<span class="text-xs font-bold text-rose-500">${item.daysOverdue}d overdue</span>` : `<span class="text-xs text-emerald-600">Due today</span>`}
                         </div>
                         <div class="flex gap-2 mt-2">
-                             <button onclick="window.openQuizlet('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md transition">📱 Open</button>
-                             <button onclick="window.markStudied('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-white hover:bg-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500 font-semibold rounded-md transition">✅ Studied</button>
+                             <button onclick="window.openQuizlet('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-md transition">📱 Open</button>
+                             <button onclick="window.markStudied('${item.topic.id}')" class="flex-1 text-xs text-center py-1.5 px-2 bg-white hover:bg-slate-200 font-semibold rounded-md transition">✅ Studied</button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
         
-        // --- Heatmap UI Rendering ---
         function renderHeatmap() {
             if (!heatmapGridEl || Object.keys(topicMetadata).length === 0) return;
             heatmapGridEl.innerHTML = Object.entries(TOPICS_DATABASE).map(([clusterId, cluster]) => {
                 const clusterTopics = cluster.topics.map(t => topicMetadata[t.id]).filter(Boolean);
                 const readyCount = clusterTopics.filter(t => t.confidence >= 4).length;
                 return `
-                    <div class="bg-gray-100 dark:bg-gray-800/50 rounded-lg p-4 flex flex-col">
-                        <h4 class="font-bold text-gray-700 dark:text-gray-300 mb-3 text-sm flex justify-between">${clusterId}: ${cluster.name} <span class="text-blue-500">${readyCount}/${cluster.topics.length}</span></h4>
+                    <div class="bg-slate-100 rounded-lg p-4 flex flex-col">
+                        <h4 class="font-bold text-slate-700 mb-3 text-sm flex justify-between">${clusterId}: ${cluster.name} <span class="text-teal-500">${readyCount}/${cluster.topics.length}</span></h4>
                         <div class="space-y-3 flex-grow">
                             ${cluster.topics.map(t => renderTopicCard(topicMetadata[t.id])).join('')}
                         </div>
@@ -461,14 +629,14 @@
             const stars = Array.from({ length: 5 }, (_, i) => i < topic.confidence ? '⭐' : '☆').join('');
 
             return `
-                <div onclick="window.openTopicModal('${topic.id}')" class="topic-card bg-white dark:bg-gray-700 rounded-lg p-3 shadow-sm hover:shadow-md hover:border-blue-500 border-2 border-transparent transition-all cursor-pointer ${isPriority ? 'border-l-4 border-l-yellow-500' : ''}">
+                <div onclick="window.openTopicModal('${topic.id}')" class="topic-card bg-white rounded-lg p-3 shadow-sm hover:shadow-md hover:border-teal-500 border-2 border-transparent transition-all cursor-pointer ${isPriority ? 'border-l-4 border-l-amber-500' : ''}">
                     <div class="flex justify-between items-start">
-                        <span class="text-sm font-semibold text-gray-800 dark:text-gray-200 pr-2">${topic.id} ${topic.name}</span>
-                        ${isPriority ? '<span class="text-xs bg-yellow-400 text-white font-bold px-1.5 py-0.5 rounded-full" title="Priority">🔥</span>' : ''}
+                        <span class="text-sm font-semibold text-slate-800 pr-2">${topic.id} ${topic.name}</span>
+                        ${isPriority ? '<span class="text-xs bg-amber-400 text-white font-bold px-1.5 py-0.5 rounded-full" title="Priority">🔥</span>' : ''}
                     </div>
                     <div class="flex justify-between items-center mt-2">
                         <span class="text-lg leading-none" title="Confidence: ${topic.confidence}/5">${stars}</span>
-                        <span class="text-xs font-medium px-2 py-1 rounded-full ${isUrgent ? 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300' : 'bg-gray-200 text-gray-600 dark:bg-gray-600 dark:text-gray-300'}">
+                        <span class="text-xs font-medium px-2 py-1 rounded-full ${isUrgent ? 'bg-rose-100 text-rose-700' : 'bg-slate-200 text-slate-600'}">
                             ${topic.lastReviewed ? (daysSince === 0 ? 'Today' : `${daysSince}d ago`) : 'Never'}
                         </span>
                     </div>
@@ -523,29 +691,37 @@
         }
         
         async function saveHeatmapState() {
-            if (!heatmapDocRef) return;
+            if (!userId || !db) return;
             try {
-                await setDoc(heatmapDocRef, { metadata: topicMetadata });
+                await setDoc(doc(db, 'geography-os', userId, 'data', 'heatmap'), { metadata: topicMetadata });
             } catch (e) {
                 console.error("Error saving heatmap state:", e);
                 showToast("Failed to save progress.", "error");
             }
         }
 
-        // --- All Modals and Interactions ---
         const topicModal = document.getElementById('topicModal');
         const topicModalBody = document.getElementById('topicModalBody');
         window.openTopicModal = (topicId) => {
             const topic = topicMetadata[topicId]; if (!topic) return;
-            topicModalBody.innerHTML = `<h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">${topic.id}: ${topic.name}</h3><p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Cluster: ${topic.cluster}</p><div class="bg-gray-100 dark:bg-gray-700/50 p-4 rounded-lg mb-4"><p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Update Confidence:</p><div class="confidence-selector flex justify-center">${[1, 2, 3, 4, 5].map(level => `<span class="star-btn ${level <= topic.confidence ? 'active' : ''}" onclick="window.setConfidence('${topicId}', ${level})">⭐</span>`).join('')}</div></div><button onclick="window.quickReview('${topicId}')" class="w-full text-center py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition mb-4">Mark as Reviewed Now</button>`;
+            topicModalBody.innerHTML = `<h3 class="text-xl font-bold text-slate-900 mb-1">${topic.id}: ${topic.name}</h3><p class="text-sm text-slate-500 mb-4">Cluster: ${topic.cluster}</p><div class="bg-slate-100 p-4 rounded-lg mb-4"><p class="text-sm font-semibold text-slate-800 mb-2">Update Confidence:</p><div class="confidence-selector flex justify-center">${[1, 2, 3, 4, 5].map(level => `<span class="star-btn ${level <= topic.confidence ? 'active' : ''}" onclick="window.setConfidence('${topicId}', ${level})">⭐</span>`).join('')}</div></div><button onclick="window.quickReview('${topicId}')" class="w-full text-center py-2 px-4 bg-teal-500 hover:bg-teal-600 text-white font-semibold rounded-lg transition mb-4">Mark as Reviewed Now</button>`;
             topicModal.classList.remove('hidden');
         };
         window.closeTopicModal = () => topicModal.classList.add('hidden');
         window.setConfidence = (topicId, level) => { topicMetadata[topicId].confidence = level; topicMetadata[topicId].lastReviewed = new Date().toISOString(); showToast(`Confidence for ${topicId} set to ${level} stars!`, "success"); saveHeatmapState(); closeTopicModal(); };
         window.quickReview = (topicId) => { topicMetadata[topicId].lastReviewed = new Date().toISOString(); showToast(`${topicId} marked as reviewed!`, "success"); saveHeatmapState(); closeTopicModal(); };
         
-        async function saveMissions() { if (missionsDocRef) await setDoc(missionsDocRef, { tasks: missions }); }
-        function renderMissions() { if (!missionListEl) return; if (missions.length === 0) { missionListEl.innerHTML = `<div class="text-center text-sm text-gray-500 dark:text-gray-400 p-4 italic">No missions yet. Add one! 🎯</div>`; } else { missionListEl.innerHTML = missions.map(m => `<div class="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg group"><div onclick="window.toggleMission(${m.id})" class="w-6 h-6 rounded-md border-2 ${m.completed ? 'bg-blue-500 border-blue-500' : 'border-gray-300 dark:border-gray-500'} flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">${m.completed ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><span onclick="window.toggleMission(${m.id})" class="flex-grow text-sm text-gray-800 dark:text-gray-200 ${m.completed ? 'line-through opacity-50' : ''} cursor-pointer">${m.text}</span><button onclick="window.confirmDeleteMission(${m.id})" class="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity text-lg">&times;</button></div>`).join(''); } updateWeekProgress(); }
+        async function saveMissions() { 
+            if (!userId || !db) return;
+            try {
+                await setDoc(doc(db, 'geography-os', userId, 'data', 'missions'), { tasks: missions });
+                renderMissions();
+            } catch (e) {
+                console.error("Error saving missions:", e);
+                showToast("Failed to save mission.", "error");
+            }
+        }
+        function renderMissions() { if (!missionListEl) return; if (missions.length === 0) { missionListEl.innerHTML = `<div class="text-center text-sm text-slate-500 p-4 italic">No missions yet. Add one!</div>`; } else { missionListEl.innerHTML = missions.map(m => `<div class="flex items-center gap-3 p-3 bg-slate-100 rounded-lg group"><div onclick="window.toggleMission(${m.id})" class="w-6 h-6 rounded-md border-2 ${m.completed ? 'bg-teal-500 border-teal-500' : 'border-slate-300'} flex items-center justify-center cursor-pointer transition-colors flex-shrink-0">${m.completed ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><span onclick="window.toggleMission(${m.id})" class="flex-grow text-sm text-slate-800 ${m.completed ? 'line-through opacity-50' : ''} cursor-pointer">${m.text}</span><button onclick="window.confirmDeleteMission(${m.id})" class="text-slate-400 hover:text-rose-500 opacity-0 group-hover:opacity-100 transition-opacity text-lg">&times;</button></div>`).join(''); } updateWeekProgress(); }
         window.addMission = () => { const text = newMissionInput.value.trim(); if (text) { missions.push({ id: Date.now(), text, completed: false }); newMissionInput.value = ''; saveMissions(); } };
         window.toggleMission = (id) => { const mission = missions.find(m => m.id === id); if (mission) { mission.completed = !mission.completed; saveMissions(); } };
         window.confirmDeleteMission = (id) => showConfirmation("Delete Mission", "Are you sure you want to delete this mission?", () => { missions = missions.filter(m => m.id !== id); saveMissions(); showToast("Mission deleted.", "success"); });
@@ -556,7 +732,7 @@
         function showConfirmation(title, message, onConfirm) { modalTitle.textContent = title; modalMessage.textContent = message; confirmCallback = onConfirm; modal.classList.remove('hidden'); }
         modalConfirm.addEventListener('click', () => { if (confirmCallback) confirmCallback(); modal.classList.add('hidden'); });
         modalCancel.addEventListener('click', () => modal.classList.add('hidden'));
-        window.showToast = (message, type = 'info') => { const container = document.getElementById('toastContainer'); const toast = document.createElement('div'); const colors = { info: 'bg-blue-500', success: 'bg-green-500', error: 'bg-red-500' }; toast.className = `toast text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-lg ${colors[type]}`; toast.textContent = message; container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); toast.addEventListener('transitionend', () => toast.remove()); }, 3000); };
+        window.showToast = (message, type = 'info') => { const container = document.getElementById('toastContainer'); const toast = document.createElement('div'); const colors = { info: 'bg-teal-500', success: 'bg-emerald-500', error: 'bg-rose-500' }; toast.className = `toast text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-lg ${colors[type]}`; toast.textContent = message; container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10); setTimeout(() => { toast.classList.remove('show'); toast.addEventListener('transitionend', () => toast.remove()); }, 3000); };
         const caseDeckModal = document.getElementById('caseDeckModal');
         window.openCaseDeck = () => caseDeckModal.classList.remove('hidden');
         window.closeCaseDeck = () => caseDeckModal.classList.add('hidden');
@@ -567,16 +743,14 @@
         const quizletManagerBody = document.getElementById('quizletManagerBody');
         const studyFeedbackModal = document.getElementById('studyFeedbackModal');
         window.openQuizlet = (topicId) => { const url = quizletTrackingData[topicId]?.quizletSetUrl; if (url) { window.open(url, '_blank'); } else { showToast("No Quizlet URL set for this topic.", "error"); } };
-        window.openQuizletManager = () => { quizletManagerBody.innerHTML = Object.values(TOPICS_DATABASE).flatMap(cluster => cluster.topics).map(topic => { const tracking = quizletTrackingData[topic.id] || {}; return `<div class="flex items-center gap-3 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg"><span class="font-semibold text-sm w-28 flex-shrink-0">${topic.id}</span><input type="url" id="quizlet-url-${topic.id}" class="flex-grow bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 focus:border-blue-500 rounded-lg p-2 text-sm outline-none transition" value="${tracking.quizletSetUrl || ''}" placeholder="Paste Quizlet Set URL here..."><button onclick="window.saveQuizletLink('${topic.id}')" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold rounded-lg transition">Save</button></div>`; }).join(''); quizletManagerModal.classList.remove('hidden'); };
+        window.openQuizletManager = () => { quizletManagerBody.innerHTML = Object.values(TOPICS_DATABASE).flatMap(cluster => cluster.topics).map(topic => { const tracking = quizletTrackingData[topic.id] || {}; return `<div class="flex items-center gap-3 p-3 bg-slate-100 rounded-lg"><span class="font-semibold text-sm w-28 flex-shrink-0">${topic.id}</span><input type="url" id="quizlet-url-${topic.id}" class="flex-grow bg-white border-2 border-slate-200 focus:border-teal-500 rounded-lg p-2 text-sm outline-none transition" value="${tracking.quizletSetUrl || ''}" placeholder="Paste Quizlet Set URL here..."><button onclick="window.saveQuizletLink('${topic.id}')" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white text-sm font-bold rounded-lg transition">Save</button></div>`; }).join(''); quizletManagerModal.classList.remove('hidden'); };
         window.closeQuizletManager = () => quizletManagerModal.classList.add('hidden');
-        window.saveQuizletLink = (topicId) => { const urlInput = document.getElementById(`quizlet-url-${topicId}`); if (!quizletTrackingData[topicId]) { quizletTrackingData[topicId] = { studyFrequency: 7, studyCount: 0, lastStudied: null, history: [] }; } quizletTrackingData[topicId].quizletSetUrl = urlInput.value.trim(); saveQuizletData().then(() => showToast("Quizlet link saved!", "success")); };
-        window.markStudied = (topicId) => { document.getElementById('studyFeedbackTitle').textContent = `Great! You studied ${topicId} 🎉`; document.getElementById('feedbackBtnHard').onclick = () => window.saveStudy(topicId, 1); document.getElementById('feedbackBtnGood').onclick = () => window.saveStudy(topicId, 3); document.getElementById('feedbackBtnEasy').onclick = () => window.saveStudy(topicId, 5); studyFeedbackModal.classList.remove('hidden'); };
-        window.saveStudy = (topicId, rating) => { const time = document.getElementById('studyTimeInput').value || 15; const data = quizletTrackingData[topicId]; if (!data) return; data.lastStudied = new Date().toISOString(); data.studyCount = (data.studyCount || 0) + 1; if (!data.history) data.history = []; data.history.push({ date: data.lastStudied, duration: parseInt(time), selfRating: rating }); const intervals = {1: 1, 3: 3, 5: 7}; data.studyFrequency = intervals[rating] || 3; saveQuizletData().then(() => { showToast(`${topicId} marked as studied! Next review in ${data.studyFrequency} days`, "success"); }); topicMetadata[topicId].lastReviewed = data.lastStudied; saveHeatmapState(); closeStudyFeedbackModal(); };
+        window.saveQuizletLink = (topicId) => { const urlInput = document.getElementById(`quizlet-url-${topicId}`); if (!quizletTrackingData[topicId]) { quizletTrackingData[topicId] = { studyFrequency: 7, studyCount: 0, lastStudied: null, history: [] }; } quizletTrackingData[topicId].quizletSetUrl = urlInput.value.trim(); saveQuizletData().then(() => { showToast("Quizlet link saved!", "success"); renderQuizletQueue(); }); };
+        window.markStudied = (topicId) => { document.getElementById('studyFeedbackTitle').textContent = `Great! You studied ${topicId}`; document.getElementById('feedbackBtnHard').onclick = () => window.saveStudy(topicId, 1); document.getElementById('feedbackBtnGood').onclick = () => window.saveStudy(topicId, 3); document.getElementById('feedbackBtnEasy').onclick = () => window.saveStudy(topicId, 5); studyFeedbackModal.classList.remove('hidden'); };
+        window.saveStudy = (topicId, rating) => { const time = document.getElementById('studyTimeInput').value || 15; const data = quizletTrackingData[topicId]; if (!data) return; data.lastStudied = new Date().toISOString(); data.studyCount = (data.studyCount || 0) + 1; if (!data.history) data.history = []; data.history.push({ date: data.lastStudied, duration: parseInt(time), selfRating: rating }); const intervals = {1: 1, 3: 3, 5: 7}; data.studyFrequency = intervals[rating] || 3; saveQuizletData().then(() => { showToast(`${topicId} marked as studied! Next review in ${data.studyFrequency} days`, "success"); }); topicMetadata[topicId].lastReviewed = data.lastStudied; saveHeatmapState(); closeStudyFeedbackModal(); renderQuizletQueue(); };
         window.closeStudyFeedbackModal = () => { document.getElementById('studyTimeInput').value = ''; studyFeedbackModal.classList.add('hidden'); };
         
-        // --- INITIALIZE ---
         document.addEventListener('DOMContentLoaded', initialize);
     </script>
 </body>
 </html>
-
