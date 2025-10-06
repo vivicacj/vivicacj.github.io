@@ -39,13 +39,29 @@
     .flip-card-back {
       transform: rotateY(180deg);
     }
+    /* Accordion styles */
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+      padding: 0 1rem;
+    }
+    .accordion-content.open {
+      max-height: 500px; /* Adjust as needed */
+      padding: 1rem 1rem;
+    }
+    .highlight-glow {
+      box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.5);
+      border-color: rgba(59, 130, 246, 0.8) !important;
+      border-radius: 0.5rem; /* Ensure glow respects border radius */
+    }
   </style>
 </head>
 <body class="p-4 md:p-8">
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect, useRef } = React;
 
     // --- Mock Lucide Icons ---
     const createIcon = (svgContent) => ({ size = 24, className = '' }) => (
@@ -70,6 +86,7 @@
     const Target = createIcon(<><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></>);
     const AlertCircle = createIcon(<><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></>);
     const List = createIcon(<><line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/></>);
+    const ClipboardList = createIcon(<><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></>);
     
     // --- React Component ---
     const PhysicsKnowledgeMatrix = () => {
@@ -77,14 +94,15 @@
       const [hoveredCell, setHoveredCell] = useState(null);
       const [selectedArchetype, setSelectedArchetype] = useState(null);
       const [flippedCards, setFlippedCards] = useState({});
-      const atomicNotesURL = 'physics-atomic-note.html'; // URL for the atomic notes page
+      const [openFrameworks, setOpenFrameworks] = useState({});
+      const [filter, setFilter] = useState({ type: null, ids: [] });
+      
+      const frameworkRefs = useRef({});
+      const topicRefs = useRef({});
 
-      const handleFlip = (topicId) => {
-        setFlippedCards(prev => ({...prev, [topicId]: !prev[topicId]}));
-      }
+      const atomicNotesURL = 'physics-atomic-note.html';
 
-      // --- Data Structures based on the T1-T9 Final AKM Directory ---
-
+      // --- Data Structures ---
       const topics = [
         { id: 1, name: 'Measurement', color: 'bg-blue-100 border-blue-300', textColor: 'text-blue-700' },
         { id: 2, name: 'Kinematics', color: 'bg-green-100 border-green-300', textColor: 'text-green-700' },
@@ -97,16 +115,36 @@
         { id: 9, name: 'Radioactivity', color: 'bg-gray-200 border-gray-400', textColor: 'text-gray-800' }
       ];
 
+      const frameworks = {
+        'A1': { name: 'G-A-S Ladder Method (Gradient-Area-Story)', type: 'Procedural', scope: 'All calculations and analysis for speed-time graphs and distance-time graphs.', content: [ { title: 'G (Gradient - Calculate the Slope)', points: ['Action: Apply the formula gradient = (change in y-axis) / (change in x-axis).','For Speed-Time Graph: This yields Acceleration (a = (v-u)/t).','For Distance-Time Graph: This yields Speed.'] }, { title: 'A (Area - Calculate the Area Under the Graph)', points: ['Action: Decompose the required section into triangles, rectangles, or trapeziums.','For Speed-Time Graph: This yields the Distance Traveled.','For Distance-Time Graph: This calculation is not physically meaningful.'] }, { title: 'S (Story - Describe the Motion)', points: ['Action: Use precise physics terminology to describe the motion in each segment.','Vocabulary: "at rest", "constant speed/velocity", "constant/uniform acceleration", "non-uniform acceleration", etc.'] } ] },
+        'A2': { name: 'P-F-D-E Ladder Method (Pivot-Forces-Distances-Equation)', type: 'Procedural', scope: 'All problems involving levers, see-saws, stability, and rotational balance.', content: [ { title: 'P (Pivot)', points: ['Identify the pivot point (fulcrum).'] }, { title: 'F (Forces)', points: ['Identify and draw ALL forces, including the weight of the object at its Centre of Gravity (CG).'] }, { title: 'D (Distances)', points: ['Determine each force\'s perpendicular distance from the pivot.'] }, { title: 'E (Equation)', points: ['State the Principle of Moments (Sum of Clockwise Moments = Sum of Anticlockwise Moments) and solve.'] } ] },
+        'A3': { name: 'E(A) = E(B) + Wf Energy Balance Equation', type: 'Procedural', scope: 'Problems involving changes in height and speed (e.g. roller coasters, pendulums).', content: [ { title: 'Define States', points: ['Identify the initial state (Point A) and final state (Point B).'] }, { title: 'Write Master Equation', points: ['State: Total Energy at A = Total Energy at B + Energy Lost.'] }, { title: 'Expand Equation', points: ['GPE_A + KE_A = GPE_B + KE_B + Work Done against resistive forces (Wf).'] }, { title: 'Substitute & Solve', points: ['Substitute formulas (mgh, ½mv²). If no friction, Wf = 0.'] } ] },
+        'A4': { name: 'F_net = ma Application Ladder', type: 'Procedural', scope: 'Calculating acceleration, net force, or an individual force.', content: [ { title: 'Free-Body Diagram', points: ['Draw the object and all forces acting on it.'] }, { title: 'Calculate Net Force (F_net)', points: ['In the direction of motion, calculate F_net = Driving Forces - Resistive Forces.'] }, { title: 'Apply Formula & Solve', points: ['Substitute F_net and mass into F_net = m × a and solve.'] } ] },
+        'A5': { name: 'S-T-R-M Drawing Method (Scale-Tip-to-tail-Resultant-Measure)', type: 'Procedural', scope: 'Finding the resultant of vectors using a graphical method.', content: [ { title: 'S (Scale)', points: ['Choose and state a clear scale (e.g., 1 cm : 10 N).'] }, { title: 'T (Tip-to-tail)', points: ['Draw vectors to scale, connecting the tip of one to the tail of the next.'] }, { title: 'R (Resultant)', points: ['Draw the resultant vector from the tail of the first to the tip of the last.'] }, { title: 'M (Measure)', points: ['Measure the resultant\'s length and angle, then convert back using the scale.'] } ] },
+        'A6': { name: 'R-V-I-P Chain Method (Resistance-Voltage-Current-Power)', type: 'Procedural', scope: 'All D.C. circuit calculations.', content: [ { title: 'R (Reduce)', points: ['Find the Total Equivalent Resistance (R_total) of the circuit.'] }, { title: 'V (Voltage - Global)', points: ['Apply Ohm\'s Law to the entire circuit (V_total = I_total × R_total) to find total current.'] }, { title: 'I (Individual - Local)', points: ['Work backwards to find current and p.d. for each component using series/parallel rules.'] }, { title: 'P (Power)', points: ['Calculate power using P = VI or P = I²R.'] } ] },
+        'A7': { name: 'Optical Ray Tracing SOP', type: 'Procedural', scope: 'Constructing ray diagrams for mirrors and lenses.', content: [ { title: 'P (Principle)', points: ['Recall the Law of Reflection or Rules of Refraction for a lens.'] }, { title: 'R (Rays)', points: ['From the top of the object, draw at least two standard rays.'] }, { title: 'I (Image)', points: ['Locate the image where rays intersect (real) or appear to diverge from (virtual).'] }, { title: 'D (Describe)', points: ['Describe the image using three properties: Real/Virtual, Inverted/Upright, Magnified/Diminished.'] } ] },
+        'A8': { name: 'Wave Equation Solver', type: 'Procedural', scope: 'Solving problems using the wave equation v = fλ.', content: [ { title: 'Identify Variables', points: ['List the knowns (v, f, or λ) and the unknown.'] }, { title: 'State Formula', points: ['Write down v = fλ.'] }, { title: 'Rearrange & Solve', points: ['Rearrange the formula to solve for the unknown variable and calculate.'] } ] },
+        'A9': { name: 'Density & Pressure Calculation SOP', type: 'Procedural', scope: 'All calculations involving ρ = m/V and P = F/A.', content: [ { title: 'Identify Goal', points: ['Determine if the target is Density (ρ) or Pressure (P).'] }, { title: 'State Formula', points: ['Write down the relevant equation (ρ=m/V or P=F/A).'] }, { title: 'Find Components', points: ['For Pressure: F is usually weight (W=mg). A is the contact area.', 'For Density: m is mass. V is volume (l×w×h or via displacement).'] }, { title: 'Unit Check & Solve', points: ['Ensure all units are consistent (SI: kg, m, s, N, Pa). Then solve.'] } ] },
+        'A10': { name: 'Half-Life Calculation SOP', type: 'Procedural', scope: 'All quantitative problems involving half-life.', content: [ { title: 'Correct for Background', points: ['Initial Net Activity = Measured Activity - Background Count Rate.'] }, { title: 'Find \'n\' (Number of Half-lives)', points: ['Calculate n = Total Time / Half-life duration.'] }, { title: 'Calculate Remainder', points: ['Remaining Activity = Initial Net Activity / 2ⁿ.'] }, { title: 'Find Final Reading', points: ['Final Measured Reading = Remaining Activity + Background Count Rate.'] } ] },
+        'B1': { name: 'M-C-E Micro-to-Macro Chain (Molecule-Cause-Effect)', type: 'Conceptual', scope: 'Explaining thermal phenomena (conduction, convection, evaporation).', content: [ { title: 'M (Molecule/Particle)', points: ['Start at the particle level. What happens to the energy (KE/PE) of the particles?'] }, { title: 'C (Cause/Change)', points: ['How does this affect particle movement, spacing, and forces? For convection, density change is key.'] }, { title: 'E (Effect/Macro)', points: ['Link this microscopic behavior to the macroscopic phenomenon (e.g., a convection current is set up).'] } ] },
+        'B2': { name: 'N1L Balance Principle (Newton\'s First Law)', type: 'Conceptual', scope: 'Explaining why an object is at rest or moving at a constant velocity.', content: [ { title: 'State of Motion', points: ['Explicitly state the object is "at rest" or "moving at a constant velocity."'] }, { title: 'Conclusion of Force', points: ['Conclude that the net/resultant force is zero.'] }, { title: 'Analysis of Forces', points: ['Identify the specific forces that are balancing each other.'] } ] },
+        'B3': { name: 'CG-B Principle (Centre of Gravity & Base Area)', type: 'Conceptual', scope: 'Explaining or comparing the stability of objects.', content: [ { title: 'Centre of Gravity (CG)', points: ['Mention the height of the CG (lower is more stable).'] }, { title: 'Base Area (B)', points: ['Mention the size of the base area (wider is more stable).'] }, { title: 'Toppling Condition', points: ['Link these factors to the toppling condition: A lower CG and wider base require a larger tilt angle to topple.'] } ] },
+        'B4': { name: 'PCE+WD Energy Flow Framework', type: 'Conceptual', scope: 'Qualitatively describing energy transformations.', content: [ { title: 'Principle of Conservation of Energy (PCE)', points: ['Energy cannot be created or destroyed, only converted from one form to another.'] }, { title: 'Work Done (WD)', points: ['Identify where work is done against resistive forces (like friction), converting useful energy into thermal energy.'] } ] },
+        'B5': { name: 'R-I-V Logic Chain', type: 'Conceptual', scope: 'Explaining relationships in circuits.', content: [ { title: 'Resistance (R)', points: ['The opposition to current flow.'] }, { title: 'Current (I)', points: ['The rate of flow of charge, driven by potential difference.'] }, { title: 'Voltage (V)', points: ['The "push" or energy per unit charge. A change in R will cause a change in I and/or V based on Ohm\'s Law.'] } ] },
+        'B6': { name: 'Decay Properties Framework', type: 'Conceptual', scope: 'Explaining the nature of radioactivity and comparing Alpha, Beta, and Gamma emissions.', content: [ { title: 'Nature of Decay', points: ['State that the process is random and spontaneous.'] }, { title: 'Particle Identity', points: ['Correctly identify the nature of the emission (Alpha = Helium nucleus, Beta = electron, Gamma = EM wave).'] }, { title: 'Property Comparison', points: ['Link mass and charge to ionizing power and penetrating power.'] } ] }
+      };
+
       const archetypes = [
-        { id: 'C1', name: 'Kinematics Graph Saga', icon: '📊', type: 'Core', story: 'Reading the story of motion from graphs', variations: ['Constant velocity vs acceleration', 'Calculating distance from complex shapes', 'Drawing graphs from description'], color: 'bg-cyan-50', borderColor: 'border-cyan-300' },
-        { id: 'C2', name: 'The Balancing Act', icon: '⚖️', type: 'Core', story: 'Making things not rotate', variations: ['Levers: see-saws, cranes', 'Stability on surfaces', 'Toppling point analysis'], color: 'bg-yellow-50', borderColor: 'border-yellow-300' },
-        { id: 'C3', name: 'Energy Conversion Trail', icon: '⚡', type: 'Core', story: 'Tracking where the energy goes', variations: ['Slopes & ramps', 'Free fall & projectiles', 'Power calculation P=E/t'], color: 'bg-pink-50', borderColor: 'border-pink-300' },
-        { id: 'C4', name: 'Particle Storytelling', icon: '🔬', type: 'Core', story: 'Explaining the visible with the invisible', variations: ['Heating/cooling curves', 'Heat transfer mechanisms', 'Evaporation cooling effect'], color: 'bg-rose-50', borderColor: 'border-rose-300' },
-        { id: 'C5', name: 'Circuit Analysis Saga', icon: '🔌', type: 'Core', story: 'Solving the puzzle of electron flow', variations: ['Series/parallel resistance', 'V=IR and P=VI calculations', 'Electrical safety analysis'], color: 'bg-sky-50', borderColor: 'border-sky-300' },
-        { id: 'S1', name: 'Stability (CG & Base)', icon: '🏗️', type: 'Satellite', story: 'Why things don\'t fall over', variations: ['Comparing stability', 'Loading effects on trucks', 'CG position for equilibrium'], color: 'bg-amber-50', borderColor: 'border-amber-300' },
-        { id: 'S2', name: 'Vector Drawing & Dynamics', icon: '🎯', type: 'Satellite', story: 'Finding net result of forces', variations: ['Graphical methods', 'Finding acceleration from Fnet=ma', 'Constant velocity scenarios'], color: 'bg-lime-50', borderColor: 'border-lime-300' },
-        { id: 'S3', name: 'Density & Pressure Calc', icon: '📐', type: 'Satellite', story: 'Calculating compactness and sharpness', variations: ['Pressure under blocks', 'Irregular object density', 'Wide tracks reducing pressure'], color: 'bg-teal-50', borderColor: 'border-teal-300' },
-        { id: 'S4', name: 'Light Ray Tracing', icon: '💡', type: 'Satellite', story: 'Following the path of light', variations: ['Mirror reflections', 'Refraction & critical angle', 'Lens ray diagrams'], color: 'bg-violet-50', borderColor: 'border-violet-300' }
+        { id: 'C1', name: 'Kinematics Graph Saga', icon: '📊', type: 'Core', story: 'Reading the story of motion from graphs', frameworkIds: ['A1'], variations: ['Constant velocity vs acceleration', 'Calculating distance from complex shapes', 'Drawing graphs from description'], color: 'bg-cyan-50', borderColor: 'border-cyan-300' },
+        { id: 'C2', name: 'The Balancing Act', icon: '⚖️', type: 'Core', story: 'Making things not rotate', frameworkIds: ['A2'], variations: ['Levers: see-saws, cranes', 'Stability on surfaces', 'Toppling point analysis'], color: 'bg-yellow-50', borderColor: 'border-yellow-300' },
+        { id: 'C3', name: 'Energy Conversion Trail', icon: '⚡', type: 'Core', story: 'Tracking where the energy goes', frameworkIds: ['A3', 'B4'], variations: ['Slopes & ramps', 'Free fall & projectiles', 'Power calculation P=E/t'], color: 'bg-pink-50', borderColor: 'border-pink-300' },
+        { id: 'C4', name: 'Particle Storytelling', icon: '🔬', type: 'Core', story: 'Explaining the visible with the invisible', frameworkIds: ['B1'], variations: ['Heating/cooling curves', 'Heat transfer mechanisms', 'Evaporation cooling effect'], color: 'bg-rose-50', borderColor: 'border-rose-300' },
+        { id: 'C5', name: 'Circuit Analysis Saga', icon: '🔌', type: 'Core', story: 'Solving the puzzle of electron flow', frameworkIds: ['A6', 'B5'], variations: ['Series/parallel resistance', 'V=IR and P=VI calculations', 'Electrical safety analysis'], color: 'bg-sky-50', borderColor: 'border-sky-300' },
+        { id: 'S1', name: 'Stability (CG & Base)', icon: '🏗️', type: 'Satellite', story: 'Why things don\'t fall over', frameworkIds: ['A2', 'B3'], variations: ['Comparing stability', 'Loading effects on trucks', 'CG position for equilibrium'], color: 'bg-amber-50', borderColor: 'border-amber-300' },
+        { id: 'S2', name: 'Vector Drawing & Dynamics', icon: '🎯', type: 'Satellite', story: 'Finding net result of forces', frameworkIds: ['A4', 'A5', 'B2'], variations: ['Graphical methods', 'Finding acceleration from Fnet=ma', 'Constant velocity scenarios'], color: 'bg-lime-50', borderColor: 'border-lime-300' },
+        { id: 'S3', name: 'Density & Pressure Calc', icon: '📐', type: 'Satellite', story: 'Calculating compactness and sharpness', frameworkIds: ['A9'], variations: ['Pressure under blocks', 'Irregular object density', 'Wide tracks reducing pressure'], color: 'bg-teal-50', borderColor: 'border-teal-300' },
+        { id: 'S4', name: 'Light Ray Tracing & Optics', icon: '💡', type: 'Satellite', story: 'Following the path of light', frameworkIds: ['A7', 'A8'], variations: ['Mirror reflections', 'Refraction & critical angle', 'Lens ray diagrams'], color: 'bg-violet-50', borderColor: 'border-violet-300' },
+        { id: 'S5', name: 'Nuclear Decay & Half-Life', icon: '☢️', type: 'Satellite', story: 'Decoding the predictable decay of unstable atoms.', frameworkIds: ['A10', 'B6'], variations: ['Comparing Alpha, Beta, and Gamma radiation.', 'Calculating remaining activity/mass after a certain time.', 'Determining half-life from a decay curve.'], color: 'bg-slate-200', borderColor: 'border-slate-400' }
       ];
 
       const akmDirectory = {
@@ -115,58 +153,95 @@
         'P3.1': 'Kinetic Particle Model of Matter', 'P3.2': 'Thermal Processes', 'P3.3': 'Heat Transfer',
         'P4.1': 'General Wave Properties', 'P4.2': 'Sound', 'P4.3': 'EM Spectrum', 'P4.4': 'Reflection of Light', 'P4.5': 'Refraction of Light', 'P4.6': 'Thin Converging Lenses',
         'P5.1': 'Static Electricity', 'P5.2': 'Current, Charge & Potential Difference', 'P5.3': 'Resistance & Ohm\'s Law', 'P5.4': 'D.C. Circuits', 'P5.5': 'Practical Electricity', 'P5.6': 'Magnetism & Electromagnetism',
-        'P6.1': 'P6.1 The Atom & Radioactive Decay', 'P6.2': 'Half-Life'
+        'P6.1': 'The Atom & Radioactive Decay', 'P6.2': 'Half-Life'
       };
 
       const matrix = {
-        '1-C1': { active: true, tools: ['Reading axes', 'Unit analysis'], akms: ['P1.1', 'P1.3'] }, '2-C1': { active: true, tools: ['Gradient = velocity/acceleration', 'Area = distance'], akms: ['P2.2'] }, '3-C1': { active: true, tools: ['F=ma explains graph changes'], akms: ['P2.4'] },
-        '1-C2': { active: true, tools: ['Measuring distances from pivot'], akms: ['P1.2'] }, '3-C2': { active: true, tools: ['W=mg for weight calculation'], akms: ['P2.3'] }, '4-C2': { active: true, tools: ['Moment = Fd', 'Equilibrium principle'], akms: ['P2.6'] },
-        '2-C3': { active: true, tools: ['v² = u² + 2as for velocity'], akms: ['P2.1'] }, '3-C3': { active: true, tools: ['Friction force Ff', 'Weight on slope'], akms: ['P2.3', 'P2.4'] }, '5-C3': { active: true, tools: ['GPE=mgh', 'KE=½mv²', 'Work=Fd', 'Power=E/t'], akms: ['P2.8', 'P2.9'] }, '9-C3': { active: true, tools: ['Mass-energy equivalence'], akms: ['P6.1'] },
-        '5-C4': { active: true, tools: ['Internal energy concepts'], akms: ['P2.8', 'P3.1'] }, '6-C4': { active: true, tools: ['Kinetic particle model', 'Latent heat'], akms: ['P3.1', 'P3.2'] }, '9-C4': { active: true, tools: ['Alpha, Beta, Gamma decay', 'Half-life calculations'], akms: ['P6.1', 'P6.2'] },
-        '1-C5': { active: true, tools: ['Reading circuit diagrams'], akms: ['P1.1'] }, '8-C5': { active: true, tools: ['V=IR', 'P=VI', 'Series/parallel rules', 'Safety'], akms: ['P5.2', 'P5.3', 'P5.4', 'P5.5'] },
-        '3-S1': { active: true, tools: ['Weight = mg'], akms: ['P2.3'] }, '4-S1': { active: true, tools: ['Centre of gravity location', 'Stability'], akms: ['P2.7'] },
-        '1-S2': { active: true, tools: ['Scalar vs vector', 'Scale drawing'], akms: ['P1.1'] }, '3-S2': { active: true, tools: ['Fnet = ma', 'Vector addition'], akms: ['P2.4'] },
-        '1-S3': { active: true, tools: ['ρ=m/V definition', 'P=F/A definition'], akms: ['P1.1', 'P2.3'] }, '3-S3': { active: true, tools: ['Pressure calculation with Weight'], akms: ['P2.5'] },
-        '1-S4': { active: true, tools: ['Angle measurement', 'Protractor use'], akms: ['P1.1'] }, '7-S4': { active: true, tools: ['Law of reflection', 'Snell\'s Law', 'Lens rules'], akms: ['P4.4', 'P4.5', 'P4.6'] }
+        '1-C1': { active: true, tools: ['Reading axes', 'Unit analysis'], akms: ['P1.1'], frameworkIds: ['A1'] },
+        '2-C1': { active: true, tools: ['Gradient = velocity/acceleration', 'Area = distance'], akms: ['P2.2'], frameworkIds: ['A1'] },
+        '3-C1': { active: true, tools: ['F=ma explains graph changes'], akms: ['P2.4'], frameworkIds: ['A1', 'A4'] },
+        '4-C2': { active: true, tools: ['Moment = Fd', 'Equilibrium principle'], akms: ['P2.6'], frameworkIds: ['A2'] },
+        '5-C3': { active: true, tools: ['GPE=mgh', 'KE=½mv²', 'Work=Fd'], akms: ['P2.8'], frameworkIds: ['A3', 'B4'] },
+        '9-C3': { active: true, tools: ['Mass-energy equivalence'], akms: ['P6.1'], frameworkIds: ['A3', 'B4'] },
+        '6-C4': { active: true, tools: ['Kinetic particle model', 'Latent heat'], akms: ['P3.1', 'P3.2'], frameworkIds: ['B1'] },
+        '8-C5': { active: true, tools: ['V=IR', 'P=VI', 'Series/parallel rules'], akms: ['P5.3', 'P5.4'], frameworkIds: ['A6', 'B5'] },
+        '4-S1': { active: true, tools: ['Centre of gravity location', 'Stability conditions'], akms: ['P2.7'], frameworkIds: ['A2', 'B3'] },
+        '3-S2': { active: true, tools: ['Fnet = ma', 'Vector addition'], akms: ['P2.4'], frameworkIds: ['A4', 'A5', 'B2'] },
+        '3-S3': { active: true, tools: ['Pressure calculation'], akms: ['P2.5'], frameworkIds: ['A9'] },
+        '7-S4': { active: true, tools: ['Ray diagrams', 'Snell\'s Law'], akms: ['P4.4','P4.5','P4.6'], frameworkIds: ['A7', 'A8'] },
+        '9-S5': { active: true, tools: ['Decay equations', 'Half-life graph'], akms: ['P6.1', 'P6.2'], frameworkIds: ['A10', 'B6'] }
       };
       
-      const topicToAkmsMap = {
-          1: ['P1.1', 'P1.2', 'P1.3'],
-          2: ['P2.1', 'P2.2'],
-          3: ['P2.3', 'P2.4', 'P2.5'],
-          4: ['P2.6', 'P2.7'],
-          5: ['P2.8', 'P2.9'],
-          6: ['P3.1', 'P3.2', 'P3.3'],
-          7: ['P4.1', 'P4.2', 'P4.3', 'P4.4', 'P4.5', 'P4.6'],
-          8: ['P5.1', 'P5.2', 'P5.3', 'P5.4', 'P5.5', 'P5.6'],
-          9: ['P6.1', 'P6.2']
+      const topicToAkmsMap = { 1: ['P1.1', 'P1.2', 'P1.3'], 2: ['P2.1', 'P2.2'], 3: ['P2.3', 'P2.4', 'P2.5'], 4: ['P2.6', 'P2.7'], 5: ['P2.8', 'P2.9'], 6: ['P3.1', 'P3.2', 'P3.3'], 7: ['P4.1', 'P4.2', 'P4.3', 'P4.4', 'P4.5', 'P4.6'], 8: ['P5.1', 'P5.2', 'P5.3', 'P5.4', 'P5.5', 'P5.6'], 9: ['P6.1', 'P6.2'] };
+      const groupedAkms = topics.map(topic => ({ ...topic, akms: (topicToAkmsMap[topic.id] || []).map(id => ({ id, title: akmDirectory[id] })) }));
+
+      // --- Navigation and State Handlers ---
+      const handleFlip = (topicId) => setFlippedCards(prev => ({...prev, [topicId]: !prev[topicId]}));
+      const toggleFramework = (id) => setOpenFrameworks(prev => ({...prev, [id]: !prev[id]}));
+      
+      const changeView = (view) => {
+        setActiveView(view);
+        setFilter({ type: null, ids: [] }); // Reset filter on view change
+      };
+      
+      const navigateTo = (view, filterType, ids) => {
+        setActiveView(view);
+        setFilter({ type: filterType, ids: ids });
       };
 
-      const groupedAkms = topics.map(topic => ({
-        ...topic,
-        akms: (topicToAkmsMap[topic.id] || []).map(id => ({ id, title: akmDirectory[id] }))
-      }));
+      useEffect(() => {
+        // Clear highlight after a delay to give user feedback
+        let highlightTimeout;
+        if (filter.type) {
+            highlightTimeout = setTimeout(() => {
+                setFilter({ type: null, ids: [] });
+            }, 2500); // Highlight for 2.5 seconds
+        }
 
+        if (filter.type === 'framework' && filter.ids.length > 0) {
+            const id = filter.ids[0];
+            setOpenFrameworks(prev => ({ ...prev, [id]: true }));
+            setTimeout(() => {
+                frameworkRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+        
+        if (filter.type === 'topic' && filter.ids.length > 0) {
+            const id = filter.ids[0];
+            // Ensure the card is flipped open
+            setFlippedCards(prev => ({...prev, [id]: true}));
+            setTimeout(() => {
+                topicRefs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        return () => clearTimeout(highlightTimeout); // Cleanup on unmount or filter change
+    }, [filter]);
+
+      // --- Render Logic ---
       return (
         <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl shadow-lg">
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Physics Knowledge Matrix</h1>
-            <p className="text-slate-600">One-Page Strategy: Topics (Knowledge Warehouse) × Archetypes (Battle SOPs)</p>
+            <p className="text-slate-600">One-Page Strategy: Topics (Warehouse) × Archetypes (Battlefield) × Frameworks (Playbook)</p>
           </div>
           {/* View Selector */}
           <div className="mb-8">
             <div className="flex gap-3 flex-wrap">
-              <button onClick={() => setActiveView('matrix')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'matrix' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
+              <button onClick={() => changeView('matrix')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'matrix' ? 'bg-emerald-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
                 <Target size={18} /><span className="font-medium">Matrix View</span>
               </button>
-              <button onClick={() => setActiveView('warehouse')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'warehouse' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
+              <button onClick={() => changeView('warehouse')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'warehouse' ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
                 <Book size={18} /><span className="font-medium">Warehouse (Topics)</span>
               </button>
-              <button onClick={() => setActiveView('battlefield')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'battlefield' ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
+              <button onClick={() => changeView('battlefield')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'battlefield' ? 'bg-purple-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
                 <Zap size={18} /><span className="font-medium">Battlefield (Archetypes)</span>
               </button>
-              <button onClick={() => setActiveView('directory')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'directory' ? 'bg-gray-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
+              <button onClick={() => changeView('frameworks')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'frameworks' ? 'bg-cyan-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
+                <ClipboardList size={18} /><span className="font-medium">Frameworks</span>
+              </button>
+              <button onClick={() => changeView('directory')} className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${activeView === 'directory' ? 'bg-gray-600 text-white shadow-md' : 'bg-white text-slate-600 hover:bg-slate-200'}`}>
                 <List size={18} /><span className="font-medium">AKM Directory</span>
               </button>
             </div>
@@ -176,171 +251,153 @@
           <div className="transition-opacity duration-300 ease-in-out">
             {activeView === 'matrix' && (
               <div className="bg-white rounded-lg p-4 sm:p-6 shadow-inner animate-fade-in">
-                {/* ... Matrix View Content ... */}
                 <div className="flex items-start gap-4 mb-6">
                   <Target className="text-emerald-600 mt-1 flex-shrink-0" size={24} />
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-800">The Integration Map</h3>
-                    <p className="text-slate-600 text-sm mt-1">Horizontal = Static Knowledge / Vertical = Dynamic Problems / Intersection = Specific Tools</p>
-                  </div>
+                  <div><h3 className="text-xl font-bold text-slate-800">The Integration Map</h3><p className="text-slate-600 text-sm mt-1">Knowledge (Rows) × Problems (Cols) = Tools & Frameworks (Cells)</p></div>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full border-collapse min-w-[1200px]">
                     <thead>
                       <tr>
-                        <th className="border-2 border-slate-300 bg-slate-200 p-3 text-sm font-bold text-slate-700 sticky left-0 z-10">Topics ↓ (AKM #)<br/>Archetypes →</th>
-                        {archetypes.map(arch => (
-                          <th key={arch.id} className={`border-2 ${arch.borderColor} ${arch.color} p-3 text-center min-w-[160px]`}>
-                            <div className="text-2xl mb-1">{arch.icon}</div>
-                            <div className="text-xs font-bold text-slate-800 mb-1">{arch.id}</div>
-                            <div className="text-xs font-semibold text-slate-700">{arch.name}</div>
-                            <div className="text-xs text-slate-500 mt-1 italic">({arch.type})</div>
-                          </th>
-                        ))}
+                        <th className="border-2 border-slate-300 bg-slate-200 p-3 text-sm font-bold text-slate-700 sticky left-0 z-10">Topics ↓<br/>Archetypes →</th>
+                        {archetypes.map(arch => (<th key={arch.id} className={`border-2 ${arch.borderColor} ${arch.color} p-3 text-center min-w-[160px]`}><div className="text-2xl mb-1">{arch.icon}</div><div className="text-xs font-bold text-slate-800 mb-1">{arch.id}</div><div className="text-xs font-semibold text-slate-700">{arch.name}</div><div className="text-xs text-slate-500 mt-1 italic">({arch.type})</div></th>))}
                       </tr>
                     </thead>
                     <tbody>
-                      {topics.map(topic => {
-                        const topicAkms = groupedAkms.find(gAkm => gAkm.id === topic.id)?.akms || [];
-                        const akmString = topicAkms.map(akm => `#${akm.id}`).join(', ');
-                        return (
-                          <tr key={topic.id}>
-                            <td className={`border-2 border-slate-300 ${topic.color} p-3 font-bold text-sm ${topic.textColor} sticky left-0 z-10 bg-opacity-80 backdrop-blur-sm`}>
-                              <div>T{topic.id}: {topic.name}</div>
-                              {akmString && <div className="text-xs font-normal mt-1">({akmString})</div>}
-                            </td>
-                            {archetypes.map(arch => {
-                              const cellKey = `${topic.id}-${arch.id}`;
-                              const cellData = matrix[cellKey];
-                              return (
-                                <td key={cellKey} className={`border-2 border-slate-300 p-2 text-center transition-all duration-200 ${cellData?.active ? 'bg-gradient-to-br from-emerald-100 to-emerald-200 cursor-pointer hover:shadow-lg hover:scale-105 hover:relative hover:z-20' : 'bg-slate-50'}`} onMouseEnter={() => cellData?.active && setHoveredCell(cellKey)} onMouseLeave={() => setHoveredCell(null)}>
-                                  {cellData?.active && (
-                                    <div className="relative">
-                                      <div className="text-2xl font-bold text-emerald-600">✓</div>
-                                      {hoveredCell === cellKey && (
-                                        <div className="absolute z-30 left-1/2 transform -translate-x-1/2 mt-2 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl w-64 animate-fade-in-fast">
-                                          <div className="font-bold mb-2 text-emerald-300">Tools Called:</div>
-                                          <ul className="list-none p-0 m-0 mb-3">
-                                            {cellData.tools.map((tool, idx) => (<li key={idx} className="mb-1 text-left pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-emerald-400">{tool}</li>))}
-                                          </ul>
-                                          {cellData.akms && cellData.akms.length > 0 && (
-                                            <div>
-                                              <div className="font-bold mb-2 text-amber-300 border-t border-slate-600 pt-2">Linked Atomic Notes:</div>
-                                              <ul className="list-none p-0 m-0">
-                                                {cellData.akms.map((akmId) => (
-                                                  <li key={akmId} className="mb-1 text-left">
-                                                    <a href={`${atomicNotesURL}#AKM-${akmId}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-200 hover:underline pl-4 relative before:content-['#'] before:absolute before:left-0">{akmId}: {akmDirectory[akmId] || 'Note'}</a>
-                                                  </li>
-                                                ))}
-                                              </ul>
-                                            </div>
-                                          )}
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </td>
-                              );
-                            })}
-                          </tr>
-                        );
-                      })}
+                      {topics.map(topic => (
+                        <tr key={topic.id}>
+                          <td className={`border-2 border-slate-300 ${topic.color} p-3 font-bold text-sm ${topic.textColor} sticky left-0 z-10 bg-opacity-80 backdrop-blur-sm`}>T{topic.id}: {topic.name}</td>
+                          {archetypes.map(arch => {
+                            const cellKey = `${topic.id}-${arch.id}`;
+                            const cellData = matrix[cellKey];
+                            return (
+                              <td key={cellKey} className={`border-2 border-slate-300 p-2 text-center transition-all duration-200 ${cellData?.active ? 'bg-gradient-to-br from-emerald-100 to-emerald-200 cursor-pointer hover:shadow-lg hover:scale-105 hover:relative hover:z-20' : 'bg-slate-50'}`} onMouseEnter={() => cellData?.active && setHoveredCell(cellKey)} onMouseLeave={() => setHoveredCell(null)}>
+                                {cellData?.active && (
+                                  <div className="relative"><div className="text-2xl font-bold text-emerald-600">✓</div>
+                                    {hoveredCell === cellKey && (
+                                      <div className="absolute z-30 left-1/2 transform -translate-x-1/2 mt-2 bg-slate-800 text-white text-xs rounded-lg p-3 shadow-xl w-64 animate-fade-in-fast">
+                                        <div className="font-bold mb-2 text-emerald-300">Tools Called:</div>
+                                        <ul className="list-none p-0 m-0 mb-3">{cellData.tools?.map((tool, idx) => (<li key={idx} className="mb-1 text-left pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-emerald-400">{tool}</li>))}</ul>
+                                        {cellData.frameworkIds && cellData.frameworkIds.length > 0 && (<div>
+                                            <div className="font-bold mb-2 text-cyan-300 border-t border-slate-600 pt-2">Framework Applied:</div>
+                                            <ul className="list-none p-0 m-0 mb-3">{cellData.frameworkIds.map((id) => (<li key={id} className="mb-1 text-left pl-4 relative before:content-['#'] before:absolute before:left-0 text-cyan-400 hover:text-cyan-200 hover:underline cursor-pointer" onClick={() => navigateTo('frameworks', 'framework', [id])}>{id}: {frameworks[id].name}</li>))}</ul>
+                                        </div>)}
+                                        {cellData.akms && cellData.akms.length > 0 && (<div>
+                                            <div className="font-bold mb-2 text-amber-300 border-t border-slate-600 pt-2">Linked Atomic Notes:</div>
+                                            <ul className="list-none p-0 m-0">{cellData.akms.map((akmId) => (<li key={akmId} className="mb-1 text-left"><a href={`${atomicNotesURL}#AKM-${akmId}`} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-200 hover:underline pl-4 relative before:content-['#'] before:absolute before:left-0">{akmId}: {akmDirectory[akmId]}</a></li>))}</ul>
+                                        </div>)}
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </div>
-                 <div className="mt-6 grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-blue-50 border-l-4 border-blue-400 rounded"><p className="text-sm text-slate-700"><strong className="text-blue-700">Read Horizontally (by row):</strong> One Topic's knowledge serves multiple Archetypes</p></div>
-                  <div className="p-4 bg-purple-50 border-l-4 border-purple-400 rounded"><p className="text-sm text-slate-700"><strong className="text-purple-700">Read Vertically (by column):</strong> One Archetype calls tools from multiple Topics</p></div>
                 </div>
               </div>
             )}
             
             {activeView === 'warehouse' && (
               <div className="bg-white rounded-lg p-4 sm:p-6 shadow-inner animate-fade-in">
-                 <div className="flex items-start gap-4 mb-4">
-                  <Book className="text-blue-600 mt-1 flex-shrink-0" size={24} />
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-800">Knowledge Warehouse: Systematic Learning Architecture</h3>
-                    <p className="text-slate-600 text-sm mt-1">Build complete knowledge base by chapter sequence. Click any card to see its Atomic Notes.</p>
-                  </div>
-                </div>
+                 <div className="flex items-start gap-4 mb-4"><Book className="text-blue-600 mt-1 flex-shrink-0" size={24} /><div><h3 className="text-xl font-bold text-slate-800">Knowledge Warehouse: Systematic Learning Architecture</h3><p className="text-slate-600 text-sm mt-1">Build complete knowledge base by chapter sequence. Click any card to see its Atomic Notes.</p></div></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                   {groupedAkms.map((topic) => (
-                    <div key={topic.id} className="flip-card-container cursor-pointer h-40" onClick={() => handleFlip(topic.id)}>
+                    <div key={topic.id} ref={el => topicRefs.current[topic.id] = el} className={`flip-card-container cursor-pointer h-40 transition-all rounded-lg ${filter.type === 'topic' && filter.ids.includes(topic.id) ? 'highlight-glow' : ''}`} onClick={() => handleFlip(topic.id)}>
                         <div className={`flip-card w-full h-full rounded-lg shadow-md ${flippedCards[topic.id] ? 'is-flipped' : ''}`}>
-                            {/* Front of the card */}
-                            <div className={`flip-card-front flex flex-col justify-center items-center text-center p-4 rounded-lg border-2 ${topic.color}`}>
-                                <div className={`text-4xl font-bold ${topic.textColor} mb-2`}>T{topic.id}</div>
-                                <div className="text-md font-semibold text-slate-800 mb-2">{topic.name}</div>
-                                <div className="text-xs text-slate-600">Used in {Object.keys(matrix).filter(k => k.startsWith(`${topic.id}-`)).length} Archetypes</div>
-                            </div>
-                            {/* Back of the card */}
-                            <div className={`flip-card-back grid grid-rows-[auto_1fr] p-3 rounded-lg border-2 ${topic.color}`}>
-                                <h4 className={`font-bold ${topic.textColor} mb-2 text-center border-b pb-1`}>AKMs for T{topic.id}</h4>
-                                <ul className="text-xs text-left space-y-1 overflow-y-auto pr-2">
-                                  {topic.akms.map(akm => (
-                                      <li key={akm.id}>
-                                          <a href={`${atomicNotesURL}#AKM-${akm.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline" onClick={(e) => e.stopPropagation()}>
-                                              <span className="font-mono bg-slate-200 px-1 rounded">{akm.id}</span>: {akm.title}
-                                          </a>
-                                      </li>
-                                  ))}
-                                </ul>
-                            </div>
+                            <div className={`flip-card-front flex flex-col justify-center items-center text-center p-4 rounded-lg border-2 ${topic.color}`}><div className={`text-4xl font-bold ${topic.textColor} mb-2`}>T{topic.id}</div><div className="text-md font-semibold text-slate-800 mb-2">{topic.name}</div><div className="text-xs text-slate-600">Used in {Object.keys(matrix).filter(k => k.startsWith(`${topic.id}-`)).length} Archetypes</div></div>
+                            <div className={`flip-card-back grid grid-rows-[auto_1fr] p-3 rounded-lg border-2 ${topic.color}`}><h4 className={`font-bold ${topic.textColor} mb-2 text-center border-b pb-1`}>AKMs for T{topic.id}</h4><ul className="text-xs text-left space-y-1 overflow-y-auto pr-2">{topic.akms.map(akm => (<li key={akm.id}><a href={`${atomicNotesURL}#AKM-${akm.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline" onClick={(e) => e.stopPropagation()}><span className="font-mono bg-slate-200 px-1 rounded">{akm.id}</span>: {akm.title}</a></li>))}</ul></div>
                         </div>
                     </div>
                   ))}
-                </div>
-                <div className="mt-8 p-4 bg-blue-50 border-l-4 border-blue-400 rounded">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="text-blue-600 mt-0.5 flex-shrink-0" size={18} /><p className="text-sm text-slate-700"><strong>Purpose:</strong> Ensure zero knowledge gaps. Click a Topic card to reveal the specific Atomic Knowledge Modules (AKMs) it contains.</p>
-                  </div>
                 </div>
               </div>
             )}
             
             {activeView === 'battlefield' && (
               <div className="bg-white rounded-lg p-4 sm:p-6 shadow-inner animate-fade-in">
-                 {/* ... Battlefield view content remains the same ... */}
-                <div className="flex items-start gap-4 mb-4">
-                  <Zap className="text-purple-600 mt-1 flex-shrink-0" size={24} />
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-800">Battlefield: Problem-Oriented Battle Plans</h3>
-                    <p className="text-slate-600 text-sm mt-1">Match question patterns to strategies instantly (Ensures Output Efficiency)</p>
-                  </div>
-                </div>
-                <div className="mb-4 flex gap-2 flex-wrap">
-                  <button onClick={() => setSelectedArchetype(null)} className={`px-3 py-1 rounded text-sm transition-all ${selectedArchetype === null ? 'bg-slate-700 text-white' : 'bg-slate-200 text-slate-600 hover:bg-slate-300'}`}>All ({archetypes.length})</button>
-                  <button onClick={() => setSelectedArchetype('Core')} className={`px-3 py-1 rounded text-sm transition-all ${selectedArchetype === 'Core' ? 'bg-purple-600 text-white' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'}`}>Core ({archetypes.filter(a => a.type === 'Core').length})</button>
-                  <button onClick={() => setSelectedArchetype('Satellite')} className={`px-3 py-1 rounded text-sm transition-all ${selectedArchetype === 'Satellite' ? 'bg-emerald-600 text-white' : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'}`}>Satellite ({archetypes.filter(a => a.type === 'Satellite').length})</button>
-                </div>
+                <div className="flex items-start gap-4 mb-4"><Zap className="text-purple-600 mt-1 flex-shrink-0" size={24} /><div><h3 className="text-xl font-bold text-slate-800">Battlefield: Problem-Oriented Battle Plans</h3><p className="text-slate-600 text-sm mt-1">Match question patterns to strategies instantly (Ensures Output Efficiency)</p></div></div>
+                <div className="mb-4 flex gap-2 flex-wrap">{/* ... Filter buttons ... */}</div>
                 <div className="space-y-3">
                   {archetypes.filter(arch => !selectedArchetype || arch.type === selectedArchetype).map((arch) => (
-                    <div key={arch.id} className={`${arch.color} border-2 ${arch.borderColor} rounded-lg p-4 sm:p-5 transition-all hover:shadow-md hover:border-slate-400`}>
+                    <div key={arch.id} className={`${arch.color} border-2 ${arch.borderColor} rounded-lg p-4 sm:p-5 transition-all hover:shadow-md ${filter.type === 'archetype' && filter.ids.includes(arch.id) ? 'highlight-glow' : ''}`}>
                       <div className="flex flex-col sm:flex-row items-start gap-4">
                         <span className="text-4xl flex-shrink-0 mt-1">{arch.icon}</span>
                         <div className="flex-1">
                           <div className="flex flex-wrap items-center gap-3 mb-2"><h4 className="font-bold text-slate-800 text-lg">{arch.id}: {arch.name}</h4><span className={`px-2 py-1 rounded text-xs font-semibold ${arch.type === 'Core' ? 'bg-purple-200 text-purple-800' : 'bg-emerald-200 text-emerald-800'}`}>{arch.type}</span></div>
                           <p className="text-sm text-slate-700 italic mb-3">"{arch.story}"</p>
-                          <div className="mb-3">
-                            <div className="text-xs font-semibold text-slate-600 mb-1">Common Variations:</div>
-                            <div className="flex flex-wrap gap-2">{arch.variations.map((v, idx) => (<span key={idx} className="text-xs bg-white px-2 py-1 rounded border border-slate-200">{v}</span>))}</div>
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-slate-600 flex-wrap">
+                          <div className="mb-3"><div className="text-xs font-semibold text-slate-600 mb-1">Common Variations:</div><div className="flex flex-wrap gap-2">{arch.variations.map((v, idx) => (<span key={idx} className="text-xs bg-white px-2 py-1 rounded border border-slate-200">{v}</span>))}</div></div>
+                          <div className="flex items-center gap-2 text-xs text-slate-600 flex-wrap border-t border-slate-200 pt-2 mt-2">
                             <span className="font-semibold">Tools from:</span>
                             {Object.keys(matrix).filter(k => k.endsWith(`-${arch.id}`)).map(k => {
-                                const topicId = parseInt(k.split('-')[0]); const topic = topics.find(t => t.id === topicId); if (!topic) return null; const borderColor = topic.borderColor ? topic.borderColor.replace('300', '400') : 'border-slate-400';
-                                return (<span key={k} className={`${topic.color} px-2 py-1 rounded border ${borderColor} font-medium`}>T{topicId}</span>);
+                                const topicId = parseInt(k.split('-')[0]);
+                                const topic = topics.find(t => t.id === topicId);
+                                if (!topic) return null;
+                                
+                                const colorClasses = topic.color.split(' ');
+                                const bgClass = colorClasses.find(c => c.startsWith('bg-')) || '';
+                                const borderClass = colorClasses.find(c => c.startsWith('border-')) || '';
+                                const newBorderClass = borderClass ? borderClass.replace('300', '400') : 'border-gray-400';
+                                
+                                return (
+                                  <button key={k} onClick={() => navigateTo('warehouse', 'topic', [topicId])} className={`${bgClass} ${topic.textColor} px-2 py-1 rounded border ${newBorderClass} font-medium cursor-pointer hover:scale-110 transition-transform`}>
+                                    T{topicId}
+                                  </button>
+                                );
                             })}
                           </div>
+                          {arch.frameworkIds && arch.frameworkIds.length > 0 && (<div className="flex items-center gap-2 text-xs text-slate-600 flex-wrap border-t border-slate-200 pt-2 mt-2">
+                            <span className="font-semibold">Frameworks Used:</span>
+                            {arch.frameworkIds.map(id => (<span key={id} className="bg-cyan-100 text-cyan-800 px-2 py-1 rounded border border-cyan-300 font-medium cursor-pointer hover:bg-cyan-200" onClick={() => navigateTo('frameworks', 'framework', [id])}>{id}</span>))}
+                          </div>)}
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 p-4 bg-purple-50 border-l-4 border-purple-400 rounded">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="text-purple-600 mt-0.5 flex-shrink-0" size={18} /><p className="text-sm text-slate-700"><strong>Purpose:</strong> Rapid question-type recognition in combat. First question when seeing a problem: "Which game is this?" not "Which chapter?"</p>
+              </div>
+            )}
+
+            {activeView === 'frameworks' && (
+              <div className="bg-white rounded-lg p-4 sm:p-6 shadow-inner animate-fade-in">
+                <div className="flex items-start gap-4 mb-6"><ClipboardList className="text-cyan-600 mt-1 flex-shrink-0" size={24} /><div><h3 className="text-xl font-bold text-slate-800">Frameworks: The Tactical Playbook</h3><p className="text-slate-600 text-sm mt-1">Reusable models for solving specific types of problems.</p></div></div>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-700 mb-3 border-b-2 border-slate-200 pb-2">A. Procedural Step-Models (How-To)</h4>
+                    <div className="space-y-3">
+                      {Object.entries(frameworks).filter(([id, fw]) => fw.type === 'Procedural').map(([id, fw]) => (
+                        <div key={id} ref={el => frameworkRefs.current[id] = el} className={`border rounded-lg transition-all ${filter.type === 'framework' && filter.ids.includes(id) ? 'highlight-glow' : 'border-slate-200'}`}>
+                          <h5 className="font-bold text-slate-800 p-3 cursor-pointer hover:bg-slate-50 rounded-t-lg" onClick={() => toggleFramework(id)}>{id}: {fw.name}</h5>
+                          <div className={`accordion-content ${openFrameworks[id] ? 'open' : ''} bg-slate-50 rounded-b-lg`}>
+                            <p className="text-xs italic text-slate-500 mb-3">{fw.scope}</p>
+                            {fw.content.map((item, index) => (<div key={index} className="mb-2"><strong className="text-slate-600 text-xs block">{item.title}</strong><ul className="list-disc pl-5 text-xs text-slate-700 space-y-1 mt-1">{item.points.map((p, i) => <li key={i}>{p}</li>)}</ul></div>))}
+                            <div className="mt-4 border-t pt-2">
+                              <button onClick={() => navigateTo('battlefield', 'archetype', archetypes.filter(a => a.frameworkIds.includes(id)).map(a => a.id) )} className="text-xs text-blue-600 hover:underline">See Related Archetypes →</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="text-lg font-bold text-slate-700 mb-3 border-b-2 border-slate-200 pb-2">B. Conceptual Frameworks (Why-It-Is)</h4>
+                     <div className="space-y-3">
+                      {Object.entries(frameworks).filter(([id, fw]) => fw.type === 'Conceptual').map(([id, fw]) => (
+                        <div key={id} ref={el => frameworkRefs.current[id] = el} className={`border rounded-lg transition-all ${filter.type === 'framework' && filter.ids.includes(id) ? 'highlight-glow' : 'border-slate-200'}`}>
+                          <h5 className="font-bold text-slate-800 p-3 cursor-pointer hover:bg-slate-50 rounded-t-lg" onClick={() => toggleFramework(id)}>{id}: {fw.name}</h5>
+                           <div className={`accordion-content ${openFrameworks[id] ? 'open' : ''} bg-slate-50 rounded-b-lg`}>
+                            <p className="text-xs italic text-slate-500 mb-3">{fw.scope}</p>
+                            {fw.content.map((item, index) => (<div key={index} className="mb-2"><strong className="text-slate-600 text-xs block">{item.title}</strong><ul className="list-disc pl-5 text-xs text-slate-700 space-y-1 mt-1">{item.points.map((p, i) => <li key={i}>{p}</li>)}</ul></div>))}
+                             <div className="mt-4 border-t pt-2">
+                              <button onClick={() => navigateTo('battlefield', 'archetype', archetypes.filter(a => a.frameworkIds.includes(id)).map(a => a.id) )} className="text-xs text-blue-600 hover:underline">See Related Archetypes →</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -348,44 +405,10 @@
 
             {activeView === 'directory' && (
               <div className="bg-white rounded-lg p-4 sm:p-6 shadow-inner animate-fade-in">
-                 {/* ... Directory View Content ... */}
-                <div className="flex items-start gap-4 mb-6">
-                  <List className="text-gray-600 mt-1 flex-shrink-0" size={24} />
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-800">Atomic Knowledge Module (AKM) Directory</h3>
-                    <p className="text-slate-600 text-sm mt-1">The definitive index mapping syllabus topics to their corresponding note modules.</p>
-                  </div>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-collapse">
-                    <thead className="bg-slate-100">
-                      <tr>
-                        <th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">Syllabus Topic</th>
-                        <th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">AKM #</th>
-                        <th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">AKM Title (Atomic Note)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {groupedAkms.map((topic) => (
-                        <React.Fragment key={topic.id}>
-                          {topic.akms.map((akm, akmIndex) => (
-                            <tr key={akm.id} className="hover:bg-slate-50">
-                              {akmIndex === 0 && (
-                                <td rowSpan={topic.akms.length} className={`p-3 border-b border-slate-200 font-bold text-sm ${topic.textColor} align-top`}>
-                                  T{topic.id}: {topic.name}
-                                </td>
-                              )}
-                              <td className="p-3 border-b border-slate-200 font-mono text-sm text-slate-700">
-                                <a href={`${atomicNotesURL}#AKM-${akm.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{akm.id}</a>
-                              </td>
-                              <td className="p-3 border-b border-slate-200 text-sm text-slate-800">{akm.title}</td>
-                            </tr>
-                          ))}
-                        </React.Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <div className="flex items-start gap-4 mb-6"><List className="text-gray-600 mt-1 flex-shrink-0" size={24} /><div><h3 className="text-xl font-bold text-slate-800">Atomic Knowledge Module (AKM) Directory</h3><p className="text-slate-600 text-sm mt-1">The definitive index mapping syllabus topics to their corresponding note modules.</p></div></div>
+                <div className="overflow-x-auto"><table className="w-full border-collapse"><thead className="bg-slate-100"><tr><th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">Syllabus Topic</th><th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">AKM #</th><th className="p-3 text-left text-sm font-semibold text-slate-600 border-b-2 border-slate-200">AKM Title (Atomic Note)</th></tr></thead>
+                  <tbody>{groupedAkms.map((topic) => (<React.Fragment key={topic.id}>{topic.akms.map((akm, akmIndex) => (<tr key={akm.id} className="hover:bg-slate-50">{akmIndex === 0 && (<td rowSpan={topic.akms.length} className={`p-3 border-b border-slate-200 font-bold text-sm ${topic.textColor} align-top`}>T{topic.id}: {topic.name}</td>)}<td className="p-3 border-b border-slate-200 font-mono text-sm text-slate-700"><a href={`${atomicNotesURL}#AKM-${akm.id}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{akm.id}</a></td><td className="p-3 border-b border-slate-200 text-sm text-slate-800">{akm.title}</td></tr>))}</React.Fragment>))}</tbody>
+                </table></div>
               </div>
             )}
           </div>
@@ -403,8 +426,6 @@
           <style>{`
             @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
             .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
-            @keyframes fade-in-fast { from { opacity: 0; } to { opacity: 1; } }
-            .animate-fade-in-fast { animation: fade-in-fast 0.2s ease-out forwards; }
           `}</style>
         </div>
       );
