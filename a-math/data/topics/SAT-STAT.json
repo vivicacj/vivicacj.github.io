@@ -1,0 +1,61 @@
+{
+  "sops": [
+    {
+      "title": "SOP 1: Interpreting Stem-and-Leaf Diagrams",
+      "goal": "Quickly and accurately extract mode, median, and mean",
+      "triggers": ["stem-and-leaf diagram is presented"],
+      "steps": [
+        "Count Total (N): Write N beside the diagram—this controls the median",
+        "Mode: Scan for the most frequent leaf (recombine with stem)",
+        "Median: Position is (N + 1) ÷ 2. If N odd → whole position (e.g., 11th). If N even → average of the two middle values (e.g., 13th and 14th)",
+        "Mean: Sum all values (stem+leaf) and divide by N. Use calculator carefully"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "For even N, forgetting to average the two middle values" },
+        { "type": "典型", "text": "Miscounting N" }
+      ],
+      "pro_tips": [
+        "Write N = … on top before doing median",
+        "When N is even, pre-write Median = (____ + ____ ) ÷ 2"
+      ]
+    },
+    {
+      "title": "SOP 2: Interpreting Grouped Frequency Tables",
+      "goal": "Estimate the mean from a grouped frequency table",
+      "triggers": ["table with class intervals", "140 < h ≤ 150"],
+      "steps": [
+        "Midpoint (x): For each class, midpoint = (lower + upper) ÷ 2. Example: (140 + 150) ÷ 2 = 145",
+        "Compute fx: Multiply midpoint x by frequency f",
+        "Sum: Σf (often given) and Σ(fx)",
+        "Estimate Mean: Mean = Σ(fx) ÷ Σf"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Using interval boundaries instead of midpoints" },
+        { "type": "典型", "text": "Forgetting to compute an fx column for each row" }
+      ],
+      "pro_tips": [
+        "Add explicit columns for Midpoint (x) and fx",
+        "Do totals (Σf, Σfx) in a separate line to avoid slips"
+      ]
+    },
+    {
+      "title": "SOP 3: Solving Basic Probability Problems",
+      "goal": "Accurately calculate the probability of an event",
+      "triggers": ["probability", "at random"],
+      "steps": [
+        "Total Outcomes: Identify the size of the sample space",
+        "Favourable Outcomes: List them explicitly (do not 'do it in your head'). Example: 'even and divisible by 3' → list evens, then circle those divisible by 3: 6, 12, 18",
+        "Compute Probability: P(Event) = Favourable ÷ Total",
+        "Simplify the fraction"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Miscounting outcomes for compound 'and/or'" },
+        { "type": "典型", "text": "Leaving the fraction unsimplified" }
+      ],
+      "pro_tips": [
+        "Always list the favourable outcomes—never rely on mental counting",
+        "Reduce the final fraction (or convert to simplest decimal/percentage if required)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "sops": [
+    {
+      "title": "SOP 1: Solving 2D Bearing / Geometry Problems",
+      "goal": "To find unknown lengths or angles in non-right-angled triangles",
+      "triggers": ["Bearing of", "due east", "diagrams with non-right-angled triangles"],
+      "steps": [
+        "Annotate & Convert: Draw all North lines. Convert all given bearings into internal angles of the key triangle using parallel line properties",
+        "Assess the Triangle: Count the knowns. Do you have SAS/SSS or AAS/SSA?",
+        "Select the Right Tool: If SAS or SSS, use the Cosine Rule. If AAS or SSA, use the Sine Rule",
+        "Calculate & Check: Solve for the unknown. If finding an angle with the Sine Rule, check if an obtuse angle (180° - θ) is possible"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Mixing up the Sine Rule and Cosine Rule formulas" },
+        { "type": "典型", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" }
+      ],
+      "pro_tips": [
+        "Memorize: 'If the problem gives you three sides (SSS) or a Side-Angle-Side sandwich (SAS), you need the Cosine Rule. For almost everything else, it's the Sine Rule'",
+        "Always draw North lines first to visualize the bearing angles clearly"
+      ]
+    },
+    {
+      "title": "SOP 2: Solving 3D Elevation & Depression Problems",
+      "goal": "To solve problems involving height and angles in a 3D context",
+      "triggers": ["angle of elevation", "angle of depression", "height of", "vertical"],
+      "steps": [
+        "Deconstruct into 2 Planes: Isolate the problem into: (a) A 2D problem on the horizontal ground, (b) A 2D right-angled triangle in the vertical plane",
+        "Solve the Ground Problem First: Use SOP 1 to find the crucial horizontal distance between the observer and the base of the vertical object. This is your 'bridge' value",
+        "Solve the Vertical Problem: Draw the right-angled triangle. Label the height and the 'bridge' value (horizontal distance). Use basic SOH CAH TOA to find the final answer"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Trying to use Sine/Cosine Rule directly in the 3D space" },
+        { "type": "典型", "text": "Confusing horizontal distance with slant distance" }
+      ],
+      "pro_tips": [
+        "Always break it down. Your mantra: 'First the map, then the wall' (First solve the ground plan, then solve the vertical plane)",
+        "The horizontal distance from ground plan becomes the adjacent/opposite side in your vertical triangle"
+      ]
+    },
+    {
+      "title": "SOP 3: Finding Shortest Distance via Area Method",
+      "goal": "To find the perpendicular distance from a point to a line using area",
+      "triggers": ["shortest distance", "perpendicular distance", "from point to line"],
+      "steps": [
+        "Identify the Triangle: The point and the two endpoints of the line segment form a triangle",
+        "Calculate Area Using Sine: Use Area = ½ab sin C with the known sides and included angle",
+        "Use Area = ½ × base × height: Set the line segment as the base, and solve for the perpendicular height (which is the shortest distance)",
+        "Verify: The shortest distance should be less than any direct distance from the point to the line's endpoints"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Forgetting that Area = ½ × base × height must use the perpendicular height" },
+        { "type": "典型", "text": "Using the wrong side as the base" }
+      ],
+      "pro_tips": [
+        "This method bypasses the need to find the angle at the base",
+        "Double-check: shortest distance < any slant distance"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "sops": [
+    {
+      "title": "SOP 1: Completing the Square",
+      "goal": "Convert quadratic from standard form to completed square form",
+      "triggers": ["complete the square", "express in the form (x + p)² + q"],
+      "steps": [
+        "Identify coefficient of x²: If it's not 1, factor it out first",
+        "Take half of the x coefficient, square it: For x² + bx, take (b/2)²",
+        "Add and subtract this value inside: x² + bx + (b/2)² - (b/2)²",
+        "Group to form perfect square: (x + b/2)² - (b/2)² + c",
+        "Simplify the constant term: Combine constants to get final form (x + p)² + q"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Forgetting to factor out the coefficient of x² before completing the square" },
+        { "type": "典型", "text": "Not squaring the half-coefficient correctly" }
+      ],
+      "pro_tips": [
+        "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²",
+        "Check your answer by expanding back to verify"
+      ]
+    },
+    {
+      "title": "SOP 2: Graph Sketching (Quadratics)",
+      "goal": "Sketch the parabola with all key features labeled",
+      "triggers": ["sketch the graph", "draw the curve"],
+      "steps": [
+        "Identify the turning point: Use completed square form (x + p)² + q gives turning point (-p, q)",
+        "Determine if it opens up or down: Positive coefficient of x² → opens up, Negative → opens down",
+        "Find y-intercept: Set x = 0 and calculate y",
+        "Find x-intercepts (if they exist): Set y = 0 and solve the quadratic (use formula if needed)",
+        "Sketch: Draw smooth U-shape through all labeled points"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Getting the sign wrong for the turning point coordinates" },
+        { "type": "典型", "text": "Forgetting to label all intercepts and the turning point" }
+      ],
+      "pro_tips": [
+        "If completing the square gives (x - a)² + b, turning point is (a, b) not (-a, b)",
+        "Always mark minimum/maximum value clearly"
+      ]
+    },
+    {
+      "title": "SOP 3: Finding Equation from Graph",
+      "goal": "Determine the quadratic equation given key features of the graph",
+      "triggers": ["find the equation", "given turning point and another point"],
+      "steps": [
+        "Start with completed square form: Use y = a(x - h)² + k where (h, k) is the turning point",
+        "Substitute the other given point: Plug in the coordinates to find the value of a",
+        "Solve for a: Isolate a in the equation",
+        "Write the final equation: Either in completed square form or expand to standard form if required"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Forgetting to include the coefficient a in front" },
+        { "type": "典型", "text": "Sign errors when substituting coordinates with negative values" }
+      ],
+      "pro_tips": [
+        "Always use y = a(x - h)² + k form first, it's faster than y = ax² + bx + c",
+        "Verify by checking if the turning point satisfies your final equation"
+      ]
+    }
+  ]
+}

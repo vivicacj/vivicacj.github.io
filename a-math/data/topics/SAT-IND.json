@@ -1,0 +1,77 @@
+{
+  "sops": [
+    {
+      "title": "SOP 1: Simplifying Complex Index Expressions",
+      "goal": "Reduce complicated expressions to simplest form with positive indices",
+      "triggers": ["Simplify", "expressions with powers, roots, negatives"],
+      "steps": [
+        "Brackets First (Power of a Power): Multiply indices inside brackets. Examples: (p³)² = p⁶; (4p³)² = 16p⁶",
+        "Handle Negatives & Roots: Negative indices → reciprocals: x⁻³ = 1 ÷ x³. Roots → fractional indices: √x = x^(1/2), ³√x = x^(1/3)",
+        "Combine Same Bases: Multiply same base → add indices. Divide same base → subtract indices",
+        "Calculate Coefficients: Manage normal numbers separately; then recombine"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Treating negative indices as negative numbers (instead of reciprocals)" },
+        { "type": "典型", "text": "Forgetting to distribute powers across brackets and coefficients" }
+      ],
+      "pro_tips": [
+        "Convert roots to fractional indices and negatives to reciprocals FIRST",
+        "Separate coefficient arithmetic from index manipulation, then recombine"
+      ]
+    },
+    {
+      "title": "SOP 2: Solving Exponential Equations",
+      "goal": "Find the unknown in the exponent",
+      "triggers": ["Solve", "variables appear as powers"],
+      "steps": [
+        "Unify the Base (Golden Rule): Write all numbers as powers of the SAME base. Examples: 9 = 3², 27 = 3³, 1/16 = 2⁻⁴",
+        "Simplify Both Sides: Use SOP 1 rules until you get base^a = base^b",
+        "Equate the Indices: Set a = b",
+        "Solve: Finish the (usually linear) equation"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Trying to equate indices BEFORE unifying the base" },
+        { "type": "典型", "text": "Mishandling fractional/negative powers during simplification" }
+      ],
+      "pro_tips": [
+        "Always rewrite numbers as prime-base powers first",
+        "Keep a tiny scratch list of common conversions (e.g., 8 = 2³, 81 = 3⁴)"
+      ]
+    },
+    {
+      "title": "SOP 3: Handling '+' or '−' in Exponential Equations",
+      "goal": "Solve exponential equations that involve addition or subtraction",
+      "triggers": ["Sums/differences of like exponentials"],
+      "steps": [
+        "Identify the Trap: Index laws do NOT apply across + or −",
+        "Factor / Combine Like Terms: Treat repeated exponentials like like-terms. Examples: 3³ + 3³ + 3³ = 3 × (3³); 2^(x+1) − 2^x = 2^x (2 − 1)",
+        "Simplify → Switch to SOP 2: Reduce to a standard exponential form. Example: 9^x = 3 × (3³) → (3²)^x = 3⁴ → proceed with SOP 2"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Forcing index laws over sums/differences" },
+        { "type": "典型", "text": "Forgetting to factor out the common exponential term" }
+      ],
+      "pro_tips": [
+        "'Apples with apples': combine identical bases/powers first",
+        "After factoring, look for the single-base structure and revert to SOP 2"
+      ]
+    },
+    {
+      "title": "SOP 4: Calculating with Standard Form (Scientific Notation)",
+      "goal": "Perform calculations with A × 10^n and end in proper standard form (1 ≤ A < 10)",
+      "triggers": ["numbers given in scientific notation"],
+      "steps": [
+        "Multiplication / Division: 1) Multiply/divide the A parts. 2) Apply index laws to the 10^n parts (10^a × 10^b = 10^(a+b)). 3) Adjust to make 1 ≤ A < 10",
+        "Addition / Subtraction: 1) Unify the exponent (Golden Rule): rewrite so powers of 10 match. 2) Factor out the common 10^n. 3) Add/subtract the A parts. 4) Adjust A back to [1, 10) if needed"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Adding/subtracting without matching powers of 10" },
+        { "type": "典型", "text": "Leaving A outside [1, 10)" }
+      ],
+      "pro_tips": [
+        "For +/−, match exponents first, then work on the A parts",
+        "Always do a final 'standard-form check'"
+      ]
+    }
+  ]
+}

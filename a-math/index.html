@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Math & A-Math Knowledge Mapping System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        
+        .node-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .node-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .node-card.active {
+            box-shadow: 0 0 25px rgba(14, 165, 233, 0.6);
+        }
+        .node-card.connected {
+            background: #f0fdfa;
+            border-color: #2dd4bf;
+        }
+        .node-card.dimmed {
+            opacity: 0.25;
+            transform: scale(0.98);
+        }
+        #loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen font-sans">
+    <div id="root"></div>
+
+    <script type="module">
+        // ==================== DATA ====================
+        let externalSOPs = {}; // Store loaded SOP data from JSON files
+        
+        const TOPICS = [
+            { "id": "core-trig", "type": "strategic", "name": "Core-Trigonometry", "badge": "CORE", "jsonFile": "CORE-TRIG.json" },
+            { "id": "core-quad", "type": "strategic", "name": "Core-Quadratics", "badge": "CORE", "jsonFile": "CORE-QUAD.json" },
+            { "id": "core-alg", "type": "strategic", "name": "Core-Algebra", "badge": "CORE", "jsonFile": "CORE-ALG.json" },
+            { "id": "core-geo", "type": "strategic", "name": "Core-GeometryProofs", "badge": "CORE", "jsonFile": "CORE-GEO.json" },
+            { "id": "sat-ind", "type": "strategic", "name": "Sat-Indices", "badge": "SAT", "jsonFile": "SAT-IND.json" },
+            { "id": "sat-ineq", "type": "strategic", "name": "Sat-Inequalities", "badge": "SAT", "jsonFile": "SAT-INEQ.json" },
+            { "id": "sat-ratio", "type": "strategic", "name": "Sat-RatioPercent", "badge": "SAT", "jsonFile": "SAT-RATIO.json" },
+            { "id": "sat-stat", "type": "strategic", "name": "Sat-StatsProb", "badge": "SAT", "jsonFile": "SAT-STAT.json" },
+            { "id": "sat-coord", "type": "strategic", "name": "Sat-CoordGeo", "badge": "SAT", "jsonFile": "SAT-COORD.json" },
+            { "id": "sat-men", "type": "strategic", "name": "Sat-Mensuration", "badge": "SAT", "jsonFile": "SAT-MEN.json" },
+            { "id": "n1", "type": "emath", "name": "N1: Numbers", "desc": "Operations & Indices", "category": "Number" },
+            { "id": "n2", "type": "emath", "name": "N2: Ratio", "desc": "Proportion", "category": "Number" },
+            { "id": "n3", "type": "emath", "name": "N3: Percentage", "desc": "", "category": "Number" },
+            { "id": "n5", "type": "emath", "name": "N5: Algebra", "desc": "Expressions", "category": "Algebra" },
+            { "id": "n6", "type": "emath", "name": "N6: Functions", "desc": "& Graphs", "category": "Algebra" },
+            { "id": "n7", "type": "emath", "name": "N7: Equations", "desc": "& Inequalities", "category": "Algebra" },
+            { "id": "g2", "type": "emath", "name": "G2: Congruence", "desc": "& Similarity", "category": "Geometry" },
+            { "id": "g4", "type": "emath", "name": "G4: Trigonometry", "desc": "Sine/Cosine Rule & Area of Triangle", "category": "Geometry", "jsonFile": "EM-G4.json" },
+            { "id": "g5", "type": "emath", "name": "G5: Mensuration", "desc": "", "category": "Geometry" },
+            { "id": "g6", "type": "emath", "name": "G6: Coord Geo", "desc": "Gradient, Length & Equation of Line", "category": "Geometry", "jsonFile": "EM-G6.json" },
+            { "id": "s1", "type": "emath", "name": "S1: Data", "desc": "", "category": "Statistics" },
+            { "id": "s2", "type": "emath", "name": "S2: Probability", "desc": "", "category": "Statistics" },
+            { "id": "a1", "type": "amath", "name": "A1: Quadratics", "desc": "Functions", "category": "Algebra" },
+            { "id": "a4", "type": "amath", "name": "A4: Polynomials", "desc": "Partial Fractions", "category": "Algebra" },
+            { "id": "a6", "type": "amath", "name": "A6: Exponential", "desc": "& Logarithmic", "category": "Algebra" },
+            { "id": "g1", "type": "amath", "name": "G1: Trig Functions", "desc": "& Identities", "category": "Geometry" },
+            { "id": "g2-am", "type": "amath", "name": "G2: Circles", "desc": "Coord Geometry", "category": "Geometry" },
+            { "id": "c1", "type": "amath", "name": "C1: Calculus", "desc": "Diff & Integration", "category": "Calculus" }
+        ];
+
+        const MAPPINGS = {
+            "core-trig": { "emath": ["g4"] },
+            "core-quad": { "emath": ["n6", "n7"] },
+            "core-alg": { "emath": ["n5", "n7"] },
+            "core-geo": { "emath": ["g2"] },
+            "sat-ind": { "emath": ["n1"] },
+            "sat-ineq": { "emath": ["n7"] },
+            "sat-ratio": { "emath": ["n2", "n3"] },
+            "sat-stat": { "emath": ["s1", "s2"] },
+            "sat-coord": { "emath": ["g6"] },
+            "sat-men": { "emath": ["g5", "g2"] },
+            "n1": { "amath": ["a6"] },
+            "n5": { "amath": ["a4", "c1"] },
+            "n6": { "amath": ["a1", "a6", "c1"] },
+            "n7": { "amath": ["a1"] },
+            "g4": { "amath": ["g1"] },
+            "g6": { "amath": ["g2-am"] }
+        };
+
+        // ==================== APP LOGIC ====================
+        let REVERSE_MAPPINGS = {};
+
+        // Load external JSON files for SOPs
+        async function loadExternalSOPs() {
+            const filesToLoad = TOPICS.filter(t => t.jsonFile).map(t => t.jsonFile);
+            const uniqueFiles = [...new Set(filesToLoad)];
+            
+            for (const filename of uniqueFiles) {
+                try {
+                    const response = await fetch(`data/topics/${filename}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        externalSOPs[filename] = data;
+                        console.log(`✓ Loaded ${filename}`, data);
+                    } else {
+                        console.warn(`⚠ Could not load ${filename}: ${response.status}`);
+                        externalSOPs[filename] = null;
+                    }
+                } catch (error) {
+                    console.warn(`⚠ Error loading ${filename}:`, error);
+                    externalSOPs[filename] = null;
+                }
+            }
+        }
+
+        // Get SOPs for a topic (from either hardcoded or JSON file)
+        function getTopicSOPs(topic) {
+            if (topic.sops) {
+                return topic.sops; // Use hardcoded SOPs
+            }
+            if (topic.jsonFile && externalSOPs[topic.jsonFile]) {
+                const jsonData = externalSOPs[topic.jsonFile];
+                
+                // Handle the new MPC structure
+                if (jsonData.mpc) {
+                    const sops = [];
+                    
+                    // Add Tier 1 (Core concepts)
+                    if (jsonData.mpc.tier1) {
+                        sops.push({ type: 'header', text: '📌 Tier 1: Core Concepts' });
+                        jsonData.mpc.tier1.forEach(item => {
+                            sops.push({ type: 'concept', q: item.q, a: item.a });
+                        });
+                    }
+                    
+                    // Add Tier 2 (SOPs)
+                    if (jsonData.mpc.tier2) {
+                        sops.push({ type: 'header', text: '🎯 Tier 2: Standard Operating Procedures' });
+                        jsonData.mpc.tier2.forEach(item => {
+                            sops.push({ type: 'sop', title: item.title, steps: item.steps });
+                        });
+                    }
+                    
+                    // Add Tier 3 (Deep understanding)
+                    if (jsonData.mpc.tier3) {
+                        sops.push({ type: 'header', text: '🧠 Tier 3: Deep Understanding' });
+                        jsonData.mpc.tier3.forEach(item => {
+                            sops.push({ type: 'reflection', text: item });
+                        });
+                    }
+                    
+                    return sops.length > 0 ? sops : null;
+                }
+                
+                // Fallback: Handle old format
+                if (Array.isArray(jsonData)) {
+                    return jsonData;
+                } else if (jsonData.sops) {
+                    return jsonData.sops;
+                } else if (jsonData.procedures) {
+                    return jsonData.procedures;
+                } else if (jsonData.topics) {
+                    return jsonData.topics;
+                }
+            }
+            return null;
+        }
+
+        // Get detailed SOPs for a topic (new structure with goal, triggers, pitfalls, etc.)
+        function getDetailedSOPs(topic) {
+            if (topic.jsonFile && externalSOPs[topic.jsonFile]) {
+                const jsonData = externalSOPs[topic.jsonFile];
+                return jsonData.sops || null;
+            }
+            return null;
+        }
+
+        // Get drills for a topic
+        function getTopicDrills(topic) {
+            if (topic.jsonFile && externalSOPs[topic.jsonFile]) {
+                const jsonData = externalSOPs[topic.jsonFile];
+                return jsonData.drills || null;
+            }
+            return null;
+        }
+
+        // Get weaknesses for a topic
+        function getTopicWeaknesses(topic) {
+            if (topic.jsonFile && externalSOPs[topic.jsonFile]) {
+                const jsonData = externalSOPs[topic.jsonFile];
+                return jsonData.weaknesses || null;
+            }
+            return null;
+        }
+
+        // Application State
+        let state = {
+            selectedNode: null,
+            masteredNodes: new Set(),
+            filterCategory: 'All',
+            filterBadge: 'All',
+            activeView: 'network'
+        };
+
+        // Canvas variables
+        let canvas, ctx;
+
+        function generateReverseMappings() {
+            Object.entries(MAPPINGS).forEach(([fromId, targets]) => {
+                const fromTopic = TOPICS.find(t => t.id === fromId);
+                if (!fromTopic) return;
+                Object.entries(targets).forEach(([targetType, targetIds]) => {
+                    targetIds.forEach(toId => {
+                        if (!REVERSE_MAPPINGS[toId]) {
+                            REVERSE_MAPPINGS[toId] = { strategic: [], emath: [] };
+                        }
+                        if (fromTopic.type === 'strategic') {
+                            REVERSE_MAPPINGS[toId].strategic.push(fromId);
+                        } else if (fromTopic.type === 'emath') {
+                            REVERSE_MAPPINGS[toId].emath.push(fromId);
+                        }
+                    });
+                });
+            });
+        }
+        
+        function initCanvas() {
+            canvas = document.getElementById('connectionCanvas');
+            if (!canvas) return;
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', () => {
+                resizeCanvas();
+                redrawCurrentConnections();
+            });
+        }
+
+        function resizeCanvas() {
+            const container = document.getElementById('networkContainer');
+            if (!container || !canvas) return;
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = container.offsetWidth * dpr;
+            canvas.height = container.offsetHeight * dpr;
+            canvas.style.width = `${container.offsetWidth}px`;
+            canvas.style.height = `${container.offsetHeight}px`;
+            ctx.scale(dpr, dpr);
+        }
+
+        function getNodeCenter(element) {
+            if (!element) return null;
+            const containerRect = document.getElementById('networkContainer').getBoundingClientRect();
+            const rect = element.getBoundingClientRect();
+            return {
+                x: rect.left - containerRect.left + rect.width / 2,
+                y: rect.top - containerRect.top + rect.height / 2
+            };
+        }
+
+        function drawCurvedLine(from, to, color, lineWidth = 2.5) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            ctx.globalAlpha = 0.8;
+            const midX = (from.x + to.x) / 2;
+            const midY = (from.y + to.y) / 2;
+            const cpX = midX;
+            const cpY = midY - 30;
+            ctx.moveTo(from.x, from.y);
+            ctx.quadraticCurveTo(cpX, cpY, to.x, to.y);
+            ctx.stroke();
+            const angle = Math.atan2(to.y - cpY, to.x - cpX);
+            const arrowLength = 10;
+            ctx.beginPath();
+            ctx.moveTo(to.x, to.y);
+            ctx.lineTo(to.x - arrowLength * Math.cos(angle - Math.PI / 6), to.y - arrowLength * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(to.x, to.y);
+            ctx.lineTo(to.x - arrowLength * Math.cos(angle + Math.PI / 6), to.y - arrowLength * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+            ctx.globalAlpha = 1.0;
+        }
+
+        function drawConnections(nodeId) {
+            if (!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const fromNodeEl = document.querySelector(`[data-id="${nodeId}"]`);
+            if (!fromNodeEl) return;
+            const fromPos = getNodeCenter(fromNodeEl);
+            if (!fromPos) return;
+            const connections = MAPPINGS[nodeId] || {};
+            const reverseConnections = REVERSE_MAPPINGS[nodeId] || {};
+            const typeToEMathColor = '#38bdf8';
+            const eMathToAMathColor = '#2dd4bf';
+            Object.entries(connections).forEach(([targetType, targetIds]) => {
+                targetIds.forEach(targetId => {
+                    const toNodeEl = document.querySelector(`[data-id="${targetId}"]`);
+                    const toPos = getNodeCenter(toNodeEl);
+                    if (toPos) {
+                        const color = targetType === 'emath' ? typeToEMathColor : eMathToAMathColor;
+                        drawCurvedLine(fromPos, toPos, color);
+                    }
+                });
+            });
+            Object.entries(reverseConnections).forEach(([sourceType, sourceIds]) => {
+                sourceIds.forEach(sourceId => {
+                    const sourceNodeEl = document.querySelector(`[data-id="${sourceId}"]`);
+                    const sourcePos = getNodeCenter(sourceNodeEl);
+                    if (sourcePos) {
+                        const color = sourceType === 'strategic' ? typeToEMathColor : eMathToAMathColor;
+                        drawCurvedLine(sourcePos, fromPos, color);
+                    }
+                });
+            });
+        }
+        
+        function redrawCurrentConnections() {
+             if (state.selectedNode) {
+                drawConnections(state.selectedNode);
+            }
+        }
+
+        function renderApp() {
+            const filteredTopics = TOPICS.filter(t => {
+                const categoryMatch = state.filterCategory === 'All' || t.category === state.filterCategory;
+                const badgeMatch = state.filterBadge === 'All' || t.badge === state.filterBadge;
+                if(t.type === 'strategic') return badgeMatch;
+                return categoryMatch && badgeMatch;
+            });
+
+            document.getElementById('root').innerHTML = `
+                <div class="max-w-[1800px] mx-auto p-4 sm:p-6">
+                    <header class="bg-gradient-to-r from-sky-400 to-blue-500 text-white p-6 rounded-xl shadow-2xl mb-6 animate-fade-in">
+                        <h1 class="text-3xl md:text-4xl font-bold mb-2">🔗 Three-Layer Knowledge Mapping System</h1>
+                        <p class="text-sky-100">Strategic Types (Exam Focus) ↔ E-Math (Foundation) → A-Math (Advanced)</p>
+                    </header>
+                    <div class="bg-white rounded-lg shadow-md mb-6 p-2 flex gap-2 flex-wrap">
+                        <button onclick="switchView('network')" class="px-4 py-2 rounded-lg transition-all text-sm font-semibold ${state.activeView === 'network' ? 'bg-sky-500 text-white shadow' : 'hover:bg-slate-100'}">📊 Network View</button>
+                        <button onclick="switchView('progress')" class="px-4 py-2 rounded-lg transition-all text-sm font-semibold ${state.activeView === 'progress' ? 'bg-sky-500 text-white shadow' : 'hover:bg-slate-100'}">📈 Learning Progress</button>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                        <div class="lg:col-span-3">${state.activeView === 'network' ? renderNetworkView(filteredTopics) : renderProgressView()}</div>
+                        <div class="lg:col-span-1">${renderDetailPanel()}</div>
+                    </div>
+                </div>`;
+
+            setTimeout(() => {
+                if (state.activeView === 'network') {
+                    initCanvas();
+                    redrawCurrentConnections();
+                }
+            }, 0);
+        }
+
+        function renderNetworkView(filteredTopics) {
+            const strategicTopics = filteredTopics.filter(t => t.type === 'strategic');
+            const emathTopics = filteredTopics.filter(t => t.type === 'emath');
+            const amathTopics = filteredTopics.filter(t => t.type === 'amath');
+
+            return `<div class="bg-white rounded-xl shadow-lg p-6">
+                        <div class="flex gap-4 mb-6 flex-wrap items-center">
+                            <div>
+                                <label class="font-semibold mr-2 text-sm text-slate-600">Category:</label>
+                                <select onchange="updateFilter('category', this.value)" class="border rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-sky-500 transition">${['All', 'Number', 'Algebra', 'Geometry', 'Statistics', 'Calculus'].map(c => `<option value="${c}" ${state.filterCategory === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+                            </div>
+                            <div>
+                                <label class="font-semibold mr-2 text-sm text-slate-600">Type:</label>
+                                <select onchange="updateFilter('badge', this.value)" class="border rounded-md px-3 py-1.5 text-sm focus:ring-2 focus:ring-sky-500 transition">${['All', 'CORE', 'SAT'].map(b => `<option value="${b}" ${state.filterBadge === b ? 'selected' : ''}>${b}</option>`).join('')}</select>
+                            </div>
+                            <div class="ml-auto text-slate-500 text-sm font-medium">${filteredTopics.length} / ${TOPICS.length} topics visible</div>
+                        </div>
+                        <div class="flex justify-center gap-8 mb-6 text-sm flex-wrap bg-slate-50 p-4 rounded-lg">
+                            <div class="flex items-center gap-2"><div class="w-12 h-1 bg-sky-500 rounded"></div><span class="font-semibold text-slate-700">Type ↔ E-Math</span></div>
+                            <div class="flex items-center gap-2"><div class="w-12 h-1 bg-teal-500 rounded"></div><span class="font-semibold text-slate-700">E-Math → A-Math</span></div>
+                            <div class="flex items-center gap-2"><div class="w-12 h-1 bg-red-500 rounded relative"><div class="absolute inset-0 flex items-center justify-center text-red-500 font-bold text-lg">✕</div></div><span class="font-semibold text-slate-700">Type ✕ A-Math</span></div>
+                        </div>
+                        <div id="networkContainer" class="relative flex gap-6 overflow-x-auto pb-4 bg-slate-50 rounded-lg p-4" style="min-height: 800px;">
+                            <canvas id="connectionCanvas" class="absolute top-0 left-0 pointer-events-none z-10"></canvas>
+                            <div class="flex-shrink-0 w-[320px] z-20">
+                                <div class="bg-gradient-to-br from-violet-300 to-purple-400 text-white p-4 rounded-lg mb-4 text-center shadow-lg"><h3 class="text-xl font-bold">Strategic Types ↔ E-Math</h3><p class="text-xs mt-1 opacity-90">Exam-focused classification</p></div>
+                                <div class="space-y-3">${strategicTopics.map(t => renderNodeCard(t)).join('')}</div>
+                            </div>
+                            <div class="flex-shrink-0 w-[320px] z-20">
+                                <div class="bg-gradient-to-br from-cyan-300 to-sky-400 text-white p-4 rounded-lg mb-4 text-center shadow-lg"><h3 class="text-xl font-bold">E-Math (4052)</h3><p class="text-xs mt-1 opacity-90">Foundation topics</p></div>
+                                <div class="space-y-3">${emathTopics.map(t => renderNodeCard(t)).join('')}</div>
+                            </div>
+                            <div class="flex-shrink-0 w-[320px] z-20">
+                                <div class="bg-gradient-to-br from-emerald-300 to-teal-400 text-white p-4 rounded-lg mb-4 text-center shadow-lg"><h3 class="text-xl font-bold">A-Math (4049)</h3><p class="text-xs mt-1 opacity-90">Advanced topics</p></div>
+                                <div class="space-y-3">${amathTopics.map(t => renderNodeCard(t)).join('')}</div>
+                            </div>
+                        </div>
+                    </div>`;
+        }
+
+        function renderNodeCard(topic) {
+            const isSelected = state.selectedNode === topic.id;
+            const isMastered = state.masteredNodes.has(topic.id);
+            const isConnected = state.selectedNode && isNodeConnected(state.selectedNode, topic.id);
+            const isDimmed = state.selectedNode && !isSelected && !isConnected;
+            const badgeColors = {'CORE': 'bg-violet-100 text-violet-700 border border-violet-300', 'SAT': 'bg-purple-100 text-purple-700 border border-purple-300'};
+            return `<div data-id="${topic.id}" onclick="selectNode('${topic.id}')" class="node-card bg-white rounded-xl p-4 cursor-pointer relative border-2 ${isSelected ? 'active border-sky-500' : 'border-slate-200'} ${isConnected ? 'connected' : ''} ${isDimmed ? 'dimmed' : ''} ${isMastered ? 'bg-green-50 border-green-400' : ''}">
+                        ${topic.badge ? `<span class="inline-block px-2 py-1 rounded-md text-xs font-bold mb-2 ${badgeColors[topic.badge]}">${topic.badge}</span>` : ''}
+                        <div class="font-bold text-sm mb-1 ${topic.type === 'strategic' ? 'text-violet-700' : topic.type === 'emath' ? 'text-sky-700' : 'text-teal-700'}">${topic.name}</div>
+                        ${topic.desc ? `<div class="text-xs text-slate-600 mt-1">${topic.desc}</div>` : ''}
+                        ${topic.category ? `<div class="text-xs text-slate-500 mt-1 italic">${topic.category}</div>` : ''}
+                        ${isMastered ? '<div class="absolute top-3 right-3 text-green-600 text-xl font-bold">✓</div>' : ''}
+                    </div>`;
+        }
+
+        function renderProgressView() {
+            const learnableTopics = TOPICS.filter(t => t.type !== 'strategic');
+            const totalTopics = learnableTopics.length;
+            const masteredCount = learnableTopics.filter(t => state.masteredNodes.has(t.id)).length;
+            const progress = totalTopics > 0 ? Math.round((masteredCount / totalTopics) * 100) : 0;
+            return `<div class="bg-white rounded-xl shadow-lg p-6 animate-fade-in">
+                        <h2 class="text-2xl font-bold mb-6">Learning Progress Tracker</h2>
+                        <div class="bg-gradient-to-r from-sky-400 to-blue-500 text-white p-6 rounded-xl mb-6">
+                            <div class="text-4xl font-bold mb-2">${progress}%</div>
+                            <div class="text-lg">${masteredCount} / ${totalTopics} topics mastered</div>
+                            <div class="w-full bg-white/30 rounded-full h-3 mt-4">
+                                <div class="bg-white h-3 rounded-full transition-all duration-500" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${['emath', 'amath'].map(type => {
+                                const subjectTopics = TOPICS.filter(t => t.type === type);
+                                const subjectMastered = subjectTopics.filter(t => state.masteredNodes.has(t.id)).length;
+                                const subjectProgress = subjectTopics.length > 0 ? Math.round((subjectMastered / subjectTopics.length) * 100) : 0;
+                                const subjectName = type === 'emath' ? 'E-Math' : 'A-Math';
+                                return `<div class="border rounded-lg p-4">
+                                            <h3 class="font-bold mb-2">${subjectName}</h3>
+                                            <div class="text-2xl font-bold text-sky-600">${subjectProgress}%</div>
+                                            <div class="text-sm text-slate-600">${subjectMastered} / ${subjectTopics.length}</div>
+                                        </div>`;
+                            }).join('')}
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="font-bold mb-3">Mastered Topics:</h3>
+                            <div class="space-y-2 max-h-80 overflow-y-auto pr-2">
+                                ${Array.from(state.masteredNodes).map(id => {
+                                    const topic = TOPICS.find(t => t.id === id);
+                                    if (!topic || topic.type === 'strategic') return '';
+                                    return `<div class="flex items-center gap-2 p-2 bg-green-50 rounded"><span class="text-green-600">✓</span><span class="font-semibold text-sm">${topic.name}</span></div>`;
+                                }).join('') || '<p class="text-slate-400">No topics mastered yet</p>'}
+                            </div>
+                        </div>
+                    </div>`;
+        }
+        
+        function renderDetailPanel() {
+            if (!state.selectedNode) {
+                return `<div class="bg-white rounded-xl shadow-lg p-6 text-center text-slate-400 sticky top-6">
+                            <div class="text-6xl mb-4">📚</div>
+                            <p class="text-sm">Click any node to view<br/>detailed information</p>
+                        </div>`;
+            }
+            const topic = TOPICS.find(t => t.id === state.selectedNode);
+            const isMastered = state.masteredNodes.has(topic.id);
+            const connections = MAPPINGS[topic.id] || {};
+            const reverseConnections = REVERSE_MAPPINGS[topic.id] || { strategic: [], emath: [] };
+            const prerequisites = reverseConnections.emath;
+            const unmetPrereqs = prerequisites.filter(p => !state.masteredNodes.has(p));
+            const canLearn = unmetPrereqs.length === 0 && topic.type !== 'strategic';
+            
+            // Get SOPs for this topic
+            const topicSOPs = getTopicSOPs(topic);
+            const detailedSOPs = getDetailedSOPs(topic);
+            const topicDrills = getTopicDrills(topic);
+            const topicWeaknesses = getTopicWeaknesses(topic);
+
+            return `<div class="bg-white rounded-xl shadow-lg p-6 sticky top-6 animate-fade-in max-h-[calc(100vh-100px)] overflow-y-auto">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-2xl font-bold text-sky-600">${topic.name}</h3>
+                                ${topic.desc ? `<p class="text-slate-600">${topic.desc}</p>` : ''}
+                                ${topic.badge ? `<span class="inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold ${topic.badge === 'CORE' ? 'bg-violet-100 text-violet-700' : 'bg-purple-100 text-purple-700'}">${topic.badge}</span>` : ''}
+                            </div>
+                            <button onclick="closeDetail()" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">×</button>
+                        </div>
+                        ${topic.type !== 'strategic' ? `<button onclick="toggleMastered('${topic.id}')" class="w-full py-3 rounded-lg font-semibold mb-4 transition-all ${isMastered ? 'bg-green-500 text-white hover:bg-green-600' : canLearn ? 'bg-sky-500 text-white hover:bg-sky-600' : 'bg-slate-300 text-slate-600 cursor-not-allowed'}" ${!canLearn && !isMastered ? 'disabled' : ''}>${isMastered ? '✓ Mastered' : canLearn ? 'Mark as Mastered' : '✕ Prerequisites Required'}</button>${!canLearn && !isMastered ? `<div class="text-xs text-red-600 text-center mb-4 p-2 bg-red-50 rounded-md"><strong>Complete first:</strong> ${unmetPrereqs.map(id => TOPICS.find(t=>t.id===id).name).join(', ')}</div>` : ''}` : ''}
+                        ${topicSOPs ? renderSOPsSection(topicSOPs) : ''}
+                        ${detailedSOPs ? renderDetailedSOPsSection(detailedSOPs) : ''}
+                        ${topicDrills ? renderDrillsSection(topicDrills) : ''}
+                        ${topicWeaknesses ? renderWeaknessesSection(topicWeaknesses) : ''}
+                        ${(reverseConnections.strategic.length + reverseConnections.emath.length) > 0 ? `<div class="mb-4"><h4 class="font-bold mb-2 text-sm flex items-center gap-2"><span>🎯</span> Prerequisites</h4><div class="space-y-2">${[...reverseConnections.strategic, ...reverseConnections.emath].map(id => { const prereqTopic = TOPICS.find(t => t.id === id); return `<div onclick="selectNode('${id}')" class="p-2 bg-sky-50 border-l-4 border-sky-400 rounded cursor-pointer hover:bg-sky-100 transition-all"><div class="font-semibold text-sm">${prereqTopic.name}</div></div>`; }).join('')}</div></div>` : ''}
+                        ${Object.values(connections).flat().length > 0 ? `<div><h4 class="font-bold mb-2 text-sm flex items-center gap-2"><span>📈</span> Extensions</h4><div class="space-y-2">${Object.values(connections).flat().map(id => { const extTopic = TOPICS.find(t => t.id === id); return `<div onclick="selectNode('${id}')" class="p-2 bg-teal-50 border-l-4 border-teal-400 rounded cursor-pointer hover:bg-teal-100 transition-all"><div class="font-semibold text-sm">${extTopic.name}</div></div>`; }).join('')}</div></div>` : ''}
+                    </div>`;
+        }
+
+        function renderSOPsSection(sops) {
+            let html = '<div class="mb-4">';
+            
+            sops.forEach(item => {
+                if (item.type === 'header') {
+                    html += `<h4 class="font-bold mb-2 text-sm mt-4 first:mt-0">${item.text}</h4>`;
+                } else if (item.type === 'concept') {
+                    html += `<div class="p-3 bg-blue-50 rounded-lg mb-2 border-l-4 border-blue-400">
+                                <div class="font-semibold text-sm text-blue-900 mb-1">${item.q}</div>
+                                <div class="text-xs text-blue-700">${item.a}</div>
+                            </div>`;
+                } else if (item.type === 'sop') {
+                    html += `<div class="p-3 bg-sky-50 rounded-lg mb-2 border-l-4 border-sky-400">
+                                <div class="font-semibold text-sm text-sky-900 mb-2">${item.title}</div>
+                                <ol class="list-decimal list-inside text-xs text-sky-700 space-y-1">
+                                    ${item.steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                            </div>`;
+                } else if (item.type === 'reflection') {
+                    html += `<div class="p-3 bg-purple-50 rounded-lg mb-2 border-l-4 border-purple-400">
+                                <div class="text-xs text-purple-700 italic">${item.text}</div>
+                            </div>`;
+                } else if (typeof item === 'string') {
+                    // Fallback for simple strings
+                    html += `<div class="text-xs p-2 bg-sky-50 rounded mb-1">${item}</div>`;
+                }
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderDrillsSection(drills) {
+            let html = '<div class="mb-4"><h4 class="font-bold mb-2 text-sm flex items-center gap-2"><span>💪</span> Practice Drills</h4>';
+            
+            if (drills.prototype) {
+                html += `<div class="p-3 bg-amber-50 rounded-lg mb-2 border-l-4 border-amber-400">
+                            <div class="text-xs font-semibold text-amber-900 mb-2">Prototype Question</div>
+                            <div class="text-xs text-amber-800 mb-2">${drills.prototype.question}</div>
+                            <div class="text-xs text-amber-700"><strong>Expert Path:</strong> ${drills.prototype.expertPath}</div>
+                            ${drills.prototype.commonPitfalls ? `<div class="text-xs text-red-600 mt-1"><strong>⚠️ Pitfall:</strong> ${drills.prototype.commonPitfalls}</div>` : ''}
+                        </div>`;
+            }
+            
+            if (drills.variations && drills.variations.length > 0) {
+                html += `<div class="text-xs font-semibold text-slate-700 mb-1 mt-3">Variations:</div>`;
+                drills.variations.forEach(variation => {
+                    html += `<div class="text-xs p-2 bg-slate-50 rounded mb-1 border-l-2 border-slate-300">${variation}</div>`;
+                });
+            }
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderWeaknessesSection(weaknesses) {
+            if (!weaknesses || weaknesses.length === 0) return '';
+            
+            let html = '<div class="mb-4"><h4 class="font-bold mb-2 text-sm flex items-center gap-2"><span>⚠️</span> Common Weaknesses</h4>';
+            
+            weaknesses.forEach(weakness => {
+                html += `<div class="p-3 bg-red-50 rounded-lg mb-2 border-l-4 border-red-400">
+                            <div class="text-xs font-semibold text-red-900 mb-1">${weakness.case}</div>
+                            <div class="text-xs text-red-700 mb-2">${weakness.error}</div>
+                            <div class="text-xs text-green-700 bg-green-50 p-2 rounded"><strong>✓ Fix:</strong> ${weakness.command}</div>
+                        </div>`;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function renderDetailedSOPsSection(sops) {
+            if (!sops || sops.length === 0) return '';
+            
+            let html = '<div class="mb-4"><h4 class="font-bold mb-3 text-base flex items-center gap-2"><span>📋</span> Detailed Standard Operating Procedures</h4>';
+            
+            sops.forEach((sop, index) => {
+                html += `<div class="mb-4 p-4 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200">
+                            <div class="font-bold text-sm text-indigo-900 mb-2">${sop.title}</div>`;
+                
+                // Goal
+                if (sop.goal) {
+                    html += `<div class="mb-2 p-2 bg-white rounded-lg">
+                                <div class="text-xs font-semibold text-indigo-700">🎯 Goal:</div>
+                                <div class="text-xs text-indigo-600 mt-1">${sop.goal}</div>
+                            </div>`;
+                }
+                
+                // Triggers
+                if (sop.triggers && sop.triggers.length > 0) {
+                    html += `<div class="mb-2 p-2 bg-white rounded-lg">
+                                <div class="text-xs font-semibold text-indigo-700">🔔 Triggers:</div>
+                                <div class="text-xs text-indigo-600 mt-1">${sop.triggers.map(t => `<span class="inline-block bg-indigo-100 px-2 py-0.5 rounded mr-1 mb-1">"${t}"</span>`).join('')}</div>
+                            </div>`;
+                }
+                
+                // Steps
+                if (sop.steps && sop.steps.length > 0) {
+                    html += `<div class="mb-2 p-2 bg-white rounded-lg">
+                                <div class="text-xs font-semibold text-indigo-700 mb-1">📝 Steps:</div>
+                                <ol class="list-decimal list-inside text-xs text-indigo-600 space-y-1">
+                                    ${sop.steps.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                            </div>`;
+                }
+                
+                // Pitfalls
+                if (sop.pitfalls && sop.pitfalls.length > 0) {
+                    html += `<div class="mb-2 p-2 bg-red-50 rounded-lg border border-red-200">
+                                <div class="text-xs font-semibold text-red-700 mb-1">⚠️ Pitfalls:</div>
+                                <div class="space-y-1">
+                                    ${sop.pitfalls.map(pitfall => `
+                                        <div class="text-xs">
+                                            <span class="inline-block bg-red-200 text-red-800 px-2 py-0.5 rounded text-xs font-bold mr-1">${pitfall.type}</span>
+                                            <span class="text-red-700">${pitfall.text}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>`;
+                }
+                
+                // Pro Tips
+                if (sop.pro_tips && sop.pro_tips.length > 0) {
+                    html += `<div class="p-2 bg-green-50 rounded-lg border border-green-200">
+                                <div class="text-xs font-semibold text-green-700 mb-1">💡 Pro Tips:</div>
+                                <ul class="space-y-1">
+                                    ${sop.pro_tips.map(tip => `<li class="text-xs text-green-700">• ${tip}</li>`).join('')}
+                                </ul>
+                            </div>`;
+                }
+                
+                html += `</div>`;
+            });
+            
+            html += '</div>';
+            return html;
+        }
+
+        function isNodeConnected(selectedId, nodeId) {
+            if (selectedId === nodeId) return false;
+            const forwardConnections = Object.values(MAPPINGS[selectedId] || {}).flat();
+            if (forwardConnections.includes(nodeId)) return true;
+            const reverseConnections = Object.values(REVERSE_MAPPINGS[selectedId] || {}).flat();
+            if (reverseConnections.includes(nodeId)) return true;
+            return false;
+        }
+
+        window.selectNode = function(nodeId) {
+            state.selectedNode = state.selectedNode === nodeId ? null : nodeId;
+            renderApp();
+        };
+        window.closeDetail = function() {
+            state.selectedNode = null;
+            renderApp();
+        };
+        window.toggleMastered = function(nodeId) {
+            if (state.masteredNodes.has(nodeId)) {
+                state.masteredNodes.delete(nodeId);
+            } else {
+                state.masteredNodes.add(nodeId);
+            }
+            renderApp();
+        };
+        window.updateFilter = function(filterType, value) {
+            state[filterType === 'category' ? 'filterCategory' : 'filterBadge'] = value;
+            renderApp();
+        };
+        window.switchView = function(view) {
+            state.activeView = view;
+            renderApp();
+        };
+        
+        // ==================== INITIALIZE ====================
+        async function initializeApp() {
+            // Show loading indicator
+            document.getElementById('root').innerHTML = '<div id="loader">⏳ Loading topic data...</div>';
+            
+            // Load external JSON files
+            await loadExternalSOPs();
+            
+            // Generate reverse mappings
+            generateReverseMappings();
+            
+            // Render the app
+            renderApp();
+        }
+
+        initializeApp();
+    </script>
+</body>
+</html>

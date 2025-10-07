@@ -1,0 +1,32 @@
+// ... in topicDetailsData object
+"EM-G6": {
+  "mpc": { /* ... mpc data ... */ },
+  "drills": { /* ... drills data ... */ },
+  "weaknesses": [ /* ... weaknesses data ... */ ],
+  "sops": [
+    {
+      "title": "SOP 1: Equation of a Straight Line (y=mx+c)",
+      "goal": "Find the equation connecting two points.",
+      "triggers": ["Find the equation of the line..."],
+      "steps": [
+        "Find gradient m = (y2-y1)/(x2-x1)",
+        "Write partial equation y = mx + c",
+        "Substitute one point to find c",
+        "Write final equation"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Swapping x/y values when substituting into y=mx+c." },
+        { "type": "典型", "text": "Computing gradient with coordinates reversed." }
+      ],
+      "pro_tips": [
+        "Label points clearly (x1, y1), (x2, y2) before any calculation.",
+        "After finding m, immediately write y=mx+c and then solve for c."
+      ]
+    },
+    {
+      "title": "SOP 2: Parallel & Perpendicular Lines",
+      // ... SOP 2 data structured similarly
+    }
+    // ... and so on for all SOPs related to this topic
+  ]
+}
