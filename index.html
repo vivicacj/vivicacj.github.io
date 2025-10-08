@@ -13,21 +13,36 @@
         .header { text-align: center; padding: 60px 20px; }
         .header h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; color: #ffffff; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .header p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); max-width: 700px; margin: 0 auto; }
-        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        
+        /* 修改为固定的 3x3 布局 */
+        .subjects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 30px; 
+            margin-top: 40px; 
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
         .subject-card { text-decoration: none; color: white; border-radius: 20px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.2); background-color: white; }
         .subject-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
         .card-header { padding: 20px; color: white; display: flex; align-items: center; gap: 15px; }
         .subject-icon { font-size: 2rem; }
         .subject-title { font-size: 1.5rem; font-weight: 600; }
-        .card-content { padding: 20px; background-color: white; color: #555; font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.1); }
+        .card-content { padding: 20px; background-color: white; color: #555; font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.1); min-height: 100px; }
+        
+        /* 所有科目的颜色 */
+        .study-portal .card-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
         .e-math .card-header { background-color: #8f94fb; }
         .h-chinese .card-header { background-color: #a8e063; }
-        .english .card-header { background-color: #ff8e53; }
         .a-math .card-header { background-color: #ffc837; }
+        .english .card-header { background-color: #ff8e53; }
         .geography .card-header { background-color: #48dbfb; }
         .science .card-header { background-color: #8e2de2; }
         .poa .card-header { background-color: #c0392b; }
         .history .card-header { background-color: #434343; }
+        
         .cta-section { text-align: center; margin-top: 60px; padding: 40px 20px; }
         .cta-section h2 { font-size: 2.5rem; margin-bottom: 20px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .cta-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
@@ -37,7 +52,15 @@
         .cta-button:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.3); }
         #notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s; }
         #notification.show { opacity: 1; visibility: visible; transform: translate(-50%, -20px); }
-        @media (max-width: 768px) { .header h1 { font-size: 2.5rem; } .subjects-grid { grid-template-columns: 1fr; } }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) { 
+            .subjects-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) { 
+            .header h1 { font-size: 2.5rem; } 
+            .subjects-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -48,43 +71,57 @@
         </div>
 
         <div class="subjects-grid">
+            <!-- 第一行 -->
+            <a href="study-portal.html" class="subject-card study-portal">
+                <div class="card-header">
+                    <span class="subject-icon">🎓</span>
+                    <h3 class="subject-title">Study Portal</h3>
+                </div>
+                <div class="card-content">
+                    <p>Unified login dashboard for all subjects' practice tracking and progress management.</p>
+                </div>
+            </a>
+
             <a href="e-math/" class="subject-card e-math">
                 <div class="card-header"><span class="subject-icon">🧮</span><h3 class="subject-title">E-Math</h3></div>
                 <div class="card-content"><p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p></div>
             </a>
+            
             <a href="h-chinese/" class="subject-card h-chinese">
                 <div class="card-header"><span class="subject-icon">✍️</span><h3 class="subject-title">Higher Chinese</h3></div>
                 <div class="card-content"><p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p></div>
             </a>
+            
+            <!-- 第二行 -->
             <a href="a-math/" class="subject-card a-math">
                 <div class="card-header"><span class="subject-icon">📐</span><h3 class="subject-title">Additional Mathematics</h3></div>
                 <div class="card-content"><p>Algebraic methods, calculus, and trigonometric functions.</p></div>
             </a>
             
-            <!-- 核心修正1：将所有未激活的科目链接恢复为安全的占位符 "#" -->
             <a href="#" class="subject-card english">
                 <div class="card-header"><span class="subject-icon">📚</span><h3 class="subject-title">English Language</h3></div>
                 <div class="card-content"><p>Modules for composition, comprehension, and oral communication skills.</p></div>
             </a>
 
-             <a href="geography/index.html" class="subject-card geography">
+            <a href="geography/index.html" class="subject-card geography">
                 <div class="card-header"><span class="subject-icon">🌍</span><h3 class="subject-title">Geography</h3></div>
                 <div class="card-content"><p>Study of physical and human geography, map skills, and case studies.</p></div>
             </a>
             
-             <!-- 核心修正2：将 Combined Science 的链接精确指向其正确的 index.html 入口 -->
-             <a href="combined-science/index.html" class="subject-card science">
+            <!-- 第三行 -->
+            <a href="combined-science/index.html" class="subject-card science">
                 <div class="card-header"><span class="subject-icon">🔬</span><h3 class="subject-title">Combined Science (Phys/Chem)</h3></div>
                 <div class="card-content"><p>Core principles of Physics and Chemistry for the combined science paper.</p></div>
             </a>
             
-             <a href="poa-g3/index.html" class="subject-card poa">
-               <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
-               <div class="card-content"><p>Fundamentals of accounting, financial statements, and business entities.</p></div>
+            <a href="poa-g3/index.html" class="subject-card poa">
+                <div class="card-header"><span class="subject-icon">💼</span><h3 class="subject-title">Principles of Accounts</h3></div>
+                <div class="card-content"><p>Fundamentals of accounting, financial statements, and business entities.</p></div>
             </a>
+            
             <a href="history/index.html" class="subject-card history">
-              <div class="card-header"><span class="subject-icon">📜</span><h3 class="subject-title">Elective History</h3></div>
-              <div class="card-content"><p>Analysis of key historical events, sources, and essay writing skills.</p></div>
+                <div class="card-header"><span class="subject-icon">📜</span><h3 class="subject-title">Elective History</h3></div>
+                <div class="card-content"><p>Analysis of key historical events, sources, and essay writing skills.</p></div>
             </a>
         </div>
 
