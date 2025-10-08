@@ -240,6 +240,7 @@
         }
 
         // 用下面这个新版本，完整替换掉旧的 auth.onAuthStateChanged 函数
+        // 改进的认证状态监听器
         auth.onAuthStateChanged(async (firebaseUser) => {
             if (unsubscribe) unsubscribe();
             if (firebaseUser) {
@@ -249,31 +250,50 @@
                 mainAppContainer.classList.remove('hidden');
                 userEmailDisplay.textContent = user.email;
 
-                // 使用 get() 检查文档是否存在，仅在首次登录时为新用户创建
+                console.log("用户已登录:", user.uid);
+
+                // 改进的文档检查逻辑
                 try {
                     const docSnap = await userDocRef.get();
-                    if (!checkDocExists(docSnap)) {
-                        console.log("新用户，正在云端创建初始文档...");
+                    const docExists = docSnap.exists;
+                    
+                    console.log("文档存在性:", docExists);
+                    
+                    if (!docExists) {
+                        console.log("新用户，正在创建初始文档...");
                         await userDocRef.set(defaultPracticesData);
-                        console.log("初始文档创建成功。");
+                        console.log("初始文档创建成功");
+                    } else {
+                        console.log("文档已存在，数据将通过实时监听器加载");
                     }
                 } catch (error) {
-                    console.error("检查或创建用户文档时出错:", error);
+                    console.error("检查或创建文档时出错:", error);
                 }
 
-                // 设置实时侦听器
+                // 设置实时侦听器 - 改进的数据加载逻辑
                 unsubscribe = userDocRef.onSnapshot(docSnap => {
-                    if (checkDocExists(docSnap)) {
-                        practicesData = docSnap.data();
-                        for (const key in sectionTypes) { 
-                            if (!practicesData[key]) { practicesData[key] = []; } 
+                    console.log("收到文档快照更新");
+                    
+                    if (docSnap.exists) {
+                        const data = docSnap.data();
+                        console.log("加载的数据:", data);
+                        
+                        // 确保所有分类都存在
+                        practicesData = {};
+                        for (const key in sectionTypes) {
+                            practicesData[key] = data[key] || [];
                         }
+                        
+                        console.log("处理后的数据:", practicesData);
                     } else {
-                        practicesData = defaultPracticesData;
+                        console.log("文档不存在，使用默认数据");
+                        practicesData = JSON.parse(JSON.stringify(defaultPracticesData));
                     }
+                    
                     renderPractices();
                 }, error => {
                     console.error("实时侦听器错误:", error);
+                    alert("数据加载失败: " + error.message);
                 });
             } else {
                 user = null;
