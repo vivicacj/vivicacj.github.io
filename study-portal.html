@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-Level Study Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-purple: #7c3aed;
+            --primary-green: #059669;
+            --primary-orange: #ea580c;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .subject-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--color);
+        }
+        
+        .subject-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.2);
+        }
+        
+        .subject-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: var(--color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        .subject-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+        
+        .subject-card p {
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .subject-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--color);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 3px;
+        }
+        
+        .card-emath { --color: #3b82f6; }
+        .card-amath { --color: #f59e0b; }
+        .card-hcl { --color: #84cc16; }
+        .card-geography { --color: #06b6d4; }
+        .card-english { --color: #f97316; }
+        .card-science { --color: #8b5cf6; }
+        .card-poa { --color: #dc2626; }
+        .card-history { --color: #64748b; }
+        
+        .auth-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            max-width: 500px;
+            margin: 0 auto;
+            display: none;
+        }
+        
+        .auth-section.show {
+            display: block;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+        }
+        
+        .btn-logout {
+            background: #ef4444;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+        
+        .auth-toggle {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+        
+        .auth-toggle a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .auth-error {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .user-info {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px 25px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .user-info strong {
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .subjects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login/Register Section -->
+        <div id="auth-container">
+            <div class="header">
+                <h1>🎓 O-Level Study Portal</h1>
+                <p>Your comprehensive study management system</p>
+            </div>
+            
+            <div class="auth-section show" id="login-section">
+                <div class="auth-header">
+                    <h2>Welcome Back!</h2>
+                    <p style="color: var(--text-light);">Login to access your study materials</p>
+                </div>
+                <form id="login-form">
+                    <input type="email" id="login-email" class="form-input" placeholder="Email Address" required>
+                    <input type="password" id="login-password" class="form-input" placeholder="Password" required>
+                    <div id="login-error" class="auth-error"></div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+                <div class="auth-toggle">
+                    Don't have an account? <a href="#" onclick="toggleAuth(); return false;">Register</a>
+                </div>
+            </div>
+            
+            <div class="auth-section" id="register-section">
+                <div class="auth-header">
+                    <h2>Create Account</h2>
+                    <p style="color: var(--text-light);">Start your study journey today</p>
+                </div>
+                <form id="register-form">
+                    <input type="email" id="register-email" class="form-input" placeholder="Email Address" required>
+                    <input type="password" id="register-password" class="form-input" placeholder="Password (min 6 characters)" required>
+                    <div id="register-error" class="auth-error"></div>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </form>
+                <div class="auth-toggle">
+                    Already have an account? <a href="#" onclick="toggleAuth(); return false;">Login</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Portal (hidden until logged in) -->
+        <div id="main-portal" style="display: none;">
+            <div class="header">
+                <h1>🎓 O-Level Study Portal</h1>
+                <p>Select a subject to start practicing</p>
+            </div>
+            
+            <div class="user-info">
+                Welcome, <strong id="user-email"></strong>
+            </div>
+            
+            <div class="subjects-grid">
+                <a href="e-math/emath-exercise-tracker.html" class="subject-card card-emath">
+                    <div class="subject-icon">🧮</div>
+                    <h2>E-Math</h2>
+                    <p>Core concepts, revision guides, and sprint plans for Elementary Mathematics.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="emath-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="emath-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="h-chinese/hcl-exercise-tracker.html" class="subject-card card-hcl">
+                    <div class="subject-icon">✍️</div>
+                    <h2>Higher Chinese</h2>
+                    <p>Comprehensive breakdown of all papers, writing skills, and oral practice.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="hcl-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="hcl-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="a-math/amath-exercise-tracker.html" class="subject-card card-amath">
+                    <div class="subject-icon">📐</div>
+                    <h2>Additional Mathematics</h2>
+                    <p>Algebraic methods, calculus, and trigonometric functions.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="amath-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="amath-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="english/english-tracker.html" class="subject-card card-english">
+                    <div class="subject-icon">📚</div>
+                    <h2>English Language</h2>
+                    <p>Modules for composition, comprehension, and oral communication skills.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="english-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="english-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="geography/geography-tracker.html" class="subject-card card-geography">
+                    <div class="subject-icon">🌍</div>
+                    <h2>Geography</h2>
+                    <p>Study of physical and human geography, map skills, and case studies.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="geo-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="geo-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="combined-science/science-tracker.html" class="subject-card card-science">
+                    <div class="subject-icon">🔬</div>
+                    <h2>Combined Science (Phys/Chem)</h2>
+                    <p>Core principles of Physics and Chemistry for the combined science paper.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="science-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="science-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="poa/poa-tracker.html" class="subject-card card-poa">
+                    <div class="subject-icon">💼</div>
+                    <h2>Principles of Accounts</h2>
+                    <p>Fundamentals of accounting, financial statements, and business entities.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="poa-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="poa-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="history/history-tracker.html" class="subject-card card-history">
+                    <div class="subject-icon">📜</div>
+                    <h2>Elective History</h2>
+                    <p>Analysis of key historical events, sources, and essay writing skills.</p>
+                    <div class="subject-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="history-total">-</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="history-mastered">-</span>
+                            <span class="stat-label">Mastered</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div style="text-align: center;">
+                <button onclick="handleLogout()" class="btn btn-logout" style="max-width: 300px; margin: 0 auto;">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDdtQYfOC87IvpTZPFoDyb6ZgpEISzqw_I",
+            authDomain: "emath-study-plan.firebaseapp.com",
+            projectId: "emath-study-plan",
+            storageBucket: "emath-study-plan.firebasestorage.app",
+            messagingSenderId: "589299697460",
+            appId: "1:589299697460:web:df1e0bb0586b3740c04761"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Toggle between login and register
+        window.toggleAuth = function() {
+            document.getElementById('login-section').classList.toggle('show');
+            document.getElementById('register-section').classList.toggle('show');
+            document.getElementById('login-error').textContent = '';
+            document.getElementById('register-error').textContent = '';
+        };
+
+        // Login
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+            errorEl.textContent = '';
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                errorEl.textContent = error.code === 'auth/invalid-credential' 
+                    ? 'Invalid email or password' 
+                    : error.message;
+            }
+        });
+
+        // Register
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const errorEl = document.getElementById('register-error');
+            errorEl.textContent = '';
+            
+            if (password.length < 6) {
+                errorEl.textContent = 'Password must be at least 6 characters';
+                return;
+            }
+            
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                errorEl.textContent = error.code === 'auth/email-already-in-use'
+                    ? 'This email is already registered'
+                    : error.message;
+            }
+        });
+
+        // Logout
+        window.handleLogout = function() {
+            if (confirm('Are you sure you want to logout?')) {
+                signOut(auth);
+            }
+        };
+
+        // Load subject stats dynamically
+        async function loadSubjectStats(userId) {
+            try {
+                // E-Math stats
+                const emathDoc = await getDoc(doc(db, 'emath-practices', userId));
+                if (emathDoc.exists()) {
+                    const data = emathDoc.data();
+                    const total = (data.core || []).length + (data.satellite || []).length;
+                    const mastered = [...(data.core || []), ...(data.satellite || [])].filter(p => p.status === 'mastered').length;
+                    document.getElementById('emath-total').textContent = total || '0';
+                    document.getElementById('emath-mastered').textContent = mastered || '0';
+                }
+
+                // A-Math stats
+                const amathDoc = await getDoc(doc(db, 'amath-practices', userId));
+                if (amathDoc.exists()) {
+                    const data = amathDoc.data();
+                    const total = (data.core || []).length + (data.satellite || []).length;
+                    const mastered = [...(data.core || []), ...(data.satellite || [])].filter(p => p.status === 'mastered').length;
+                    document.getElementById('amath-total').textContent = total || '0';
+                    document.getElementById('amath-mastered').textContent = mastered || '0';
+                }
+
+               // HCL stats (优先读取新路径，fallback 到旧路径)
+                const hclDoc = await getDoc(doc(db, 'artifacts', appId, 'users', userId, 'user_data', 'hcl-practices'));
+                if (hclDoc.exists()) {
+                    const data = hclDoc.data();
+                    // 新数据结构：按分类统计
+                    let totalPractices = 0;
+                    let masteredPractices = 0;
+                    
+                    for (const section in data) {
+                        if (Array.isArray(data[section])) {
+                            totalPractices += data[section].length;
+                            masteredPractices += data[section].filter(p => p.status === 'mastered').length;
+                        }
+                    }
+                    
+                    document.getElementById('hcl-total').textContent = totalPractices || '0';
+                    document.getElementById('hcl-mastered').textContent = masteredPractices || '0';
+                } else {
+                    // Fallback：尝试读取旧数据（兼容）
+                    const oldHclDoc = await getDoc(doc(db, 'userPractices', userId));
+                    if (oldHclDoc.exists()) {
+                        const data = oldHclDoc.data();
+                        const practices = data.practices || [];
+                        const mastered = practices.filter(p => p.status === 'mastered').length;
+                        document.getElementById('hcl-total').textContent = practices.length || '0';
+                        document.getElementById('hcl-mastered').textContent = mastered || '0';
+                    }
+                }
+
+                // Geography stats
+                const geoDoc = await getDoc(doc(db, 'geography-practices', userId));
+                if (geoDoc.exists()) {
+                    const data = geoDoc.data();
+                    const practices = data.practices || [];
+                    const mastered = practices.filter(p => p.status === 'mastered').length;
+                    document.getElementById('geo-total').textContent = practices.length || '0';
+                    document.getElementById('geo-mastered').textContent = mastered || '0';
+                }
+
+                // English stats
+                const englishDoc = await getDoc(doc(db, 'english-practices', userId));
+                if (englishDoc.exists()) {
+                    const data = englishDoc.data();
+                    const practices = data.practices || [];
+                    const mastered = practices.filter(p => p.status === 'mastered').length;
+                    document.getElementById('english-total').textContent = practices.length || '0';
+                    document.getElementById('english-mastered').textContent = mastered || '0';
+                }
+
+                // Science stats
+                const scienceDoc = await getDoc(doc(db, 'science-practices', userId));
+                if (scienceDoc.exists()) {
+                    const data = scienceDoc.data();
+                    const practices = data.practices || [];
+                    const mastered = practices.filter(p => p.status === 'mastered').length;
+                    document.getElementById('science-total').textContent = practices.length || '0';
+                    document.getElementById('science-mastered').textContent = mastered || '0';
+                }
+
+                // POA stats
+                const poaDoc = await getDoc(doc(db, 'poa-practices', userId));
+                if (poaDoc.exists()) {
+                    const data = poaDoc.data();
+                    const practices = data.practices || [];
+                    const mastered = practices.filter(p => p.status === 'mastered').length;
+                    document.getElementById('poa-total').textContent = practices.length || '0';
+                    document.getElementById('poa-mastered').textContent = mastered || '0';
+                }
+
+                // History stats
+                const historyDoc = await getDoc(doc(db, 'history-practices', userId));
+                if (historyDoc.exists()) {
+                    const data = historyDoc.data();
+                    const practices = data.practices || [];
+                    const mastered = practices.filter(p => p.status === 'mastered').length;
+                    document.getElementById('history-total').textContent = practices.length || '0';
+                    document.getElementById('history-mastered').textContent = mastered || '0';
+                }
+
+                console.log('✅ Stats loaded successfully');
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Auth state observer
+        onAuthStateChanged(auth, async (user) => {
+            console.log('Auth state changed:', user ? user.email : 'No user');
+            if (user) {
+                console.log('✅ User logged in:', user.email);
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('main-portal').style.display = 'block';
+                document.getElementById('user-email').textContent = user.email;
+                
+                // Load stats dynamically
+                await loadSubjectStats(user.uid);
+            } else {
+                console.log('❌ No user, showing login');
+                document.getElementById('auth-container').style.display = 'block';
+                document.getElementById('main-portal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
