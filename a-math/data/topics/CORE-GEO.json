@@ -1,0 +1,98 @@
+{
+  "topic": {
+    "name": "Core-GeometryProofs",
+    "badge": "CORE",
+    "description": "Proving similarity and congruency, applying properties to find unknown lengths and angles",
+    "exam_weight": "~10-15% of Paper 2"
+  },
+  "archetypes_overview": [
+    {
+      "name": "Similarity Proofs",
+      "description": "Proving two triangles are similar (mainly using AA)",
+      "key_concepts": ["AA Criterion", "Angle Identification", "Corresponding Vertices"]
+    },
+    {
+      "name": "Congruency Proofs",
+      "description": "Proving two triangles are congruent (using SAS, SSS, ASA, RHS)",
+      "key_concepts": ["SAS", "SSS", "ASA", "RHS", "Element Matching"]
+    },
+    {
+      "name": "Finding Unknown Lengths",
+      "description": "Applying similarity/congruency properties to find unknown lengths",
+      "key_concepts": ["Ratio Proportions", "Corresponding Sides"]
+    },
+    {
+      "name": "Area Ratios",
+      "description": "Calculating the ratio of areas from the ratio of lengths",
+      "key_concepts": ["k² Rule", "Scale Factor Squaring"]
+    }
+  ],
+  "sops": [
+    {
+      "title": "SOP 1: Proving Similarity (AA Criterion)",
+      "archetype": "Similarity Proofs",
+      "key_concepts": ["AA Criterion", "Angle Properties", "Triangle Correspondence"],
+      "goal": "Prove two triangles are similar using Angle-Angle",
+      "triggers": ["prove triangles are similar", "show similarity"],
+      "steps": [
+        "Identify the two triangles: Label vertices clearly (e.g., △ABC and △DEF)",
+        "Find two pairs of equal angles: Use properties like vertically opposite angles, corresponding angles, alternate angles, or angles in the same segment",
+        "State the equal angles explicitly: Write ∠ABC = ∠DEF and ∠BAC = ∠EDF with reasons",
+        "Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Not providing geometric reasons for why angles are equal" },
+        { "type": "典型", "text": "Mixing up corresponding vertices when stating similarity" }
+      ],
+      "pro_tips": [
+        "Common angle reasons: vertically opposite, corresponding (parallel lines), alternate (parallel lines), angles in same segment",
+        "Always write the triangle correspondence correctly: △ABC ~ △DEF means A↔D, B↔E, C↔F"
+      ]
+    },
+    {
+      "title": "SOP 2: Proving Congruency (SAS, SSS, ASA, RHS)",
+      "archetype": "Congruency Proofs",
+      "key_concepts": ["SAS", "SSS", "ASA", "RHS", "Criterion Selection"],
+      "goal": "Prove two triangles are congruent",
+      "triggers": ["prove triangles are congruent", "show congruency"],
+      "steps": [
+        "Identify the two triangles: Label all vertices",
+        "List what you know: Mark equal sides and angles on the diagram",
+        "Determine which test applies: SAS (Side-Angle-Side), SSS (Side-Side-Side), ASA (Angle-Side-Angle), or RHS (Right angle-Hypotenuse-Side)",
+        "State the equal elements with reasons: e.g., 'AB = DE (given)', '∠ABC = ∠DEF (common angle)'",
+        "Conclude: State '△ABC ≅ △DEF (SAS)' with the appropriate criterion"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Using the wrong congruency criterion (e.g., trying to use AAA)" },
+        { "type": "典型", "text": "For SAS, the angle must be BETWEEN the two equal sides" }
+      ],
+      "pro_tips": [
+        "SAS: The angle must be included between the two sides",
+        "Common reasons: 'common side', 'given', 'opposite equal angles', 'radii of same circle'",
+        "ASA vs AAS: For ASA, the side must be between the two angles"
+      ]
+    },
+    {
+      "title": "SOP 3: Using Similarity to Find Unknown Lengths",
+      "archetype": "Finding Unknown Lengths",
+      "key_concepts": ["Ratio Proportions", "Corresponding Sides", "Cross-Multiplication"],
+      "goal": "Calculate unknown side lengths using similar triangles",
+      "triggers": ["find the length", "calculate x", "given similar triangles"],
+      "steps": [
+        "Confirm similarity: Either it's stated or prove it using SOP 1",
+        "Set up the ratio: Write corresponding sides as a proportion. e.g., AB/DE = BC/EF = AC/DF",
+        "Substitute known values: Plug in all given lengths",
+        "Solve for unknown: Cross-multiply if needed, then isolate the unknown",
+        "Check reasonableness: Does the answer make geometric sense?"
+      ],
+      "pitfalls": [
+        { "type": "致命", "text": "Setting up ratios with non-corresponding sides" },
+        { "type": "典型", "text": "Inverting the ratio (getting it upside down)" }
+      ],
+      "pro_tips": [
+        "Draw the triangles separately if they overlap, matching corresponding vertices",
+        "Write the similarity statement first (△ABC ~ △DEF) to ensure correct correspondence"
+      ]
+    }
+  ]
+}

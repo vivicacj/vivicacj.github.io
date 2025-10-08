@@ -1,0 +1,30 @@
+[
+  {
+    "id": "EM-G4",
+    "syllabus_code": "G4",
+    "name": "Pythagoras' Theorem & Trigonometry",
+    "subject": "E-Math",
+    "category": "Geometry & Measurement",
+    "exam_tags": ["Core_Topic", "High_Frequency", "Paper2_Major_Question"],
+    "description": "Application of Sine/Cosine rules, bearings, and elevation in real-world contexts."
+  },
+  {
+    "id": "EM-N6",
+    "syllabus_code": "N6",
+    "name": "Functions & Graphs",
+    "subject": "E-Math",
+    "category": "Number & Algebra",
+    "exam_tags": ["Core_Topic", "High_Frequency", "Graphing_Skill_Heavy"],
+    "description": "Analysis of quadratic functions, completing the square, and graphical interpretation."
+  },
+  {
+    "id": "EM-N2",
+    "syllabus_code": "N2",
+    "name": "Ratio and Proportion",
+    "subject": "E-Math",
+    "category": "Number & Algebra",
+    "exam_tags": ["Satellite_Topic", "Paper1_Staple", "Calculation_Heavy"],
+    "description": "Includes map scales, direct and inverse proportion."
+  },
+  ...
+]

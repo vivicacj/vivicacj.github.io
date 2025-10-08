@@ -1,0 +1,115 @@
+{
+  "topic": {
+    "name": "Sat-Mensuration",
+    "badge": "SAT",
+    "description": "Arc length, sector area, surface area and volume of composite solids, similar figures",
+    "exam_weight": "~8-10% across both papers"
+  },
+  "archetypes_overview": [
+    {
+      "name": "Basic Mensuration",
+      "description": "Calculating arc length, sector area, and segment area of circles",
+      "key_concepts": ["Formula Selection", "Unit Consistency", "Method Marks"]
+    },
+    {
+      "name": "Similar Figures Scaling",
+      "description": "Solving problems using the scaling laws for similar figures/solids",
+      "key_concepts": ["Length Ratio k", "Area Ratio k²", "Volume Ratio k³"]
+    },
+    {
+      "name": "Composite Solids",
+      "description": "Finding the surface area and volume of composite solids (e.g., cone + sphere)",
+      "key_concepts": ["Shape Deconstruction", "Exposed Surfaces Only", "TSA vs CSA"]
+    },
+    {
+      "name": "Sector & Segment",
+      "description": "Calculating properties of circle parts",
+      "key_concepts": ["Degrees vs Radians", "Sector - Triangle", "Arc Length Formula"]
+    }
+  ],
+  "sops": [
+    {
+      "title": "SOP 1: Master SOP for ALL Mensuration Problems",
+      "archetype": "Basic Mensuration",
+      "key_concepts": ["Formula Writing", "Variable Listing", "Unit Check"],
+      "goal": "To never lose marks due to formula or calculation errors",
+      "triggers": ["area", "surface area", "volume", "capacity"],
+      "steps": [
+        "Identify the Shape(s): Name them immediately (e.g., cone + hemisphere)",
+        "Write the Formula FIRST: e.g., write CSA = πrl before substituting. (Secures method marks)",
+        "List Variables: Example: r = 8, l = 17",
+        "Substitute and Calculate: Carefully",
+        "Final Check (Units & Accuracy): Correct units (e.g., cm², cm³) and required s.f./d.p."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Missing/incorrect units → lose accuracy/answer marks" },
+        { "type": "COMMON", "text": "Substituting numbers before writing the exact formula" }
+      ],
+      "pro_tips": [
+        "Always write the formula first to lock in method marks",
+        "Box the final answer with units and accuracy"
+      ]
+    },
+    {
+      "title": "SOP 2: Similar Figures & Solids",
+      "archetype": "Similar Figures Scaling",
+      "key_concepts": ["k for Length", "k² for Area", "k³ for Volume"],
+      "goal": "Correctly use scaling laws for length, area, and volume",
+      "triggers": ["similar", "same shape but different size"],
+      "steps": [
+        "Find the Length Ratio (k) FIRST: k = Length₁ ÷ Length₂",
+        "Identify the Target: Area or Volume/Capacity/Mass?",
+        "Apply Power Rule: Area ratio = k². Volume/Capacity/Mass ratio = k³",
+        "Set up Proportion & Solve: Plug numbers into the correct ratio equation"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using k for area/volume without squaring/cubing" },
+        { "type": "COMMON", "text": "Swapping numerator/denominator (wrong object on top)" }
+      ],
+      "pro_tips": [
+        "Always write k first, then immediately write k² or k³ before numbers",
+        "Draw a mini table with three rows: Length / Area / Volume = k / k² / k³"
+      ]
+    },
+    {
+      "title": "SOP 3: Composite Solids",
+      "archetype": "Composite Solids",
+      "key_concepts": ["Deconstruction", "Exposed Surfaces", "Hidden Faces"],
+      "goal": "Find Total Surface Area (TSA) or Total Volume of combined shapes",
+      "triggers": ["combined shapes", "cone + hemisphere", "composite solid"],
+      "steps": [
+        "Deconstruct the Shape: List the basic parts clearly",
+        "Calculate Each Part Separately: Volume: sum volumes of parts. TSA (TRAP): only exposed surfaces count. Cone curved surface area: πrl. Hemisphere curved surface area: 2πr². Do NOT add base areas that are glued/hidden",
+        "Sum the Exposed Parts for TSA; sum volumes for total volume"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Double-counting hidden/glued faces in TSA" },
+        { "type": "COMMON", "text": "Mixing up CSA vs TSA formulas or incorrectly adding base areas" }
+      ],
+      "pro_tips": [
+        "Make a checklist of faces; mark 'hidden' vs 'exposed'",
+        "Calculate and label each part with units before summing"
+      ]
+    },
+    {
+      "title": "SOP 4: Sector & Segment Problems",
+      "archetype": "Sector & Segment",
+      "key_concepts": ["Angle Units", "Sector Formulas", "Segment = Sector - Triangle"],
+      "goal": "Accurately calculate properties of circle parts",
+      "triggers": ["sector", "segment", "arc length"],
+      "steps": [
+        "Check Angle Unit: Degrees vs radians determines formulas",
+        "Sector First: Arc length: (θ÷360)×2πr (degrees) or rθ (radians). Sector area: (θ÷360)×πr² (degrees) or ½r²θ (radians)",
+        "Segment: Master idea: Area of Segment = Area of Sector − Area of Triangle. Triangle area (using included angle): ½ab sinC. Perform the subtraction"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using degree formulas on radian inputs (or vice-versa)" },
+        { "type": "COMMON", "text": "Forgetting to subtract the triangle for a segment" }
+      ],
+      "pro_tips": [
+        "Circle the angle unit at the start",
+        "Always write 'Segment = Sector − Triangle' before substituting numbers"
+      ]
+    }
+  ]
+}

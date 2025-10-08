@@ -1,0 +1,88 @@
+{
+  "topic": {
+    "name": "Sat-RatioPercent",
+    "badge": "SAT",
+    "description": "Map scales, percentage change, simple/compound interest, and currency exchange",
+    "exam_weight": "~8-10% of Paper 1"
+  },
+  "archetypes_overview": [
+    {
+      "name": "Map Scale Problems",
+      "description": "Converting between map distances and actual distances/areas",
+      "key_concepts": ["Scale Ratio", "Length vs Area Scaling", "Unit Conversion"]
+    },
+    {
+      "name": "Percentage Change",
+      "description": "Calculating percentage change, profit, discount, or GST",
+      "key_concepts": ["100% Reference", "Forward/Reverse Percentage", "New Percentage"]
+    },
+    {
+      "name": "Interest Calculations",
+      "description": "Solving Simple & Compound Interest problems",
+      "key_concepts": ["Principal", "Rate", "Time", "Compounding Frequency"]
+    }
+  ],
+  "sops": [
+    {
+      "title": "SOP 1: Map Scale Problems",
+      "archetype": "Map Scale Problems",
+      "key_concepts": ["Length Scale", "Area Scale k²", "Unit Conversion"],
+      "goal": "Accurately convert between map distances and actual distances/areas",
+      "triggers": ["Scale 1 : n", "area on the map", "actual area"],
+      "steps": [
+        "Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km (convert n cm to km first). Area scale: 1 cm² : (n ÷ 100,000)² km²",
+        "Select the Correct Scale: Decide if it's length or area",
+        "Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using the length scale to compute an area" },
+        { "type": "COMMON", "text": "Forgetting to square when switching to area" }
+      ],
+      "pro_tips": [
+        "Always write BOTH scales first (length and area)",
+        "Circle the word 'Area' in the question → write 'square it' beside it"
+      ]
+    },
+    {
+      "title": "SOP 2: Percentage Change & Reverse Percentage",
+      "archetype": "Percentage Change",
+      "key_concepts": ["100% Reference Point", "New Percentage", "Forward vs Reverse"],
+      "goal": "Calculate the new value after change, or recover the original value",
+      "triggers": ["increase by X%", "discount", "GST", "after the increase"],
+      "steps": [
+        "Identify the '100%': Always the original value / cost price / pre-tax price",
+        "Compute New Percentage: Increase 15% → new % = 115%. Discount 20% → new % = 80%",
+        "Execute: Forward (new value): New = Original × (New% ÷ 100). Reverse (original): Original = New ÷ (New% ÷ 100)"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "In reverse percentage, multiplying instead of dividing by the new percentage" },
+        { "type": "COMMON", "text": "Setting '100%' to the new (changed) value" }
+      ],
+      "pro_tips": [
+        "Underline the '100% reference' (Original/Cost/Pre-tax) before any calculation",
+        "Write a reminder: 'Original? → divide by new%'"
+      ]
+    },
+    {
+      "title": "SOP 3: Simple & Compound Interest",
+      "archetype": "Interest Calculations",
+      "key_concepts": ["P-R-T-n Parameters", "Simple vs Compound Formula", "Compounding Frequency"],
+      "goal": "Compute total amount and interest for simple/compound interest",
+      "triggers": ["simple interest", "compound interest", "per annum", "compounded quarterly/half-yearly"],
+      "steps": [
+        "Identify Type & Parameters: P = Principal, R = annual rate, T = time (years), n = compounding per year (1/2/4…)",
+        "Write Formula: Simple: I = P × (R ÷ 100) × T. Compound: A = P × (1 + (R ÷ n) ÷ 100)^(n × T)",
+        "Substitute Carefully & Calculate: For compound, divide R by n, multiply T by n",
+        "Answer the Question: If they want interest, use A − P"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Forgetting R → R/n and T → nT for compounding" },
+        { "type": "COMMON", "text": "Confusing interest vs total amount" }
+      ],
+      "pro_tips": [
+        "As soon as you read 'compounded …', jot n = …, then write R → R/n, T → nT",
+        "If the question says 'interest', remember to compute A − P"
+      ]
+    }
+  ]
+}

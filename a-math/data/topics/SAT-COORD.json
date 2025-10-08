@@ -1,0 +1,88 @@
+{
+  "topic": {
+    "name": "Sat-CoordGeo",
+    "badge": "SAT",
+    "description": "Gradient, distance, equation of lines, parallel and perpendicular lines",
+    "exam_weight": "~5-8% of Paper 1"
+  },
+  "archetypes_overview": [
+    {
+      "name": "Finding Line Equations",
+      "description": "Finding the distance between two points",
+      "key_concepts": ["Gradient Formula m=(y₂-y₁)/(x₂-x₁)", "y=mx+c Form", "Point Substitution"]
+    },
+    {
+      "name": "Parallel & Perpendicular Lines",
+      "description": "Solving problems involving parallel and perpendicular lines",
+      "key_concepts": ["m₁=m₂ for Parallel", "m₁×m₂=-1 for Perpendicular", "Negative Reciprocal"]
+    },
+    {
+      "name": "Distance & Area",
+      "description": "Finding the gradient of a line and calculating areas",
+      "key_concepts": ["Distance Formula", "Shoelace Formula", "Base×Height Method"]
+    }
+  ],
+  "sops": [
+    {
+      "title": "SOP 1: Finding the Equation of a Straight Line (y = mx + c)",
+      "archetype": "Finding Line Equations",
+      "key_concepts": ["Gradient m", "y-intercept c", "Point-Slope Method"],
+      "goal": "To find the equation connecting any two points",
+      "triggers": ["Find the equation of the line", "equation passing through"],
+      "steps": [
+        "Find the Gradient (m): m = (y₂ − y₁) ÷ (x₂ − x₁). Pro-Tip: Label points (x₁,y₁) and (x₂,y₂) before calculating",
+        "Write the Partial Equation: y = (your m)x + c",
+        "Find the y-intercept (c): Substitute coordinates of one known point (use simpler one) into y = mx + c and solve for c",
+        "Write the Final Equation: Combine your m and c values"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Swapping x and y when substituting into y = mx + c" },
+        { "type": "COMMON", "text": "Computing m with (x₁,y₁) and (x₂,y₂) reversed by mistake" }
+      ],
+      "pro_tips": [
+        "Label points clearly (x₁,y₁), (x₂,y₂) before any calculation",
+        "After finding m, immediately write y = mx + c, then plug in the simplest point to get c"
+      ]
+    },
+    {
+      "title": "SOP 2: Parallel & Perpendicular Lines",
+      "archetype": "Parallel & Perpendicular Lines",
+      "key_concepts": ["Gradient Relationships", "m₁=m₂", "m₁×m₂=-1"],
+      "goal": "To find the equation of a new line based on its relationship to another line",
+      "triggers": ["parallel to", "perpendicular to"],
+      "steps": [
+        "Extract the Original Gradient (m₁): Rearrange the given line to y = mx + c first if needed. Example: 3x + 2y = 7 → 2y = −3x + 7 → y = (−3/2)x + 3.5. Gradient m₁ = −3/2",
+        "Determine the New Gradient (m₂): Parallel: m₂ = m₁. Perpendicular: m₂ = −1 ÷ m₁ (flip the fraction and change the sign)",
+        "Use SOP 1: With m₂ and a point on the new line, repeat SOP 1 (Steps 2–4) to finish"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "For perpendicular lines, forgetting to flip AND change sign" },
+        { "type": "COMMON", "text": "Not rearranging a general form (like ax + by = c) before reading m" }
+      ],
+      "pro_tips": [
+        "Box m₁ first, then write m₂ = m₁ (parallel) or m₂ = −1/m₁ (perpendicular)",
+        "Once m₂ is fixed, jump straight into SOP 1 flow to finish quickly"
+      ]
+    },
+    {
+      "title": "SOP 3: Finding Length & Area (on the Coordinate Plane)",
+      "archetype": "Distance & Area",
+      "key_concepts": ["Distance Formula", "Shoelace Method", "Triangle Area"],
+      "goal": "To calculate the distance between points or the area of a triangle",
+      "triggers": ["Find the length of", "Find the area of"],
+      "steps": [
+        "Length of a Line Segment: Distance = √[(x₂−x₁)² + (y₂−y₁)²]. Note: Order doesn't matter because of squaring, but be consistent and watch negatives",
+        "Area of a Triangle (axis-aligned side): If one side is horizontal or vertical, use it as the base. Height is the perpendicular distance from the third vertex. Area = ½ × base × height",
+        "Area of a General Triangle (Shoelace): List the vertices around the triangle and repeat the first at the end. Area = ½ × |(x₁y₂ + x₂y₃ + x₃y₁) − (y₁x₂ + y₂x₃ + y₃x₁)|"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Misordering coordinates in Shoelace → wrong magnitude/sign" },
+        { "type": "COMMON", "text": "Dropping negative signs in distance/area calculations" }
+      ],
+      "pro_tips": [
+        "For Shoelace, write points clockwise and repeat the first at the bottom",
+        "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
+      ]
+    }
+  ]
+}

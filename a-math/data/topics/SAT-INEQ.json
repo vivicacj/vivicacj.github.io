@@ -1,0 +1,90 @@
+{
+  "topic": {
+    "name": "Sat-Inequalities",
+    "badge": "SAT",
+    "description": "Solving compound inequalities, modeling, and finding maximum/minimum values",
+    "exam_weight": "~5-8% of Paper 1"
+  },
+  "archetypes_overview": [
+    {
+      "name": "Compound Inequalities",
+      "description": "Solving linear and compound inequalities",
+      "key_concepts": ["Splitting Method", "Number Line Representation", "Sign Flipping Rule"]
+    },
+    {
+      "name": "Inequality Modeling",
+      "description": "Translating real-world language into precise inequalities",
+      "key_concepts": ["Keyword Translation", "Variable Definition", "Constraint Formation"]
+    },
+    {
+      "name": "Max/Min in Ranges",
+      "description": "Finding maximum or minimum values of expressions within given ranges",
+      "key_concepts": ["Boundary Analysis", "Extreme Values", "Power Sign Behavior"]
+    }
+  ],
+  "sops": [
+    {
+      "title": "SOP 1: Solving Compound Inequalities",
+      "archetype": "Compound Inequalities",
+      "key_concepts": ["Split and Solve", "Sign Flip Rule", "Number Line Overlap"],
+      "goal": "To find the final, single range of x",
+      "triggers": ["two inequality signs", "A < B ≤ C"],
+      "steps": [
+        "SPLIT: Break into two simpler inequalities. Example: 3x − 1 < 2x + 9 ≤ 15 → Part A: 3x − 1 < 2x + 9, Part B: 2x + 9 ≤ 15",
+        "SOLVE: Solve Part A and Part B individually (each gives a range)",
+        "CRITICAL RULE: If you multiply or divide by a negative, you MUST flip the inequality sign",
+        "DRAW: Draw a number line and mark key values (this is your safety net)",
+        "PLOT & OVERLAP: Plot both solutions; open circles for <, >, solid for ≤, ≥. The final answer is the overlap",
+        "WRITE: Write as a single compound inequality (e.g., 4 < x ≤ 10)"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Not flipping the sign after multiplying/dividing by a negative" },
+        { "type": "COMMON", "text": "Using the wrong open/closed circle on the number line" }
+      ],
+      "pro_tips": [
+        "Write a banner note at the top: '× or ÷ negative → flip sign'",
+        "Always sketch the number line before writing the final compound form"
+      ]
+    },
+    {
+      "title": "SOP 2: Modelling with Inequalities",
+      "archetype": "Inequality Modeling",
+      "key_concepts": ["Keyword Recognition", "Symbol Translation", "Variable Definition"],
+      "goal": "Translate real-world language into a precise inequality",
+      "triggers": ["at least", "no more than", "minimum", "maximum"],
+      "steps": [
+        "DEFINE: 'Let x be …' (define the variable clearly)",
+        "TRANSLATE KEYWORDS: at least/minimum → ≥, at most/maximum/no more than → ≤, more than/greater than → >, less than/fewer than → <",
+        "CONSTRUCT: Build the inequality with the numbers and your symbol"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Misreading 'at least/at most' leading to the wrong inequality direction" },
+        { "type": "COMMON", "text": "Forgetting to define the variable first" }
+      ],
+      "pro_tips": [
+        "Underline the keyword and immediately write its symbol (≥, ≤, >, <)",
+        "Start with 'Let x = …' to anchor the model"
+      ]
+    },
+    {
+      "title": "SOP 3: Finding Max/Min Values in a Range",
+      "archetype": "Max/Min in Ranges",
+      "key_concepts": ["Boundary Values", "Power Sign Behavior", "Optimization Strategy"],
+      "goal": "To find the absolute maximum or minimum value of an expression",
+      "triggers": ["largest value", "smallest value", "with given ranges"],
+      "steps": [
+        "LIST BOUNDARIES: Write x_min, x_max, y_min, y_max. Example: x_min = −9, x_max = 18, y_min = 9 (smallest integer > 8), y_max = 24",
+        "ANALYZE THE GOAL: Largest of y − x³: choose y_max and the smallest possible x³ (remember (−9)³ is negative and very small). Smallest of y − 2x: choose y_min and the largest possible 2x (use x_max)",
+        "CALCULATE: Substitute boundary values and compute. Example: Largest y − x³ = 24 − (−9)³ = 24 − (−729) = 753"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Choosing the wrong boundary combination (entire result wrong)" },
+        { "type": "COMMON", "text": "Forgetting that odd powers keep sign (e.g., (−9)³ = −729)" }
+      ],
+      "pro_tips": [
+        "Draw a quick 2×2 boundary table for x and y, then pick the combo that matches the goal",
+        "Do a quick mental 'sanity check' before finalizing"
+      ]
+    }
+  ]
+}
