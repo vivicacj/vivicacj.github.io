@@ -1,0 +1,35 @@
+{
+  "version": "3.0",
+  "last_updated": "2025-10-14",
+  "description": "Configuration file for managing multiple archetype data sources",
+  "available_grades": ["G3", "G4"],
+  "data_sources": {
+    "G3": {
+      "file": "archetypes-g3.json",
+      "description": "Grade 3 O-Level E-Math Archetypes",
+      "enabled": true,
+      "total_archetypes": 31,
+      "categories": {
+        "CORE": 13,
+        "SAT": 18
+      }
+    },
+    "G4": {
+      "file": "archetypes-g4.json",
+      "description": "Grade 4 O-Level E-Math Archetypes",
+      "enabled": true,
+      "total_archetypes": 1,
+      "categories": {
+        "CORE": 1,
+        "SAT": 0
+      }
+    }
+  },
+  "default_grade": "G3",
+  "load_strategy": "on_demand",
+  "notes": {
+    "on_demand": "Load data for each grade only when user selects that grade filter",
+    "all_at_once": "Load all grades at initialization (use for small datasets)",
+    "recommended": "on_demand for better performance as dataset grows"
+  }
+}

@@ -1,0 +1,1343 @@
+{
+  "version": "3.0-G3",
+  "grade": "G3",
+  "last_updated": "2025-10-14",
+  "description": "E-Math O-Level G3 Problem Archetypes",
+  "metadata": {
+    "total_archetypes": 31,
+    "category_distribution": {
+      "CORE": 13,
+      "SAT": 18
+    },
+    "topic_distribution": {
+      "trigonometry": 4,
+      "algebra": 10,
+      "geometry": 6,
+      "numbers": 6,
+      "mensuration": 3,
+      "statistics": 3
+    }
+  },
+  "archetypes": [
+    {
+      "id": "ARCH-TRIG-01",
+      "name": "2D Bearing Problems",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Solve for unknown sides/angles in scenarios involving bearings, North lines, and parallel angle relationships",
+      "key_concepts": ["Sine Rule", "Cosine Rule", "Bearing Conversion", "Parallel Line Angle Properties"],
+      "difficulty": 4,
+      "exam_weight": 95,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-02", "ARCH-TRIG-04"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-01",
+        "index": 0
+      },
+      "tags": ["bearing", "navigation", "sine-rule", "cosine-rule", "2d"]
+    },
+    {
+      "id": "ARCH-TRIG-02",
+      "name": "3D Elevation & Depression Problems",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Calculate angles of elevation/depression in 3D scenarios with vertical and horizontal components",
+      "key_concepts": ["SOH CAH TOA", "2D Plane Decomposition", "Right-Angled Triangles", "Horizontal/Vertical Plane"],
+      "difficulty": 5,
+      "exam_weight": 88,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-02",
+        "index": 1
+      },
+      "tags": ["3d", "elevation", "depression", "trigonometry", "vertical"]
+    },
+    {
+      "id": "ARCH-TRIG-03",
+      "name": "Area Calculation using Sine",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Calculate area of complex fields using the half ab sinC formula",
+      "key_concepts": ["Triangle Area Formula", "Included Angle Identification", "Half ab sinC"],
+      "difficulty": 3,
+      "exam_weight": 82,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-03",
+        "index": 2
+      },
+      "tags": ["area", "sine", "triangle", "field-calculation"]
+    },
+    {
+      "id": "ARCH-TRIG-04",
+      "name": "Shortest Distance Problems",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Find shortest distance from a point to a line using area method",
+      "key_concepts": ["Area Method", "Perpendicular Height Concept", "Distance Calculation"],
+      "difficulty": 4,
+      "exam_weight": 79,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-01", "ARCH-TRIG-03"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-04",
+        "index": 2
+      },
+      "tags": ["distance", "perpendicular", "area-method", "shortest-path"]
+    },
+    {
+      "id": "ARCH-QUAD-01",
+      "name": "Completing the Square & Feature Extraction",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Convert quadratic expressions to vertex form to identify turning points and max/min values",
+      "key_concepts": ["Perfect Square Trinomial", "Vertex Form", "Half-Coefficient Method", "Turning Point"],
+      "difficulty": 4,
+      "exam_weight": 92,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-02", "ARCH-QUAD-03"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-01",
+        "index": 0
+      },
+      "tags": ["quadratic", "completing-square", "vertex-form", "maximum", "minimum"]
+    },
+    {
+      "id": "ARCH-QUAD-02",
+      "name": "Graph Sketching from Equation",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Sketch parabolas accurately by identifying y-intercept, x-intercepts, and vertex",
+      "key_concepts": ["Turning Point", "Intercepts", "Parabola Shape", "Axis of Symmetry"],
+      "difficulty": 3,
+      "exam_weight": 85,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-01", "ARCH-QUAD-03"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-02",
+        "index": 1
+      },
+      "tags": ["graph", "sketch", "parabola", "quadratic", "plotting"]
+    },
+    {
+      "id": "ARCH-QUAD-03",
+      "name": "Finding Equation from Graph Features",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Reverse engineer the quadratic equation given graph features like roots or vertex",
+      "key_concepts": ["Vertex Form y=a(x-h)²+k", "Parameter Determination", "Point Substitution"],
+      "difficulty": 4,
+      "exam_weight": 81,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-01", "ARCH-QUAD-02"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-03",
+        "index": 2
+      },
+      "tags": ["reverse-engineering", "equation", "graph-features", "quadratic"]
+    },
+    {
+      "id": "ARCH-QUAD-04",
+      "name": "Solving Equations via Graph Intersection",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Interpret intersection points of parabola with lines to solve equations graphically",
+      "key_concepts": ["Discriminant", "Solution Count", "Intersection Points"],
+      "difficulty": 3,
+      "exam_weight": 77,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-02"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": null,
+        "index": null
+      },
+      "tags": ["intersection", "graphical-solution", "discriminant"]
+    },
+    {
+      "id": "ARCH-ALG-01",
+      "name": "Simplifying Complex Algebraic Fractions",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Manipulate multi-term algebraic fractions through factorization and cancellation",
+      "key_concepts": ["LCD (Lowest Common Denominator)", "Common Denominator", "Factorization", "Cancellation"],
+      "difficulty": 4,
+      "exam_weight": 89,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-02"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-01",
+        "index": 0
+      },
+      "tags": ["algebraic-fractions", "factorization", "lcd", "simplification"]
+    },
+    {
+      "id": "ARCH-ALG-02",
+      "name": "Solving Fractional Equations",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Clear denominators and solve equations involving algebraic fractions",
+      "key_concepts": ["Clearing Fractions", "Extraneous Solutions", "LCD Multiplication"],
+      "difficulty": 4,
+      "exam_weight": 86,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-02",
+        "index": 1
+      },
+      "tags": ["fractional-equations", "clearing-denominators", "extraneous-solutions"]
+    },
+    {
+      "id": "ARCH-ALG-03",
+      "name": "Changing the Subject of a Formula",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Rearrange complex formulas to isolate a different variable",
+      "key_concepts": ["Variable Isolation", "Factoring Out", "Inverse Operations"],
+      "difficulty": 3,
+      "exam_weight": 83,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-03",
+        "index": 2
+      },
+      "tags": ["subject-change", "formula-rearrangement", "variable-isolation"]
+    },
+    {
+      "id": "ARCH-ALG-04",
+      "name": "Solving Simultaneous Equations",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Solve systems of linear equations using substitution or elimination methods",
+      "key_concepts": ["Elimination Method", "Substitution Method", "Coefficient Matching"],
+      "difficulty": 3,
+      "exam_weight": 90,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-02"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-04",
+        "index": 3
+      },
+      "tags": ["simultaneous-equations", "elimination", "substitution", "systems"]
+    },
+    {
+      "id": "ARCH-GEO-01",
+      "name": "Proving Triangle Similarity (AA)",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Establish triangle similarity using Angle-Angle criterion with clear reasoning",
+      "key_concepts": ["AA Criterion", "Angle Identification", "Corresponding Vertices", "Angle Properties"],
+      "difficulty": 4,
+      "exam_weight": 84,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-02", "ARCH-GEO-03"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-01",
+        "index": 0
+      },
+      "tags": ["similarity", "aa-criterion", "proof", "triangles"]
+    },
+    {
+      "id": "ARCH-GEO-02",
+      "name": "Proving Triangle Congruency",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Prove triangles congruent using SAS, SSS, ASA, or RHS with proper notation",
+      "key_concepts": ["SAS", "SSS", "ASA", "RHS", "Element Matching"],
+      "difficulty": 4,
+      "exam_weight": 80,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-01"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-02",
+        "index": 1
+      },
+      "tags": ["congruency", "sas", "sss", "asa", "rhs", "proof"]
+    },
+    {
+      "id": "ARCH-GEO-03",
+      "name": "Calculating Lengths/Areas using Similarity Ratios",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Apply similarity ratios to find unknown lengths and areas in similar figures",
+      "key_concepts": ["Ratio Proportions", "Corresponding Sides", "Cross-Multiplication"],
+      "difficulty": 3,
+      "exam_weight": 87,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-01"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-03",
+        "index": 2
+      },
+      "tags": ["similarity-ratios", "proportions", "calculations"]
+    },
+    {
+      "id": "ARCH-IND-01",
+      "name": "Simplifying Expressions with Index Laws",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Apply multiplication, division, and power rules for indices",
+      "key_concepts": ["Power Rules", "Negative Indices", "Fractional Indices", "Zero Index"],
+      "difficulty": 2,
+      "exam_weight": 68,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-02"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-01",
+        "index": 0
+      },
+      "tags": ["indices", "powers", "exponents", "simplification"]
+    },
+    {
+      "id": "ARCH-IND-02",
+      "name": "Solving Exponential Equations by Unifying Base",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Solve equations by unifying bases and equating indices",
+      "key_concepts": ["Base Unification", "Index Equation", "Prime Factorization"],
+      "difficulty": 3,
+      "exam_weight": 65,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-01"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-02",
+        "index": 1
+      },
+      "tags": ["exponential-equations", "base-unification", "solving"]
+    },
+    {
+      "id": "ARCH-IND-03",
+      "name": "Calculations in Standard Form",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Perform arithmetic operations with numbers in scientific notation",
+      "key_concepts": ["Scientific Notation", "Power of 10", "A × 10^n Format"],
+      "difficulty": 2,
+      "exam_weight": 62,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-01"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-04",
+        "index": 3
+      },
+      "tags": ["standard-form", "scientific-notation", "calculations"]
+    },
+    {
+      "id": "ARCH-STAT-01",
+      "name": "Finding Mean/Median/Mode from Charts",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Calculate central tendency measures from frequency tables or stem-and-leaf diagrams",
+      "key_concepts": ["Counting Total N", "Position Formula", "Most Frequent Value", "Stem-and-Leaf"],
+      "difficulty": 2,
+      "exam_weight": 70,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-02"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": "SOP-STAT-01",
+        "index": 0
+      },
+      "tags": ["statistics", "mean", "median", "mode", "central-tendency"]
+    },
+    {
+      "id": "ARCH-STAT-02",
+      "name": "Calculating Basic & Simple Combined Probability",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Calculate probabilities of single and combined events",
+      "key_concepts": ["Sample Space", "Favourable Outcomes", "P(Event) = Favourable/Total", "AND/OR Rules"],
+      "difficulty": 2,
+      "exam_weight": 72,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-03"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": "SOP-STAT-03",
+        "index": 2
+      },
+      "tags": ["probability", "combined-events", "sample-space"]
+    },
+    {
+      "id": "ARCH-STAT-03",
+      "name": "Analyzing Misleading Graphs",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Identify how graphs can be manipulated to mislead viewers",
+      "key_concepts": ["Graph Manipulation", "Scale Distortion", "Critical Analysis"],
+      "difficulty": 2,
+      "exam_weight": 58,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-01"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": null,
+        "index": null
+      },
+      "tags": ["graphs", "misleading", "critical-thinking", "analysis"]
+    },
+    {
+      "id": "ARCH-RP-01",
+      "name": "Map Scale Problems (Length & Area)",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Apply ratio concepts to map scales for length and area calculations",
+      "key_concepts": ["Scale Ratio", "Length vs Area Scaling", "Unit Conversion"],
+      "difficulty": 3,
+      "exam_weight": 66,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-02"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-01",
+        "index": 0
+      },
+      "tags": ["map-scale", "ratio", "area-scaling", "conversion"]
+    },
+    {
+      "id": "ARCH-RP-02",
+      "name": "Simple & Compound Interest Problems",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Calculate interest using appropriate formulas in financial contexts",
+      "key_concepts": ["Principal", "Rate", "Time", "Compounding Frequency"],
+      "difficulty": 3,
+      "exam_weight": 69,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-03"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-03",
+        "index": 2
+      },
+      "tags": ["interest", "compound", "simple", "financial", "percentage"]
+    },
+    {
+      "id": "ARCH-RP-03",
+      "name": "Percentage Change & Reverse Percentage Problems",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Find original values after percentage changes or calculate percentage increases",
+      "key_concepts": ["100% Reference", "Forward/Reverse Percentage", "New Percentage"],
+      "difficulty": 3,
+      "exam_weight": 71,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-02"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-02",
+        "index": 1
+      },
+      "tags": ["percentage", "reverse", "change", "increase", "decrease"]
+    },
+    {
+      "id": "ARCH-CG-01",
+      "name": "Finding Equation of a Line",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Derive linear equations from gradient and point or two points",
+      "key_concepts": ["Gradient Formula m=(y₂-y₁)/(x₂-x₁)", "y=mx+c Form", "Point Substitution"],
+      "difficulty": 2,
+      "exam_weight": 67,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-02"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-01",
+        "index": 0
+      },
+      "tags": ["coordinate-geometry", "line-equation", "gradient", "y-intercept"]
+    },
+    {
+      "id": "ARCH-CG-02",
+      "name": "Solving Problems with Parallel/Perpendicular Lines",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Use gradient relationships (m₁ = m₂ or m₁m₂ = -1) to solve problems",
+      "key_concepts": ["m₁=m₂ for Parallel", "m₁×m₂=-1 for Perpendicular", "Negative Reciprocal"],
+      "difficulty": 3,
+      "exam_weight": 64,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-01"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-02",
+        "index": 1
+      },
+      "tags": ["parallel", "perpendicular", "gradient-relationships"]
+    },
+    {
+      "id": "ARCH-CG-03",
+      "name": "Finding Distance, Midpoint, and Area",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Apply coordinate geometry formulas for distance, midpoint, and triangle areas",
+      "key_concepts": ["Distance Formula", "Midpoint Formula", "Shoelace Formula", "Base×Height Method"],
+      "difficulty": 2,
+      "exam_weight": 61,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-01"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-03",
+        "index": 2
+      },
+      "tags": ["distance", "midpoint", "area", "coordinate-plane"]
+    },
+    {
+      "id": "ARCH-MEN-01",
+      "name": "Area/Volume of Composite Solids",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "mensuration",
+      "topic_display": "Mensuration",
+      "description": "Break complex shapes into simpler components and sum their areas/volumes",
+      "key_concepts": ["Shape Deconstruction", "Exposed Surfaces Only", "TSA vs CSA"],
+      "difficulty": 3,
+      "exam_weight": 73,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-MEN-02"],
+      "sop_reference": {
+        "file": "SAT-G3-MEN.json",
+        "sop_id": "SOP-MEN-03",
+        "index": 2
+      },
+      "tags": ["composite", "volume", "area", "surface-area", "solids"]
+    },
+    {
+      "id": "ARCH-MEN-02",
+      "name": "Problems involving Similar Solids (Scaling Laws)",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "mensuration",
+      "topic_display": "Mensuration",
+      "description": "Apply length, area, and volume ratios for similar 3D objects",
+      "key_concepts": ["Length Ratio k", "Area Ratio k²", "Volume Ratio k³"],
+      "difficulty": 3,
+      "exam_weight": 63,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-MEN-01"],
+      "sop_reference": {
+        "file": "SAT-G3-MEN.json",
+        "sop_id": "SOP-MEN-02",
+        "index": 1
+      },
+      "tags": ["similar-figures", "scaling", "ratio", "k-squared", "k-cubed"]
+    },
+    {
+      "id": "ARCH-TRIG-03",
+      "name": "Area Calculation using Sine",
+      "name_cn": "复杂场地形面积计算",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Calculate area of complex fields using the ½ab sinC formula",
+      "key_concepts": ["Triangle Area Formula", "Included Angle Identification", "½ab sinC"],
+      "difficulty": 3,
+      "exam_weight": 82,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-03",
+        "index": 2
+      },
+      "tags": ["area", "sine", "triangle", "field-calculation"]
+    },
+    {
+      "id": "ARCH-TRIG-04",
+      "name": "Shortest Distance Problems",
+      "name_cn": "点到线最短距离问题",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "trigonometry",
+      "topic_display": "Trigonometry Application in Context",
+      "description": "Find shortest distance from a point to a line using area method",
+      "key_concepts": ["Area Method", "Perpendicular Height Concept", "Distance Calculation"],
+      "difficulty": 4,
+      "exam_weight": 79,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-TRIG-01", "ARCH-TRIG-03"],
+      "sop_reference": {
+        "file": "CORE-G3-TRIG.json",
+        "sop_id": "SOP-TRIG-04",
+        "index": 2
+      },
+      "tags": ["distance", "perpendicular", "area-method", "shortest-path"]
+    },
+    {
+      "id": "ARCH-QUAD-01",
+      "name": "Completing the Square & Feature Extraction",
+      "name_cn": "配方法与特征提取",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Convert quadratic expressions to vertex form to identify turning points and max/min values",
+      "key_concepts": ["Perfect Square Trinomial", "Vertex Form", "Half-Coefficient Method", "Turning Point"],
+      "difficulty": 4,
+      "exam_weight": 92,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-02", "ARCH-QUAD-03"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-01",
+        "index": 0
+      },
+      "tags": ["quadratic", "completing-square", "vertex-form", "maximum", "minimum"]
+    },
+    {
+      "id": "ARCH-QUAD-02",
+      "name": "Graph Sketching from Equation",
+      "name_cn": "从方程绘制图像",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Sketch parabolas accurately by identifying y-intercept, x-intercepts, and vertex",
+      "key_concepts": ["Turning Point", "Intercepts", "Parabola Shape", "Axis of Symmetry"],
+      "difficulty": 3,
+      "exam_weight": 85,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-01", "ARCH-QUAD-03"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-02",
+        "index": 1
+      },
+      "tags": ["graph", "sketch", "parabola", "quadratic", "plotting"]
+    },
+    {
+      "id": "ARCH-QUAD-03",
+      "name": "Finding Equation from Graph Features",
+      "name_cn": "从图像特征反求方程",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Reverse engineer the quadratic equation given graph features like roots or vertex",
+      "key_concepts": ["Vertex Form y=a(x-h)²+k", "Parameter Determination", "Point Substitution"],
+      "difficulty": 4,
+      "exam_weight": 81,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-01", "ARCH-QUAD-02"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": "SOP-QUAD-03",
+        "index": 2
+      },
+      "tags": ["reverse-engineering", "equation", "graph-features", "quadratic"]
+    },
+    {
+      "id": "ARCH-QUAD-04",
+      "name": "Solving Equations via Graph Intersection",
+      "name_cn": "通过图像交点解方程",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Quadratic Functions & Graphs",
+      "description": "Interpret intersection points of parabola with lines to solve equations graphically",
+      "key_concepts": ["Discriminant", "Solution Count", "Intersection Points"],
+      "difficulty": 3,
+      "exam_weight": 77,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-QUAD-02"],
+      "sop_reference": {
+        "file": "CORE-G3-QUAD.json",
+        "sop_id": null,
+        "index": null
+      },
+      "tags": ["intersection", "graphical-solution", "discriminant"]
+    },
+    {
+      "id": "ARCH-ALG-01",
+      "name": "Simplifying Complex Algebraic Fractions",
+      "name_cn": "复杂代数分数化简",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Manipulate multi-term algebraic fractions through factorization and cancellation",
+      "key_concepts": ["LCD (Lowest Common Denominator)", "Common Denominator", "Factorization", "Cancellation"],
+      "difficulty": 4,
+      "exam_weight": 89,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-02"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-01",
+        "index": 0
+      },
+      "tags": ["algebraic-fractions", "factorization", "lcd", "simplification"]
+    },
+    {
+      "id": "ARCH-ALG-02",
+      "name": "Solving Fractional Equations",
+      "name_cn": "解含分数方程",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Clear denominators and solve equations involving algebraic fractions",
+      "key_concepts": ["Clearing Fractions", "Extraneous Solutions", "LCD Multiplication"],
+      "difficulty": 4,
+      "exam_weight": 86,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-02",
+        "index": 1
+      },
+      "tags": ["fractional-equations", "clearing-denominators", "extraneous-solutions"]
+    },
+    {
+      "id": "ARCH-ALG-03",
+      "name": "Changing the Subject of a Formula",
+      "name_cn": "公式变形",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Rearrange complex formulas to isolate a different variable",
+      "key_concepts": ["Variable Isolation", "Factoring Out", "Inverse Operations"],
+      "difficulty": 3,
+      "exam_weight": 83,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-01"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-03",
+        "index": 2
+      },
+      "tags": ["subject-change", "formula-rearrangement", "variable-isolation"]
+    },
+    {
+      "id": "ARCH-ALG-04",
+      "name": "Solving Simultaneous Equations",
+      "name_cn": "解联立方程",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Comprehensive Algebraic Manipulation",
+      "description": "Solve systems of linear equations using substitution or elimination methods",
+      "key_concepts": ["Elimination Method", "Substitution Method", "Coefficient Matching"],
+      "difficulty": 3,
+      "exam_weight": 90,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-ALG-02"],
+      "sop_reference": {
+        "file": "CORE-G3-ALG.json",
+        "sop_id": "SOP-ALG-04",
+        "index": 3
+      },
+      "tags": ["simultaneous-equations", "elimination", "substitution", "systems"]
+    },
+    {
+      "id": "ARCH-GEO-01",
+      "name": "Proving Triangle Similarity (AA)",
+      "name_cn": "AA相似证明",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Establish triangle similarity using Angle-Angle criterion with clear reasoning",
+      "key_concepts": ["AA Criterion", "Angle Identification", "Corresponding Vertices", "Angle Properties"],
+      "difficulty": 4,
+      "exam_weight": 84,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-02", "ARCH-GEO-03"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-01",
+        "index": 0
+      },
+      "tags": ["similarity", "aa-criterion", "proof", "triangles"]
+    },
+    {
+      "id": "ARCH-GEO-02",
+      "name": "Proving Triangle Congruency",
+      "name_cn": "全等证明",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Prove triangles congruent using SAS, SSS, ASA, or RHS with proper notation",
+      "key_concepts": ["SAS", "SSS", "ASA", "RHS", "Element Matching"],
+      "difficulty": 4,
+      "exam_weight": 80,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-01"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-02",
+        "index": 1
+      },
+      "tags": ["congruency", "sas", "sss", "asa", "rhs", "proof"]
+    },
+    {
+      "id": "ARCH-GEO-03",
+      "name": "Calculating Lengths/Areas using Similarity Ratios",
+      "name_cn": "应用相似比例进行计算",
+      "badge": "CORE",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Geometric Proofs & Similarity/Congruency",
+      "description": "Apply similarity ratios to find unknown lengths and areas in similar figures",
+      "key_concepts": ["Ratio Proportions", "Corresponding Sides", "Cross-Multiplication"],
+      "difficulty": 3,
+      "exam_weight": 87,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-GEO-01"],
+      "sop_reference": {
+        "file": "CORE-G3-GEO.json",
+        "sop_id": "SOP-GEO-03",
+        "index": 2
+      },
+      "tags": ["similarity-ratios", "proportions", "calculations"]
+    },
+    {
+      "id": "ARCH-IND-01",
+      "name": "Simplifying Expressions with Index Laws",
+      "name_cn": "指数定律化简",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Apply multiplication, division, and power rules for indices",
+      "key_concepts": ["Power Rules", "Negative Indices", "Fractional Indices", "Zero Index"],
+      "difficulty": 2,
+      "exam_weight": 68,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-02"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-01",
+        "index": 0
+      },
+      "tags": ["indices", "powers", "exponents", "simplification"]
+    },
+    {
+      "id": "ARCH-IND-02",
+      "name": "Solving Exponential Equations by Unifying Base",
+      "name_cn": "统一底数解方程",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Solve equations by unifying bases and equating indices",
+      "key_concepts": ["Base Unification", "Index Equation", "Prime Factorization"],
+      "difficulty": 3,
+      "exam_weight": 65,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-01"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-02",
+        "index": 1
+      },
+      "tags": ["exponential-equations", "base-unification", "solving"]
+    },
+    {
+      "id": "ARCH-IND-03",
+      "name": "Calculations in Standard Form",
+      "name_cn": "标准式计算",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Indices & Standard Form",
+      "description": "Perform arithmetic operations with numbers in scientific notation",
+      "key_concepts": ["Scientific Notation", "Power of 10", "A × 10^n Format"],
+      "difficulty": 2,
+      "exam_weight": 62,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-IND-01"],
+      "sop_reference": {
+        "file": "SAT-G3-IND.json",
+        "sop_id": "SOP-IND-04",
+        "index": 3
+      },
+      "tags": ["standard-form", "scientific-notation", "calculations"]
+    },
+    {
+      "id": "ARCH-STAT-01",
+      "name": "Finding Mean/Median/Mode from Charts",
+      "name_cn": "从图表求平均数/中位数/众数",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Calculate central tendency measures from frequency tables or stem-and-leaf diagrams",
+      "key_concepts": ["Counting Total N", "Position Formula", "Most Frequent Value", "Stem-and-Leaf"],
+      "difficulty": 2,
+      "exam_weight": 70,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-02"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": "SOP-STAT-01",
+        "index": 0
+      },
+      "tags": ["statistics", "mean", "median", "mode", "central-tendency"]
+    },
+    {
+      "id": "ARCH-STAT-02",
+      "name": "Calculating Basic & Simple Combined Probability",
+      "name_cn": "基本概率与简单组合概率",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Calculate probabilities of single and combined events",
+      "key_concepts": ["Sample Space", "Favourable Outcomes", "P(Event) = Favourable/Total", "AND/OR Rules"],
+      "difficulty": 2,
+      "exam_weight": 72,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-03"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": "SOP-STAT-03",
+        "index": 2
+      },
+      "tags": ["probability", "combined-events", "sample-space"]
+    },
+    {
+      "id": "ARCH-STAT-03",
+      "name": "Analyzing Misleading Graphs",
+      "name_cn": "分析误导性图表",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "statistics",
+      "topic_display": "Statistics & Probability",
+      "description": "Identify how graphs can be manipulated to mislead viewers",
+      "key_concepts": ["Graph Manipulation", "Scale Distortion", "Critical Analysis"],
+      "difficulty": 2,
+      "exam_weight": 58,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-STAT-01"],
+      "sop_reference": {
+        "file": "SAT-G3-STAT.json",
+        "sop_id": null,
+        "index": null
+      },
+      "tags": ["graphs", "misleading", "critical-thinking", "analysis"]
+    },
+    {
+      "id": "ARCH-RP-01",
+      "name": "Map Scale Problems (Length & Area)",
+      "name_cn": "地图比例尺问题",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Apply ratio concepts to map scales for length and area calculations",
+      "key_concepts": ["Scale Ratio", "Length vs Area Scaling", "Unit Conversion"],
+      "difficulty": 3,
+      "exam_weight": 66,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-02"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-01",
+        "index": 0
+      },
+      "tags": ["map-scale", "ratio", "area-scaling", "conversion"]
+    },
+    {
+      "id": "ARCH-RP-02",
+      "name": "Simple & Compound Interest Problems",
+      "name_cn": "单利与复利问题",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Calculate interest using appropriate formulas in financial contexts",
+      "key_concepts": ["Principal", "Rate", "Time", "Compounding Frequency"],
+      "difficulty": 3,
+      "exam_weight": 69,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-03"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-03",
+        "index": 2
+      },
+      "tags": ["interest", "compound", "simple", "financial", "percentage"]
+    },
+    {
+      "id": "ARCH-RP-03",
+      "name": "Percentage Change & Reverse Percentage Problems",
+      "name_cn": "百分比变化与反向百分比",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "numbers",
+      "topic_display": "Ratio & Percentage in Context",
+      "description": "Find original values after percentage changes or calculate percentage increases",
+      "key_concepts": ["100% Reference", "Forward/Reverse Percentage", "New Percentage"],
+      "difficulty": 3,
+      "exam_weight": 71,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-RP-02"],
+      "sop_reference": {
+        "file": "SAT-G3-RATIO.json",
+        "sop_id": "SOP-RP-02",
+        "index": 1
+      },
+      "tags": ["percentage", "reverse", "change", "increase", "decrease"]
+    },
+    {
+      "id": "ARCH-CG-01",
+      "name": "Finding Equation of a Line",
+      "name_cn": "求直线方程",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Derive linear equations from gradient and point or two points",
+      "key_concepts": ["Gradient Formula m=(y₂-y₁)/(x₂-x₁)", "y=mx+c Form", "Point Substitution"],
+      "difficulty": 2,
+      "exam_weight": 67,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-02"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-01",
+        "index": 0
+      },
+      "tags": ["coordinate-geometry", "line-equation", "gradient", "y-intercept"]
+    },
+    {
+      "id": "ARCH-CG-02",
+      "name": "Solving Problems with Parallel/Perpendicular Lines",
+      "name_cn": "平行与垂直线问题",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Use gradient relationships (m₁ = m₂ or m₁m₂ = -1) to solve problems",
+      "key_concepts": ["m₁=m₂ for Parallel", "m₁×m₂=-1 for Perpendicular", "Negative Reciprocal"],
+      "difficulty": 3,
+      "exam_weight": 64,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-01"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-02",
+        "index": 1
+      },
+      "tags": ["parallel", "perpendicular", "gradient-relationships"]
+    },
+    {
+      "id": "ARCH-CG-03",
+      "name": "Finding Distance, Midpoint, and Area",
+      "name_cn": "求距离、中点与面积",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "geometry",
+      "topic_display": "Coordinate Geometry",
+      "description": "Apply coordinate geometry formulas for distance, midpoint, and triangle areas",
+      "key_concepts": ["Distance Formula", "Midpoint Formula", "Shoelace Formula", "Base×Height Method"],
+      "difficulty": 2,
+      "exam_weight": 61,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-CG-01"],
+      "sop_reference": {
+        "file": "SAT-G3-COORD.json",
+        "sop_id": "SOP-CG-03",
+        "index": 2
+      },
+      "tags": ["distance", "midpoint", "area", "coordinate-plane"]
+    },
+    {
+      "id": "ARCH-MEN-01",
+      "name": "Area/Volume of Composite Solids",
+      "name_cn": "组合立体的面积/体积",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "mensuration",
+      "topic_display": "Mensuration",
+      "description": "Break complex shapes into simpler components and sum their areas/volumes",
+      "key_concepts": ["Shape Deconstruction", "Exposed Surfaces Only", "TSA vs CSA"],
+      "difficulty": 3,
+      "exam_weight": 73,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-MEN-02"],
+      "sop_reference": {
+        "file": "SAT-G3-MEN.json",
+        "sop_id": "SOP-MEN-03",
+        "index": 2
+      },
+      "tags": ["composite", "volume", "area", "surface-area", "solids"]
+    },
+    {
+      "id": "ARCH-MEN-02",
+      "name": "Problems involving Similar Solids (Scaling Laws)",
+      "name_cn": "相似立体的缩放规律",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "mensuration",
+      "topic_display": "Mensuration",
+      "description": "Apply length, area, and volume ratios for similar 3D objects",
+      "key_concepts": ["Length Ratio k", "Area Ratio k²", "Volume Ratio k³"],
+      "difficulty": 3,
+      "exam_weight": 63,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-MEN-01"],
+      "sop_reference": {
+        "file": "SAT-G3-MEN.json",
+        "sop_id": "SOP-MEN-02",
+        "index": 1
+      },
+      "tags": ["similar-figures", "scaling", "ratio", "k-squared", "k-cubed"]
+    },
+    {
+      "id": "ARCH-MEN-03",
+      "name": "Arc Length, Sector & Segment Area Problems",
+      "name_cn": "弧长、扇形与弓形面积",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "mensuration",
+      "topic_display": "Mensuration",
+      "description": "Calculate arc lengths, sector areas, and segment areas of circles",
+      "key_concepts": ["Degrees vs Radians", "Sector - Triangle", "Arc Length Formula"],
+      "difficulty": 3,
+      "exam_weight": 60,
+      "common_in_papers": ["P1", "P2"],
+      "related_archetypes": ["ARCH-MEN-01"],
+      "sop_reference": {
+        "file": "SAT-G3-MEN.json",
+        "sop_id": "SOP-MEN-04",
+        "index": 3
+      },
+      "tags": ["circle", "arc-length", "sector", "segment", "area"]
+    },
+    {
+      "id": "ARCH-INEQ-01",
+      "name": "Solving Compound Inequalities",
+      "name_cn": "解复合不等式",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Inequalities",
+      "description": "Solve and represent solutions of combined inequality statements",
+      "key_concepts": ["Split and Solve", "Sign Flip Rule", "Number Line Representation"],
+      "difficulty": 2,
+      "exam_weight": 59,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-INEQ-02"],
+      "sop_reference": {
+        "file": "SAT-G3-INEQ.json",
+        "sop_id": "SOP-INEQ-01",
+        "index": 0
+      },
+      "tags": ["inequalities", "compound", "number-line", "sign-flip"]
+    },
+    {
+      "id": "ARCH-INEQ-02",
+      "name": "Modelling with Inequalities from Word Problems",
+      "name_cn": "不等式建模",
+      "badge": "SAT",
+      "grade": "G3",
+      "topic": "algebra",
+      "topic_display": "Inequalities",
+      "description": "Translate word problems into inequality statements and solve",
+      "key_concepts": ["Keyword Translation", "Variable Definition", "Constraint Formation"],
+      "difficulty": 2,
+      "exam_weight": 57,
+      "common_in_papers": ["P1"],
+      "related_archetypes": ["ARCH-INEQ-01"],
+      "sop_reference": {
+        "file": "SAT-G3-INEQ.json",
+        "sop_id": "SOP-INEQ-02",
+        "index": 1
+      },
+      "tags": ["inequality-modeling", "word-problems", "translation"]
+    },
+    {
+      "id": "ARCH-G4-CALC-01",
+      "name": "Differentiation Applications",
+      "name_cn": "微分应用",
+      "badge": "CORE",
+      "grade": "G4",
+      "topic": "algebra",
+      "topic_display": "Calculus (G4)",
+      "description": "Apply differentiation to find gradients, stationary points, and rates of change",
+      "key_concepts": ["dy/dx", "Stationary Points", "Chain Rule", "Product Rule"],
+      "difficulty": 5,
+      "exam_weight": 95,
+      "common_in_papers": ["P2"],
+      "related_archetypes": [],
+      "sop_reference": {
+        "file": "CORE-G4-CALC.json",
+        "sop_id": "SOP-CALC-01",
+        "index": 0
+      },
+      "tags": ["differentiation", "calculus", "gradient", "stationary-points", "g4"]
+    }
+  ],
+  "topic_groups": {
+    "CORE": [
+      {
+        "name": "Trigonometry Application in Context",
+        "name_cn": "三角函数综合应用",
+        "archetypes": ["ARCH-TRIG-01", "ARCH-TRIG-02", "ARCH-TRIG-03", "ARCH-TRIG-04"],
+        "total_weight": 344
+      },
+      {
+        "name": "Quadratic Functions & Graphs",
+        "name_cn": "二次函数与图像",
+        "archetypes": ["ARCH-QUAD-01", "ARCH-QUAD-02", "ARCH-QUAD-03", "ARCH-QUAD-04"],
+        "total_weight": 335
+      },
+      {
+        "name": "Comprehensive Algebraic Manipulation",
+        "name_cn": "代数综合处理",
+        "archetypes": ["ARCH-ALG-01", "ARCH-ALG-02", "ARCH-ALG-03", "ARCH-ALG-04"],
+        "total_weight": 348
+      },
+      {
+        "name": "Geometric Proofs & Similarity/Congruency",
+        "name_cn": "几何证明与相似/全等",
+        "archetypes": ["ARCH-GEO-01", "ARCH-GEO-02", "ARCH-GEO-03"],
+        "total_weight": 251
+      }
+    ],
+    "SAT": [
+      {
+        "name": "Indices & Standard Form",
+        "name_cn": "指数与标准式",
+        "archetypes": ["ARCH-IND-01", "ARCH-IND-02", "ARCH-IND-03"],
+        "total_weight": 195
+      },
+      {
+        "name": "Statistics & Probability",
+        "name_cn": "统计与概率",
+        "archetypes": ["ARCH-STAT-01", "ARCH-STAT-02", "ARCH-STAT-03"],
+        "total_weight": 200
+      },
+      {
+        "name": "Ratio & Percentage in Context",
+        "name_cn": "比例与百分比应用",
+        "archetypes": ["ARCH-RP-01", "ARCH-RP-02", "ARCH-RP-03"],
+        "total_weight": 206
+      },
+      {
+        "name": "Coordinate Geometry",
+        "name_cn": "坐标几何",
+        "archetypes": ["ARCH-CG-01", "ARCH-CG-02", "ARCH-CG-03"],
+        "total_weight": 192
+      },
+      {
+        "name": "Mensuration",
+        "name_cn": "测量/空间几何",
+        "archetypes": ["ARCH-MEN-01", "ARCH-MEN-02", "ARCH-MEN-03"],
+        "total_weight": 196
+      },
+      {
+        "name": "Inequalities",
+        "name_cn": "不等式",
+        "archetypes": ["ARCH-INEQ-01", "ARCH-INEQ-02"],
+        "total_weight": 116
+      }
+    ],
+    "G4": [
+      {
+        "name": "Calculus",
+        "name_cn": "微积分",
+        "archetypes": ["ARCH-G4-CALC-01"],
+        "total_weight": 95
+      }
+    ]
+  },
+  "usage_guidelines": {
+    "loading": "Load this file as the single source of truth for all archetype data across the e-math system",
+    "updates": "When adding/modifying archetypes, update this file and all dependent modules will automatically reflect changes",
+    "sop_integration": "Use sop_reference.file and sop_reference.index to fetch detailed SOP content from data/topics/",
+    "drill_integration": "Drill links are managed separately in localStorage or future database",
+    "filtering": "Filter by grade, badge, topic, difficulty, or exam_weight as needed"
+  },
+  "api_endpoints_future": {
+    "get_all": "/api/archetypes",
+    "get_by_id": "/api/archetypes/{id}",
+    "get_by_grade": "/api/archetypes?grade=G3",
+    "get_by_topic": "/api/archetypes?topic=trigonometry",
+    "get_by_badge": "/api/archetypes?badge=CORE",
+    "search": "/api/archetypes/search?q=bearing"
+  }
+}

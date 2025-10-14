@@ -1,0 +1,49 @@
+{
+  "version": "3.0-G4",
+  "grade": "G4",
+  "last_updated": "2025-10-14",
+  "description": "E-Math O-Level G4 Problem Archetypes",
+  "metadata": {
+    "total_archetypes": 1,
+    "category_distribution": {
+      "CORE": 1,
+      "SAT": 0
+    },
+    "topic_distribution": {
+      "algebra": 1
+    }
+  },
+  "archetypes": [
+    {
+      "id": "ARCH-G4-CALC-01",
+      "name": "Differentiation Applications",
+      "badge": "CORE",
+      "grade": "G4",
+      "topic": "algebra",
+      "topic_display": "Calculus",
+      "description": "Apply differentiation to find gradients, stationary points, and rates of change",
+      "key_concepts": ["dy/dx", "Stationary Points", "Chain Rule", "Product Rule", "Quotient Rule"],
+      "difficulty": 5,
+      "exam_weight": 95,
+      "common_in_papers": ["P2"],
+      "related_archetypes": ["ARCH-G4-CALC-02", "ARCH-G4-CALC-03"],
+      "sop_reference": {
+        "file": "CORE-G4-CALC.json",
+        "sop_id": "SOP-CALC-01",
+        "index": 0
+      },
+      "tags": ["differentiation", "calculus", "gradient", "stationary-points", "g4", "rates-of-change"]
+    }
+  ],
+  "topic_groups": {
+    "CORE": [
+      {
+        "name": "Calculus",
+        "archetypes": ["ARCH-G4-CALC-01"],
+        "total_weight": 95
+      }
+    ],
+    "SAT": []
+  },
+  "notes": "G4 archetypes are still being developed. More will be added in future updates."
+}
