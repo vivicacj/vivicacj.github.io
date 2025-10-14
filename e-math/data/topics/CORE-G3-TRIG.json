@@ -46,8 +46,8 @@
         "Calculate & Check: Solve for the unknown. If finding an angle with the Sine Rule, check if an obtuse angle (180° - θ) is possible"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Mixing up the Sine Rule and Cosine Rule formulas" },
-        { "type": "典型", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" }
+        { "type": "CRITICAL", "text": "Mixing up the Sine Rule and Cosine Rule formulas" },
+        { "type": "Common", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" }
       ],
       "pro_tips": [
         "Memorize: 'If the problem gives you three sides (SSS) or a Side-Angle-Side sandwich (SAS), you need the Cosine Rule. For almost everything else, it's the Sine Rule'",
@@ -66,8 +66,8 @@
         "Solve the Vertical Problem: Draw the right-angled triangle. Label the height and the 'bridge' value (horizontal distance). Use basic SOH CAH TOA to find the final answer"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Trying to use Sine/Cosine Rule directly in the 3D space" },
-        { "type": "典型", "text": "Confusing horizontal distance with slant distance" }
+        { "type": "CRITICAL", "text": "Trying to use Sine/Cosine Rule directly in the 3D space" },
+        { "type": "Common", "text": "Confusing horizontal distance with slant distance" }
       ],
       "pro_tips": [
         "Always break it down. Your mantra: 'First the map, then the wall' (First solve the ground plan, then solve the vertical plane)",
@@ -87,8 +87,8 @@
         "Verify: The shortest distance should be less than any direct distance from the point to the line's endpoints"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Forgetting that Area = ½ × base × height must use the perpendicular height" },
-        { "type": "典型", "text": "Using the wrong side as the base" }
+        { "type": "CRITICAL", "text": "Forgetting that Area = ½ × base × height must use the perpendicular height" },
+        { "type": "Common", "text": "Using the wrong side as the base" }
       ],
       "pro_tips": [
         "This method bypasses the need to find the angle at the base",
