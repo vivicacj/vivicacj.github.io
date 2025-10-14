@@ -86,6 +86,7 @@
             display: flex;
             gap: 15px;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .header-nav a {
@@ -411,6 +412,29 @@
             opacity: 0.3;
         }
 
+        /* Archetype Styles */
+        .archetypes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        .archetype-item {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .archetype-name {
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+        .archetype-desc {
+            font-size: 0.9em;
+            color: #64748b;
+        }
+
+
         /* SOP Block Styles */
         .sop-block {
             margin: 2rem 0;
@@ -554,7 +578,9 @@
             <div class="header-nav">
                 <a href="resource-portal.html">Resource Portal</a>
                 <span class="nav-divider">|</span>
-                <a href="emath-exercise-tracker.html">Study Portal</a>
+                <a href="archetype-explorer.html">Archetype Explorer</a>
+                <span class="nav-divider">|</span>
+                <a href="study-portal.html">Study Portal</a>
                 <span class="nav-divider">|</span>
                 <a href="#">Task Tracker</a>
                 <span class="nav-divider">|</span>
@@ -592,11 +618,8 @@
     <div class="scroll-top" onclick="scrollToTop()">▲</div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAllTopics();
-        });
-
-        const topicsData = [
+        // Data is embedded here to avoid local file loading issues
+        const allTopicsData = [
             // G3 Core
             { 
                 id: 'TRIG', number: '01', name: 'Trigonometry Application in Context', category: 'core', grade: 'g3',
@@ -650,18 +673,51 @@
                 tier3: { prompts: ["Explain the fundamental difference between simple interest and compound interest."] }
             },
             // G4 Placeholders
-            { id: 'VECTORS', number: '11', name: 'Vectors in Two Dimensions', category: 'core', grade: 'g4', tier1: null, tier3: null },
-            { id: 'MATRICES', number: '12', name: 'Matrices', category: 'satellite', grade: 'g4', tier1: null, tier3: null }
+            { id: 'VECTORS', number: '11', name: 'Vectors in Two Dimensions', category: 'core', grade: 'g4', tier1: null, tier3: null, details: null },
+            { id: 'MATRICES', number: '12', name: 'Matrices', category: 'satellite', grade: 'g4', tier1: null, tier3: null, details: null }
         ];
+
+        const allDetailsData = {
+            "CORE-G3-TRIG": { "archetypes_overview": [ { "name": "2D Bearing Problems", "description": "Solving for sides/angles in 2D Bearing scenarios" }, { "name": "3D Elevation & Depression Problems", "description": "Solving for sides/angles in 3D Elevation & Depression scenarios" }, { "name": "Area Calculation using Sine", "description": "Calculating Area of complex fields using the ½ab sinC formula" } ], "sops": [ { "title": "SOP 1: Solving 2D Bearing / Geometry Problems", "goal": "To find unknown lengths or angles in non-right-angled triangles", "triggers": "Bearing of, due east, diagrams with non-right-angled triangles", "steps": [ "Annotate & Convert: Draw all North lines. Convert all given bearings into internal angles of the key triangle using parallel line properties", "Assess the Triangle: Count the knowns. Do you have SAS/SSS or AAS/SSA?", "Select the Right Tool: If SAS or SSS, use the Cosine Rule. If AAS or SSA, use the Sine Rule", "Calculate & Check: Solve for the unknown. If finding an angle with the Sine Rule, check if an obtuse angle (180° - θ) is possible" ], "pitfalls": [ { "type": "致命", "text": "Mixing up the Sine Rule and Cosine Rule formulas" }, { "type": "典型", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" } ], "pro_tips": [ "Memorize: 'If the problem gives you three sides (SSS) or a Side-Angle-Side sandwich (SAS), you need the Cosine Rule. For almost everything else, it's the Sine Rule'", "Always draw North lines first to visualize the bearing angles clearly" ] }, { "title": "SOP 2: Solving 3D Elevation & Depression Problems", "goal": "To solve problems involving height and angles in a 3D context", "triggers": "angle of elevation, angle of depression, height of, vertical", "steps": [ "Deconstruct into 2 Planes: Isolate the problem into: (a) A 2D problem on the horizontal ground, (b) A 2D right-angled triangle in the vertical plane", "Solve the Ground Problem First: Use SOP 1 to find the crucial horizontal distance between the observer and the base of the vertical object. This is your 'bridge' value", "Solve the Vertical Problem: Draw the right-angled triangle. Label the height and the 'bridge' value (horizontal distance). Use basic SOH CAH TOA to find the final answer" ], "pitfalls": [ { "type": "致命", "text": "Trying to use Sine/Cosine Rule directly in the 3D space" }, { "type": "典型", "text": "Confusing horizontal distance with slant distance" } ], "pro_tips": [ "Always break it down. Your mantra: 'First the map, then the wall' (First solve the ground plan, then solve the vertical plane)", "The horizontal distance from ground plan becomes the adjacent/opposite side in your vertical triangle" ] } ] },
+            "CORE-G3-QUAD": { "archetypes_overview": [ { "name": "Completing the Square", "description": "Converting to Vertex Form via Completing the Square" }, { "name": "Graph Sketching", "description": "Sketching the Graph, showing all key features (vertex, intercepts, axis of symmetry)" } ], "sops": [ { "title": "SOP 1: Completing the Square", "goal": "Convert quadratic from standard form to completed square form", "triggers": "complete the square, express in the form (x + p)² + q", "steps": [ "Identify coefficient of x²: If it's not 1, factor it out first", "Take half of the x coefficient, square it: For x² + bx, take (b/2)²", "Add and subtract this value inside: x² + bx + (b/2)² - (b/2)²", "Group to form perfect square: (x + b/2)² - (b/2)² + c", "Simplify the constant term: Combine constants to get final form (x + p)² + q" ], "pitfalls": [ { "type": "致命", "text": "Forgetting to factor out the coefficient of x² before completing the square" }, { "type": "典型", "text": "Not squaring the half-coefficient correctly" } ], "pro_tips": [ "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²", "Check your answer by expanding back to verify" ] } ] },
+            "CORE-G3-ALG": { "archetypes_overview": [ { "name": "Algebraic Fractions", "description": "Simplifying complex algebraic fractions (addition/subtraction/multiplication/division)" }, { "name": "Fractional Equations", "description": "Solving fractional equations that reduce to linear or quadratic" } ], "sops": [ { "title": "SOP 1: Adding/Subtracting Algebraic Fractions", "goal": "Combine fractions with algebraic denominators into a single fraction", "triggers": "add, subtract, fractions with different denominators", "steps": [ "Find the LCD (Lowest Common Denominator): Factor all denominators if needed, then find LCD", "Convert each fraction: Multiply numerator and denominator by whatever makes the denominator = LCD", "Combine numerators: Add or subtract the numerators over the common denominator", "Simplify: Factor and cancel common factors if possible" ], "pitfalls": [ { "type": "CRITICAL", "text": "Not distributing the negative sign when subtracting fractions" }, { "type": "COMMON", "text": "Forgetting to multiply both numerator AND denominator when converting" } ], "pro_tips": [ "When subtracting, put brackets around the entire second numerator: (a) - (b + c)", "Always factor the final numerator and denominator to check for further simplification" ] } ] },
+            "CORE-G3-GEO": { "archetypes_overview": [ { "name": "Similarity Proofs", "description": "Proving two triangles are similar (mainly using AA)" }, { "name": "Congruency Proofs", "description": "Proving two triangles are congruent (using SAS, SSS, ASA, RHS)" } ], "sops": [ { "title": "SOP 1: Proving Similarity (AA Criterion)", "goal": "Prove two triangles are similar using Angle-Angle", "triggers": "prove triangles are similar, show similarity", "steps": [ "Identify the two triangles: Label vertices clearly (e.g., △ABC and △DEF)", "Find two pairs of equal angles: Use properties like vertically opposite angles, corresponding angles, alternate angles, or angles in the same segment", "State the equal angles explicitly: Write ∠ABC = ∠DEF and ∠BAC = ∠EDF with reasons", "Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'" ], "pitfalls": [ { "type": "致命", "text": "Not providing geometric reasons for why angles are equal" }, { "type": "典型", "text": "Mixing up corresponding vertices when stating similarity" } ], "pro_tips": [ "Common angle reasons: vertically opposite, corresponding (parallel lines), alternate (parallel lines), angles in same segment", "Always write the triangle correspondence correctly: △ABC ~ △DEF means A↔D, B↔E, C↔F" ] } ] },
+            "SAT-G3-COORD": { "archetypes_overview": [ { "name": "Finding Line Equations", "description": "Finding the distance between two points" }, { "name": "Parallel & Perpendicular Lines", "description": "Solving problems involving parallel and perpendicular lines" } ], "sops": [ { "title": "SOP 1: Finding the Equation of a Straight Line (y = mx + c)", "goal": "To find the equation connecting any two points", "triggers": "Find the equation of the line, equation passing through", "steps": [ "Find the Gradient (m): m = (y₂ − y₁) ÷ (x₂ − x₁). Pro-Tip: Label points (x₁,y₁) and (x₂,y₂) before calculating", "Write the Partial Equation: y = (your m)x + c", "Find the y-intercept (c): Substitute coordinates of one known point (use simpler one) into y = mx + c and solve for c", "Write the Final Equation: Combine your m and c values" ], "pitfalls": [ { "type": "CRITICAL", "text": "Swapping x and y when substituting into y = mx + c" }, { "type": "COMMON", "text": "Computing m with (x₁,y₁) and (x₂,y₂) reversed by mistake" } ], "pro_tips": [ "Label points clearly (x₁,y₁), (x₂,y₂) before any calculation", "After finding m, immediately write y = mx + c, then plug in the simplest point to get c" ] } ] },
+            "SAT-G3-MEN": { "archetypes_overview": [ { "name": "Basic Mensuration", "description": "Calculating arc length, sector area, and segment area of circles" }, { "name": "Similar Figures Scaling", "description": "Solving problems using the scaling laws for similar figures/solids" } ], "sops": [ { "title": "SOP 1: Master SOP for ALL Mensuration Problems", "goal": "To never lose marks due to formula or calculation errors", "triggers": "area, surface area, volume, capacity", "steps": [ "Identify the Shape(s): Name them immediately (e.g., cone + hemisphere)", "Write the Formula FIRST: e.g., write CSA = πrl before substituting. (Secures method marks)", "List Variables: Example: r = 8, l = 17", "Substitute and Calculate: Carefully", "Final Check (Units & Accuracy): Correct units (e.g., cm², cm³) and required s.f./d.p." ], "pitfalls": [ { "type": "CRITICAL", "text": "Missing/incorrect units → lose accuracy/answer marks" }, { "type": "COMMON", "text": "Substituting numbers before writing the exact formula" } ], "pro_tips": [ "Always write the formula first to lock in method marks", "Box the final answer with units and accuracy" ] } ] },
+            "SAT-G3-INEQ": { "archetypes_overview": [ { "name": "Compound Inequalities", "description": "Solving linear and compound inequalities" }, { "name": "Inequality Modeling", "description": "Translating real-world language into precise inequalities" } ], "sops": [ { "title": "SOP 1: Solving Compound Inequalities", "goal": "To find the final, single range of x", "triggers": "two inequality signs, A < B ≤ C", "steps": [ "SPLIT: Break into two simpler inequalities. Example: 3x − 1 < 2x + 9 ≤ 15 → Part A: 3x − 1 < 2x + 9, Part B: 2x + 9 ≤ 15", "SOLVE: Solve Part A and Part B individually (each gives a range)", "CRITICAL RULE: If you multiply or divide by a negative, you MUST flip the inequality sign", "DRAW: Draw a number line and mark key values (this is your safety net)", "PLOT & OVERLAP: Plot both solutions; open circles for <, >, solid for ≤, ≥. The final answer is the overlap", "WRITE: Write as a single compound inequality (e.g., 4 < x ≤ 10)" ], "pitfalls": [ { "type": "CRITICAL", "text": "Not flipping the sign after multiplying/dividing by a negative" }, { "type": "COMMON", "text": "Using the wrong open/closed circle on the number line" } ], "pro_tips": [ "Write a banner note at the top: '× or ÷ negative → flip sign'", "Always sketch the number line before writing the final compound form" ] } ] },
+            "SAT-G3-IND": { "archetypes_overview": [ { "name": "Simplifying Index Expressions", "description": "Simplifying complex expressions using Laws of Indices" }, { "name": "Exponential Equations", "description": "Solving exponential equations by unifying the base" } ], "sops": [ { "title": "SOP 1: Simplifying Complex Index Expressions", "goal": "Reduce complicated expressions to simplest form with positive indices", "triggers": "Simplify, expressions with powers, roots, negatives", "steps": [ "Brackets First (Power of a Power): Multiply indices inside brackets. Examples: (p³)² = p⁶; (4p³)² = 16p⁶", "Handle Negatives & Roots: Negative indices → reciprocals: x⁻³ = 1 ÷ x³. Roots → fractional indices: √x = x^(1/2), ³√x = x^(1/3)", "Combine Same Bases: Multiply same base → add indices. Divide same base → subtract indices", "Calculate Coefficients: Manage normal numbers separately; then recombine" ], "pitfalls": [ { "type": "CRITICAL", "text": "Treating negative indices as negative numbers (instead of reciprocals)" }, { "type": "COMMON", "text": "Forgetting to distribute powers across brackets and coefficients" } ], "pro_tips": [ "Convert roots to fractional indices and negatives to reciprocals FIRST", "Separate coefficient arithmetic from index manipulation, then recombine" ] } ] },
+            "SAT-G3-STAT": { "archetypes_overview": [ { "name": "Stem-and-Leaf Interpretation", "description": "Finding Mean, Median, and Mode from stem-and-leaf diagrams" }, { "name": "Grouped Frequency Analysis", "description": "Calculating mean from grouped frequency tables" } ], "sops": [ { "title": "SOP 1: Interpreting Stem-and-Leaf Diagrams", "goal": "Quickly and accurately extract mode, median, and mean", "triggers": "stem-and-leaf diagram is presented", "steps": [ "Count Total (N): Write N beside the diagram—this controls the median", "Mode: Scan for the most frequent leaf (recombine with stem)", "Median: Position is (N + 1) ÷ 2. If N odd → whole position (e.g., 11th). If N even → average of the two middle values (e.g., 13th and 14th)", "Mean: Sum all values (stem+leaf) and divide by N. Use calculator carefully" ], "pitfalls": [ { "type": "CRITICAL", "text": "For even N, forgetting to average the two middle values" }, { "type": "COMMON", "text": "Miscounting N" } ], "pro_tips": [ "Write N = … on top before doing median", "When N is even, pre-write Median = (____ + ____ ) ÷ 2" ] } ] },
+            "SAT-G3-RATIO": { "archetypes_overview": [ { "name": "Map Scale Problems", "description": "Converting between map distances and actual distances/areas" }, { "name": "Percentage Change", "description": "Calculating percentage change, profit, discount, or GST" } ], "sops": [ { "title": "SOP 1: Map Scale Problems", "goal": "Accurately convert between map distances and actual distances/areas", "triggers": "Scale 1 : n, area on the map, actual area", "steps": [ "Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km (convert n cm to km first). Area scale: 1 cm² : (n ÷ 100,000)² km²", "Select the Correct Scale: Decide if it's length or area", "Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)" ], "pitfalls": [ { "type": "CRITICAL", "text": "Using the length scale to compute an area" }, { "type": "COMMON", "text": "Forgetting to square when switching to area" } ], "pro_tips": [ "Always write BOTH scales first (length and area)", "Circle the word 'Area' in the question → write 'square it' beside it" ] } ] }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllTopics();
+        });
 
         function renderAllTopics() {
             const container = document.getElementById('topics-container');
-            let allTopicsHTML = '';
-            
-            topicsData.forEach(topic => {
-                allTopicsHTML += createTopicCardHTML(topic);
+            if (!container) {
+                console.error("Topics container not found!");
+                return;
+            }
+             if (typeof allTopicsData === 'undefined' || typeof allDetailsData === 'undefined') {
+                console.error("Data is not loaded!");
+                container.innerHTML = "<p style='color:red; text-align: center; padding: 20px;'>Error: topics-data.js is not loaded or is empty. Please check the file path and browser console for errors.</p>";
+                return;
+            }
+
+            // Combine details into allTopicsData
+            allTopicsData.forEach(topic => {
+                const key = `${topic.category.toUpperCase() === 'SATELLITE' ? 'SAT' : 'CORE'}-${topic.grade.toUpperCase()}-${topic.id}`;
+                if (allDetailsData[key]) {
+                    topic.details = allDetailsData[key];
+                }
             });
 
+            let allTopicsHTML = '';
+            allTopicsData.forEach(topic => {
+                allTopicsHTML += createTopicCardHTML(topic);
+            });
             container.innerHTML = allTopicsHTML;
         }
 
@@ -682,14 +738,25 @@
                         <!-- Tier 1: Memorisation -->
                         ${topic.tier1 ? createTier1HTML(topic.tier1) : ''}
                         
-                        <!-- Tier 2: Procedural (SOPs) - Placeholder -->
+                        <!-- Archetypes Overview -->
+                        <div class="tier">
+                             <div class="tier-header">
+                                <span class="tier-icon">🗺️</span>
+                                Typical Problem Archetypes
+                            </div>
+                            <div class="archetypes-container">
+                                ${createArchetypesHTML(topic.details?.archetypes_overview)}
+                            </div>
+                        </div>
+
+                        <!-- Tier 2: Procedural (SOPs) -->
                         <div class="tier">
                             <div class="tier-header">
                                 <span class="tier-icon">⚙️</span>
                                 Tier 2: Procedural (SOPs)
                             </div>
-                            <div class="sop-container" data-loaded="false">
-                                <p>Click to load SOPs...</p>
+                            <div class="sop-container">
+                                 ${createSopsHTML(topic.details?.sops)}
                             </div>
                         </div>
 
@@ -719,6 +786,24 @@
                     </div>
                 </div>
             `;
+        }
+        
+        function createArchetypesHTML(archetypes) {
+            if (!archetypes || archetypes.length === 0) return '<p>No archetypes defined for this topic.</p>';
+            
+            const archetypesListHTML = archetypes.map(arch => `
+                <div class="archetype-item">
+                    <div class="archetype-name">${arch.name}</div>
+                    <div class="archetype-desc">${arch.description}</div>
+                </div>
+            `).join('');
+            
+            return `<div class="archetypes-grid">${archetypesListHTML}</div>`;
+        }
+
+        function createSopsHTML(sops) {
+            if (!sops || sops.length === 0) return '<p>No SOPs defined for this topic.</p>';
+            return sops.map(sop => createSopHTML(sop)).join('');
         }
 
         function createTier3HTML(tier3Data) {
@@ -759,54 +844,21 @@
                 </div>`;
         }
         
-        async function loadSopData(headerElement) {
-            const card = headerElement.closest('.topic-card');
-            const sopContainer = card.querySelector('.sop-container');
-            if (sopContainer.dataset.loaded === 'true') return;
-
-            const topicId = card.dataset.topicId;
-            const category = card.dataset.category; // "core" or "satellite"
-            const categoryPrefix = (category === 'satellite') ? 'SAT' : category.toUpperCase();
-            const grade = card.dataset.grade.toUpperCase();
-            const fileName = `${categoryPrefix}-${grade}-${topicId}.json`;
-            const filePath = `data/topics/${fileName}`; // Corrected path from data/topic/ to data/topics/
-
-            sopContainer.innerHTML = '<p>Loading...</p>';
-
-            try {
-                const response = await fetch(filePath);
-                if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`);
-                const data = await response.json();
-                
-                const sopsHTML = data.sops.map(sop => createSopHTML(sop)).join('');
-                sopContainer.innerHTML = sopsHTML;
-                sopContainer.dataset.loaded = 'true';
-
-            } catch (error) {
-                console.error('Error loading SOP data:', error);
-                sopContainer.innerHTML = `<p style="color: red;">Error: Could not load SOP data from ${filePath}. Please check file name and path.</p>`;
-            }
-        }
-
         let currentGrade = 'all';
         let currentCategory = 'all';
 
-        async function toggleTopic(headerElement) {
+        function toggleTopic(headerElement) {
             const content = headerElement.nextElementSibling;
             const icon = headerElement.querySelector('.toggle-icon');
-            if (!content.classList.contains('show')) {
-                await loadSopData(headerElement);
-            }
             content.classList.toggle('show');
             icon.classList.toggle('open');
         }
 
         function toggleAll(expand) {
-            document.querySelectorAll('.topic-header').forEach(async (header) => {
+            document.querySelectorAll('.topic-header').forEach(header => {
                  const content = header.nextElementSibling;
                  const icon = header.querySelector('.toggle-icon');
                 if (expand) {
-                    await loadSopData(header);
                     content.classList.add('show');
                     icon.classList.add('open');
                 } else {
