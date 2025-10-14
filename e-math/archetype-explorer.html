@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Archetype Explorer | E-Math O-Level</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            padding: 28px 36px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .manage-drills-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .manage-drills-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 87, 108, 0.4);
+        }
+
+        .filter-bar {
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            padding: 20px 36px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-label {
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        select {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 10px;
+            background: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .strand-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .strand-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            background: transparent;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .strand-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .strand-btn.active {
+            background: white;
+            color: #4a5568;
+        }
+
+        .view-toggle {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .view-btn.active {
+            background: white;
+            color: #4a5568;
+        }
+
+        .stats-bar {
+            background: #f7fafc;
+            padding: 14px 36px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .stats-item {
+            font-size: 13px;
+            color: #4a5568;
+        }
+
+        .stats-item strong {
+            color: #667eea;
+            font-size: 20px;
+        }
+
+        .main-content {
+            display: flex;
+            min-height: 700px;
+        }
+
+        .archetype-grid {
+            flex: 1;
+            padding: 32px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            max-height: 800px;
+            overflow-y: auto;
+            background: #f7fafc;
+        }
+
+        .archetype-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .archetype-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .archetype-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
+        }
+
+        .card-header {
+            margin-bottom: 12px;
+        }
+
+        .archetype-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .grade-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-weight: 700;
+            border: 2px solid;
+        }
+
+        .grade-tag.G3 {
+            background: #fff5f5;
+            color: #e53e3e;
+            border-color: #fc8181;
+        }
+
+        .grade-tag.G4 {
+            background: #f0fff4;
+            color: #38a169;
+            border-color: #68d391;
+        }
+
+        .archetype-badge {
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .archetype-badge.CORE {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .archetype-badge.SAT {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .card-description {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .card-concepts {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .concepts-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .concepts-list {
+            font-size: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .concept-tag {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+        }
+
+        .view-sop-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .view-sop-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(102, 126, 234, 0.4);
+        }
+
+        .view-drills-btn {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .view-drills-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(250, 112, 154, 0.4);
+        }
+
+        .content-panel {
+            width: 480px;
+            background: white;
+            border-left: 2px solid #e2e8f0;
+            padding: 32px;
+            overflow-y: auto;
+            transition: all 0.4s;
+        }
+
+        .content-panel.hidden {
+            width: 0;
+            padding: 0;
+            opacity: 0;
+        }
+
+        .panel-welcome {
+            text-align: center;
+            color: #a0aec0;
+            padding: 100px 20px;
+        }
+
+        .panel-welcome h3 {
+            font-size: 24px;
+            margin: 20px 0 12px;
+            color: #4a5568;
+        }
+
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .panel-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .panel-tab {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: #718096;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .panel-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 16px;
+        }
+
+        .sop-steps {
+            background: #f7fafc;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .sop-step {
+            margin-bottom: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sop-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .step-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .step-content {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.7;
+        }
+
+        .pitfalls-section, .tips-section {
+            margin-top: 20px;
+        }
+
+        .pitfall-item, .tip-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid;
+        }
+
+        .pitfall-item {
+            border-color: #f56565;
+            background: #fff5f5;
+        }
+
+        .tip-item {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .pitfall-type, .tip-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .pitfall-type {
+            color: #f56565;
+        }
+
+        .tip-label {
+            color: #48bb78;
+        }
+
+        .drill-link-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .drill-link-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateX(4px);
+        }
+
+        .drill-platform-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .drill-platform-icon.google {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+        }
+
+        .drill-platform-icon.notion {
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+        }
+
+        .drill-link-content {
+            flex: 1;
+        }
+
+        .drill-link-title {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .drill-link-desc {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        .external-link-icon {
+            font-size: 20px;
+            color: #a0aec0;
+        }
+
+        .no-drills-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #a0aec0;
+        }
+
+        .add-drill-btn {
+            margin-top: 16px;
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .loading-sop {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            color: #2d3748;
+        }
+
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            color: #a0aec0;
+            background: none;
+            border: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 12px 24px;
+            background: #e2e8f0;
+            color: #4a5568;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <!-- MODIFICATION START -->
+                <div class="breadcrumbs" style="margin-bottom: 12px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">
+                    <a href="index.html" style="color: rgba(255, 255, 255, 0.9); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255, 255, 255, 0.9)'">Knowledge Framework</a>
+                    <span style="margin: 0 8px;">&gt;</span>
+                    <a href="archetype-explorer.html" style="color: #fff; text-decoration: none; font-weight: 600;">Archetype Explorer</a>
+                </div>
+                <!-- MODIFICATION END -->
+                <h1>🗺️ Archetype Explorer</h1>
+                <p>O-Level E-Math • 32 Problem Patterns</p>
+            </div>
+            <button class="manage-drills-btn" onclick="openDrillManager()">
+                ⚙️ Manage Drill Links
+            </button>
+        </div>
+
+        <div class="filter-bar">
+            <div class="filter-group">
+                <span class="filter-label">Grade:</span>
+                <select id="gradeSelect">
+                    <option value="all">All Grades</option>
+                    <option value="G3" selected>G3 Only</option>
+                    <option value="G4">G4 Only</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Category:</span>
+                <select id="categorySelect">
+                    <option value="all">All Categories</option>
+                    <option value="CORE">Core Topics Only</option>
+                    <option value="SAT">Satellite Topics Only</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Topic:</span>
+                <div class="strand-buttons">
+                    <button class="strand-btn active" data-topic="all">All</button>
+                    <button class="strand-btn" data-topic="trigonometry">Trigonometry</button>
+                    <button class="strand-btn" data-topic="algebra">Algebra</button>
+                    <button class="strand-btn" data-topic="geometry">Geometry</button>
+                    <button class="strand-btn" data-topic="numbers">Numbers</button>
+                    <button class="strand-btn" data-topic="mensuration">Mensuration</button>
+                    <button class="strand-btn" data-topic="statistics">Statistics</button>
+                </div>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">⊞</button>
+                <button class="view-btn" data-view="list">☰</button>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stats-item">
+                <strong id="displayCount">31</strong> archetypes displayed
+            </div>
+            <div class="stats-item">
+                <span style="color: #e53e3e;">●</span> G3: <strong id="g3Count">31</strong> | 
+                <span style="color: #38a169;">●</span> G4: <strong id="g4Count">1</strong>
+            </div>
+            <div class="stats-item">
+                <span style="color: #f5576c;">●</span> CORE: 13 | 
+                <span style="color: #00f2fe;">●</span> SAT: 18
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="archetype-grid" id="archetypeGrid"></div>
+
+            <div class="content-panel hidden" id="contentPanel">
+                <div class="panel-welcome">
+                    <div style="font-size:72px">🎯</div>
+                    <h3>Welcome!</h3>
+                    <p>Select any archetype to view its SOP and practice drills</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="drillModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Drill Link</h2>
+                <button class="modal-close" onclick="closeDrillManager()">×</button>
+            </div>
+            <form id="drillForm">
+                <div class="form-group">
+                    <label>Archetype</label>
+                    <select id="drillArchetype" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Drill Name</label>
+                    <input type="text" id="drillName" placeholder="e.g., Bearing Problems - Prototype Set" required>
+                </div>
+                <div class="form-group">
+                    <label>Platform</label>
+                    <select id="drillPlatform" required>
+                        <option value="google">Google Drive</option>
+                        <option value="notion">Notion</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>URL</label>
+                    <input type="url" id="drillUrl" placeholder="https://..." required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="drillDescription" rows="3" placeholder="Brief description"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeDrillManager()">Cancel</button>
+                    <button type="submit" class="btn-submit">Add Drill</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const ARCHETYPES = [
+            {id: 'ARCH-TRIG-01', name: '2D Bearing Problems', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Solve for unknown sides/angles in scenarios involving bearings', concepts: ['Sine Rule', 'Cosine Rule'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 0},
+            {id: 'ARCH-TRIG-02', name: '3D Elevation & Depression', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Calculate angles in 3D scenarios', concepts: ['SOH CAH TOA'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 1},
+            {id: 'ARCH-TRIG-03', name: 'Area using Sine', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Calculate area using formula', concepts: ['Triangle Area'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 2},
+            {id: 'ARCH-TRIG-04', name: 'Shortest Distance', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Find shortest distance', concepts: ['Area Method'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 2},
+            {id: 'ARCH-QUAD-01', name: 'Completing the Square', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Convert to vertex form', concepts: ['Vertex Form'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 0},
+            {id: 'ARCH-QUAD-02', name: 'Graph Sketching', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Sketch parabolas', concepts: ['Turning Point'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 1},
+            {id: 'ARCH-QUAD-03', name: 'Finding Equation', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Reverse engineer equation', concepts: ['Vertex Form'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 2},
+            {id: 'ARCH-QUAD-04', name: 'Intersection Analysis', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Interpret intersections', concepts: ['Discriminant'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: null},
+            {id: 'ARCH-ALG-01', name: 'Algebraic Fractions', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Manipulate fractions', concepts: ['LCD'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 0},
+            {id: 'ARCH-ALG-02', name: 'Fractional Equations', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Clear denominators', concepts: ['Clearing Fractions'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 1},
+            {id: 'ARCH-ALG-03', name: 'Changing Subject', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Rearrange formulas', concepts: ['Variable Isolation'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 2},
+            {id: 'ARCH-ALG-04', name: 'Simultaneous Equations', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Solve systems', concepts: ['Elimination'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 3},
+            {id: 'ARCH-GEO-01', name: 'Triangle Similarity', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Prove similarity', concepts: ['AA Criterion'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 0},
+            {id: 'ARCH-GEO-02', name: 'Triangle Congruency', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Prove congruency', concepts: ['SAS', 'SSS'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 1},
+            {id: 'ARCH-GEO-03', name: 'Similarity Ratios', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Apply ratios', concepts: ['Ratio Proportions'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 2},
+            {id: 'ARCH-IND-01', name: 'Index Laws', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Apply index laws', concepts: ['Power Rules'], jsonFile: 'SAT-G3-IND.json', sopIndex: 0},
+            {id: 'ARCH-IND-02', name: 'Exponential Equations', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Solve equations', concepts: ['Base Unification'], jsonFile: 'SAT-G3-IND.json', sopIndex: 1},
+            {id: 'ARCH-IND-03', name: 'Standard Form', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Scientific notation', concepts: ['Power of 10'], jsonFile: 'SAT-G3-IND.json', sopIndex: 3},
+            {id: 'ARCH-STAT-01', name: 'Stem-and-Leaf', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Calculate statistics', concepts: ['Position Formula'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 0},
+            {id: 'ARCH-STAT-02', name: 'Grouped Frequency', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Estimate mean', concepts: ['Midpoint'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 1},
+            {id: 'ARCH-STAT-03', name: 'Basic Probability', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Calculate probabilities', concepts: ['Sample Space'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 2},
+            {id: 'ARCH-RP-01', name: 'Map Scale', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Apply ratios to maps', concepts: ['Scale Ratio'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 0},
+            {id: 'ARCH-RP-02', name: 'Percentage Change', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Calculate percentages', concepts: ['Reverse Percentage'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 1},
+            {id: 'ARCH-RP-03', name: 'Interest Calculations', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Simple and compound', concepts: ['Principal', 'Rate'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 2},
+            {id: 'ARCH-CG-01', name: 'Equation of Line', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Derive equations', concepts: ['Gradient'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 0},
+            {id: 'ARCH-CG-02', name: 'Parallel & Perpendicular', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Use gradients', concepts: ['m1=m2'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 1},
+            {id: 'ARCH-CG-03', name: 'Distance & Area', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Apply formulas', concepts: ['Distance Formula'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 2},
+            {id: 'ARCH-MEN-01', name: 'Composite Solids', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Break shapes', concepts: ['Shape Deconstruction'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 2},
+            {id: 'ARCH-MEN-02', name: 'Similar Figures', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Apply scaling', concepts: ['Length Ratio k'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 1},
+            {id: 'ARCH-MEN-03', name: 'Sector & Segment', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Calculate parts', concepts: ['Arc Length'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 3},
+            {id: 'ARCH-INEQ-01', name: 'Compound Inequalities', badge: 'SAT', grade: 'G3', topic: 'algebra', description: 'Solve inequalities', concepts: ['Split and Solve'], jsonFile: 'SAT-G3-INEQ.json', sopIndex: 0},
+            {id: 'ARCH-INEQ-02', name: 'Inequality Modeling', badge: 'SAT', grade: 'G3', topic: 'algebra', description: 'Translate problems', concepts: ['Keyword Translation'], jsonFile: 'SAT-G3-INEQ.json', sopIndex: 1},
+            {id: 'ARCH-G4-CALC-01', name: 'Differentiation', badge: 'CORE', grade: 'G4', topic: 'algebra', description: 'Apply differentiation', concepts: ['dy/dx', 'Chain Rule'], jsonFile: 'CORE-G4-CALC.json', sopIndex: 0}
+        ];
+
+        let drillLinks = JSON.parse(localStorage.getItem('drillLinks') || '{}');
+        let currentFilter = {grade: 'G3', category: 'all', topic: 'all', view: 'grid'};
+        let selectedArchetype = null;
+        let sopCache = {};
+
+        function init() {
+            renderArchetypes();
+            updateStats();
+            setupEventListeners();
+        }
+
+        function updateStats() {
+            const g3Count = ARCHETYPES.filter(a => a.grade === 'G3').length;
+            const g4Count = ARCHETYPES.filter(a => a.grade === 'G4').length;
+            document.getElementById('g3Count').textContent = g3Count;
+            document.getElementById('g4Count').textContent = g4Count;
+        }
+
+        function renderArchetypes() {
+            const grid = document.getElementById('archetypeGrid');
+            const filtered = ARCHETYPES.filter(arch => {
+                const gradeMatch = currentFilter.grade === 'all' || arch.grade === currentFilter.grade;
+                const categoryMatch = currentFilter.category === 'all' || arch.badge === currentFilter.category;
+                const topicMatch = currentFilter.topic === 'all' || arch.topic === currentFilter.topic;
+                return gradeMatch && categoryMatch && topicMatch;
+            });
+
+            document.getElementById('displayCount').textContent = filtered.length;
+
+            grid.innerHTML = filtered.map(arch => `
+                <div class="archetype-card" data-id="${arch.id}">
+                    <div class="card-header">
+                        <div class="archetype-name">${arch.name}</div>
+                        <div class="card-badges">
+                            <span class="grade-tag ${arch.grade}">${arch.grade}</span>
+                            <span class="archetype-badge ${arch.badge}">${arch.badge}</span>
+                        </div>
+                    </div>
+                    <p class="card-description">${arch.description}</p>
+                    <div class="card-concepts">
+                        <div class="concepts-title">Key Concepts</div>
+                        <div class="concepts-list">
+                            ${arch.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="action-btn view-sop-btn" onclick="viewSOP('${arch.id}')">📋 View SOP</button>
+                        <button class="action-btn view-drills-btn" onclick="viewDrills('${arch.id}')">🎯 Drills</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadSOP(archId) {
+            const arch = ARCHETYPES.find(a => a.id === archId);
+            if (!arch || arch.sopIndex === null) return null;
+
+            const cacheKey = `${arch.jsonFile}-${arch.sopIndex}`;
+            if (sopCache[cacheKey]) return sopCache[cacheKey];
+
+            try {
+                // NOTE: This fetch path assumes a '/data/topics/' directory structure relative to the HTML file.
+                // This might need adjustment based on the actual file server setup.
+                const response = await fetch(`./data/topics/${arch.jsonFile}`);
+                if (!response.ok) throw new Error('File not found');
+                const data = await response.json();
+                const sop = data.sops[arch.sopIndex];
+                sopCache[cacheKey] = sop;
+                return sop;
+            } catch (error) {
+                console.error(`Failed to load SOP for ${archId}:`, error);
+                return null;
+            }
+        }
+
+        async function viewSOP(archId) {
+            selectedArchetype = archId;
+            const arch = ARCHETYPES.find(a => a.id === archId);
+            const panel = document.getElementById('contentPanel');
+            
+            document.querySelectorAll('.archetype-card').forEach(card => {
+                card.classList.remove('selected');
+                if (card.dataset.id === archId) {
+                    card.classList.add('selected');
+                    card.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+                }
+            });
+
+            panel.classList.remove('hidden');
+            panel.innerHTML = `
+                <div class="panel-content">
+                    <div class="panel-header">
+                        <h2>${arch.name}</h2>
+                        <p>${arch.grade} • ${arch.badge}</p>
+                    </div>
+                    <div class="panel-tabs">
+                        <button class="panel-tab active">📋 SOP</button>
+                        <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
+                    </div>
+                    <div class="loading-sop"><p>⏳ Loading SOP...</p></div>
+                </div>
+            `;
+
+            const sop = await loadSOP(archId);
+
+            if (!sop) {
+                panel.innerHTML = `
+                    <div class="panel-content">
+                        <div class="panel-header"><h2>${arch.name}</h2><p>${arch.grade} • ${arch.badge}</p></div>
+                        <div class="panel-tabs">
+                            <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
+                            <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
+                        </div>
+                        <div class="tab-content active" id="sopTab">
+                            <div class="no-drills-message"><p>📝</p><p>SOP not available</p></div>
+                        </div>
+                        <div class="tab-content" id="drillsTab">${renderDrillsContent(archId)}</div>
+                    </div>
+                `;
+                return;
+            }
+
+            panel.innerHTML = `
+                <div class="panel-content">
+                    <div class="panel-header"><h2>${arch.name}</h2><p>${arch.grade} • ${arch.badge}</p></div>
+                    <div class="panel-tabs">
+                        <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
+                        <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
+                    </div>
+                    <div class="tab-content active" id="sopTab">
+                        <div class="section-title">🎯 Goal</div>
+                        <p style="color:#4a5568;margin-bottom:20px;line-height:1.6;">${sop.goal}</p>
+                        <div class="section-title">📝 Steps</div>
+                        <div class="sop-steps">
+                            ${sop.steps.map((step, i) => `
+                                <div class="sop-step">
+                                    <div class="step-title">STEP ${i + 1}</div>
+                                    <div class="step-content">${step}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${sop.pitfalls && sop.pitfalls.length > 0 ? `
+                            <div class="pitfalls-section">
+                                <div class="section-title">⚠️ Common Pitfalls</div>
+                                ${sop.pitfalls.map(p => `
+                                    <div class="pitfall-item">
+                                        <div class="pitfall-type">${p.type}</div>
+                                        <div style="font-size:13px;color:#2d3748;">${p.text}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        ${sop.pro_tips && sop.pro_tips.length > 0 ? `
+                            <div class="tips-section">
+                                <div class="section-title">💡 Pro Tips</div>
+                                ${sop.pro_tips.map(tip => `
+                                    <div class="tip-item">
+                                        <div class="tip-label">PRO TIP</div>
+                                        <div style="font-size:13px;color:#2d3748;">${tip}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="tab-content" id="drillsTab">${renderDrillsContent(archId)}</div>
+                </div>
+            `;
+        }
+
+        function viewDrills(archId) {
+            viewSOP(archId);
+            setTimeout(() => switchTab('drills'), 100);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'sop') {
+                document.querySelectorAll('.panel-tab')[0].classList.add('active');
+                document.getElementById('sopTab').classList.add('active');
+            } else {
+                document.querySelectorAll('.panel-tab')[1].classList.add('active');
+                document.getElementById('drillsTab').classList.add('active');
+            }
+        }
+
+        function renderDrillsContent(archId) {
+            const drills = drillLinks[archId] || [];
+            
+            if (drills.length === 0) {
+                return `
+                    <div class="no-drills-message">
+                        <p>📚</p><p>No practice drills added yet</p>
+                        <button class="add-drill-btn" onclick="openDrillManager('${archId}')">➕ Add First Drill</button>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="section-title">🎯 Practice Drills</div>
+                ${drills.map(drill => `
+                    <a href="${drill.url}" target="_blank" rel="noopener noreferrer" class="drill-link-item">
+                        <div class="drill-platform-icon ${drill.platform}">${drill.platform === 'google' ? '📁' : '📝'}</div>
+                        <div class="drill-link-content">
+                            <div class="drill-link-title">${drill.name}</div>
+                            <div class="drill-link-desc">${drill.description || 'Practice exercises'}</div>
+                        </div>
+                        <div class="external-link-icon">↗</div>
+                    </a>
+                `).join('')}
+                <button class="add-drill-btn" onclick="openDrillManager('${archId}')" style="width:100%;">➕ Add More Drills</button>
+            `;
+        }
+
+        function openDrillManager(archId = null) {
+            const modal = document.getElementById('drillModal');
+            const select = document.getElementById('drillArchetype');
+            
+            select.innerHTML = ARCHETYPES.map(arch => 
+                `<option value="${arch.id}" ${arch.id === archId ? 'selected' : ''}>${arch.name} (${arch.grade} • ${arch.badge})</option>`
+            ).join('');
+
+            modal.classList.add('active');
+            document.getElementById('drillForm').reset();
+        }
+
+        function closeDrillManager() {
+            document.getElementById('drillModal').classList.remove('active');
+        }
+
+        document.getElementById('drillForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const archId = document.getElementById('drillArchetype').value;
+            const drill = {
+                name: document.getElementById('drillName').value,
+                platform: document.getElementById('drillPlatform').value,
+                url: document.getElementById('drillUrl').value,
+                description: document.getElementById('drillDescription').value
+            };
+
+            if (!drillLinks[archId]) drillLinks[archId] = [];
+            drillLinks[archId].push(drill);
+            
+            localStorage.setItem('drillLinks', JSON.stringify(drillLinks));
+            closeDrillManager();
+            
+            if (selectedArchetype === archId) viewDrills(archId);
+
+            // Using a custom modal/toast for notifications is better than alert()
+            // but for this example, alert() is used for simplicity.
+            alert('✅ Drill link added successfully!');
+        });
+
+        function setupEventListeners() {
+            document.getElementById('gradeSelect').addEventListener('change', (e) => {
+                currentFilter.grade = e.target.value;
+                renderArchetypes();
+            });
+
+            document.getElementById('categorySelect').addEventListener('change', (e) => {
+                currentFilter.category = e.target.value;
+                renderArchetypes();
+            });
+
+            document.querySelectorAll('.strand-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.strand-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilter.topic = e.target.dataset.topic;
+                    renderArchetypes();
+                });
+            });
+
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilter.view = e.target.dataset.view;
+                    const grid = document.getElementById('archetypeGrid');
+                    grid.classList.toggle('list-view', currentFilter.view === 'list');
+                });
+            });
+
+            document.getElementById('drillModal').addEventListener('click', (e) => {
+                if (e.target.id === 'drillModal') closeDrillManager();
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
+
+
