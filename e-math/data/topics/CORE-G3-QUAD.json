@@ -47,8 +47,8 @@
         "Simplify the constant term: Combine constants to get final form (x + p)² + q"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Forgetting to factor out the coefficient of x² before completing the square" },
-        { "type": "典型", "text": "Not squaring the half-coefficient correctly" }
+        { "type": "CRITICAL", "text": "Forgetting to factor out the coefficient of x² before completing the square" },
+        { "type": "Common", "text": "Not squaring the half-coefficient correctly" }
       ],
       "pro_tips": [
         "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²",
@@ -69,8 +69,8 @@
         "Sketch: Draw smooth U-shape through all labeled points"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Getting the sign wrong for the turning point coordinates" },
-        { "type": "典型", "text": "Forgetting to label all intercepts and the turning point" }
+        { "type": "CRITICAL", "text": "Getting the sign wrong for the turning point coordinates" },
+        { "type": "Common", "text": "Forgetting to label all intercepts and the turning point" }
       ],
       "pro_tips": [
         "If completing the square gives (x - a)² + b, turning point is (a, b) not (-a, b)",
@@ -90,8 +90,8 @@
         "Write the final equation: Either in completed square form or expand to standard form if required"
       ],
       "pitfalls": [
-        { "type": "致命", "text": "Forgetting to include the coefficient a in front" },
-        { "type": "典型", "text": "Sign errors when substituting coordinates with negative values" }
+        { "type": "CRITICAL", "text": "Forgetting to include the coefficient a in front" },
+        { "type": "Common", "text": "Sign errors when substituting coordinates with negative values" }
       ],
       "pro_tips": [
         "Always use y = a(x - h)² + k form first, it's faster than y = ax² + bx + c",
