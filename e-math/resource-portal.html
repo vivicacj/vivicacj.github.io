@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emath Resources Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+             background: rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .resource-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #2a5298;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .resource-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .resource-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .icon {
+            font-size: 1.3em;
+        }
+
+        .resource-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .resource-note {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #059669;
+            margin-top: 15px;
+            background: #f0fdf4;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover .arrow {
+            transform: translateX(5px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+             .back-link {
+                position: static;
+                display: inline-block;
+                margin-bottom: 20px;
+            }
+            .header-content {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+         <a href="index.html" class="back-link">← Back to Hub</a>
+        <div class="header-content">
+            <h1>📚 Emath Resources Portal</h1>
+            <p class="subtitle">Your comprehensive learning resource center</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="resource-grid">
+            <!-- Resource Card 1 -->
+            <div class="resource-card">
+                <a href="https://www.notion.so/G3-FINAL-SPRINT-SOP-MASTER-VERSION-28ccf67427508012bee8e5a728ddcba3?source=copy_link" 
+                   class="resource-link" 
+                   target="_blank">
+                    <div class="resource-title">
+                        <span class="icon">📄</span>
+                        <span>G3| FINAL SPRINT SOP MASTER VERSION</span>
+                    </div>
+                    <div class="resource-description">
+                        Access the complete G3 Final Sprint Standard Operating Procedures master document.
+                        <span class="arrow">→</span>
+                    </div>
+                    <div class="resource-note">
+                        Note: The link will open in Notion, where you can comment, download, or print the notes.
+                    </div>
+                </a>
+            </div>
+
+            <!-- Resource Card 2 -->
+            <div class="resource-card">
+                <a href="https://www.notion.so/G3-E-Math-M-P-C-Knowledge-Framework-28ccf6742750808cb577c76ce67a86ad?source=copy_link" 
+                   class="resource-link" 
+                   target="_blank">
+                    <div class="resource-title">
+                        <span class="icon">🎯</span>
+                        <span>G3| E-Math M-P-C Knowledge Framework</span>
+                    </div>
+                    <div class="resource-description">
+                        Explore the comprehensive M-P-C Knowledge Framework for E-Math learning.
+                        <span class="arrow">→</span>
+                    </div>
+                     <div class="resource-note">
+                        Note: The link will open in Notion, where you can comment, download, or print the notes.
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Resource Card 3: Flashcards -->
+            <div class="resource-card">
+                <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" 
+                   class="resource-link" 
+                   target="_blank">
+                    <div class="resource-title">
+                        <span class="icon">🧠</span>
+                        <span>Flashcard Sets (G3 & G4)</span>
+                    </div>
+                    <div class="resource-description">
+                        Access all official G3 & G4 flashcard sets on Quizlet for interactive memorisation.
+                        <span class="arrow">→</span>
+                    </div>
+                     <div class="resource-note">
+                        Note: The link will open in Quizlet, where you can join the class and access all study sets.
+                    </div>
+                </a>
+            </div>
+
+            <!-- Add more resource cards here as needed -->
+            
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Emath. All rights reserved.</p>
+    </footer>
+</body>
+</html>
+

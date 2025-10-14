@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Math M-P-C Knowledge Framework #G3 & #G4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: rgba(30, 60, 114, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            padding-bottom: 80px; /* Add padding for bottom nav */
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            color: #d8b4fe;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .title-icon {
+            width: 50px;
+            height: 50px;
+            fill: #d8b4fe;
+        }
+        
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1em;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .tag {
+            display: inline-block;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #1e293b;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-top: 20px;
+            letter-spacing: 1px;
+        }
+        
+        .header-nav {
+            position: absolute;
+            bottom: 25px;
+            left: 40px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .header-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            transition: color 0.3s;
+        }
+        
+        .header-nav a:hover {
+            color: #f59e0b;
+        }
+        
+        .nav-divider {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .divider {
+            width: 1px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.6);
+            margin: 0 10px;
+        }
+
+        .topic-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+        }
+
+        .topic-card[data-category="satellite"] .topic-header {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        }
+        
+        .topic-card[data-grade="g4"][data-category="core"] .topic-header {
+            background: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%);
+        }
+        .topic-card[data-grade="g4"][data-category="satellite"] .topic-header {
+            background: linear-gradient(135deg, #a3e635 0%, #4ade80 100%);
+        }
+
+
+        .topic-header:hover {
+            filter: brightness(1.1);
+        }
+
+        .topic-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .topic-number {
+            font-size: 2em;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.4);
+            min-width: 50px;
+        }
+
+        .topic-name {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .topic-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .toggle-icon {
+            font-size: 1.5em;
+            color: white;
+            transition: transform 0.3s;
+            margin-left: 20px;
+        }
+
+        .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .topic-content {
+            display: none;
+            padding: 35px;
+            background: white;
+        }
+
+        .topic-content.show {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tier {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        .topic-card[data-category="satellite"] .tier {
+             border-left-color: #06b6d4;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="core"] .tier {
+             border-left-color: #0d9488;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="satellite"] .tier {
+             border-left-color: #a3e635;
+        }
+
+        .tier-header {
+            font-size: 1.4em;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tier-icon {
+            font-size: 1.2em;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .flashcard {
+            background: white;
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 140px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flashcard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .topic-card[data-category="satellite"] .flashcard::before {
+             background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%);
+        }
+        
+        .topic-card[data-grade="g4"][data-category="core"] .flashcard::before {
+             background: linear-gradient(90deg, #0d9488 0%, #2dd4bf 100%);
+        }
+        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard::before {
+             background: linear-gradient(90deg, #a3e635 0%, #4ade80 100%);
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        
+        .topic-card[data-category="satellite"] .flashcard:hover {
+            box-shadow: 0 10px 30px rgba(6, 182, 212, 0.2);
+            border-color: #06b6d4;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="core"] .flashcard:hover {
+            box-shadow: 0 10px 30px rgba(13, 148, 136, 0.2);
+            border-color: #0d9488;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard:hover {
+            box-shadow: 0 10px 30px rgba(163, 230, 53, 0.2);
+            border-color: #a3e635;
+        }
+
+        .flashcard-front {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .topic-card[data-category="satellite"] .flashcard-front {
+            color: #0891b2;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="core"] .flashcard-front {
+            color: #0d9488;
+        }
+        
+        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard-front {
+            color: #a3e635;
+        }
+
+        .flashcard-back {
+            color: #475569;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .feynman {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-style: italic;
+            color: #92400e;
+            box-shadow: 0 3px 15px rgba(245, 158, 11, 0.1);
+            position: relative;
+        }
+
+        .feynman::before {
+            content: '💡';
+            font-size: 1.5em;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            opacity: 0.3;
+        }
+
+        /* SOP Block Styles */
+        .sop-block {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+        }
+        .sop-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        .sop-goal, .sop-triggers, .sop-steps { margin: 1rem 0; }
+        .label {
+            font-weight: bold;
+            color: #667eea;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .steps-list { margin-left: 1.5rem; }
+        .steps-list li { margin: 0.75rem 0; padding-left: 0.5rem; }
+        .pitfalls {
+            background: #fff3cd;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            margin: 1rem 0;
+        }
+        .pitfalls-title {
+            font-weight: bold;
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+        .fatal, .致命, .CRITICAL { color: #dc3545; font-weight: bold; }
+        .typical, .典型, .COMMON { color: #fd7e14; font-weight: bold; }
+        .protips {
+            background: #d1ecf1;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            margin: 1rem 0;
+        }
+        .protips-title {
+            font-weight: bold;
+            color: #0c5460;
+            margin-bottom: 0.5rem;
+        }
+        .formula {
+            background: #e9ecef;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 0.25rem 0;
+        }
+
+        @media (max-width: 1024px) {
+             .nav-buttons {
+                flex-direction: column;
+            }
+            .divider {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.2em;
+                flex-direction: column;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .header-nav {
+                position: static;
+                margin-top: 20px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .topic-name {
+                font-size: 1.2em;
+            }
+            
+            .topic-title {
+                gap: 10px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .flashcard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 1.5em;
+            visibility: hidden;
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+         <header>
+            <h1>
+                <svg class="title-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22.5,1.5,1.5,22.5l-1-1,21-21,1,1Zm-1,1-1-1L2,20.5l-1,1,20,2,1-1ZM2.5,22.5l-1-1,1-1,1,1-1,1Z"/></svg>
+                E-Math M-P-C Knowledge Framework
+            </h1>
+            <div class="subtitle">Memorisation • Procedural • Conceptual</div>
+            <div class="tag">#G3 & #G4</div>
+            <div class="header-nav">
+                <a href="resource-portal.html">Resource Portal</a>
+                <span class="nav-divider">|</span>
+                <a href="emath-exercise-tracker.html">Study Portal</a>
+                <span class="nav-divider">|</span>
+                <a href="#">Task Tracker</a>
+                <span class="nav-divider">|</span>
+                <a href="rsrm_system.html">RSRM System</a>
+                <span class="nav-divider">|</span>
+                <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" target="_blank">Flashcard Sets</a>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="toggleAll(true)">Expand All</button>
+                <button class="nav-btn" onclick="toggleAll(false)">Collapse All</button>
+                <div class="divider"></div>
+                 <div class="filter-group" id="grade-filters">
+                    <button class="nav-btn grade-btn active" onclick="filterContent('grade', 'all', this)">All Grades</button>
+                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g3', this)">G3</button>
+                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g4', this)">G4</button>
+                </div>
+                <div class="divider"></div>
+                <div class="filter-group" id="category-filters">
+                    <button class="nav-btn category-btn active" onclick="filterContent('category', 'all', this)">All Topics</button>
+                    <button class="nav-btn category-btn" onclick="filterContent('category', 'core', this)">Core Topics</button>
+                    <button class="nav-btn category-btn" onclick="filterContent('category', 'satellite', this)">Satellite Topics</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="topics-container">
+            <!-- Topic cards will be dynamically inserted here -->
+        </div>
+
+    </div>
+
+    <div class="scroll-top" onclick="scrollToTop()">▲</div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllTopics();
+        });
+
+        const topicsData = [
+            // G3 Core
+            { 
+                id: 'TRIG', number: '01', name: 'Trigonometry Application in Context', category: 'core', grade: 'g3',
+                tier1: { flashcards: [ { front: 'SOH CAH TOA', back: 'sinθ = Opp/Hyp, cosθ = Adj/Hyp, tanθ = Opp/Adj' }, { front: 'Sine Rule', back: 'a/sinA = b/sinB = c/sinC' }, { front: 'Cosine Rule', back: 'c² = a² + b² - 2ab cosC' }, { front: 'Area of Triangle', back: 'Area = ½ ab sinC' }] },
+                tier3: { prompts: ["Explain why the 'ambiguous case' exists for the Sine Rule.", "Explain why the greatest angle of elevation is found at the shortest horizontal distance."] }
+            },
+            { 
+                id: 'QUAD', number: '02', name: 'Quadratic Functions & Graphs', category: 'core', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Vertex Form', back: 'y = a(x - h)² + k' }, { front: 'Quadratic Formula', back: 'x = [-b ± √(b²-4ac)] / 2a' }, { front: 'Discriminant', back: 'Δ = b² - 4ac' }] },
+                tier3: { prompts: ["Explain the connection between the discriminant and the number of x-intercepts.", "Why is the axis of symmetry x = -b/2a?"] }
+            },
+            { 
+                id: 'ALG', number: '03', name: 'Comprehensive Algebraic Manipulation', category: 'core', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Difference of Squares', back: 'a² - b² = (a - b)(a + b)' }, { front: 'Rule for a-b vs b-a', back: 'b - a = -(a - b)' }, { front: 'Equation vs. Expression', back: 'Equations have an = sign; expressions do not.' }] },
+                tier3: { prompts: ["Explain why you can't cancel the 'x' in (x+3)/x.", "Explain why multiplying by the LCD is valid for equations but not expressions."] }
+            },
+            { 
+                id: 'GEO', number: '04', name: 'Geometric Proofs & Similarity/Congruency', category: 'core', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Similarity Conditions', back: 'AA, SAS Similarity, SSS Similarity' }, { front: 'Congruency Conditions', back: 'SAS, SSS, ASA, RHS' }, { front: 'Parallel Lines', back: 'Alternate angles, Corresponding angles, Interior angles.' }] },
+                tier3: { prompts: ["Explain why SSA is not a valid congruency test.", "Explain why the ratio of areas of similar triangles is the square of the ratio of their lengths."] }
+            },
+            // G3 Satellite
+            { 
+                id: 'COORD', number: '05', name: 'Coordinate Geometry', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Gradient Formula', back: 'm = (y₂ - y₁) / (x₂ - x₁)' }, { front: 'Distance Formula', back: '√[(x₂ - x₁)² + (y₂ - y₁)²]' }, { front: 'Perpendicular Gradient', back: 'm₁ * m₂ = -1' }] },
+                tier3: { prompts: ["Explain the geometric meaning of the y-intercept.", "Derive the formula for the midpoint of a line segment."] }
+            },
+            { 
+                id: 'MEN', number: '06', name: 'Mensuration', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Volume of Cone', back: 'V = (1/3)πr²h' }, { front: 'Surface Area of Sphere', back: 'A = 4πr²' }, { front: 'Area of Sector', back: 'A = (θ/360) * πr²' }] },
+                tier3: { prompts: ["Explain why the volume of a pyramid is one-third the volume of its enclosing prism.", "Why is the total surface area of a hemisphere 3πr² and not 2πr²?"] }
+            },
+            { 
+                id: 'INEQ', number: '07', name: 'Inequalities', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Flipping the Sign', back: 'Flip the inequality sign when multiplying or dividing by a negative number.' }, { front: 'At least', back: 'Means greater than or equal to (≥)' }, { front: 'At most', back: 'Means less than or equal to (≤)' }] },
+                tier3: { prompts: ["Explain with an example why you must flip the inequality sign when multiplying by a negative number."] }
+            },
+            { 
+                id: 'IND', number: '08', name: 'Indices & Standard Form', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Multiplication Law', back: 'aᵐ × aⁿ = aᵐ⁺ⁿ' }, { front: 'Negative Index', back: 'a⁻ⁿ = 1/aⁿ' }, { front: 'Fractional Index', back: 'a¹/ⁿ = ⁿ√a' }] },
+                tier3: { prompts: ["Explain why a⁰ = 1 using the division law of indices.", "Explain why a negative power represents a reciprocal."] }
+            },
+            { 
+                id: 'STAT', number: '09', name: 'Statistics & Probability', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Probability Formula', back: 'P(Event) = (Number of favorable outcomes) / (Total number of outcomes)' }, { front: 'Mean', back: 'Sum of values / Number of values' }, { front: 'Median', back: 'The middle value in an ordered set.' }] },
+                tier3: { prompts: ["When is the median a better measure of central tendency than the mean?"] }
+            },
+            { 
+                id: 'RATIO', number: '10', name: 'Ratio & Percentage', category: 'satellite', grade: 'g3',
+                tier1: { flashcards: [ { front: 'Percentage Increase', back: 'New Value = Original × (1 + %/100)' }, { front: 'Reverse Percentage', back: 'Original Value = Final Value / (1 ± %/100)' }, { front: 'Compound Interest', back: 'A = P(1 + r/n)^(nt)' }] },
+                tier3: { prompts: ["Explain the fundamental difference between simple interest and compound interest."] }
+            },
+            // G4 Placeholders
+            { id: 'VECTORS', number: '11', name: 'Vectors in Two Dimensions', category: 'core', grade: 'g4', tier1: null, tier3: null },
+            { id: 'MATRICES', number: '12', name: 'Matrices', category: 'satellite', grade: 'g4', tier1: null, tier3: null }
+        ];
+
+        function renderAllTopics() {
+            const container = document.getElementById('topics-container');
+            let allTopicsHTML = '';
+            
+            topicsData.forEach(topic => {
+                allTopicsHTML += createTopicCardHTML(topic);
+            });
+
+            container.innerHTML = allTopicsHTML;
+        }
+
+        function createTopicCardHTML(topic) {
+            return `
+                <div class="topic-card" data-category="${topic.category}" data-grade="${topic.grade}" data-topic-id="${topic.id}">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-number">${topic.number}</span>
+                            <span class="topic-name">${topic.name}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="topic-badge">${topic.grade.toUpperCase()}</span>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="topic-content">
+                        <!-- Tier 1: Memorisation -->
+                        ${topic.tier1 ? createTier1HTML(topic.tier1) : ''}
+                        
+                        <!-- Tier 2: Procedural (SOPs) - Placeholder -->
+                        <div class="tier">
+                            <div class="tier-header">
+                                <span class="tier-icon">⚙️</span>
+                                Tier 2: Procedural (SOPs)
+                            </div>
+                            <div class="sop-container" data-loaded="false">
+                                <p>Click to load SOPs...</p>
+                            </div>
+                        </div>
+
+                        <!-- Tier 3: Conceptual -->
+                        ${topic.tier3 ? createTier3HTML(topic.tier3) : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTier1HTML(tier1Data) {
+            const flashcardsHTML = tier1Data.flashcards.map(card => `
+                <div class="flashcard">
+                    <div class="flashcard-front">${card.front}</div>
+                    <div class="flashcard-back">${card.back}</div>
+                </div>
+            `).join('');
+
+            return `
+                <div class="tier">
+                    <div class="tier-header">
+                        <span class="tier-icon">🎯</span>
+                        Tier 1: Memorisation-Based (Flashcards)
+                    </div>
+                    <div class="flashcard-grid">
+                        ${flashcardsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createTier3HTML(tier3Data) {
+            const promptsHTML = tier3Data.prompts.map(prompt => `
+                <div class="feynman">${prompt}</div>
+            `).join('');
+
+            return `
+                <div class="tier">
+                    <div class="tier-header">
+                        <span class="tier-icon">💡</span>
+                        Tier 3: Conceptual (Feynman Prompts)
+                    </div>
+                    ${promptsHTML}
+                </div>
+            `;
+        }
+        
+        function createSopHTML(sop) {
+            const pitfallTypes = { '致命': 'fatal', '典型': 'typical', 'CRITICAL': 'fatal', 'COMMON': 'typical' };
+            return `
+                <div class="sop-block">
+                    <h3 class="sop-title">${sop.title}</h3>
+                    <div class="sop-goal"><span class="label">Goal:</span> ${sop.goal}</div>
+                    <div class="sop-triggers"><span class="label">Triggers:</span> ${sop.triggers}</div>
+                    <div class="sop-steps">
+                        <span class="label">Steps:</span>
+                        <ol class="steps-list">${sop.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+                    </div>
+                    <div class="pitfalls">
+                        <div class="pitfalls-title">Common Pitfalls:</div>
+                        <ul>${sop.pitfalls.map(pitfall => `<li><span class="${pitfallTypes[pitfall.type] || 'typical'}">${pitfall.type}:</span> ${pitfall.text}</li>`).join('')}</ul>
+                    </div>
+                    <div class="protips">
+                        <div class="protips-title">Pro-Tip:</div>
+                        <p>${Array.isArray(sop.pro_tips) ? sop.pro_tips.join('<br>') : sop.pro_tips}</p>
+                    </div>
+                </div>`;
+        }
+        
+        async function loadSopData(headerElement) {
+            const card = headerElement.closest('.topic-card');
+            const sopContainer = card.querySelector('.sop-container');
+            if (sopContainer.dataset.loaded === 'true') return;
+
+            const topicId = card.dataset.topicId;
+            const category = card.dataset.category; // "core" or "satellite"
+            const categoryPrefix = (category === 'satellite') ? 'SAT' : category.toUpperCase();
+            const grade = card.dataset.grade.toUpperCase();
+            const fileName = `${categoryPrefix}-${grade}-${topicId}.json`;
+            const filePath = `data/topics/${fileName}`; // Corrected path from data/topic/ to data/topics/
+
+            sopContainer.innerHTML = '<p>Loading...</p>';
+
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) throw new Error(`Network response was not ok. Status: ${response.status}`);
+                const data = await response.json();
+                
+                const sopsHTML = data.sops.map(sop => createSopHTML(sop)).join('');
+                sopContainer.innerHTML = sopsHTML;
+                sopContainer.dataset.loaded = 'true';
+
+            } catch (error) {
+                console.error('Error loading SOP data:', error);
+                sopContainer.innerHTML = `<p style="color: red;">Error: Could not load SOP data from ${filePath}. Please check file name and path.</p>`;
+            }
+        }
+
+        let currentGrade = 'all';
+        let currentCategory = 'all';
+
+        async function toggleTopic(headerElement) {
+            const content = headerElement.nextElementSibling;
+            const icon = headerElement.querySelector('.toggle-icon');
+            if (!content.classList.contains('show')) {
+                await loadSopData(headerElement);
+            }
+            content.classList.toggle('show');
+            icon.classList.toggle('open');
+        }
+
+        function toggleAll(expand) {
+            document.querySelectorAll('.topic-header').forEach(async (header) => {
+                 const content = header.nextElementSibling;
+                 const icon = header.querySelector('.toggle-icon');
+                if (expand) {
+                    await loadSopData(header);
+                    content.classList.add('show');
+                    icon.classList.add('open');
+                } else {
+                    content.classList.remove('show');
+                    icon.classList.remove('open');
+                }
+            });
+        }
+
+        function filterContent(type, value, clickedButton) {
+            if (type === 'grade') currentGrade = value;
+            else if (type === 'category') currentCategory = value;
+            
+            updateActiveButton(document.querySelectorAll(`#${type}-filters .nav-btn`), clickedButton);
+            applyFilters();
+        }
+
+        function updateActiveButton(buttons, activeButton) {
+             buttons.forEach(btn => btn.classList.remove('active'));
+             activeButton.classList.add('active');
+        }
+
+        function applyFilters() {
+            document.querySelectorAll('.topic-card').forEach(topic => {
+                const gradeMatch = (currentGrade === 'all') || (topic.dataset.grade === currentGrade);
+                const categoryMatch = (currentCategory === 'all') || (topic.dataset.category === currentCategory);
+                topic.style.display = (gradeMatch && categoryMatch) ? 'block' : 'none';
+            });
+        }
+
+        const scrollTopBtn = document.querySelector('.scroll-top');
+        window.onscroll = () => {
+            scrollTopBtn.classList.toggle('show', document.body.scrollTop > 100 || document.documentElement.scrollTop > 100);
+        };
+        
+        function scrollToTop() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+    </script>
+</body>
+</html>
+

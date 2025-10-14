@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.S.R.M. AI Debriefing System (OpenAI Protocol Edition)</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX transpilation in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .image-paste-box {
+            min-height: 100px;
+            border: 2px dashed #4a5568;
+            transition: all 0.2s ease-in-out;
+        }
+        .image-paste-box:hover {
+            border-color: #6366f1;
+            background-color: #2d3748;
+        }
+        /* Styles for settings slide-out panel */
+        .settings-panel {
+            transition: transform 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- Helper Components & Icons ---
+        const BotIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></svg>;
+        const UserIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>;
+        const EyeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const EyeOffIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>;
+        const SettingsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const LoadingSpinner = () => <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>;
+        
+        // --- Password Screen Component ---
+        function PasswordScreen({ onSuccess }) {
+            const [password, setPassword] = useState('');
+            const [error, setError] = useState('');
+            
+            // --- CHANGE YOUR PASSWORD HERE ---
+            const correctPassword = 'rsrm2025'; 
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (password === correctPassword) {
+                    sessionStorage.setItem('rsrm_auth', 'true'); // Save session auth
+                    onSuccess();
+                } else {
+                    setError('Incorrect password. Please try again.');
+                }
+            };
+
+            return (
+                <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+                    <div className="w-full max-w-md p-8 space-y-6 bg-gray-800 rounded-lg shadow-lg">
+                        <div className="text-center">
+                            <h1 className="text-3xl font-bold">R.S.R.M. Math Review System</h1>
+                            <p className="text-gray-400 mt-2">Please enter the password to continue.</p>
+                        </div>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div>
+                                <label htmlFor="password-input" className="block text-sm font-medium text-gray-300">Password</label>
+                                <input
+                                    type="password"
+                                    id="password-input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="mt-1 w-full bg-gray-700 border-gray-600 text-white rounded-md p-3 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                                    autoFocus
+                                />
+                            </div>
+                            {error && <p className="text-red-500 text-sm">{error}</p>}
+                            <div>
+                                <button type="submit" className="w-full bg-indigo-600 font-bold py-3 px-4 rounded-lg hover:bg-indigo-700 transition-colors">
+                                    Unlock
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        // --- Main Application Component ---
+        function App() {
+            // --- State Management ---
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [apiKey, setApiKey] = useState('');
+            const [baseUrl, setBaseUrl] = useState('https://www.chataiapi.com');
+            const [modelName, setModelName] = useState('gemini-2.5-pro');
+            const [isApiKeyVisible, setIsApiKeyVisible] = useState(false);
+            const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+            const [studentName, setStudentName] = useState('Dennis');
+
+            const [problemText, setProblemText] = useState('');
+            const [problemImage, setProblemImage] = useState(null);
+            const [standardAnswer, setStandardAnswer] = useState('');
+            const [studentAnswerText, setStudentAnswerText] = useState('');
+            const [studentAnswerImage, setStudentAnswerImage] = useState(null);
+            
+            const [isDebriefStarted, setIsDebriefStarted] = useState(false);
+            const [isDebriefComplete, setIsDebriefComplete] = useState(false);
+            const [chatHistory, setChatHistory] = useState([]);
+            const [userInput, setUserInput] = useState('');
+            const [isLoading, setIsLoading] = useState(false);
+            const [error, setError] = useState('');
+            const [connectionStatus, setConnectionStatus] = useState(null);
+
+            const chatContainerRef = useRef(null);
+
+            const availableModels = [
+                // Google
+                'gemini-2.5-pro',
+                'gemini-2.5-flash',
+                'gemini-2.0-flash-exp',
+                // Anthropic
+                'claude-opus-4-0',
+                'claude-sonnet-4-0',
+                'claude-3-5-sonnet-20240620',
+                // DeepSeek
+                'DeepSeek V3.2',
+                'DeepSeek V3.1',
+                'DeepSeek V3',
+                // OpenAI
+                'GPT 5',
+            ];
+            
+            // --- Authentication Check ---
+             useEffect(() => {
+                if (sessionStorage.getItem('rsrm_auth') === 'true') {
+                    setIsAuthenticated(true);
+                }
+            }, []);
+
+            // --- Config Persistence ---
+            useEffect(() => {
+                if (!isAuthenticated) return;
+                const savedKey = localStorage.getItem('rsrm_api_key_proxy') || 'sk-Af5OGPGIyZ2oWRJeovMBr9AaEr8nofeZuhYcEBAUgHhCbn8K';
+                const savedBaseUrl = localStorage.getItem('rsrm_base_url') || 'https://www.chataiapi.com';
+                const savedModel = localStorage.getItem('rsrm_model_name') || 'gemini-2.5-pro';
+                setApiKey(savedKey);
+                setBaseUrl(savedBaseUrl);
+                setModelName(savedModel);
+            }, [isAuthenticated]);
+
+            useEffect(() => { if (isAuthenticated) localStorage.setItem('rsrm_api_key_proxy', apiKey); }, [apiKey, isAuthenticated]);
+            useEffect(() => { if (isAuthenticated) localStorage.setItem('rsrm_base_url', baseUrl); }, [baseUrl, isAuthenticated]);
+            useEffect(() => { if (isAuthenticated) localStorage.setItem('rsrm_model_name', modelName); }, [modelName, isAuthenticated]);
+
+            // --- Auto-Scrolling Chat ---
+            useEffect(() => {
+                if (chatContainerRef.current) {
+                    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+                }
+            }, [chatHistory]);
+            
+            // --- Prompt Template ---
+            const getSystemPrompt = () => {
+                return `You are a world-class math learning coach who uses the Socratic method.
+IMPORTANT: You must always respond in English, regardless of the user's input language.
+
+Your task is to initiate an interactive dialogue process called the "R.S.R.M. 4-Step Debrief Model". Do not judge directly or give answers. Instead, guide the student step-by-step through a deep review of the problem.
+I will provide an E-Math problem description ${problemImage ? 'and an image' : ''}, and a student's (${studentName}) solution (which may also include text ${studentAnswerImage ? 'and an image' : ''}). Please analyze the images if provided.
+${standardAnswer ? `The standard answer is:\n${standardAnswer}` : 'No standard answer is provided. Please first deduce the expert solution path based on the problem information.'}
+
+Strictly follow the dialogue flow and rules below, asking questions for one stage at a time and waiting for the user's response before proceeding:
+
+---
+[R.S.R.M. DEBRIEF FLOW]
+
+1. [Start Command]
+   At the beginning of the conversation, say:
+   > "Hi, ${studentName}! Well done. Let's use the R.S.R.M. model to turn this problem's experience into your skill. We'll go step by step. Are you ready?"
+
+2. [Step 1: R1 - Recognize]
+   * Your Task: Guide the student to identify the core problem type.
+   * Your Question: "First, take a quick look at this problem. Which core problem type does it most resemble? (e.g., Trigonometry, Quadratic Functions, Geometric Proofs?)"
+
+3. [Step 2: R2 - Structure]
+   * Your Task: Guide the student to structure the solution process.
+   * Your Question: "Let's review the 'map' for solving this problem. What was the first major step you (or the standard answer) took, and what was its purpose?"
+
+4. [Step 3: R3 - Reflect]
+   * Your Task: Guide the student to identify deviations and their causes.
+   * Your Question (if the student made a mistake): "Excellent. Now, compare your solution to the SOP chain we just outlined. At which step did you start to go down a different path, or where did you get stuck?"
+
+5. [Step 4: M - Modelize]
+   * Your Task: Guide the student to abstract the experience into a reusable model.
+   * Your Question: "Through this debrief, we've unlocked a powerful problem-solving model. What cool name could we give this SOP?"
+   * Closing Statement: After the student answers, provide a summary and say "Debrief complete!", which marks the end of the process.
+
+---
+[ASSISTANCE COMMANDS]
+
+* [Hint Request]: If the user sends "I'm stuck, please give me a hint", temporarily step out of the Socratic role and provide a direct, clear answer or guidance for the current step. Then, encourage the user back into the flow.
+
+* [Concept Explanation]: If the user sends "Please explain this concept: [Concept Name]", act as a patient math teacher, clearly explain the concept, and provide a simple example. Then, guide the user back to the debrief flow.
+
+* [Generate Practice Problem]: If the user sends "Please give me a similar practice problem" after the debrief is complete, create a new, original problem of similar difficulty based on the core concepts of the problem just reviewed. Provide the final answer only (no solution).
+`;
+            };
+
+            // --- API Call Logic ---
+            const callApi = async (currentChatHistory) => {
+                setIsLoading(true);
+                setError('');
+                if (!apiKey) {
+                    setError('Please enter your API Token in settings.');
+                    setIsSettingsOpen(true);
+                    setIsLoading(false); 
+                    return;
+                }
+                setConnectionStatus('connecting');
+
+                const systemPrompt = getSystemPrompt();
+                const endpoint = `${baseUrl.replace(/\/$/, "")}/v1/chat/completions`;
+                const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}`};
+
+                try {
+                    const messages = currentChatHistory.map(msg => ({
+                        role: msg.author === 'ai' ? 'assistant' : 'user',
+                        content: msg.parts.map(part => {
+                            if (part.type === 'text') return { type: 'text', text: part.text };
+                            if (part.type === 'image') return { type: 'image_url', image_url: { url: `data:${part.source.type};base64,${part.source.data}` }};
+                        })
+                    }));
+                    const body = JSON.stringify({ model: modelName, messages: [{ role: 'system', content: systemPrompt }, ...messages]});
+                    const response = await fetch(endpoint, { method: 'POST', headers, body });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        setConnectionStatus('failed');
+                        throw new Error(errorData.error?.message || `API Request Failed, status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    const aiResponseText = data.choices?.[0]?.message.content;
+
+                    if (!aiResponseText) {
+                        setConnectionStatus('failed');
+                        throw new Error("Could not get a valid response from the API.");
+                    }
+                    
+                    setConnectionStatus('connected');
+                    if (aiResponseText.includes("Debrief complete!")) setIsDebriefComplete(true);
+                    
+                    const newAiMessage = { author: 'ai', parts: [{ type: 'text', text: aiResponseText.replace(/> “/g, '"').replace(/> /g, '') }] };
+                    setChatHistory(prev => [...prev, newAiMessage]);
+                } catch (err) {
+                    setConnectionStatus('failed');
+                    if (err instanceof TypeError && err.message.includes('fetch')) {
+                        setError('Network request failed. This is likely due to the proxy server\'s CORS policy. Please try using a browser CORS extension.');
+                    } else {
+                        setError(err.message);
+                    }
+                    setChatHistory(prev => currentChatHistory.length > 1 ? prev.slice(0, -1) : []);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            // --- Event Handlers ---
+            const handleStartDebrief = () => {
+                if (!problemText && !problemImage) { setError('Please enter problem text or paste an image.'); return; }
+                const initialParts = [
+                    { type: 'text', text: `Original Problem:\n${problemText}` },
+                    ...(problemImage ? [{ type: 'image', source: problemImage }] : []),
+                    { type: 'text', text: `\n${studentName}'s Solution:\n${studentAnswerText}` },
+                    ...(studentAnswerImage ? [{ type: 'image', source: studentAnswerImage }] : []),
+                ];
+                const firstMessage = { author: 'user', parts: initialParts };
+                setIsDebriefStarted(true);
+                setIsDebriefComplete(false);
+                setChatHistory([firstMessage]);
+                callApi([firstMessage]); 
+            };
+            const handleSendMessage = (e) => {
+                e.preventDefault();
+                if (!userInput.trim() || isLoading) return;
+                const newUserMessage = { author: 'user', parts: [{ type: 'text', text: userInput }] };
+                const newHistory = [...chatHistory, newUserMessage];
+                setChatHistory(newHistory);
+                setUserInput('');
+                callApi(newHistory);
+            };
+            const handleGetHint = () => {
+                if (isLoading) return;
+                const hintMessage = "I'm stuck, please give me a hint";
+                const newUserMessage = { author: 'user', parts: [{ type: 'text', text: hintMessage }] };
+                setChatHistory(prev => [...prev, newUserMessage]);
+                callApi([...chatHistory, newUserMessage]);
+            };
+            const handleExplainConcept = () => {
+                if (isLoading || !userInput.trim()) { alert("Please enter the concept you want to learn about in the input box, then click the explain button."); return; }
+                const conceptMessage = `Please explain this concept: ${userInput}`;
+                const newUserMessage = { author: 'user', parts: [{ type: 'text', text: conceptMessage }] };
+                setChatHistory(prev => [...prev, newUserMessage]);
+                setUserInput('');
+                callApi([...chatHistory, newUserMessage]);
+            };
+            const handleGenerateSimilar = () => {
+                if (isLoading) return;
+                const generateMessage = "Please give me a similar practice problem";
+                const newUserMessage = { author: 'user', parts: [{ type: 'text', text: generateMessage }] };
+                setChatHistory(prev => [...prev, newUserMessage]);
+                setIsDebriefComplete(false);
+                callApi([...chatHistory, newUserMessage]);
+            };
+            const handleReset = () => {
+                setIsDebriefStarted(false);
+                setIsDebriefComplete(false);
+                setChatHistory([]);
+                setError('');
+                setConnectionStatus(null);
+            };
+            const handlePaste = (e, setImage) => {
+                 const items = e.clipboardData.items;
+                for (const item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        e.preventDefault();
+                        const blob = item.getAsFile();
+                        if (blob) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                                const base64Data = event.target.result.split(',')[1];
+                                setImage({ type: blob.type, data: base64Data, preview: event.target.result });
+                            };
+                            reader.readAsDataURL(blob);
+                        }
+                        return;
+                    }
+                }
+            };
+            
+            // --- Render Logic ---
+            if (!isAuthenticated) {
+                return <PasswordScreen onSuccess={() => setIsAuthenticated(true)} />;
+            }
+
+            const ConnectionStatus = () => {
+                if (!connectionStatus) return null;
+                let statusClass = 'bg-yellow-600';
+                let statusText = `Connecting to ${modelName}...`;
+                if(connectionStatus === 'connected') {
+                    statusClass = 'bg-green-600';
+                    statusText = `✅ Connected: ${modelName}`;
+                } else if (connectionStatus === 'failed') {
+                    statusClass = 'bg-red-600';
+                    statusText = `❌ Connection Failed. Check settings & console.`;
+                }
+
+                return (
+                    <div className={`w-full max-w-6xl mx-auto p-2 text-center text-white text-sm rounded-b-lg ${statusClass}`}>
+                        {statusText}
+                    </div>
+                );
+            };
+
+            const SettingsPanel = () => (
+                <div className={`fixed top-0 right-0 h-full bg-gray-800 shadow-2xl z-50 p-6 w-96 settings-panel transform ${isSettingsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    <h2 className="text-2xl font-bold text-white mb-6">Settings</h2>
+                    <div className="space-y-6">
+                        <div>
+                            <label htmlFor="base-url" className="block text-sm font-medium text-gray-300 mb-1">Endpoint Base URL</label>
+                            <input type="text" id="base-url" value={baseUrl} onChange={e => setBaseUrl(e.target.value)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2" />
+                        </div>
+                        <div>
+                            <label htmlFor="model-name" className="block text-sm font-medium text-gray-300 mb-1">Model Name</label>
+                            <select id="model-name" value={modelName} onChange={e => setModelName(e.target.value)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2">
+                                {availableModels.map(m => <option key={m} value={m}>{m}</option>)}
+                            </select>
+                        </div>
+                        <div>
+                           <label htmlFor="api-key" className="block text-sm font-medium text-gray-300 mb-1">Your API Token (Key)</label>
+                           <div className="flex items-center">
+                               <input type={isApiKeyVisible ? "text" : "password"} id="api-key" value={apiKey} onChange={e => setApiKey(e.target.value)} className="w-full bg-gray-700 border-gray-600 text-white rounded-l-md p-2" placeholder="Enter your token here" />
+                               <button onClick={() => setIsApiKeyVisible(!isApiKeyVisible)} className="bg-gray-600 p-2 rounded-r-md hover:bg-gray-500">{isApiKeyVisible ? <EyeOffIcon/> : <EyeIcon/>}</button>
+                           </div>
+                        </div>
+                    </div>
+                    <button onClick={() => setIsSettingsOpen(false)} className="mt-8 w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">
+                        Close
+                    </button>
+                </div>
+            );
+
+            const renderInputForm = () => (
+                <div className="bg-gray-800 p-6 rounded-lg shadow-lg space-y-6 mt-4">
+                    <h2 className="text-xl font-semibold text-white border-b border-gray-600 pb-2">Input Debrief Content</h2>
+                    <div>
+                         <label htmlFor="student-name" className="block text-sm font-medium text-gray-300 mb-1">Student's Name</label>
+                         <input type="text" id="student-name" value={studentName} onChange={e => setStudentName(e.target.value)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2" />
+                    </div>
+                     <div className="grid grid-cols-1 gap-6">
+                        <div>
+                            <label htmlFor="problem" className="block text-sm font-medium text-gray-300 mb-1">Original Problem</label>
+                            <textarea id="problem" rows="8" value={problemText} onChange={e => setProblemText(e.target.value)} onPaste={(e) => handlePaste(e, setProblemImage)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2" placeholder="Enter problem text, or paste an image here..."></textarea>
+                            <div className="mt-2 image-paste-box rounded-md flex justify-center items-center p-2 text-gray-400">{problemImage ? <img src={problemImage.preview} className="max-h-48 rounded-md object-contain" /> : 'Image Paste Area'}</div>
+                        </div>
+                        <div>
+                            <label htmlFor="standard-answer" className="block text-sm font-medium text-gray-300 mb-1">Standard Answer (Optional)</label>
+                            <textarea id="standard-answer" rows="8" value={standardAnswer} onChange={e => setStandardAnswer(e.target.value)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2" placeholder="Paste the standard answer (optional)..."></textarea>
+                        </div>
+                        <div>
+                            <label htmlFor="student-answer" className="block text-sm font-medium text-gray-300 mb-1">{studentName}'s Solution</label>
+                            <textarea id="student-answer" rows="8" value={studentAnswerText} onChange={e => setStudentAnswerText(e.target.value)} onPaste={(e) => handlePaste(e, setStudentAnswerImage)} className="w-full bg-gray-700 border-gray-600 text-white rounded-md p-2" placeholder="Enter your solution, or paste an image here..."></textarea>
+                             <div className="mt-2 image-paste-box rounded-md flex justify-center items-center p-2 text-gray-400">{studentAnswerImage ? <img src={studentAnswerImage.preview} className="max-h-48 rounded-md object-contain" /> : 'Image Paste Area'}</div>
+                        </div>
+                    </div>
+                    <div className="text-center pt-4">
+                        <button onClick={handleStartDebrief} className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-700 transition-colors shadow-lg disabled:bg-gray-500" disabled={isLoading}>{isLoading ? 'Connecting...' : 'Start Debrief'}</button>
+                    </div>
+                </div>
+            );
+
+            const renderChatInterface = () => (
+                <div className="w-full max-w-4xl mx-auto flex flex-col p-4" style={{height: 'calc(100vh - 120px)'}}>
+                     <div className="flex justify-between items-center mb-4">
+                        <h1 className="text-2xl font-bold text-white">R.S.R.M. Debrief Conversation</h1>
+                        <button onClick={handleReset} className="bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors">Reset</button>
+                    </div>
+                    <div ref={chatContainerRef} className="flex-grow bg-gray-800 rounded-lg p-4 overflow-y-auto space-y-4 mb-4">
+                        {chatHistory.map((msg, index) => {
+                            const textContent = msg.parts.filter(p => p.type === 'text').map(p => p.text).join(' ');
+                            return (
+                                <div key={index} className={`flex items-start gap-3 ${msg.author === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                    {msg.author === 'ai' && <div className="flex-shrink-0 bg-gray-600 rounded-full p-2"><BotIcon /></div>}
+                                    { textContent && <div className={`max-w-xl px-4 py-3 rounded-xl whitespace-pre-wrap ${msg.author === 'user' ? 'bg-indigo-600 text-white rounded-br-none' : 'bg-gray-700 text-gray-200 rounded-bl-none'}`}>{textContent}</div> }
+                                    {msg.author === 'user' && <div className="flex-shrink-0 bg-gray-600 rounded-full p-2"><UserIcon /></div>}
+                                </div>
+                            )
+                        })}
+                         {isLoading && (
+                            <div className="flex items-start gap-3 justify-start">
+                                <div className="flex-shrink-0 bg-gray-600 rounded-full p-2"><BotIcon /></div>
+                                <div className="bg-gray-700 rounded-lg p-2"><LoadingSpinner /></div>
+                            </div>
+                        )}
+                        {error && <div className="text-red-400 text-center py-2">{error}</div>}
+                    </div>
+                    <div className="space-y-3">
+                        <form onSubmit={handleSendMessage} className="flex gap-4">
+                            <input type="text" value={userInput} onChange={e => setUserInput(e.target.value)} className="flex-grow bg-gray-700 border-gray-600 text-white rounded-lg p-3" placeholder="Enter your response or a concept..." disabled={isLoading} />
+                            <button type="button" onClick={handleGetHint} className="bg-amber-600 text-white font-bold p-3 rounded-lg hover:bg-amber-700 disabled:bg-gray-500" disabled={isLoading}>💡 Get a Hint</button>
+                            <button type="button" onClick={handleExplainConcept} className="bg-sky-600 text-white font-bold p-3 rounded-lg hover:bg-sky-700 disabled:bg-gray-500" disabled={isLoading}>🎓 Explain Concept</button>
+                            <button type="submit" className="bg-indigo-600 text-white font-bold p-3 rounded-lg hover:bg-indigo-700 disabled:bg-gray-500" disabled={isLoading}>Send</button>
+                        </form>
+                        {isDebriefComplete && (
+                            <div className="text-center">
+                                <button onClick={handleGenerateSimilar} className="bg-emerald-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-emerald-700 shadow-lg w-full disabled:bg-gray-500" disabled={isLoading}>
+                                ✨ Generate a Similar Problem
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+
+            return (
+                <div className="relative min-h-screen w-full">
+                    <SettingsPanel />
+                    {isSettingsOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsSettingsOpen(false)}></div>}
+                    
+                    <div className="w-full max-w-6xl mx-auto p-4 md:p-8">
+                        <div className="flex justify-between items-center">
+                            <div className="text-left">
+                                <h1 className="text-3xl md:text-4xl font-bold text-white">R.S.R.M. Math Review System</h1>
+                                <p className="text-gray-400 mt-1">Recognize · Structure · Reflect · Modelize</p>
+                            </div>
+                            <button onClick={() => setIsSettingsOpen(true)} className="p-3 bg-gray-700 rounded-lg hover:bg-gray-600 text-white">
+                                <SettingsIcon />
+                            </button>
+                        </div>
+                        
+                        <ConnectionStatus />
+
+                        {error && <div className="bg-red-800 border border-red-600 text-white px-4 py-3 rounded-lg mt-4" role="alert">{error}</div>}
+
+                        {isDebriefStarted ? renderChatInterface() : renderInputForm()}
+                    </div>
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
