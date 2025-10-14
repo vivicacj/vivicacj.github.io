@@ -560,6 +560,38 @@
             color: #a0aec0;
         }
 
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -652,21 +684,35 @@
             font-weight: 600;
             cursor: pointer;
         }
+
+        .error-message {
+            background: #fff5f5;
+            border: 2px solid #fc8181;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px;
+            color: #c53030;
+        }
+
+        .error-message h3 {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h2>Loading Archetypes...</h2>
+            <p id="loadingStatus">Initializing...</p>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="header-left">
-                <!-- MODIFICATION START -->
-                <div class="breadcrumbs" style="margin-bottom: 12px; font-size: 14px; color: rgba(255, 255, 255, 0.7);">
-                    <a href="index.html" style="color: rgba(255, 255, 255, 0.9); text-decoration: none; transition: color 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255, 255, 255, 0.9)'">Knowledge Framework</a>
-                    <span style="margin: 0 8px;">&gt;</span>
-                    <a href="archetype-explorer.html" style="color: #fff; text-decoration: none; font-weight: 600;">Archetype Explorer</a>
-                </div>
-                <!-- MODIFICATION END -->
                 <h1>🗺️ Archetype Explorer</h1>
-                <p>O-Level E-Math • 32 Problem Patterns</p>
+                <p>O-Level E-Math • Problem Pattern Library</p>
             </div>
             <button class="manage-drills-btn" onclick="openDrillManager()">
                 ⚙️ Manage Drill Links
@@ -713,15 +759,15 @@
 
         <div class="stats-bar">
             <div class="stats-item">
-                <strong id="displayCount">31</strong> archetypes displayed
+                <strong id="displayCount">0</strong> archetypes displayed
             </div>
             <div class="stats-item">
-                <span style="color: #e53e3e;">●</span> G3: <strong id="g3Count">31</strong> | 
-                <span style="color: #38a169;">●</span> G4: <strong id="g4Count">1</strong>
+                <span style="color: #e53e3e;">●</span> G3: <strong id="g3Count">0</strong> | 
+                <span style="color: #38a169;">●</span> G4: <strong id="g4Count">0</strong>
             </div>
             <div class="stats-item">
-                <span style="color: #f5576c;">●</span> CORE: 13 | 
-                <span style="color: #00f2fe;">●</span> SAT: 18
+                <span style="color: #f5576c;">●</span> CORE: <strong id="coreCount">0</strong> | 
+                <span style="color: #00f2fe;">●</span> SAT: <strong id="satCount">0</strong>
             </div>
         </div>
 
@@ -777,58 +823,170 @@
     </div>
 
     <script>
-        const ARCHETYPES = [
-            {id: 'ARCH-TRIG-01', name: '2D Bearing Problems', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Solve for unknown sides/angles in scenarios involving bearings', concepts: ['Sine Rule', 'Cosine Rule'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 0},
-            {id: 'ARCH-TRIG-02', name: '3D Elevation & Depression', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Calculate angles in 3D scenarios', concepts: ['SOH CAH TOA'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 1},
-            {id: 'ARCH-TRIG-03', name: 'Area using Sine', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Calculate area using formula', concepts: ['Triangle Area'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 2},
-            {id: 'ARCH-TRIG-04', name: 'Shortest Distance', badge: 'CORE', grade: 'G3', topic: 'trigonometry', description: 'Find shortest distance', concepts: ['Area Method'], jsonFile: 'CORE-G3-TRIG.json', sopIndex: 2},
-            {id: 'ARCH-QUAD-01', name: 'Completing the Square', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Convert to vertex form', concepts: ['Vertex Form'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 0},
-            {id: 'ARCH-QUAD-02', name: 'Graph Sketching', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Sketch parabolas', concepts: ['Turning Point'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 1},
-            {id: 'ARCH-QUAD-03', name: 'Finding Equation', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Reverse engineer equation', concepts: ['Vertex Form'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: 2},
-            {id: 'ARCH-QUAD-04', name: 'Intersection Analysis', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Interpret intersections', concepts: ['Discriminant'], jsonFile: 'CORE-G3-QUAD.json', sopIndex: null},
-            {id: 'ARCH-ALG-01', name: 'Algebraic Fractions', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Manipulate fractions', concepts: ['LCD'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 0},
-            {id: 'ARCH-ALG-02', name: 'Fractional Equations', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Clear denominators', concepts: ['Clearing Fractions'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 1},
-            {id: 'ARCH-ALG-03', name: 'Changing Subject', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Rearrange formulas', concepts: ['Variable Isolation'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 2},
-            {id: 'ARCH-ALG-04', name: 'Simultaneous Equations', badge: 'CORE', grade: 'G3', topic: 'algebra', description: 'Solve systems', concepts: ['Elimination'], jsonFile: 'CORE-G3-ALG.json', sopIndex: 3},
-            {id: 'ARCH-GEO-01', name: 'Triangle Similarity', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Prove similarity', concepts: ['AA Criterion'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 0},
-            {id: 'ARCH-GEO-02', name: 'Triangle Congruency', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Prove congruency', concepts: ['SAS', 'SSS'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 1},
-            {id: 'ARCH-GEO-03', name: 'Similarity Ratios', badge: 'CORE', grade: 'G3', topic: 'geometry', description: 'Apply ratios', concepts: ['Ratio Proportions'], jsonFile: 'CORE-G3-GEO.json', sopIndex: 2},
-            {id: 'ARCH-IND-01', name: 'Index Laws', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Apply index laws', concepts: ['Power Rules'], jsonFile: 'SAT-G3-IND.json', sopIndex: 0},
-            {id: 'ARCH-IND-02', name: 'Exponential Equations', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Solve equations', concepts: ['Base Unification'], jsonFile: 'SAT-G3-IND.json', sopIndex: 1},
-            {id: 'ARCH-IND-03', name: 'Standard Form', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Scientific notation', concepts: ['Power of 10'], jsonFile: 'SAT-G3-IND.json', sopIndex: 3},
-            {id: 'ARCH-STAT-01', name: 'Stem-and-Leaf', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Calculate statistics', concepts: ['Position Formula'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 0},
-            {id: 'ARCH-STAT-02', name: 'Grouped Frequency', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Estimate mean', concepts: ['Midpoint'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 1},
-            {id: 'ARCH-STAT-03', name: 'Basic Probability', badge: 'SAT', grade: 'G3', topic: 'statistics', description: 'Calculate probabilities', concepts: ['Sample Space'], jsonFile: 'SAT-G3-STAT.json', sopIndex: 2},
-            {id: 'ARCH-RP-01', name: 'Map Scale', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Apply ratios to maps', concepts: ['Scale Ratio'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 0},
-            {id: 'ARCH-RP-02', name: 'Percentage Change', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Calculate percentages', concepts: ['Reverse Percentage'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 1},
-            {id: 'ARCH-RP-03', name: 'Interest Calculations', badge: 'SAT', grade: 'G3', topic: 'numbers', description: 'Simple and compound', concepts: ['Principal', 'Rate'], jsonFile: 'SAT-G3-RATIO.json', sopIndex: 2},
-            {id: 'ARCH-CG-01', name: 'Equation of Line', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Derive equations', concepts: ['Gradient'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 0},
-            {id: 'ARCH-CG-02', name: 'Parallel & Perpendicular', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Use gradients', concepts: ['m1=m2'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 1},
-            {id: 'ARCH-CG-03', name: 'Distance & Area', badge: 'SAT', grade: 'G3', topic: 'geometry', description: 'Apply formulas', concepts: ['Distance Formula'], jsonFile: 'SAT-G3-COORD.json', sopIndex: 2},
-            {id: 'ARCH-MEN-01', name: 'Composite Solids', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Break shapes', concepts: ['Shape Deconstruction'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 2},
-            {id: 'ARCH-MEN-02', name: 'Similar Figures', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Apply scaling', concepts: ['Length Ratio k'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 1},
-            {id: 'ARCH-MEN-03', name: 'Sector & Segment', badge: 'SAT', grade: 'G3', topic: 'mensuration', description: 'Calculate parts', concepts: ['Arc Length'], jsonFile: 'SAT-G3-MEN.json', sopIndex: 3},
-            {id: 'ARCH-INEQ-01', name: 'Compound Inequalities', badge: 'SAT', grade: 'G3', topic: 'algebra', description: 'Solve inequalities', concepts: ['Split and Solve'], jsonFile: 'SAT-G3-INEQ.json', sopIndex: 0},
-            {id: 'ARCH-INEQ-02', name: 'Inequality Modeling', badge: 'SAT', grade: 'G3', topic: 'algebra', description: 'Translate problems', concepts: ['Keyword Translation'], jsonFile: 'SAT-G3-INEQ.json', sopIndex: 1},
-            {id: 'ARCH-G4-CALC-01', name: 'Differentiation', badge: 'CORE', grade: 'G4', topic: 'algebra', description: 'Apply differentiation', concepts: ['dy/dx', 'Chain Rule'], jsonFile: 'CORE-G4-CALC.json', sopIndex: 0}
-        ];
-
+        // Global state
+        let ARCHETYPES = [];
+        let ARCHETYPE_CONFIG = null;
+        let LOADED_GRADES = {};
         let drillLinks = JSON.parse(localStorage.getItem('drillLinks') || '{}');
         let currentFilter = {grade: 'G3', category: 'all', topic: 'all', view: 'grid'};
         let selectedArchetype = null;
         let sopCache = {};
 
-        function init() {
-            renderArchetypes();
-            updateStats();
-            setupEventListeners();
+        // Update loading status
+        function updateLoadingStatus(message) {
+            const statusEl = document.getElementById('loadingStatus');
+            if (statusEl) {
+                statusEl.textContent = message;
+            }
+            console.log(`📊 ${message}`);
         }
 
+        // Load configuration file
+        async function loadConfig() {
+            try {
+                updateLoadingStatus('Loading configuration...');
+                const response = await fetch('./data/archetypes/archetypes-config.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                ARCHETYPE_CONFIG = await response.json();
+                console.log(`✅ Loaded config v${ARCHETYPE_CONFIG.version}`);
+                updateLoadingStatus(`Config v${ARCHETYPE_CONFIG.version} loaded`);
+                return true;
+            } catch (error) {
+                console.error('❌ Failed to load config:', error);
+                updateLoadingStatus('Config load failed');
+                return false;
+            }
+        }
+
+        // Load archetypes for a specific grade
+        async function loadGradeData(grade) {
+            if (LOADED_GRADES[grade]) {
+                console.log(`✅ Using cached data for ${grade}`);
+                return LOADED_GRADES[grade];
+            }
+
+            if (!ARCHETYPE_CONFIG || !ARCHETYPE_CONFIG.data_sources || !ARCHETYPE_CONFIG.data_sources[grade]) {
+                console.warn(`⚠️ Grade ${grade} not configured`);
+                return [];
+            }
+
+            const gradeConfig = ARCHETYPE_CONFIG.data_sources[grade];
+            if (!gradeConfig.enabled) {
+                console.warn(`⚠️ Grade ${grade} is disabled`);
+                return [];
+            }
+
+            try {
+                const filename = gradeConfig.file;
+                updateLoadingStatus(`Loading ${grade} data...`);
+                
+                const response = await fetch(`./data/archetypes/${filename}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                let data = await response.json();
+                
+                // Handle the data structure - the file might have archetypes directly or nested
+                let archetypes = [];
+                if (Array.isArray(data)) {
+                    archetypes = data;
+                } else if (data.archetypes && Array.isArray(data.archetypes)) {
+                    archetypes = data.archetypes;
+                } else {
+                    console.error('Unexpected data structure:', data);
+                    return [];
+                }
+                
+                console.log(`✅ Loaded ${archetypes.length} archetypes for ${grade}`);
+                updateLoadingStatus(`${archetypes.length} ${grade} archetypes loaded`);
+                
+                LOADED_GRADES[grade] = archetypes;
+                return archetypes;
+            } catch (error) {
+                console.error(`❌ Failed to load ${grade} data:`, error);
+                updateLoadingStatus(`Failed to load ${grade} data`);
+                return [];
+            }
+        }
+
+        // Initialize and load default grade
+        async function init() {
+            try {
+                const configLoaded = await loadConfig();
+                if (!configLoaded) {
+                    showError('Failed to load configuration file. Please check that data/archetypes/archetypes-config.json exists.');
+                    return;
+                }
+
+                // Load default grade data
+                const defaultGrade = ARCHETYPE_CONFIG.default_grade || 'G3';
+                ARCHETYPES = await loadGradeData(defaultGrade);
+                
+                if (ARCHETYPES.length === 0) {
+                    showError(`No archetypes loaded for ${defaultGrade}. Please check that data files exist.`);
+                    return;
+                }
+                
+                // Hide loading screen
+                document.getElementById('loadingScreen').style.display = 'none';
+                
+                renderArchetypes();
+                updateStats();
+                setupEventListeners();
+                
+                console.log(`✅ Initialization complete - ${ARCHETYPES.length} archetypes loaded`);
+            } catch (error) {
+                console.error('❌ Initialization failed:', error);
+                showError(`Initialization failed: ${error.message}`);
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('loadingScreen').style.display = 'none';
+            const grid = document.getElementById('archetypeGrid');
+            grid.innerHTML = `
+                <div class="error-message" style="grid-column: 1/-1;">
+                    <h3>⚠️ Error Loading Data</h3>
+                    <p>${message}</p>
+                    <p style="margin-top: 10px; font-size: 14px;">
+                        Expected file structure:<br>
+                        <code>data/archetypes/archetypes-config.json</code><br>
+                        <code>data/archetypes/archetypes-g3.json</code><br>
+                        <code>data/archetypes/archetypes-g4.json</code>
+                    </p>
+                </div>
+            `;
+        }
+
+        // Update statistics display
         function updateStats() {
-            const g3Count = ARCHETYPES.filter(a => a.grade === 'G3').length;
-            const g4Count = ARCHETYPES.filter(a => a.grade === 'G4').length;
+            let g3Count = 0, g4Count = 0, coreCount = 0, satCount = 0;
+            
+            if (ARCHETYPE_CONFIG && ARCHETYPE_CONFIG.data_sources) {
+                if (LOADED_GRADES['G3']) {
+                    g3Count = LOADED_GRADES['G3'].length;
+                } else if (ARCHETYPE_CONFIG.data_sources['G3']) {
+                    g3Count = ARCHETYPE_CONFIG.data_sources['G3'].total_archetypes;
+                }
+
+                if (LOADED_GRADES['G4']) {
+                    g4Count = LOADED_GRADES['G4'].length;
+                } else if (ARCHETYPE_CONFIG.data_sources['G4']) {
+                    g4Count = ARCHETYPE_CONFIG.data_sources['G4'].total_archetypes;
+                }
+            } else {
+                g3Count = ARCHETYPES.filter(a => a.grade === 'G3').length;
+                g4Count = ARCHETYPES.filter(a => a.grade === 'G4').length;
+            }
+
+            coreCount = ARCHETYPES.filter(a => a.badge === 'CORE').length;
+            satCount = ARCHETYPES.filter(a => a.badge === 'SAT').length;
+
             document.getElementById('g3Count').textContent = g3Count;
             document.getElementById('g4Count').textContent = g4Count;
+            document.getElementById('coreCount').textContent = coreCount;
+            document.getElementById('satCount').textContent = satCount;
         }
 
         function renderArchetypes() {
@@ -842,44 +1000,64 @@
 
             document.getElementById('displayCount').textContent = filtered.length;
 
-            grid.innerHTML = filtered.map(arch => `
-                <div class="archetype-card" data-id="${arch.id}">
-                    <div class="card-header">
-                        <div class="archetype-name">${arch.name}</div>
-                        <div class="card-badges">
-                            <span class="grade-tag ${arch.grade}">${arch.grade}</span>
-                            <span class="archetype-badge ${arch.badge}">${arch.badge}</span>
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding:60px 20px; color:#a0aec0;">
+                        <p style="font-size:48px; margin-bottom:16px;">🔍</p>
+                        <p style="font-size:18px; font-weight:600;">No archetypes match your filters</p>
+                        <p style="font-size:14px; margin-top:12px;">Try adjusting your filter selection</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(arch => {
+                const concepts = arch.key_concepts || arch.concepts || [];
+                return `
+                    <div class="archetype-card" data-id="${arch.id}">
+                        <div class="card-header">
+                            <div class="archetype-name">${arch.name}</div>
+                            <div class="card-badges">
+                                <span class="grade-tag ${arch.grade}">${arch.grade}</span>
+                                <span class="archetype-badge ${arch.badge}">${arch.badge}</span>
+                            </div>
+                        </div>
+                        <p class="card-description">${arch.description}</p>
+                        <div class="card-concepts">
+                            <div class="concepts-title">Key Concepts</div>
+                            <div class="concepts-list">
+                                ${concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn view-sop-btn" onclick="viewSOP('${arch.id}')">📋 View SOP</button>
+                            <button class="action-btn view-drills-btn" onclick="viewDrills('${arch.id}')">🎯 Drills</button>
                         </div>
                     </div>
-                    <p class="card-description">${arch.description}</p>
-                    <div class="card-concepts">
-                        <div class="concepts-title">Key Concepts</div>
-                        <div class="concepts-list">
-                            ${arch.concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
-                        </div>
-                    </div>
-                    <div class="card-actions">
-                        <button class="action-btn view-sop-btn" onclick="viewSOP('${arch.id}')">📋 View SOP</button>
-                        <button class="action-btn view-drills-btn" onclick="viewDrills('${arch.id}')">🎯 Drills</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         async function loadSOP(archId) {
             const arch = ARCHETYPES.find(a => a.id === archId);
-            if (!arch || arch.sopIndex === null) return null;
+            if (!arch) return null;
 
-            const cacheKey = `${arch.jsonFile}-${arch.sopIndex}`;
+            if (arch.sop) {
+                return arch.sop;
+            }
+
+            if (!arch.sop_reference || arch.sop_reference.index === null) {
+                return null;
+            }
+
+            const cacheKey = `${arch.sop_reference.file}-${arch.sop_reference.index}`;
             if (sopCache[cacheKey]) return sopCache[cacheKey];
 
             try {
-                // NOTE: This fetch path assumes a '/data/topics/' directory structure relative to the HTML file.
-                // This might need adjustment based on the actual file server setup.
-                const response = await fetch(`./data/topics/${arch.jsonFile}`);
+                const response = await fetch(`./data/topics/${arch.sop_reference.file}`);
                 if (!response.ok) throw new Error('File not found');
                 const data = await response.json();
-                const sop = data.sops[arch.sopIndex];
+                const sop = data.sops[arch.sop_reference.index];
                 sopCache[cacheKey] = sop;
                 return sop;
             } catch (error) {
@@ -909,7 +1087,7 @@
                         <p>${arch.grade} • ${arch.badge}</p>
                     </div>
                     <div class="panel-tabs">
-                        <button class="panel-tab active">📋 SOP</button>
+                        <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
                         <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
                     </div>
                     <div class="loading-sop"><p>⏳ Loading SOP...</p></div>
@@ -927,7 +1105,11 @@
                             <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
                         </div>
                         <div class="tab-content active" id="sopTab">
-                            <div class="no-drills-message"><p>📝</p><p>SOP not available</p></div>
+                            <div class="no-drills-message">
+                                <p>📝</p>
+                                <p>SOP not available yet</p>
+                                <p style="font-size:12px; margin-top:10px;">Check data/topics/${arch.sop_reference?.file || 'unknown'}</p>
+                            </div>
                         </div>
                         <div class="tab-content" id="drillsTab">${renderDrillsContent(archId)}</div>
                     </div>
@@ -1038,6 +1220,9 @@
 
             modal.classList.add('active');
             document.getElementById('drillForm').reset();
+            if (archId) {
+                document.getElementById('drillArchetype').value = archId;
+            }
         }
 
         function closeDrillManager() {
@@ -1063,15 +1248,29 @@
             
             if (selectedArchetype === archId) viewDrills(archId);
 
-            // Using a custom modal/toast for notifications is better than alert()
-            // but for this example, alert() is used for simplicity.
             alert('✅ Drill link added successfully!');
         });
 
-        function setupEventListeners() {
-            document.getElementById('gradeSelect').addEventListener('change', (e) => {
-                currentFilter.grade = e.target.value;
+        async function setupEventListeners() {
+            document.getElementById('gradeSelect').addEventListener('change', async (e) => {
+                const newGrade = e.target.value;
+                currentFilter.grade = newGrade;
+                
+                if (newGrade === 'all') {
+                    const allArchetypes = [];
+                    if (ARCHETYPE_CONFIG && ARCHETYPE_CONFIG.available_grades) {
+                        for (const grade of ARCHETYPE_CONFIG.available_grades) {
+                            const gradeData = await loadGradeData(grade);
+                            allArchetypes.push(...gradeData);
+                        }
+                        ARCHETYPES = allArchetypes;
+                    }
+                } else {
+                    ARCHETYPES = await loadGradeData(newGrade);
+                }
+                
                 renderArchetypes();
+                updateStats();
             });
 
             document.getElementById('categorySelect').addEventListener('change', (e) => {
@@ -1093,8 +1292,6 @@
                     document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
                     e.target.classList.add('active');
                     currentFilter.view = e.target.dataset.view;
-                    const grid = document.getElementById('archetypeGrid');
-                    grid.classList.toggle('list-view', currentFilter.view === 'list');
                 });
             });
 
@@ -1103,9 +1300,8 @@
             });
         }
 
+        // Start initialization
         init();
     </script>
 </body>
 </html>
-
-
