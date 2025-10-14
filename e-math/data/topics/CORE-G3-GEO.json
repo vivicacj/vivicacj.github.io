@@ -41,7 +41,7 @@
         "Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'"
       ],
       "pitfalls": [
-        { "type": "Fatal", "text": "Not providing geometric reasons for why angles are equal" },
+        { "type": "CRITICAL", "text": "Not providing geometric reasons for why angles are equal" },
         { "type": "Common", "text": "Mixing up corresponding vertices when stating similarity" }
       ],
       "pro_tips": [
@@ -63,7 +63,7 @@
         "Conclude: State '△ABC ≅ △DEF (SAS)' with the appropriate criterion"
       ],
       "pitfalls": [
-        { "type": "Fatal", "text": "Using the wrong congruency criterion (e.g., trying to use AAA)" },
+        { "type": "CRITICAL", "text": "Using the wrong congruency criterion (e.g., trying to use AAA)" },
         { "type": "Common", "text": "For SAS, the angle must be BETWEEN the two equal sides" }
       ],
       "pro_tips": [
@@ -86,7 +86,7 @@
         "Check reasonableness: Does the answer make geometric sense?"
       ],
       "pitfalls": [
-        { "type": "Fatal", "text": "Setting up ratios with non-corresponding sides" },
+        { "type": "CRITICAL", "text": "Setting up ratios with non-corresponding sides" },
         { "type": "Common", "text": "Inverting the ratio (getting it upside down)" }
       ],
       "pro_tips": [
