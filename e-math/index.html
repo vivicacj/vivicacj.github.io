@@ -3,45 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Math M-P-C Knowledge Framework #G3 & #G4</title>
+    <title>E-Math Knowledge Map</title>
+    <!-- Pan & Zoom Library -->
+    <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth; 
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
-            color: #334155;
         }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
+        .container { max-width: 1400px; margin: 0 auto; }
         header {
             background: rgba(30, 60, 114, 0.7);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             padding: 40px;
-            padding-bottom: 80px; /* Add padding for bottom nav */
+            padding-bottom: 80px;
             text-align: center;
             margin-bottom: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
         }
-
         header h1 {
             font-size: 3em;
             font-weight: 800;
@@ -53,13 +40,7 @@
             justify-content: center;
             gap: 15px;
         }
-        
-        .title-icon {
-            width: 50px;
-            height: 50px;
-            fill: #d8b4fe;
-        }
-        
+        .title-icon { width: 50px; height: 50px; fill: #d8b4fe; }
         .subtitle {
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1em;
@@ -67,19 +48,6 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-
-        .tag {
-            display: inline-block;
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #1e293b;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.9em;
-            margin-top: 20px;
-            letter-spacing: 1px;
-        }
-        
         .header-nav {
             position: absolute;
             bottom: 25px;
@@ -89,7 +57,6 @@
             align-items: center;
             flex-wrap: wrap;
         }
-        
         .header-nav a {
             color: white;
             text-decoration: none;
@@ -97,451 +64,37 @@
             font-size: 1em;
             transition: color 0.3s;
         }
-        
-        .header-nav a:hover {
-            color: #f59e0b;
-        }
-        
-        .nav-divider {
-            color: #f59e0b;
-            font-weight: bold;
-        }
-        
-        .controls {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .header-nav a:hover { color: #f59e0b; }
+        .nav-divider { color: #f59e0b; font-weight: bold; }
+
+        /* Interactive SVG Map Styles */
+        .interactive-map-container {
+            background: #ffffff;
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             margin-bottom: 30px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-btn {
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 0.95em;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
-        }
-
-        .nav-btn.active {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-color: #10b981;
-        }
-        
-        .filter-group {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .divider {
-            width: 1px;
-            height: 28px;
-            background: rgba(255, 255, 255, 0.6);
-            margin: 0 10px;
-        }
-
-        .topic-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            margin-bottom: 25px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            transition: all 0.4s;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .topic-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .topic-header {
-            padding: 30px 35px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s;
-        }
-
-        /* G3 Styles */
-        .topic-card[data-grade="g3"][data-category="core"] .topic-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .topic-card[data-grade="g3"][data-category="satellite"] .topic-header { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
-        
-        /* G4 Styles (Paler, cooler green scheme) */
-        .topic-card[data-grade="g4"][data-category="core"] .topic-header { background: linear-gradient(135deg, #38b2ac 0%, #4adac6 100%); }
-        .topic-card[data-grade="g4"][data-category="satellite"] .topic-header { background: linear-gradient(135deg, #68d391 0%, #5de78d 100%); }
-        
-        .topic-header:hover {
-            filter: brightness(1.1);
-        }
-
-        .topic-title {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex: 1;
-        }
-
-        .topic-number {
-            font-size: 2em;
-            font-weight: 800;
-            color: rgba(255, 255, 255, 0.4);
-            min-width: 50px;
-        }
-
-        .topic-name {
-            font-size: 1.6em;
-            font-weight: 700;
-            color: white;
-            letter-spacing: -0.5px;
-        }
-
-        .topic-badges {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .topic-badge {
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.75em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            backdrop-filter: blur(10px);
-        }
-        
-        .connection-badge {
-            font-size: 0.8em;
-            font-weight: 700;
-            padding: 6px 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        /* Paler badge colors */
-        .connection-badge.deepened { background-color: #e38bf3; } 
-        .connection-badge.extended { background-color: #5eb3f0; } 
-        .connection-badge.upgraded { background-color: #ab84ef; }
-        .connection-badge.new { background-color: #f2a84e; }
-
-        .toggle-icon {
-            font-size: 1.5em;
-            color: white;
-            transition: transform 0.3s;
-            margin-left: 20px;
-        }
-
-        .toggle-icon.open {
-            transform: rotate(180deg);
-        }
-
-        .topic-content {
-            display: none;
-            padding: 35px;
-            background: white;
-        }
-
-        .topic-content.show {
-            display: block;
-            animation: slideDown 0.4s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .recap-block, .extension-points-block {
-            padding: 20px;
-            margin-bottom: 25px;
-            border-radius: 15px;
-            border-left: 5px solid;
-        }
-        
-        .recap-block {
-            background-color: #f0f9ff;
-            border-color: #38bdf8;
-            color: #0369a1;
-        }
-
-        .extension-points-block {
-            background-color: #fdf2f8;
-            border-color: #f472b6;
-            color: #be185d;
-        }
-        
-        .recap-block h3, .extension-points-block h3 {
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .recap-block ul, .extension-points-block ul {
-            list-style-position: inside;
-        }
-        
-        .recap-block li, .extension-points-block li {
-            margin-bottom: 5px;
-        }
-
-        .tier {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 25px;
-            border-left: 5px solid #ccc;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Tier border-left color based on grade and category */
-        .topic-card[data-grade="g3"][data-category="core"] .tier { border-left-color: #667eea; }
-        .topic-card[data-grade="g3"][data-category="satellite"] .tier { border-left-color: #06b6d4; }
-        .topic-card[data-grade="g4"][data-category="core"] .tier { border-left-color: #38b2ac; }
-        .topic-card[data-grade="g4"][data-category="satellite"] .tier { border-left-color: #68d391; }
-        
-
-        .tier-header {
-            font-size: 1.4em;
-            color: #1e293b;
-            margin-bottom: 20px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .tier-icon {
-            font-size: 1.2em;
-        }
-
-        /* Archetype Styles */
-        .archetypes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 15px;
-        }
-        .archetype-item {
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        .archetype-name {
-            font-weight: 600;
-            color: #334155;
-            margin-bottom: 5px;
-        }
-        .archetype-desc {
-            font-size: 0.9em;
-            color: #64748b;
-        }
-
-        .flashcard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .flashcard {
-            background: white;
-            border: 2px solid #e0e7ff;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            min-height: 140px;
-            position: relative;
             overflow: hidden;
         }
-
-        .flashcard::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .interactive-map-container svg {
             width: 100%;
-            height: 4px;
+            height: auto;
+            max-height: 80vh;
         }
-        
-        /* Flashcard top border color based on grade and category */
-        .topic-card[data-grade="g3"][data-category="core"] .flashcard::before { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); }
-        .topic-card[data-grade="g3"][data-category="satellite"] .flashcard::before { background: linear-gradient(90deg, #06b6d4 0%, #0891b2 100%); }
-        .topic-card[data-grade="g4"][data-category="core"] .flashcard::before { background: linear-gradient(90deg, #38b2ac 0%, #81e6d9 100%); }
-        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard::before { background: linear-gradient(90deg, #68d391 0%, #9ae6b4 100%); }
-
-        .flashcard:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        .svg-node { cursor: pointer; outline: none; }
+        .svg-node > rect { transition: stroke 0.2s ease-in-out, stroke-width 0.2s ease-in-out; }
+        .svg-node:hover > rect {
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
         }
-        
-        /* Flashcard hover border color and front text color based on grade and category */
-        .topic-card[data-grade="g3"][data-category="core"] .flashcard:hover { border-color: #667eea; }
-        .topic-card[data-grade="g3"][data-category="core"] .flashcard-front { color: #667eea; }
+        /* Hover colors matching the topic card colors */
+        .svg-node:hover[data-category="satellite"] > rect { stroke: #06b6d4; }
+        .svg-node:hover[data-category="core"] > rect { stroke: #667eea; }
+        .svg-node:hover[data-category="new"] > rect { stroke: #f59e0b; }
 
-        .topic-card[data-grade="g3"][data-category="satellite"] .flashcard:hover { border-color: #06b6d4; }
-        .topic-card[data-grade="g3"][data-category="satellite"] .flashcard-front { color: #0891b2; }
-
-        .topic-card[data-grade="g4"][data-category="core"] .flashcard:hover { border-color: #38b2ac; }
-        .topic-card[data-grade="g4"][data-category="core"] .flashcard-front { color: #38b2ac; }
-
-        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard:hover { border-color: #68d391; }
-        .topic-card[data-grade="g4"][data-category="satellite"] .flashcard-front { color: #68d391; }
-        
-        .flashcard-front {
-            font-weight: 700;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-        }
-
-        .flashcard-back {
-            color: #475569;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-        
-        .flashcard-back code {
-            background: #f1f5f9;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-
-        .feynman {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-left: 4px solid #f59e0b;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            font-style: italic;
-            color: #92400e;
-            box-shadow: 0 3px 15px rgba(245, 158, 11, 0.1);
-            position: relative;
-        }
-
-        .feynman::before {
-            content: '💡';
-            font-size: 1.5em;
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            opacity: 0.3;
-        }
-
-        .sop-block {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: #f9fafb;
-            border-radius: 8px;
-        }
-        .sop-title { font-size: 1.5rem; color: #1f2937; margin-bottom: 1rem; font-weight: bold; }
-        .sop-goal, .sop-triggers, .sop-steps { margin: 1rem 0; }
-        .label { font-weight: bold; display: inline-block; margin-bottom: 0.5rem; }
-        
-        /* SOP block left border and label color based on grade and category */
-        .topic-card[data-grade="g3"][data-category="core"] .sop-block { border-left: 4px solid #667eea; }
-        .topic-card[data-grade="g3"][data-category="core"] .label { color: #667eea; }
-        
-        .topic-card[data-grade="g3"][data-category="satellite"] .sop-block { border-left: 4px solid #06b6d4; }
-        .topic-card[data-grade="g3"][data-category="satellite"] .label { color: #06b6d4; }
-        
-        .topic-card[data-grade="g4"][data-category="core"] .sop-block { border-left: 4px solid #38b2ac; }
-        .topic-card[data-grade="g4"][data-category="core"] .label { color: #38b2ac; }
-        
-        .topic-card[data-grade="g4"][data-category="satellite"] .sop-block { border-left: 4px solid #68d391; }
-        .topic-card[data-grade="g4"][data-category="satellite"] .label { color: #68d391; }
-        
-        .steps-list { margin-left: 1.5rem; }
-        .steps-list li { margin: 0.75rem 0; padding-left: 0.5rem; }
-        .pitfalls { background: #fffbeb; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b; margin: 1rem 0; }
-        .pitfalls-title { font-weight: bold; color: #b45309; margin-bottom: 0.5rem; }
-        .fatal, .致命, .CRITICAL { color: #dc2626; font-weight: bold; }
-        .typical, .典型, .COMMON { color: #d97706; font-weight: bold; }
-        .protips { background: #eff6ff; padding: 1rem; border-radius: 8px; border-left: 4px solid #2563eb; margin: 1rem 0; }
-        .protips-title { font-weight: bold; color: #1e40af; margin-bottom: 0.5rem; }
-        .formula { background: #e9ecef; padding: 0.5rem 1rem; border-radius: 4px; font-family: 'Courier New', monospace; display: inline-block; margin: 0.25rem 0; }
-
-        @media (max-width: 1024px) {
-             .nav-buttons { flex-direction: column; }
-            .divider { display: none; }
-        }
-        
         @media (max-width: 768px) {
-            header h1 { font-size: 2.2em; flex-direction: column; }
-            .subtitle { font-size: 1em; }
-            .header-nav { position: static; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
-            .topic-name { font-size: 1.2em; }
-            .topic-title { gap: 10px; flex-direction: column; align-items: flex-start; }
-            .flashcard-grid { grid-template-columns: 1fr; }
-        }
-
-        .scroll-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: all 0.3s;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            font-size: 1.5em;
-            visibility: hidden;
-        }
-
-        .scroll-top.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-top:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            header h1 { font-size: 2.2em; }
+            .header-nav { position: static; margin-top: 20px; justify-content: center; }
         }
     </style>
 </head>
@@ -550,482 +103,86 @@
          <header>
             <h1>
                 <svg class="title-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.59L6.41 12 5 13.41 11 19.41 21.59 8.83 20.17 7.41 11 16.59z" fill="currentColor"/></svg>
-                E-Math M-P-C Knowledge Framework
+                E-Math Knowledge Map
             </h1>
-            <div class="subtitle">Memorisation • Procedural • Conceptual</div>
-            <div class="tag">#G3 & #G4</div>
+            <div class="subtitle">G3 → G4 Topic Evolution</div>
             <div class="header-nav">
-                <a href="#/">Resource Portal</a>
+                <a href="knowledge-framework.html">Knowledge Framework</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">Archetype Explorer</a>
+                <a href="resource-portal.html">Resource Portal</a>
+                <span class="nav-divider">|</span>
+                <a href="archetype-explorer.html">Archetype Explorer</a>
                 <span class="nav-divider">|</span>
                 <a href="#/">Study Portal</a>
                 <span class="nav-divider">|</span>
                 <a href="#">Task Tracker</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">RSRM System</a>
+                <a href="rsrm_system.html">RSRM System</a>
                 <span class="nav-divider">|</span>
                 <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" target="_blank">Flashcard Sets</a>
             </div>
         </header>
 
-        <div class="controls">
-            <div class="nav-buttons">
-                <button class="nav-btn" onclick="toggleAll(true)">Expand All</button>
-                <button class="nav-btn" onclick="toggleAll(false)">Collapse All</button>
-                <div class="divider"></div>
-                 <div class="filter-group" id="grade-filters">
-                    <button class="nav-btn grade-btn active" onclick="filterContent('grade', 'all', this)">All Grades</button>
-                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g3', this)">G3</button>
-                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g4', this)">G4</button>
-                </div>
-                <div class="divider"></div>
-                <div class="filter-group" id="category-filters">
-                    <button class="nav-btn category-btn active" onclick="filterContent('category', 'all', this)">All Topics</button>
-                    <button class="nav-btn category-btn" onclick="filterContent('category', 'core', this)">Core Topics</button>
-                    <button class="nav-btn category-btn" onclick="filterContent('category', 'satellite', this)">Satellite Topics</button>
-                </div>
-            </div>
-        </div>
+        <div class="interactive-map-container">
+            <!-- This is where you will paste your final SVG code exported from Figma -->
+            <!-- I've included the structure as a placeholder with corrected relative URLs. -->
+            <svg id="evolution-map-svg" viewBox="0 0 800 1200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <defs>
+                    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#A0A0A0"/>
+                    </marker>
+                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <circle cx="1" cy="1" r="1" fill="#EAEAEA"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+                <text x="180" y="50" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#212121">G3 (Skill / ...)</text>
+                <text x="610" y="50" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#212121">G4 (Integ...)</text>
+                
+                <!-- G3 Nodes (Replace with your SVG code) -->
+                <a href="knowledge-framework.html#topic-RATIO" class="svg-node" data-category="satellite"><rect x="50" y="80" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="115" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Percentage</text></a>
+                <a href="knowledge-framework.html#topic-IND" class="svg-node" data-category="satellite"><rect x="50" y="160" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="195" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Indices & Standard Form</text></a>
+                <a href="knowledge-framework.html#topic-ALG" class="svg-node" data-category="core"><rect x="50" y="240" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="275" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Algebraic Manipulation</text></a>
+                <a href="knowledge-framework.html#topic-TRIG" class="svg-node" data-category="core"><rect x="50" y="320" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="355" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Trigonometry</text></a>
+                <a href="knowledge-framework.html#topic-INEQ" class="svg-node" data-category="satellite"><rect x="50" y="400" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="435" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Inequalities</text></a>
+                <a href="knowledge-framework.html#topic-COORD" class="svg-node" data-category="satellite"><rect x="50" y="480" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="515" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Coordinate Geometry</text></a>
+                <a href="knowledge-framework.html#topic-QUAD" class="svg-node" data-category="core"><rect x="50" y="560" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="595" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Quadratic & Graphs</text></a>
+                <a href="knowledge-framework.html#topic-MEN" class="svg-node" data-category="satellite"><rect x="50" y="640" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="675" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Mensuration</text></a>
+                <a href="knowledge-framework.html#topic-GEO" class="svg-node" data-category="core"><rect x="50" y="720" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="755" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Geometric Proofs</text></a>
+                <a href="knowledge-framework.html#topic-STAT" class="svg-node" data-category="satellite"><rect x="50" y="800" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="835" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Statistics & Probability</text></a>
 
-        <div id="topics-container">
-            <!-- Topic cards will be dynamically inserted here -->
-        </div>
+                <!-- G4 Nodes -->
+                <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-category="core"><rect x="490" y="80" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="115" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Modelling</text></a>
+                <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-category="core"><rect x="490" y="160" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="185" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Trig + 3D +</text><text x="620" y="205" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Bearings/Elevation</text></a>
+                <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-category="satellite"><rect x="490" y="240" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="620" y="265" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Modelling Variables</text><text x="620" y="285" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Rate/Percen...)</text></a>
+                <a href="knowledge-framework.html#topic-VECTORS_G4" class="svg-node" data-category="new"><rect x="490" y="320" width="260" height="60" rx="10" fill="#FFFBEB" stroke="#FBBF24" stroke-width="2"/><text x="620" y="355" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">New Topic • Vectors in 2D</text></a>
+                <a href="knowledge-framework.html#topic-ALG_G4" class="svg-node" data-category="core"><rect x="490" y="400" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="425" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Functions & Graphs</text><text x="620" y="445" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Intersections,...)</text></a>
+                <a href="knowledge-framework.html#topic-MATRICES_G4" class="svg-node" data-category="new"><rect x="490" y="480" width="260" height="60" rx="10" fill="#FFFBEB" stroke="#FBBF24" stroke-width="2"/><text x="620" y="515" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">New Topic • Matrices</text></a>
+                <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-category="core"><rect x="490" y="560" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="585" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Geometry + Mensuration</text><text x="620" y="605" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Ratios/Areas/Volumes)</text></a>
+                <a href="knowledge-framework.html#topic-STAT_PROB_G4" class="svg-node" data-category="satellite"><rect x="490" y="640" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="620" y="675" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Data Analysis & Reasoning</text></a>
 
+                 <!-- Connectors with textPaths (Replace with your SVG code) -->
+                <path id="path1" d="M310 110 H 490" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+                <text font-size="12" fill="#71717A"><textPath xlink:href="#path1" startOffset="50%" text-anchor="middle">Feeds Modelling</textPath></text>
+                <path id="path2" d="M310 190 H 490" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+                <text font-size="12" fill="#71717A"><textPath xlink:href="#path2" startOffset="50%" text-anchor="middle">Internalized in</textPath></text>
+                <path id="path3" d="M310,270 C 370,270 370,210 490,210" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
+                <text font-size="12" fill="#71717A"><textPath xlink:href="#path3" startOffset="50%" text-anchor="middle">L1 → L2/L3 Elevation</textPath></text>
+            </svg>
+        </div>
     </div>
 
-    <div class="scroll-top" onclick="scrollToTop()">▲</div>
-    
     <script>
-        // --- DATA STRUCTURES ---
-
-        const allTopicsData = [
-            // G3 Core
-            { id: 'TRIG', number: '01', name: 'Trigonometry (Right-Angled)', category: 'core', grade: 'g3' },
-            { id: 'QUAD', number: '02', name: 'Quadratic Functions & Graphs', category: 'core', grade: 'g3' },
-            { id: 'ALG', number: '03', name: 'Algebraic Manipulation', category: 'core', grade: 'g3' },
-            { id: 'GEO', number: '04', name: 'Geometric Proofs & Similarity', category: 'core', grade: 'g3' },
-            // G3 Satellite
-            { id: 'COORD', number: '05', name: 'Coordinate Geometry', category: 'satellite', grade: 'g3' },
-            { id: 'MEN', number: '06', name: 'Mensuration (Simple Solids)', category: 'satellite', grade: 'g3' },
-            { id: 'INEQ', number: '07', name: 'Inequalities', category: 'satellite', grade: 'g3' },
-            { id: 'IND', number: '08', name: 'Indices & Standard Form', category: 'satellite', grade: 'g3' },
-            { id: 'STAT', number: '09', name: 'Statistics (Descriptive)', category: 'satellite', grade: 'g3' },
-            { id: 'RATIO', number: '10', name: 'Ratio, Rate & Percentage', category: 'satellite', grade: 'g3' },
-            
-            // G4 Core
-            { id: 'GEO_MEN_G4', number: '11', name: 'Geometry & Mensuration', category: 'core', grade: 'g4', connection: { type: 'Deepened', from: 'GEO' } },
-            { id: 'ALG_G4', number: '12', name: 'Algebra (Advanced)', category: 'core', grade: 'g4', connection: { type: 'Deepened', from: 'ALG' } },
-            { id: 'STAT_PROB_G4', number: '13', name: 'Statistics & Probability', category: 'core', grade: 'g4', connection: { type: 'Upgraded', from: 'STAT' } },
-            { id: 'NUM_FIN_G4', number: '14', name: 'Number, Proportion & Financial Maths', category: 'core', grade: 'g4', connection: { type: 'Extended', from: 'RATIO' } },
-
-            // G4 Satellite
-            { id: 'COORD_G4', number: '15', name: 'Coordinate Geometry (Advanced)', category: 'satellite', grade: 'g4', connection: { type: 'Deepened', from: 'COORD' } },
-            { id: 'VECTORS_G4', number: '16', name: 'Vectors in Two Dimensions', category: 'satellite', grade: 'g4', connection: { type: 'New' } },
-            { id: 'MATRICES_G4', number: '17', name: 'Matrices', category: 'satellite', grade: 'g4', connection: { type: 'New' } },
-            { id: 'SEQ_G4', number: '18', name: 'Number Sequences & Patterns', category: 'satellite', grade: 'g4', connection: { type: 'New' } }
-        ];
-
-        const allDetailsData = {
-            // --- G3 DATA (with full SOPs) ---
-            "CORE-G3-TRIG": {
-                tier1: { flashcards: [ { front: 'SOH CAH TOA', back: '<code>sinθ = Opp/Hyp</code>, <code>cosθ = Adj/Hyp</code>, <code>tanθ = Opp/Adj</code>' }, { front: 'Sine Rule', back: '<code>a/sinA = b/sinB = c/sinC</code>' }, { front: 'Cosine Rule', back: '<code>c² = a² + b² - 2ab cosC</code>' }, { front: 'Area of Triangle', back: '<code>Area = ½ ab sinC</code>' }] },
-                archetypes_overview: [ { "name": "2D Bearing Problems", "description": "Solving for sides/angles in 2D Bearing scenarios" }, { "name": "3D Elevation & Depression Problems", "description": "Solving for sides/angles in 3D Elevation & Depression scenarios" }, { "name": "Area Calculation using Sine", "description": "Calculating Area of complex fields using the ½ab sinC formula" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Solving 2D Bearing / Geometry Problems", "goal": "To find unknown lengths or angles in non-right-angled triangles", "triggers": "Bearing of, due east, diagrams with non-right-angled triangles", "steps": [ "Annotate & Convert: Draw all North lines. Convert all given bearings into internal angles of the key triangle using parallel line properties", "Assess the Triangle: Count the knowns. Do you have SAS/SSS or AAS/SSA?", "Select the Right Tool: If SAS or SSS, use the Cosine Rule. If AAS or SSA, use the Sine Rule", "Calculate & Check: Solve for the unknown. If finding an angle with the Sine Rule, check if an obtuse angle (180° - θ) is possible" ], "pitfalls": [ { "type": "致命", "text": "Mixing up the Sine Rule and Cosine Rule formulas" }, { "type": "典型", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" } ], "pro_tips": [ "Memorize: 'If the problem gives you three sides (SSS) or a Side-Angle-Side sandwich (SAS), you need the Cosine Rule. For almost everything else, it's the Sine Rule'", "Always draw North lines first to visualize the bearing angles clearly" ] }, { "title": "SOP 2: Solving 3D Elevation & Depression Problems", "goal": "To solve problems involving height and angles in a 3D context", "triggers": "angle of elevation, angle of depression, height of, vertical", "steps": [ "Deconstruct into 2 Planes: Isolate the problem into: (a) A 2D problem on the horizontal ground, (b) A 2D right-angled triangle in the vertical plane", "Solve the Ground Problem First: Use SOP 1 to find the crucial horizontal distance between the observer and the base of the vertical object. This is your 'bridge' value", "Solve the Vertical Problem: Draw the right-angled triangle. Label the height and the 'bridge' value (horizontal distance). Use basic SOH CAH TOA to find the final answer" ], "pitfalls": [ { "type": "致命", "text": "Trying to use Sine/Cosine Rule directly in the 3D space" }, { "type": "典型", "text": "Confusing horizontal distance with slant distance" } ], "pro_tips": [ "Always break it down. Your mantra: 'First the map, then the wall' (First solve the ground plan, then solve the vertical plane)", "The horizontal distance from ground plan becomes the adjacent/opposite side in your vertical triangle" ] } ] },
-                tier3: { prompts: ["Explain why the 'ambiguous case' exists for the Sine Rule.", "Explain why the greatest angle of elevation is found at the shortest horizontal distance."] }
-            },
-            "CORE-G3-QUAD": {
-                tier1: { flashcards: [ { front: 'Vertex Form', back: '<code>y = a(x - h)² + k</code>' }, { front: 'Quadratic Formula', back: '<code>x = [-b ± √(b²-4ac)] / 2a</code>' }, { front: 'Discriminant', back: '<code>Δ = b² - 4ac</code>' }] },
-                archetypes_overview: [ { "name": "Completing the Square", "description": "Converting to Vertex Form via Completing the Square" }, { "name": "Graph Sketching", "description": "Sketching the Graph, showing all key features (vertex, intercepts, axis of symmetry)" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Completing the Square", "goal": "Convert quadratic from standard form to completed square form", "triggers": "complete the square, express in the form (x + p)² + q", "steps": [ "Identify coefficient of x²: If it's not 1, factor it out first", "Take half of the x coefficient, square it: For x² + bx, take (b/2)²", "Add and subtract this value inside: x² + bx + (b/2)² - (b/2)²", "Group to form perfect square: (x + b/2)² - (b/2)² + c", "Simplify the constant term: Combine constants to get final form (x + p)² + q" ], "pitfalls": [ { "type": "致命", "text": "Forgetting to factor out the coefficient of x² before completing the square" }, { "type": "典型", "text": "Not squaring the half-coefficient correctly" } ], "pro_tips": [ "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²", "Check your answer by expanding back to verify" ] } ] },
-                tier3: { prompts: ["Explain the connection between the discriminant and the number of x-intercepts.", "Why is the axis of symmetry x = -b/2a?"] }
-            },
-            "CORE-G3-ALG": {
-                tier1: { flashcards: [ { front: 'Difference of Squares', back: '<code>a² - b² = (a - b)(a + b)</code>' }, { front: 'Rule for a-b vs b-a', back: '<code>b - a = -(a - b)</code>' }, { front: 'Equation vs. Expression', back: 'Equations have an = sign; expressions do not.' }] },
-                archetypes_overview: [ { "name": "Algebraic Fractions", "description": "Simplifying complex algebraic fractions (addition/subtraction/multiplication/division)" }, { "name": "Fractional Equations", "description": "Solving fractional equations that reduce to linear or quadratic" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Adding/Subtracting Algebraic Fractions", "goal": "Combine fractions with algebraic denominators into a single fraction", "triggers": "add, subtract, fractions with different denominators", "steps": [ "Find the LCD (Lowest Common Denominator): Factor all denominators if needed, then find LCD", "Convert each fraction: Multiply numerator and denominator by whatever makes the denominator = LCD", "Combine numerators: Add or subtract the numerators over the common denominator", "Simplify: Factor and cancel common factors if possible" ], "pitfalls": [ { "type": "CRITICAL", "text": "Not distributing the negative sign when subtracting fractions" }, { "type": "COMMON", "text": "Forgetting to multiply both numerator AND denominator when converting" } ], "pro_tips": [ "When subtracting, put brackets around the entire second numerator: (a) - (b + c)", "Always factor the final numerator and denominator to check for further simplification" ] } ] },
-                tier3: { prompts: ["Explain why you can't cancel the 'x' in (x+3)/x.", "Explain why multiplying by the LCD is valid for equations but not expressions."] }
-            },
-            "CORE-G3-GEO": {
-                tier1: { flashcards: [ { front: 'Similarity Conditions', back: 'AA, SAS Similarity, SSS Similarity' }, { front: 'Congruency Conditions', back: 'SAS, SSS, ASA, RHS' }, { front: 'Parallel Lines', back: 'Alternate angles, Corresponding angles, Interior angles.' }] },
-                archetypes_overview: [ { "name": "Similarity Proofs", "description": "Proving two triangles are similar (mainly using AA)" }, { "name": "Congruency Proofs", "description": "Proving two triangles are congruent (using SAS, SSS, ASA, RHS)" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Proving Similarity (AA Criterion)", "goal": "Prove two triangles are similar using Angle-Angle", "triggers": "prove triangles are similar, show similarity", "steps": [ "Identify the two triangles: Label vertices clearly (e.g., △ABC and △DEF)", "Find two pairs of equal angles: Use properties like vertically opposite angles, corresponding angles, alternate angles, or angles in the same segment", "State the equal angles explicitly: Write ∠ABC = ∠DEF and ∠BAC = ∠EDF with reasons", "Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'" ], "pitfalls": [ { "type": "致命", "text": "Not providing geometric reasons for why angles are equal" }, { "type": "典型", "text": "Mixing up corresponding vertices when stating similarity" } ], "pro_tips": [ "Common angle reasons: vertically opposite, corresponding (parallel lines), alternate (parallel lines), angles in same segment", "Always write the triangle correspondence correctly: △ABC ~ △DEF means A↔D, B↔E, C↔F" ] } ] },
-                tier3: { prompts: ["Explain why SSA is not a valid congruency test.", "Explain why the ratio of areas of similar triangles is the square of the ratio of their lengths."] }
-            },
-            "SAT-G3-COORD": {
-                tier1: { flashcards: [ { front: 'Gradient Formula', back: '<code>m = (y₂ - y₁) / (x₂ - x₁)</code>' }, { front: 'Distance Formula', back: '<code>√[(x₂ - x₁)² + (y₂ - y₁)²]</code>' }, { front: 'Perpendicular Gradient', back: '<code>m₁ * m₂ = -1</code>' }] },
-                archetypes_overview: [ { "name": "Finding Line Equations", "description": "Finding the distance between two points" }, { "name": "Parallel & Perpendicular Lines", "description": "Solving problems involving parallel and perpendicular lines" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Finding the Equation of a Straight Line (y = mx + c)", "goal": "To find the equation connecting any two points", "triggers": "Find the equation of the line, equation passing through", "steps": [ "Find the Gradient (m): m = (y₂ − y₁) ÷ (x₂ − x₁). Pro-Tip: Label points (x₁,y₁) and (x₂,y₂) before calculating", "Write the Partial Equation: y = (your m)x + c", "Find the y-intercept (c): Substitute coordinates of one known point (use simpler one) into y = mx + c and solve for c", "Write the Final Equation: Combine your m and c values" ], "pitfalls": [ { "type": "CRITICAL", "text": "Swapping x and y when substituting into y = mx + c" }, { "type": "COMMON", "text": "Computing m with (x₁,y₁) and (x₂,y₂) reversed by mistake" } ], "pro_tips": [ "Label points clearly (x₁,y₁), (x₂,y₂) before any calculation", "After finding m, immediately write y = mx + c, then plug in the simplest point to get c" ] } ] },
-                tier3: { prompts: ["Explain the geometric meaning of the y-intercept.", "Derive the formula for the midpoint of a line segment."] }
-            },
-            "SAT-G3-MEN": {
-                tier1: { flashcards: [ { front: 'Volume of Cone', back: '<code>V = (1/3)πr²h</code>' }, { front: 'Surface Area of Sphere', back: '<code>A = 4πr²</code>' }, { front: 'Area of Sector', back: '<code>A = (θ/360) * πr²</code>' }] },
-                archetypes_overview: [ { "name": "Basic Mensuration", "description": "Calculating arc length, sector area, and segment area of circles" }, { "name": "Similar Figures Scaling", "description": "Solving problems using the scaling laws for similar figures/solids" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Master SOP for ALL Mensuration Problems", "goal": "To never lose marks due to formula or calculation errors", "triggers": "area, surface area, volume, capacity", "steps": [ "Identify the Shape(s): Name them immediately (e.g., cone + hemisphere)", "Write the Formula FIRST: e.g., write CSA = πrl before substituting. (Secures method marks)", "List Variables: Example: r = 8, l = 17", "Substitute and Calculate: Carefully", "Final Check (Units & Accuracy): Correct units (e.g., cm², cm³) and required s.f./d.p." ], "pitfalls": [ { "type": "CRITICAL", "text": "Missing/incorrect units → lose accuracy/answer marks" }, { "type": "COMMON", "text": "Substituting numbers before writing the exact formula" } ], "pro_tips": [ "Always write the formula first to lock in method marks", "Box the final answer with units and accuracy" ] } ] },
-                tier3: { prompts: ["Explain why the volume of a pyramid is one-third the volume of its enclosing prism.", "Why is the total surface area of a hemisphere 3πr² and not 2πr²?"] }
-            },
-            "SAT-G3-INEQ": {
-                tier1: { flashcards: [ { front: 'Flipping the Sign', back: 'Flip the inequality sign when multiplying or dividing by a negative number.' }, { front: 'At least', back: 'Means greater than or equal to (≥)' }, { front: 'At most', back: 'Means less than or equal to (≤)' }] },
-                archetypes_overview: [ { "name": "Compound Inequalities", "description": "Solving linear and compound inequalities" }, { "name": "Inequality Modeling", "description": "Translating real-world language into precise inequalities" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Solving Compound Inequalities", "goal": "To find the final, single range of x", "triggers": "two inequality signs, A < B ≤ C", "steps": [ "SPLIT: Break into two simpler inequalities. Example: 3x − 1 < 2x + 9 ≤ 15 → Part A: 3x − 1 < 2x + 9, Part B: 2x + 9 ≤ 15", "SOLVE: Solve Part A and Part B individually (each gives a range)", "CRITICAL RULE: If you multiply or divide by a negative, you MUST flip the inequality sign", "DRAW: Draw a number line and mark key values (this is your safety net)", "PLOT & OVERLAP: Plot both solutions; open circles for <, >, solid for ≤, ≥. The final answer is the overlap", "WRITE: Write as a single compound inequality (e.g., 4 < x ≤ 10)" ], "pitfalls": [ { "type": "CRITICAL", "text": "Not flipping the sign after multiplying/dividing by a negative" }, { "type": "COMMON", "text": "Using the wrong open/closed circle on the number line" } ], "pro_tips": [ "Write a banner note at the top: '× or ÷ negative → flip sign'", "Always sketch the number line before writing the final compound form" ] } ] },
-                tier3: { prompts: ["Explain with an example why you must flip the inequality sign when multiplying by a negative number."] }
-            },
-            "SAT-G3-IND": {
-                tier1: { flashcards: [ { front: 'Multiplication Law', back: '<code>aᵐ × aⁿ = aᵐ⁺ⁿ</code>' }, { front: 'Negative Index', back: '<code>a⁻ⁿ = 1/aⁿ</code>' }, { front: 'Fractional Index', back: '<code>a¹/ⁿ = ⁿ√a</code>' }] },
-                archetypes_overview: [ { "name": "Simplifying Index Expressions", "description": "Simplifying complex expressions using Laws of Indices" }, { "name": "Exponential Equations", "description": "Solving exponential equations by unifying the base" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Simplifying Complex Index Expressions", "goal": "Reduce complicated expressions to simplest form with positive indices", "triggers": "Simplify, expressions with powers, roots, negatives", "steps": [ "Brackets First (Power of a Power): Multiply indices inside brackets. Examples: (p³)² = p⁶; (4p³)² = 16p⁶", "Handle Negatives & Roots: Negative indices → reciprocals: x⁻³ = 1 ÷ x³. Roots → fractional indices: √x = x^(1/2), ³√x = x^(1/3)", "Combine Same Bases: Multiply same base → add indices. Divide same base → subtract indices", "Calculate Coefficients: Manage normal numbers separately; then recombine" ], "pitfalls": [ { "type": "CRITICAL", "text": "Treating negative indices as negative numbers (instead of reciprocals)" }, { "type": "COMMON", "text": "Forgetting to distribute powers across brackets and coefficients" } ], "pro_tips": [ "Convert roots to fractional indices and negatives to reciprocals FIRST", "Separate coefficient arithmetic from index manipulation, then recombine" ] } ] },
-                tier3: { prompts: ["Explain why a⁰ = 1 using the division law of indices.", "Explain why a negative power represents a reciprocal."] }
-            },
-            "SAT-G3-STAT": {
-                tier1: { flashcards: [ { front: 'Probability Formula', back: 'P(Event) = (Favorable Outcomes) / (Total Outcomes)' }, { front: 'Mean', back: 'Sum of values / Number of values' }, { front: 'Median', back: 'The middle value in an ordered set.' }] },
-                archetypes_overview: [ { "name": "Stem-and-Leaf Interpretation", "description": "Finding Mean, Median, and Mode from stem-and-leaf diagrams" }, { "name": "Grouped Frequency Analysis", "description": "Calculating mean from grouped frequency tables" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Interpreting Stem-and-Leaf Diagrams", "goal": "Quickly and accurately extract mode, median, and mean", "triggers": "stem-and-leaf diagram is presented", "steps": [ "Count Total (N): Write N beside the diagram—this controls the median", "Mode: Scan for the most frequent leaf (recombine with stem)", "Median: Position is (N + 1) ÷ 2. If N odd → whole position (e.g., 11th). If N even → average of the two middle values (e.g., 13th and 14th)", "Mean: Sum all values (stem+leaf) and divide by N. Use calculator carefully" ], "pitfalls": [ { "type": "CRITICAL", "text": "For even N, forgetting to average the two middle values" }, { "type": "COMMON", "text": "Miscounting N" } ], "pro_tips": [ "Write N = … on top before doing median", "When N is even, pre-write Median = (____ + ____ ) ÷ 2" ] } ] },
-                tier3: { prompts: ["When is the median a better measure of central tendency than the mean?"] }
-            },
-            "SAT-G3-RATIO": {
-                tier1: { flashcards: [ { front: 'Percentage Increase', back: 'New = Original × (1 + %/100)' }, { front: 'Reverse Percentage', back: 'Original = Final / (1 ± %/100)' }, { front: 'Simple Interest', back: 'I = P × R × T / 100' }] },
-                archetypes_overview: [ { "name": "Map Scale Problems", "description": "Converting between map distances and actual distances/areas" }, { "name": "Percentage Change", "description": "Calculating percentage change, profit, discount, or GST" } ], 
-                tier2: { "sops": [ { "title": "SOP 1: Map Scale Problems", "goal": "Accurately convert between map distances and actual distances/areas", "triggers": "Scale 1 : n, area on the map, actual area", "steps": [ "Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km (convert n cm to km first). Area scale: 1 cm² : (n ÷ 100,000)² km²", "Select the Correct Scale: Decide if it's length or area", "Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)" ], "pitfalls": [ { "type": "CRITICAL", "text": "Using the length scale to compute an area" }, { "type": "COMMON", "text": "Forgetting to square when switching to area" } ], "pro_tips": [ "Always write BOTH scales first (length and area)", "Circle the word 'Area' in the question → write 'square it' beside it" ] } ] },
-                tier3: { prompts: ["Explain the fundamental difference between simple interest and compound interest."] }
-            },
-
-            // --- G4 CORE DATA ---
-            "CORE-G4-GEO_MEN_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Requires mastery of G3 trigonometry (SOH CAH TOA), basic mensuration formulas for simple solids, and introductory circle properties (e.g., angle in semicircle)."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Application of Sine/Cosine Rules in 2D/3D problems.", "Full suite of circle properties for complex, multi-step proofs.", "Calculation of composite solid volumes and complex shaded areas.", "Application of area and volume ratios for similar figures."] },
-                tier1: { flashcards: [
-                    { front: 'Sine Rule', back: '<code>a/sin A = b/sin B = c/sin C</code>' },
-                    { front: 'Cosine Rule (Side)', back: '<code>a² = b² + c² - 2bc cos A</code>' },
-                    { front: 'Cosine Rule (Angle)', back: '<code>cos A = (b² + c² - a²) / 2bc</code>' },
-                    { front: 'Area of Triangle', back: '<code>½ ab sin C</code>' },
-                    { front: 'Similarity Ratios', back: 'Length <code>a:b</code> → Area <code>a²:b²</code> → Volume <code>a³:b³</code>' },
-                    { front: 'Angle at Centre', back: 'Angle at the centre is twice the angle at the circumference.' },
-                    { front: 'Cyclic Quadrilateral', back: 'Opposite angles add up to 180°.' },
-                    { front: 'Alternate Segment Theorem', back: 'Angle between tangent and chord equals angle in the alternate segment.' },
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Solving a Complex Shaded Area Problem', goal: 'To find the area of a region composed of multiple geometric shapes.', triggers: 'Shaded region, segment, sector, composite shape', steps: ['Deconstruct: Identify the basic geometric shapes.', 'Formulate a Plan: Write the plan as an equation, e.g., Shaded Area = Area of Sector - Area of Triangle.', 'Find Missing Values: Use geometry/trigonometry to find necessary lengths or angles.', 'Calculate Each Component: Systematically calculate the area of each shape.', 'Execute the Plan: Substitute component areas back into your plan.', 'Check Precision: Ensure final answer is rounded to required s.f. or d.p.'] },
-                    { title: 'SOP: Proving Triangles are Similar', goal: 'To formally prove that two triangles are similar.', triggers: 'Prove similarity, show that triangles are similar', steps: ['State the Triangles: Begin with "In ΔABC and ΔXYZ,".', 'Identify and State Proof (AA is most common): Find first pair of equal angles with reason (e.g., Common angle). Find second pair of equal angles with reason (e.g., Alternate angles).', 'Conclude: "Therefore, ΔABC is similar to ΔXYZ (AA Similarity)."'] }
-                ]},
-                tier3: { prompts: ["Explain to a classmate when to use the Sine Rule and when to use the Cosine Rule.", "Using similarity, explain why a pizza with twice the diameter has four times the area.", "Explain why opposite angles in a cyclic quadrilateral must add up to 180°."] }
-            },
-            "CORE-G4-ALG_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Assumes fluency in G3 algebraic manipulation, factorisation of simple quadratics, and solving linear/quadratic equations."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Solving complex algebraic fractional equations.", "Mastery of Completing the Square for graphing and analysis.", "Understanding the discriminant's link to graph properties and roots."] },
-                tier1: { flashcards: [
-                    { front: 'Difference of Squares', back: '<code>a² - b² = (a - b)(a + b)</code>' },
-                    { front: 'Perfect Square', back: '<code>(a ± b)² = a² ± 2ab + b²</code>' },
-                    { front: 'Quadratic Formula', back: 'For <code>ax² + bx + c = 0</code>, <code>x = [-b ± √(b² - 4ac)] / 2a</code>' },
-                    { front: 'Laws of Indices', back: '<code>aᵐ × aⁿ = aᵐ⁺ⁿ</code>, <code>a⁻ⁿ = 1/aⁿ</code>, <code>(aᵐ)ⁿ = aᵐⁿ</code>' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Solving Algebraic Fraction Equations', goal: 'To solve an equation containing algebraic fractions.', triggers: 'Fractions with variables in denominator', steps: ['Factorise Denominators.', 'Find the Lowest Common Denominator (LCD).', 'Multiply every single term by the LCD.', 'Expand and Simplify.', 'Form a standard equation (e.g., <code>ax²+bx+c=0</code>).', 'Solve the Equation.', 'Check for Invalid Solutions (denominator cannot be zero).'] },
-                    { title: 'SOP: Completing the Square for ax² + bx + c', goal: 'To express a quadratic in vertex form.', triggers: 'Complete the square, find max/min value, find vertex', steps: ["Factor out 'a' from the first two terms: <code>a[x² + (b/a)x] + c</code>.", "Halve (<code>b/2a</code>) and Square (<code>(b/2a)²</code>) the new x-coefficient.", "Add and Subtract this term inside the bracket.", "Form the Perfect Square: <code>a[(x + b/2a)² - (b/2a)²] + c</code>.", "Expand and Simplify to get the final form."] }
-                ]},
-                tier3: { prompts: ["Explain what the discriminant (b² - 4ac) tells you about the graph of a quadratic function.", "Explain why you must flip the inequality sign when you multiply or divide by a negative number."] }
-            },
-            "CORE-G4-STAT_PROB_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Based on G3 understanding of mean, median, mode from simple data sets and basic probability."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Introduction of Standard Deviation as a robust measure of data spread.", "Use of Cumulative Frequency and Boxplots for data analysis and comparison.", "Solving multi-stage probability problems using tree diagrams and possibility spaces."] },
-                tier1: { flashcards: [
-                    { front: 'Mean (Grouped)', back: '<code>Σfx / Σf</code>' },
-                    { front: 'Standard Deviation', back: '<code>√[ (Σfx² / Σf) - (Mean)² ]</code>' },
-                    { front: 'Interquartile Range (IQR)', back: '<code>Upper Quartile (Q₃) - Lower Quartile (Q₁)</code>' },
-                    { front: 'P(A or B)', back: '<code>P(A) + P(B) - P(A and B)</code>' },
-                    { front: 'P(A and B) (Independent)', back: '<code>P(A) × P(B)</code>' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Making Comparisons using Statistical Data', goal: 'To compare two data sets using measures of central tendency and spread.', triggers: 'Compare the performance, comment on the data', steps: ['Compare the Averages (Median): State which is higher/lower and interpret what it means (e.g., "on average, performed better").', 'Compare the Spread (IQR or SD): State which is larger/smaller and interpret what it means (e.g., "results are more consistent").', 'Combine: Write two separate points with figures to support your answer.'] },
-                    { title: 'SOP: Solving Probability \'Without Replacement\' Problems', goal: 'To find probabilities when outcomes are dependent.', triggers: 'Without replacement, two items are picked in succession', steps: ['Identify the sequence of events.', 'Draw a Tree Diagram.', 'Calculate probabilities for the first event.', 'Adjust the total and item count for the second event\'s probabilities.', 'Multiply Along the branches for a specific sequence.', 'Add Between branches for multiple satisfying outcomes.'] }
-                ]},
-                tier3: { prompts: ["Explain why a company might use the mean salary to sound good, when the median would be a more accurate representation of a typical employee's pay.", "What would a standard deviation of 0 tell you about a set of data?"] }
-            },
-            "CORE-G4-NUM_FIN_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Builds on G3 knowledge of ratio, direct proportion, percentages, and simple interest."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Introduction of Compound Interest for realistic financial calculations.", "Application of percentages in tax and currency exchange scenarios.", "Solving problems involving inverse proportion.", "Using HCF/LCM for complex word problems."] },
-                tier1: { flashcards: [
-                    { front: 'Compound Interest Formula', back: '<code>Total = P(1 + R/100)ⁿ</code>' },
-                    { front: 'Direct Proportion', back: '<code>y = kx</code>' },
-                    { front: 'Inverse Proportion', back: '<code>y = k/x</code>' },
-                    { front: 'Map Scale (Area)', back: '<code>(Map Length)² : (Actual Length)²</code>' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Solving HCF & LCM Word Problems', goal: 'To identify and solve problems requiring HCF or LCM.', triggers: 'Largest possible groups, happen at the same time again', steps: ['Identify the Goal: Splitting into largest groups -> HCF. Events happening together again -> LCM.', 'Prime Factorise all numbers.', 'Calculate HCF (lowest powers of common factors) or LCM (highest powers of all factors).', 'Answer the specific question using the result.'] },
-                    { title: 'SOP: Calculating Compound Interest', goal: 'To calculate the final amount or interest earned with compounding.', triggers: 'Compounded annually, semi-annually', steps: ['Identify Variables: P, r, n (compounds per year), t (years).', 'Adjust Rate and Periods: rate per period <code>i = r/n</code>, total periods <code>N = n × t</code>.', 'Apply Formula: <code>Total = P(1 + i)ᴺ</code>.', 'Calculate carefully.', 'Find Interest if required: Interest = Total - P.'] }
-                ]},
-                tier3: { prompts: ["Explain the difference between direct and inverse proportion using the example of hiring workers to paint a house.", "Explain why prime factorisation is a powerful tool for solving HCF and LCM problems."] }
-            },
-            
-            // --- G4 SATELLITE DATA (Restored) ---
-             "SATELLITE-G4-COORD_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Requires knowledge of finding gradient, distance, and the equation y = mx + c from G3."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Solving problems involving parallel and perpendicular lines.", "Finding the midpoint of a line segment.", "Determining the point of intersection of two lines using simultaneous equations."] },
-                tier1: { flashcards: [
-                    { front: 'Parallel Lines Property', back: 'They have the <strong>same gradient</strong>. (<code>m₁ = m₂</code>)' },
-                    { front: 'Perpendicular Lines Property', back: 'The product of their gradients is <strong>-1</strong>. (<code>m₁ × m₂ = -1</code>)' },
-                    { front: 'Midpoint of a Line Segment', back: '<code>( (x₁+x₂)/2 , (y₁+y₂)/2 )</code>' },
-                    { front: 'Horizontal & Vertical Lines', back: 'Horizontal: <code>y = k</code>, Gradient = <code>0</code>.<br>Vertical: <code>x = h</code>, Gradient is <strong>undefined</strong>.' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Finding the Equation of a Line', goal: 'To find the equation of a straight line given certain properties.', triggers: 'Find the equation of the line...', steps: ['<strong>Find the Gradient (m):</strong><br> - If given two points: Use <code>(y₂ - y₁) / (x₂ - x₁)</code>.<br> - If parallel to another line: Use that line\'s gradient.<br> - If perpendicular to another line: Use <code>m = -1/m₁</code>.', '<strong>Find the y-intercept (c):</strong><br> - Substitute `m` and a known point `(x, y)` into <code>y = mx + c</code> and solve for `c`.', '<strong>Write the Final Equation:</strong><br> - State the equation in <code>y = mx + c</code> form.'] },
-                    { title: 'SOP: Finding the Point of Intersection of Two Lines', goal: 'To find the coordinates where two lines meet.', triggers: 'point of intersection, solve simultaneously', steps: ['Set up Simultaneous Equations using the two line equations.', 'Solve the system using either Substitution or Elimination method.', 'Find the value for the first variable (e.g., `x`).', 'Substitute this value back into either original equation to find the second variable (e.g., `y`).', 'State the answer as a coordinate pair `(x, y)`.'] }
-                ]},
-                tier3: { prompts: ["Explain what the 'gradient' of a line actually means. If a line has a gradient of 3, what does that tell you? What about a gradient of -1/2?", "Try to explain why the product of the gradients of two perpendicular lines is -1. Use a simple right-angled triangle on a grid to demonstrate."] }
-            },
-            "SATELLITE-G4-VECTORS_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Vectors provide a new way to describe movement and position in geometry.", "Key skills include vector addition/subtraction and using position vectors.", "Used to prove geometric properties like collinearity and parallelism."] },
-                tier1: { flashcards: [
-                    { front: 'Vector Addition', back: '<code>AB + BC = AC</code> (Triangle Law)' },
-                    { front: 'Vector Subtraction / Position Vectors', back: '<code>AB = OB - OA</code>' },
-                    { front: 'Magnitude of a Vector', back: 'If <code>v = (x, y)</code>, then <code>|v| = √(x² + y²)</code>. This is the length.' },
-                    { front: 'Parallel Vectors', back: 'Vector <strong>a</strong> is parallel to vector <strong>b</strong> if <strong>a</strong> = k<strong>b</strong>, where k is a scalar.' },
-                    { front: 'Collinear Points (A, B, C)', back: '<code>AB</code> is parallel to <code>BC</code> (i.e., <code>AB = k * BC</code>) AND they share a common point (B).' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Proving Three Points (A, B, C) are Collinear', goal: 'To prove three points lie on the same straight line.', triggers: 'Show that... are collinear', steps: ['Express two vectors that share a common point (e.g., `AB` and `BC`).', 'Use Position Vectors to find expressions for them: <code>AB = OB - OA</code> and <code>BC = OC - OB</code>.', 'Show that one vector is a scalar multiple of the other by factoring out a constant (e.g., show <code>AB = k * BC</code>).', 'State the conclusion: "Since `AB = k * BC` and point B is common, A, B, and C are collinear."'] },
-                    { title: 'SOP: Finding the Coordinates of a Point using Vectors', goal: 'To find a point\'s location using vector paths.', triggers: 'Find the coordinates of...', steps: ['Set up a vector equation from the origin `O` to the unknown point `R` (e.g., <code>OR = OP + PR</code>).', 'Substitute known vectors and relationships (e.g., <code>PR = ½ PQ</code>).', 'Calculate the resultant position vector `OR` as a single column vector <code>(x, y)</code>.', 'State the coordinates of R, which are `(x, y)`.'] }
-                ]},
-                tier3: { prompts: ["What exactly is a 'position vector'? Why is it useful to always relate vectors back to a common origin 'O'?", "Explain the subtle but crucial difference between proving two vectors are *parallel* and proving three points are *collinear*."] }
-            },
-            "SATELLITE-G4-MATRICES_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Matrices are a tool for organizing data in rows and columns.", "Focus is on matrix multiplication and its application in solving real-world contextual problems."] },
-                tier1: { flashcards: [
-                    { front: 'Matrix Order', back: '<code>rows × columns</code>' },
-                    { front: 'Condition for Matrix Multiplication (A × B)', back: 'Number of <strong>columns</strong> in matrix A must equal the number of <strong>rows</strong> in matrix B.' },
-                    { front: 'Order of Resulting Matrix', back: 'If `A` is `m × n` and `B` is `n × p`, then `AB` is `m × p`.' },
-                    { front: 'Identity Matrix (I)', back: 'A square matrix with `1`s on the main diagonal and `0`s elsewhere. `AI = IA = A`.' },
-                    { front: 'Non-Commutativity', back: 'In general, `AB ≠ BA`.' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Solving a Contextual Problem with Matrix Multiplication', goal: 'To use matrices to combine two sets of data and find a meaningful result.', triggers: 'Use matrices to calculate...', steps: ['Identify the two data sets (e.g., number of items vs. cost per item).', 'Form Matrix A and Matrix B with appropriate dimensions.', 'Determine the Order of Multiplication: Arrange `A × B` or `B × A` so the inner dimensions match and the outer dimensions give a meaningful result (e.g., total cost per outlet).', 'Perform the row-by-column multiplication.', 'Interpret the Result: Clearly state what each element in the resulting matrix represents.'] }
-                ]},
-                tier3: { prompts: ["Explain why the 'row-by-column' rule for matrix multiplication makes sense using a simple example of a shop's sales over several days.", "Why must the inner dimensions match for two matrices to be multiplied?"] }
-            },
-            "SATELLITE-G4-SEQ_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Introduces the formal study of sequences, particularly Arithmetic and Geometric Progressions.", "Focus is on finding the formula for the nth term to describe a pattern."] },
-                tier1: { flashcards: [
-                    { front: 'Arithmetic Progression (AP) - nth term', back: '<code>Tₙ = a + (n-1)d</code> (where *a* is the first term, *d* is the common difference).' },
-                    { front: 'Geometric Progression (GP) - nth term', back: '<code>Tₙ = arⁿ⁻¹</code> (where *a* is the first term, *r* is the common ratio).' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Finding the nth term of a Sequence', goal: 'To find a formula for any term in a sequence.', triggers: 'Find the nth term, find an expression for...', steps: ['<strong>Check for Common Difference (AP):</strong><br> - Calculate `T₂-T₁`, `T₃-T₂`. If constant (`d`), it\'s an AP. Use the formula <code>Tₙ = a + (n-1)d</code>.', '<strong>Check for Common Ratio (GP):</strong><br> - Calculate `T₂/T₁`, `T₃/T₂`. If constant (`r`), it\'s a GP. Use the formula <code>Tₙ = arⁿ⁻¹</code>.', '<strong>Check for Other Patterns:</strong><br> - If not AP or GP, look for patterns related to squares (`n²`), cubes (`n³`), or simple combinations (e.g., `2n+1`, `n²-1`).'] }
-                ]},
-                tier3: { prompts: ["What is the purpose of finding an 'nth term' for a sequence? Why is it more powerful than just listing out the next few terms?", "How would you use the nth term to quickly find the 100th term of a sequence without writing everything out?"] }
-            }
-        };
-
-        // --- DOM MANIPULATION & LOGIC ---
-
-        document.addEventListener('DOMContentLoaded', () => {
-            renderAllTopics();
+        window.addEventListener('load', function() {
+            svgPanZoom('#evolution-map-svg', {
+                zoomEnabled: true,
+                controlIconsEnabled: true,
+                fit: true,
+                center: true,
+                minZoom: 0.5,
+                maxZoom: 4
+            });
         });
-
-        function renderAllTopics() {
-            const container = document.getElementById('topics-container');
-            if (!container) return;
-
-            // Combine details into allTopicsData
-            allTopicsData.forEach(topic => {
-                const key = `${topic.category.toUpperCase()}-${topic.grade.toUpperCase()}-${topic.id}`;
-                topic.details = allDetailsData[key] || {};
-            });
-
-            container.innerHTML = allTopicsData.map(createTopicCardHTML).join('');
-        }
-
-        function createTopicCardHTML(topic) {
-            return `
-                <div class="topic-card" data-category="${topic.category}" data-grade="${topic.grade}" data-topic-id="${topic.id}">
-                    <div class="topic-header" onclick="toggleTopic(this)">
-                        <div class="topic-title">
-                            <span class="topic-number">${topic.number}</span>
-                            <span class="topic-name">${topic.name}</span>
-                        </div>
-                        <div class="topic-badges">
-                            ${createConnectionBadgeHTML(topic.connection)}
-                            <span class="topic-badge">${topic.grade.toUpperCase()}</span>
-                            <span class="toggle-icon">▼</span>
-                        </div>
-                    </div>
-                    <div class="topic-content">
-                        ${createRecapHTML(topic.details.recap)}
-                        ${createExtensionPointsHTML(topic.details.extension_points)}
-                        ${createTierHTML('🎯', 'Tier 1: Memorisation-Based (Flashcards)', createTier1HTML(topic.details.tier1))}
-                        ${createTierHTML('🗺️', 'Typical Problem Archetypes', createArchetypesHTML(topic.details.archetypes_overview))}
-                        ${createTierHTML('⚙️', 'Tier 2: Procedural (SOPs)', createSopsHTML(topic.details.tier2))}
-                        ${createTierHTML('💡', 'Tier 3: Conceptual (Feynman Prompts)', createTier3HTML(topic.details.tier3))}
-                    </div>
-                </div>
-            `;
-        }
-        
-        function createConnectionBadgeHTML(connection) {
-            if (!connection) return '';
-            const types = { 'Deepened': 'deepened', 'Extended': 'extended', 'Upgraded': 'upgraded', 'New': 'new' };
-            const icons = { 
-                'Deepened': '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>', 
-                'Extended': '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path></svg>', 
-                'Upgraded': '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>', 
-                'New': '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L14.39 8.36L21 9.27L16.31 13.73L17.61 20.24L12 17.27L6.39 20.24L7.69 13.73L3 9.27L9.61 8.36L12 2z"></path></svg>'
-            };
-            const className = types[connection.type] || '';
-            const icon = icons[connection.type] || '';
-            return `<span class="topic-badge connection-badge ${className}">${icon} ${connection.type}</span>`;
-        }
-
-        function createRecapHTML(recap) {
-            if (!recap) return '';
-            const pointsHTML = recap.points.map(p => `<li>${p}</li>`).join('');
-            return `
-                <div class="recap-block">
-                    <h3>🧠 ${recap.title}</h3>
-                    <ul>${pointsHTML}</ul>
-                </div>
-            `;
-        }
-        
-        function createExtensionPointsHTML(extension) {
-            if (!extension) return '';
-            const pointsHTML = extension.points.map(p => `<li>${p}</li>`).join('');
-            return `
-                <div class="extension-points-block">
-                    <h3>🚀 ${extension.title}</h3>
-                    <ul>${pointsHTML}</ul>
-                </div>
-            `;
-        }
-        
-        function createTierHTML(icon, title, content) {
-            if (!content) return '';
-            return `
-                <div class="tier">
-                    <div class="tier-header">
-                        <span class="tier-icon">${icon}</span>
-                        ${title}
-                    </div>
-                    ${content}
-                </div>
-            `;
-        }
-
-        function createArchetypesHTML(archetypes) {
-            if (!archetypes || archetypes.length === 0) return '';
-            const archetypesListHTML = archetypes.map(arch => `
-                <div class="archetype-item">
-                    <div class="archetype-name">${arch.name}</div>
-                    <div class="archetype-desc">${arch.description}</div>
-                </div>
-            `).join('');
-            
-            return `<div class="archetypes-grid">${archetypesListHTML}</div>`;
-        }
-
-        function createTier1HTML(tier1Data) {
-            if (!tier1Data || !tier1Data.flashcards) return '';
-            const flashcardsHTML = tier1Data.flashcards.map(card => `
-                <div class="flashcard">
-                    <div class="flashcard-front">${card.front}</div>
-                    <div class="flashcard-back">${card.back}</div>
-                </div>
-            `).join('');
-            return `<div class="flashcard-grid">${flashcardsHTML}</div>`;
-        }
-
-        function createSopsHTML(tier2Data) {
-            if (!tier2Data || !tier2Data.sops) return '';
-            return tier2Data.sops.map(sop => {
-                const stepsHTML = sop.steps.map(step => `<li>${step}</li>`).join('');
-                const pitfallsHTML = (sop.pitfalls || []).map(pitfall => {
-                    const typeClass = pitfall.type.toUpperCase().replace(/[^\w\s]/gi, ''); // Sanitize class name
-                    return `<li><span class="${typeClass}">${pitfall.type}:</span> ${pitfall.text}</li>`;
-                }).join('');
-                const protipsHTML = Array.isArray(sop.pro_tips) ? sop.pro_tips.map(p => `<p>${p}</p>`).join('') : `<p>${sop.pro_tips || ''}</p>`;
-                
-                return `
-                    <div class="sop-block">
-                        <h3 class="sop-title">${sop.title}</h3>
-                        ${sop.goal ? `<div class="sop-goal"><span class="label">Goal:</span> ${sop.goal}</div>` : ''}
-                        ${sop.triggers ? `<div class="sop-triggers"><span class="label">Triggers:</span> ${sop.triggers}</div>` : ''}
-                        <div class="sop-steps">
-                            <span class="label">Steps:</span>
-                            <ol class="steps-list">${stepsHTML}</ol>
-                        </div>
-                        ${pitfallsHTML ? `
-                        <div class="pitfalls">
-                            <div class="pitfalls-title">Common Pitfalls:</div>
-                            <ul>${pitfallsHTML}</ul>
-                        </div>` : ''}
-                        ${(sop.pro_tips && sop.pro_tips.length > 0) ? `
-                        <div class="protips">
-                            <div class="protips-title">Pro-Tip:</div>
-                            ${protipsHTML}
-                        </div>` : ''}
-                    </div>`;
-            }).join('');
-        }
-
-        function createTier3HTML(tier3Data) {
-            if (!tier3Data || !tier3Data.prompts) return '';
-            return tier3Data.prompts.map(prompt => `<div class="feynman">${prompt}</div>`).join('');
-        }
-        
-        let currentGrade = 'all';
-        let currentCategory = 'all';
-
-        function toggleTopic(headerElement) {
-            const content = headerElement.nextElementSibling;
-            const icon = headerElement.querySelector('.toggle-icon');
-            content.classList.toggle('show');
-            icon.classList.toggle('open');
-        }
-
-        function toggleAll(expand) {
-            document.querySelectorAll('.topic-header').forEach(header => {
-                 const content = header.nextElementSibling;
-                 const icon = header.querySelector('.toggle-icon');
-                if (expand) {
-                    content.classList.add('show');
-                    icon.classList.add('open');
-                } else {
-                    content.classList.remove('show');
-                    icon.classList.remove('open');
-                }
-            });
-        }
-
-        function filterContent(type, value, clickedButton) {
-            if (type === 'grade') currentGrade = value;
-            else if (type === 'category') currentCategory = value;
-            
-            updateActiveButton(document.querySelectorAll(`#${type}-filters .nav-btn`), clickedButton);
-            applyFilters();
-        }
-
-        function updateActiveButton(buttons, activeButton) {
-             buttons.forEach(btn => btn.classList.remove('active'));
-             activeButton.classList.add('active');
-        }
-
-        function applyFilters() {
-            document.querySelectorAll('.topic-card').forEach(topic => {
-                const gradeMatch = (currentGrade === 'all') || (topic.dataset.grade === currentGrade);
-                const categoryMatch = (currentCategory === 'all') || (topic.dataset.category === currentCategory);
-                topic.style.display = (gradeMatch && categoryMatch) ? 'block' : 'none';
-            });
-        }
-
-        const scrollTopBtn = document.querySelector('.scroll-top');
-        window.onscroll = () => {
-            scrollTopBtn.classList.toggle('show', document.body.scrollTop > 100 || document.documentElement.scrollTop > 100);
-        };
-        
-        function scrollToTop() {
-            window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
     </script>
 </body>
 </html>
