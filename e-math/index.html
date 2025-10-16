@@ -686,7 +686,7 @@
                                 <text x="384" y="235">L1 → L2/L3 Elevation</text>
                                 <text x="384" y="270">L1 → L2 Depth</text>
                                 <text x="384" y="445">With Graph Regions</text>
-                                <text x="384" y="500">Fused with I I</text>
+                                <text x="384" y="505">Fused with I I</text>
                                 <text x="384" y="555">L1 → L2 Integration</text>
                                 <text x="384" y="660">Absorbed into</text>
                                 <text x="384" y="715">Application</text>
@@ -759,15 +759,19 @@
                     onZoom: updateZoomIndicator,
                 });
                 
-                // After a short timeout to let the DOM settle, resize and center the map.
+                // After a short timeout to let the DOM and CSS animations settle, resize and center the map.
                 setTimeout(() => {
                     if (panZoomInstance) {
-                        panZoomInstance.resize(); 
-                        panZoomInstance.fit();   
-                        panZoomInstance.center(); 
-                        updateZoomIndicator();
+                        try {
+                            panZoomInstance.resize(); 
+                            panZoomInstance.fit();   
+                            panZoomInstance.center(); 
+                            updateZoomIndicator();
+                        } catch (e) {
+                            console.error("Error during pan/zoom initialization:", e);
+                        }
                     }
-                }, 100);
+                }, 1200); // Increased timeout to wait for CSS animations
             }
             
             // Update zoom indicator
