@@ -3,186 +3,976 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Math Knowledge Map</title>
+    <title>E-Math Knowledge Map - Interactive</title>
     <!-- Pan & Zoom Library -->
     <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-light: rgba(255, 255, 255, 0.9);
+            --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
+            color: #333;
+            position: relative;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Animated Background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 219, 98, 0.2) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            z-index: -1;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            33% { transform: rotate(120deg) scale(1.1); }
+            66% { transform: rotate(240deg) scale(0.9); }
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto;
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         header {
-            background: rgba(30, 60, 114, 0.7);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             padding: 40px;
             padding-bottom: 80px;
             text-align: center;
             margin-bottom: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-xl);
             position: relative;
+            overflow: hidden;
         }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+        
         header h1 {
-            font-size: 3em;
+            font-size: clamp(2em, 5vw, 3em);
             font-weight: 800;
-            color: #d8b4fe;
+            background: linear-gradient(135deg, #667eea, #f093fb, #f5576c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 15px;
             letter-spacing: -1px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
+            animation: textGlow 3s ease-in-out infinite;
         }
-        .title-icon { width: 50px; height: 50px; fill: #d8b4fe; }
+        
+        @keyframes textGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+        
+        .title-icon { 
+            width: 50px; 
+            height: 50px; 
+            animation: rotate 10s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
         .subtitle {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-light);
             font-size: 1.1em;
             font-weight: 300;
             letter-spacing: 2px;
             text-transform: uppercase;
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .header-nav {
             position: absolute;
             bottom: 25px;
-            left: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            padding: 0 40px;
             display: flex;
             gap: 15px;
             align-items: center;
+            justify-content: center;
             flex-wrap: wrap;
         }
+        
         .header-nav a {
             color: white;
             text-decoration: none;
             font-weight: 500;
             font-size: 1em;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 10px;
+            border-radius: 8px;
         }
-        .header-nav a:hover { color: #f59e0b; }
-        .nav-divider { color: #f59e0b; font-weight: bold; }
+        
+        .header-nav a::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .header-nav a:hover {
+            color: #f093fb;
+            background: rgba(240, 147, 251, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .header-nav a:hover::before {
+            width: 80%;
+        }
+        
+        .nav-divider { 
+            color: rgba(255, 255, 255, 0.3); 
+            font-weight: bold; 
+        }
 
-        /* Interactive SVG Map Styles */
-        .interactive-map-container {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 20px;
+        /* Map Section */
+        .map-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: slideInUp 0.8s ease 0.3s both;
         }
-        .interactive-map-container svg {
-            width: 100%;
-            height: auto;
-            max-height: 80vh;
+        
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .svg-node { cursor: pointer; outline: none; }
-        .svg-node > rect { transition: stroke 0.2s ease-in-out, stroke-width 0.2s ease-in-out; }
-        .svg-node:hover > rect {
-            stroke-width: 3 !important;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+        
+        .map-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding: 5px;
+            background: #f3f4f6;
+            border-radius: 12px;
         }
-        /* Hover colors matching the topic card colors */
-        .svg-node:hover[data-category="satellite"] > rect { stroke: #06b6d4; }
-        .svg-node:hover[data-category="core"] > rect { stroke: #667eea; }
-        .svg-node:hover[data-category="new"] > rect { stroke: #f59e0b; }
+        
+        .tab-button {
+            flex: 1;
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .tab-button.active {
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .tab-button:hover:not(.active) {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+        }
+        
+        .map-container { 
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .map-container.active { 
+            display: block; 
+        }
 
+        /* Enhanced Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border-radius: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .control-btn {
+            padding: 10px 18px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .control-btn:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .control-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .control-icon {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .zoom-indicator {
+            margin-left: auto;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        /* SVG Container */
+        .svg-container {
+            width: 100%;
+            height: 80vh;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+            position: relative;
+        }
+        
+        #evolution-map-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f4f6;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Enhanced SVG Node Styles */
+        .svg-node rect {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        .svg-node:hover rect {
+            stroke-width: 3 !important;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+            transform: scale(1.05);
+            transform-origin: center;
+        }
+        
+        .svg-node text {
+            pointer-events: none;
+            user-select: none;
+        }
+        
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .tooltip.show {
+            opacity: 1;
+        }
+        
+        /* Figma Embed */
+        .figma-embed {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 45px 12px 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
-            header h1 { font-size: 2.2em; }
-            .header-nav { position: static; margin-top: 20px; justify-content: center; }
+            body { padding: 10px; }
+            header { 
+                padding: 25px;
+                padding-bottom: 20px;
+            }
+            header h1 { 
+                font-size: 2em;
+                flex-direction: column;
+            }
+            .header-nav { 
+                position: static;
+                margin-top: 20px;
+                transform: none;
+                left: auto;
+                padding: 0 10px;
+            }
+            .svg-container, .figma-embed { 
+                height: 60vh; 
+            }
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .control-group {
+                justify-content: center;
+            }
+            .zoom-indicator {
+                margin: 10px auto 0;
+            }
+            .map-tabs {
+                flex-direction: column;
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-         <header>
+        <header>
             <h1>
-                <svg class="title-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.59L6.41 12 5 13.41 11 19.41 21.59 8.83 20.17 7.41 11 16.59z" fill="currentColor"/></svg>
+                <svg class="title-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="url(#iconGradient)"/>
+                </svg>
                 E-Math Knowledge Map
             </h1>
             <div class="subtitle">G3 → G4 Topic Evolution</div>
-            <div class="header-nav">
+            <nav class="header-nav" aria-label="Main Navigation">
                 <a href="knowledge-framework.html">Knowledge Framework</a>
                 <span class="nav-divider">|</span>
                 <a href="resource-portal.html">Resource Portal</a>
                 <span class="nav-divider">|</span>
                 <a href="archetype-explorer.html">Archetype Explorer</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">Study Portal</a>
+                <a href="study-portal.html">Study Portal</a>
                 <span class="nav-divider">|</span>
-                <a href="#">Task Tracker</a>
+                <a href="task-tracker.html">Task Tracker</a>
                 <span class="nav-divider">|</span>
                 <a href="rsrm_system.html">RSRM System</a>
                 <span class="nav-divider">|</span>
-                <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" target="_blank">Flashcard Sets</a>
-            </div>
+                <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" target="_blank" rel="noopener noreferrer">Flashcard Sets</a>
+            </nav>
         </header>
 
-        <div class="interactive-map-container">
-            <!-- This is where you will paste your final SVG code exported from Figma -->
-            <!-- I've included the structure as a placeholder with corrected relative URLs. -->
-            <svg id="evolution-map-svg" viewBox="0 0 800 1200" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <defs>
-                    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#A0A0A0"/>
-                    </marker>
-                    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-                        <circle cx="1" cy="1" r="1" fill="#EAEAEA"/>
-                    </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-                <text x="180" y="50" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#212121">G3 (Skill / ...)</text>
-                <text x="610" y="50" font-family="Inter, sans-serif" font-size="20" font-weight="600" fill="#212121">G4 (Integ...)</text>
+        <main class="map-section">
+            <div class="map-tabs">
+                <button id="svg-tab-button" class="tab-button active">Interactive SVG Map</button>
+                <button id="figma-tab-button" class="tab-button">Figma Original</button>
+            </div>
+
+            <!-- SVG Map Container -->
+            <div id="svg-map" class="map-container active">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="search-input" placeholder="Search topics... (e.g., Algebra, Trigonometry, Vectors)">
+                    <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
                 
-                <!-- G3 Nodes (Replace with your SVG code) -->
-                <a href="knowledge-framework.html#topic-RATIO" class="svg-node" data-category="satellite"><rect x="50" y="80" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="115" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Percentage</text></a>
-                <a href="knowledge-framework.html#topic-IND" class="svg-node" data-category="satellite"><rect x="50" y="160" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="195" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Indices & Standard Form</text></a>
-                <a href="knowledge-framework.html#topic-ALG" class="svg-node" data-category="core"><rect x="50" y="240" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="275" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Algebraic Manipulation</text></a>
-                <a href="knowledge-framework.html#topic-TRIG" class="svg-node" data-category="core"><rect x="50" y="320" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="355" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Trigonometry</text></a>
-                <a href="knowledge-framework.html#topic-INEQ" class="svg-node" data-category="satellite"><rect x="50" y="400" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="435" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Inequalities</text></a>
-                <a href="knowledge-framework.html#topic-COORD" class="svg-node" data-category="satellite"><rect x="50" y="480" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="515" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Coordinate Geometry</text></a>
-                <a href="knowledge-framework.html#topic-QUAD" class="svg-node" data-category="core"><rect x="50" y="560" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="595" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Quadratic & Graphs</text></a>
-                <a href="knowledge-framework.html#topic-MEN" class="svg-node" data-category="satellite"><rect x="50" y="640" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="675" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Mensuration</text></a>
-                <a href="knowledge-framework.html#topic-GEO" class="svg-node" data-category="core"><rect x="50" y="720" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="180" y="755" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Geometric Proofs</text></a>
-                <a href="knowledge-framework.html#topic-STAT" class="svg-node" data-category="satellite"><rect x="50" y="800" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="180" y="835" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Statistics & Probability</text></a>
+                <div class="controls">
+                    <div class="control-group">
+                        <button id="reset-zoom-btn" class="control-btn">
+                            <svg class="control-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                            </svg>
+                            Reset View
+                        </button>
+                        <button id="zoom-in-btn" class="control-btn">
+                            <svg class="control-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            Zoom In
+                        </button>
+                        <button id="zoom-out-btn" class="control-btn">
+                            <svg class="control-icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 13H5v-2h14v2z"/>
+                            </svg>
+                            Zoom Out
+                        </button>
+                    </div>
+                    <div class="control-group">
+                        <button id="highlight-core-btn" class="control-btn">
+                            Highlight Core
+                        </button>
+                        <button id="highlight-satellite-btn" class="control-btn">
+                            Highlight Satellite
+                        </button>
+                        <button id="highlight-new-btn" class="control-btn">
+                            Highlight New
+                        </button>
+                    </div>
+                    <div class="zoom-indicator" id="zoom-indicator">100%</div>
+                </div>
+                
+                <div class="svg-container">
+                    <div class="loading-spinner" id="loading-spinner"></div>
+                    <svg id="evolution-map-svg" viewBox="0 0 834 980" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="glow">
+                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <rect width="834" height="980" fill="url(#bgGradient)"/>
+                        <defs>
+                            <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f9fafb;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f3f4f6;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <text x="175" y="40" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#1f2937">G3 (Skill / L1-dominant)</text>
+                        <text x="595" y="40" text-anchor="middle" font-family="Inter, sans-serif" font-size="22" font-weight="700" fill="#1f2937">G4 (Integration/Modelling - L2/...)</text>
+                        
+                        <g id="g3-nodes">
+                            <a href="knowledge-framework.html#topic-RATIO" class="svg-node" data-topic="Ratio & Percentage" data-type="satellite">
+                                <rect x="50" y="100" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Ratio & Percentage</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-IND" class="svg-node" data-topic="Indices & Standard Form" data-type="satellite">
+                                <rect x="50" y="180" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="220" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Indices & Standard Form</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-ALG" class="svg-node" data-topic="Algebraic Manipulation" data-type="core">
+                                <rect x="50" y="260" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="175" y="300" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Algebraic Manipulation</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-TRIG" class="svg-node" data-topic="Trigonometry" data-type="core">
+                                <rect x="50" y="340" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="175" y="380" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Trigonometry</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-INEQ" class="svg-node" data-topic="Inequalities" data-type="satellite">
+                                <rect x="50" y="420" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="460" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Inequalities</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-COORD" class="svg-node" data-topic="Coordinate Geometry" data-type="satellite">
+                                <rect x="50" y="500" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="540" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Coordinate Geometry</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-QUAD" class="svg-node" data-topic="Quadratic & Graphs" data-type="core">
+                                <rect x="50" y="580" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="175" y="620" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Quadratic & Graphs</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-MEN" class="svg-node" data-topic="Mensuration" data-type="satellite">
+                                <rect x="50" y="660" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="700" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Mensuration</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-GEO" class="svg-node" data-topic="Geometric Proofs" data-type="core">
+                                <rect x="50" y="740" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="175" y="775" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">Core • Geometric Proofs</text>
+                                <text x="175" y="795" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#1f2937">(Similarity/Congruency)</text>
+                            </a>
+                             <a href="knowledge-framework.html#topic-STAT" class="svg-node" data-topic="Statistics & Probability" data-type="satellite">
+                                <rect x="50" y="820" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="175" y="860" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Statistics & Probability</text>
+                            </a>
+                        </g>
+                        
+                        <g id="g4-nodes">
+                            <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-topic="Algebraic Modelling" data-type="core">
+                                <rect x="470" y="100" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="595" y="140" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Algebraic Modelling</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-topic="Trig + 3D" data-type="core">
+                                <rect x="470" y="180" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="595" y="215" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Trig + 3D +</text>
+                                <text x="595" y="235" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Bearings/Elevation</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-topic="Modelling Variables" data-type="satellite">
+                                <rect x="470" y="260" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="595" y="295" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Modelling</text>
+                                <text x="595" y="315" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Variables (Ratio/Percent)</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-VECTORS_G4" class="svg-node" data-topic="Vectors in 2D" data-type="new">
+                                <rect x="470" y="340" width="250" height="70" rx="10" fill="#fef3c7" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="595" y="380" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">New Topic • Vectors in 2D</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-ALG_G4" class="svg-node" data-topic="Functions & Graphs" data-type="core">
+                                <rect x="470" y="420" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="595" y="455" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Core • Functions & Graphs</text>
+                                <text x="595" y="475" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">(Intersections, Tangent)</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-MATRICES_G4" class="svg-node" data-topic="Matrices" data-type="new">
+                                <rect x="470" y="500" width="250" height="70" rx="10" fill="#fef3c7" stroke="#fbbf24" stroke-width="2"/>
+                                <text x="595" y="540" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">New Topic • Matrices</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-topic="Geometry + Mensuration" data-type="core">
+                                <rect x="470" y="580" width="250" height="70" rx="10" fill="#dbeafe" stroke="#60a5fa" stroke-width="2"/>
+                                <text x="595" y="615" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">Core • Geometry +</text>
+                                <text x="595" y="635" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" font-weight="600" fill="#1f2937">Mensuration (Ratios/Areas/Volumes)</text>
+                            </a>
+                            <a href="knowledge-framework.html#topic-STAT_PROB_G4" class="svg-node" data-topic="Data Analysis" data-type="satellite">
+                                <rect x="470" y="660" width="250" height="70" rx="10" fill="#dcfce7" stroke="#4ade80" stroke-width="2"/>
+                                <text x="595" y="700" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#1f2937">Satellite • Data Analysis</text>
+                            </a>
+                        </g>
 
-                <!-- G4 Nodes -->
-                <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-category="core"><rect x="490" y="80" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="115" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Modelling</text></a>
-                <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-category="core"><rect x="490" y="160" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="185" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Trig + 3D +</text><text x="620" y="205" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Bearings/Elevation</text></a>
-                <a href="knowledge-framework.html#topic-NUM_FIN_G4" class="svg-node" data-category="satellite"><rect x="490" y="240" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="620" y="265" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Modelling Variables</text><text x="620" y="285" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Rate/Percen...)</text></a>
-                <a href="knowledge-framework.html#topic-VECTORS_G4" class="svg-node" data-category="new"><rect x="490" y="320" width="260" height="60" rx="10" fill="#FFFBEB" stroke="#FBBF24" stroke-width="2"/><text x="620" y="355" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">New Topic • Vectors in 2D</text></a>
-                <a href="knowledge-framework.html#topic-ALG_G4" class="svg-node" data-category="core"><rect x="490" y="400" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="425" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Functions & Graphs</text><text x="620" y="445" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Intersections,...)</text></a>
-                <a href="knowledge-framework.html#topic-MATRICES_G4" class="svg-node" data-category="new"><rect x="490" y="480" width="260" height="60" rx="10" fill="#FFFBEB" stroke="#FBBF24" stroke-width="2"/><text x="620" y="515" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">New Topic • Matrices</text></a>
-                <a href="knowledge-framework.html#topic-GEO_MEN_G4" class="svg-node" data-category="core"><rect x="490" y="560" width="260" height="60" rx="10" fill="#EBF4FF" stroke="#BEE3F8" stroke-width="2"/><text x="620" y="585" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Core • Geometry + Mensuration</text><text x="620" y="605" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">(Ratios/Areas/Volumes)</text></a>
-                <a href="knowledge-framework.html#topic-STAT_PROB_G4" class="svg-node" data-category="satellite"><rect x="490" y="640" width="260" height="60" rx="10" fill="#E6F4EA" stroke="#B4DDC0" stroke-width="2"/><text x="620" y="675" text-anchor="middle" font-size="14" font-family="Inter, sans-serif">Satellite • Data Analysis & Reasoning</text></a>
+                        <g id="connectors" fill="none" stroke="#4b5563" stroke-width="2">
+                            <defs>
+                                <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b5563"/>
+                                </marker>
+                            </defs>
 
-                 <!-- Connectors with textPaths (Replace with your SVG code) -->
-                <path id="path1" d="M310 110 H 490" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
-                <text font-size="12" fill="#71717A"><textPath xlink:href="#path1" startOffset="50%" text-anchor="middle">Feeds Modelling</textPath></text>
-                <path id="path2" d="M310 190 H 490" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
-                <text font-size="12" fill="#71717A"><textPath xlink:href="#path2" startOffset="50%" text-anchor="middle">Internalized in</textPath></text>
-                <path id="path3" d="M310,270 C 370,270 370,210 490,210" stroke="#A0A0A0" stroke-width="1.5" fill="none" marker-end="url(#arrowhead)"/>
-                <text font-size="12" fill="#71717A"><textPath xlink:href="#path3" startOffset="50%" text-anchor="middle">L1 → L2/L3 Elevation</textPath></text>
-            </svg>
-        </div>
+                            <!-- Arrow Paths -->
+                            <path d="M300,135 C 380,135 380,135 468,135" marker-end="url(#arrowhead)"/>
+                            <path d="M300,215 C 350,215 420,135 468,135" marker-end="url(#arrowhead)"/>
+                            <path d="M300,215 C 380,215 380,215 468,215" marker-end="url(#arrowhead)"/>
+                            <path d="M300,295 C 350,295 420,215 468,215" marker-end="url(#arrowhead)"/>
+                            <path d="M300,455 C 380,455 380,455 468,455" marker-end="url(#arrowhead)"/>
+                            <path d="M300,535 C 350,535 420,455 468,455" marker-end="url(#arrowhead)"/>
+                            <path d="M300,615 C 350,615 420,455 468,455" marker-end="url(#arrowhead)"/>
+                            <path d="M300,695 C 350,695 420,615 468,615" marker-end="url(#arrowhead)"/>
+                            <path d="M300,695 C 380,695 380,695 468,695" marker-end="url(#arrowhead)"/>
+                            <path d="M300,775 C 350,775 420,695 468,695" marker-end="url(#arrowhead)"/>
+                            <path d="M300,855 C 350,855 420,695 468,695" marker-end="url(#arrowhead)"/>
+                            
+                            <!-- Text Labels on Paths -->
+                            <g font-family="Inter, sans-serif" font-size="12px" font-weight="600" text-anchor="middle" fill="#1f2937" stroke="white" stroke-width="4" paint-order="stroke">
+                                <text x="384" y="125">Feeds Modelling</text>
+                                <text x="384" y="180">Internalized in I I</text>
+                                <text x="384" y="235">L1 → L2/L3 Elevation</text>
+                                <text x="384" y="270">L1 → L2 Depth</text>
+                                <text x="384" y="445">With Graph Regions</text>
+                                <text x="384" y="500">Fused with I I</text>
+                                <text x="384" y="555">L1 → L2 Integration</text>
+                                <text x="384" y="660">Absorbed into</text>
+                                <text x="384" y="715">Application</text>
+                                <text x="384" y="750">AO2/AO3 Upgrade</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+                <div class="tooltip" id="tooltip"></div>
+            </div>
+
+            <!-- Figma Embed Container -->
+            <div id="figma-map" class="map-container">
+                <iframe
+                    class="figma-embed"
+                    src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fboard%2FQDysks3MQMqRSVhdcBDwOQ%2FG3%25E2%2586%2592G4-Core-Satellite-Evolution-Map%3Fnode-id%3D36-161%26t%3DtVNn14QmaLnC5vOD-1"
+                    allowfullscreen
+                    loading="lazy">
+                </iframe>
+            </div>
+        </main>
     </div>
-
+    
     <script>
-        window.addEventListener('load', function() {
-            svgPanZoom('#evolution-map-svg', {
-                zoomEnabled: true,
-                controlIconsEnabled: true,
-                fit: true,
-                center: true,
-                minZoom: 0.5,
-                maxZoom: 4
-            });
-        });
+        (() => {
+            'use strict';
+            
+            // Global state
+            let panZoomInstance = null;
+            let currentZoom = 1;
+            let highlightMode = null;
+            
+            // DOM Elements
+            const elements = {
+                svgTabButton: document.getElementById('svg-tab-button'),
+                figmaTabButton: document.getElementById('figma-tab-button'),
+                svgMapContainer: document.getElementById('svg-map'),
+                figmaMapContainer: document.getElementById('figma-map'),
+                resetBtn: document.getElementById('reset-zoom-btn'),
+                zoomInBtn: document.getElementById('zoom-in-btn'),
+                zoomOutBtn: document.getElementById('zoom-out-btn'),
+                zoomIndicator: document.getElementById('zoom-indicator'),
+                searchInput: document.getElementById('search-input'),
+                highlightCoreBtn: document.getElementById('highlight-core-btn'),
+                highlightSatelliteBtn: document.getElementById('highlight-satellite-btn'),
+                highlightNewBtn: document.getElementById('highlight-new-btn'),
+                tooltip: document.getElementById('tooltip'),
+                loadingSpinner: document.getElementById('loading-spinner'),
+                svg: document.getElementById('evolution-map-svg')
+            };
+            
+            /**
+             * Initialize Pan & Zoom.
+             * This function is now more robust. It creates the instance first,
+             * then explicitly resizes, fits, and centers it after a short delay
+             * to ensure the browser has calculated the container's dimensions.
+             */
+            function initializePanZoom() {
+                if (panZoomInstance) {
+                    panZoomInstance.destroy();
+                }
+                
+                // Create the instance without fitting it immediately.
+                panZoomInstance = svgPanZoom('#evolution-map-svg', {
+                    zoomEnabled: true,
+                    controlIconsEnabled: false,
+                    minZoom: 0.5,
+                    maxZoom: 5,
+                    zoomScaleSensitivity: 0.3,
+                    onZoom: updateZoomIndicator,
+                });
+                
+                // After a short timeout to let the DOM settle, resize and center the map.
+                setTimeout(() => {
+                    if (panZoomInstance) {
+                        panZoomInstance.resize(); 
+                        panZoomInstance.fit();   
+                        panZoomInstance.center(); 
+                        updateZoomIndicator();
+                    }
+                }, 100);
+            }
+            
+            // Update zoom indicator
+            function updateZoomIndicator() {
+                if (panZoomInstance) {
+                    currentZoom = panZoomInstance.getZoom();
+                    elements.zoomIndicator.textContent = Math.round(currentZoom * 100) + '%';
+                }
+            }
+            
+            // Tab switching
+            function switchTab(targetTab) {
+                const isSVGTab = targetTab === 'svg';
+                
+                elements.svgMapContainer.classList.toggle('active', isSVGTab);
+                elements.figmaMapContainer.classList.toggle('active', !isSVGTab);
+                
+                elements.svgTabButton.classList.toggle('active', isSVGTab);
+                elements.figmaTabButton.classList.toggle('active', !isSVGTab);
+                
+                if (isSVGTab && panZoomInstance) {
+                    setTimeout(() => {
+                        panZoomInstance.resize();
+                        panZoomInstance.fit();
+                        panZoomInstance.center();
+                        updateZoomIndicator();
+                    }, 50);
+                }
+            }
+
+            // Centralized function to update node styles based on search and highlight state.
+            function updateNodeStyles() {
+                const searchTerm = elements.searchInput.value.toLowerCase();
+                const nodes = document.querySelectorAll('.svg-node');
+
+                nodes.forEach(node => {
+                    const topic = node.dataset.topic.toLowerCase();
+                    const nodeType = node.dataset.type;
+                    const rect = node.querySelector('rect');
+
+                    const searchMatch = searchTerm === '' || topic.includes(searchTerm);
+                    const highlightMatch = !highlightMode || nodeType === highlightMode;
+
+                    if (searchMatch && highlightMatch) {
+                        rect.style.opacity = '1';
+                        if (highlightMode && nodeType === highlightMode) {
+                             rect.style.filter = 'drop-shadow(0 0 10px rgba(102, 126, 234, 0.8))';
+                        } else {
+                             rect.style.filter = '';
+                        }
+                    } else {
+                        rect.style.opacity = '0.3';
+                        rect.style.filter = 'grayscale(100%)';
+                    }
+                });
+            }
+
+            // Search functionality now calls the centralized update function.
+            function handleSearch() {
+                updateNodeStyles();
+            }
+            
+            // Highlight functionality now calls the centralized update function.
+            function highlightByType(type) {
+                elements.highlightCoreBtn.classList.remove('active');
+                elements.highlightSatelliteBtn.classList.remove('active');
+                elements.highlightNewBtn.classList.remove('active');
+                
+                if (highlightMode === type) {
+                    highlightMode = null;
+                } else {
+                    highlightMode = type;
+                    if (type === 'core') elements.highlightCoreBtn.classList.add('active');
+                    if (type === 'satellite') elements.highlightSatelliteBtn.classList.add('active');
+                    if (type === 'new') elements.highlightNewBtn.classList.add('active');
+                }
+                
+                updateNodeStyles();
+            }
+            
+            // Tooltip functionality
+            function setupTooltips() {
+                const nodes = document.querySelectorAll('.svg-node');
+                
+                nodes.forEach(node => {
+                    node.addEventListener('mouseenter', (e) => {
+                        const topic = node.dataset.topic;
+                        const type = node.dataset.type;
+                        
+                        elements.tooltip.innerHTML = `
+                            <strong>${topic}</strong><br>
+                            <em>Type: ${type.charAt(0).toUpperCase() + type.slice(1)}</em><br>
+                            <small>Click to view details</small>
+                        `;
+                        elements.tooltip.classList.add('show');
+                    });
+                    
+                    node.addEventListener('mousemove', (e) => {
+                        elements.tooltip.style.left = e.pageX + 10 + 'px';
+                        elements.tooltip.style.top = e.pageY + 10 + 'px';
+                    });
+                    
+                    node.addEventListener('mouseleave', () => {
+                        elements.tooltip.classList.remove('show');
+                    });
+                });
+            }
+            
+            // Keyboard shortcuts
+            function setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    
+                    switch(e.key) {
+                        case 'r':
+                        case 'R':
+                            if (panZoomInstance) {
+                                panZoomInstance.fit();
+                                panZoomInstance.center();
+                            }
+                            break;
+                        case '+':
+                        case '=':
+                            if (panZoomInstance) {
+                                const sizes = panZoomInstance.getSizes();
+                                panZoomInstance.zoomAtPoint(panZoomInstance.getZoom() * 1.2, { x: sizes.width / 2, y: sizes.height / 2 });
+                            }
+                            break;
+                        case '-':
+                        case '_':
+                            if (panZoomInstance) {
+                                const sizes = panZoomInstance.getSizes();
+                                panZoomInstance.zoomAtPoint(panZoomInstance.getZoom() / 1.2, { x: sizes.width / 2, y: sizes.height / 2 });
+                            }
+                            break;
+                        case '/':
+                            e.preventDefault();
+                            elements.searchInput.focus();
+                            break;
+                        case 'Escape':
+                            elements.searchInput.value = '';
+                            handleSearch();
+                            elements.searchInput.blur();
+                            break;
+                    }
+                });
+            }
+            
+            // Initialize everything
+            function init() {
+                elements.loadingSpinner.style.display = 'block';
+                
+                window.addEventListener('load', () => {
+                    initializePanZoom();
+                    setupTooltips();
+                    setupKeyboardShortcuts();
+                    elements.loadingSpinner.style.display = 'none';
+                });
+                
+                elements.svgTabButton.addEventListener('click', () => switchTab('svg'));
+                elements.figmaTabButton.addEventListener('click', () => switchTab('figma'));
+                
+                elements.resetBtn.addEventListener('click', () => {
+                    if (panZoomInstance) {
+                        panZoomInstance.fit();
+                        panZoomInstance.center();
+                    }
+                });
+                
+                elements.zoomInBtn.addEventListener('click', () => {
+                    if (panZoomInstance) {
+                        const sizes = panZoomInstance.getSizes();
+                        panZoomInstance.zoomAtPoint(panZoomInstance.getZoom() * 1.2, { x: sizes.width / 2, y: sizes.height / 2 });
+                    }
+                });
+                
+                elements.zoomOutBtn.addEventListener('click', () => {
+                    if (panZoomInstance) {
+                        const sizes = panZoomInstance.getSizes();
+                        panZoomInstance.zoomAtPoint(panZoomInstance.getZoom() / 1.2, { x: sizes.width / 2, y: sizes.height / 2 });
+                    }
+                });
+                
+                elements.searchInput.addEventListener('input', handleSearch);
+                
+                elements.highlightCoreBtn.addEventListener('click', () => highlightByType('core'));
+                elements.highlightSatelliteBtn.addEventListener('click', () => highlightByType('satellite'));
+                elements.highlightNewBtn.addEventListener('click', () => highlightByType('new'));
+                
+                let resizeTimeout;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        if (panZoomInstance && elements.svgMapContainer.classList.contains('active')) {
+                            panZoomInstance.resize();
+                            panZoomInstance.fit();
+                            panZoomInstance.center();
+                        }
+                    }, 250);
+                });
+            }
+            
+            // Start the app
+            init();
+        })();
     </script>
 </body>
 </html>
