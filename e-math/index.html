@@ -75,7 +75,7 @@
             margin-bottom: 30px;
             box-shadow: var(--shadow-xl);
             position: relative;
-            overflow: hidden;
+            z-index: 100;
         }
         
         header::before {
@@ -191,6 +191,107 @@
             color: rgba(255, 255, 255, 0.3); 
             font-weight: bold; 
         }
+
+        /* Dropdown Menu Styles */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1em;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 10px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: inherit;
+        }
+        
+        .dropdown-btn .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-dropdown:hover .dropdown-btn .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-btn::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+        
+        .nav-dropdown:hover .dropdown-btn, .dropdown-btn:hover {
+            color: #f093fb;
+            background: rgba(240, 147, 251, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .nav-dropdown:hover .dropdown-btn::before, .dropdown-btn:hover::before {
+             width: 80%;
+        }
+        
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            min-width: 220px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 10;
+            border-radius: 12px;
+            padding: 8px 0;
+            margin-top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: fadeInDropdown 0.3s ease forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeInDropdown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-weight: 500;
+            font-size: 0.95em;
+            border-radius: 0;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: none;
+        }
+        
+        .nav-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
 
         /* Map Section */
         .map-section {
@@ -440,6 +541,7 @@
                 transform: none;
                 left: auto;
                 padding: 0 10px;
+                gap: 5px;
             }
             .svg-container, .figma-embed { 
                 height: 60vh; 
@@ -489,7 +591,16 @@
                 <span class="nav-divider">|</span>
                 <a href="resource-portal.html">Resource Portal</a>
                 <span class="nav-divider">|</span>
-                <a href="archetype-explorer.html">Archetype Explorer</a>
+                <div class="nav-dropdown">
+                    <button class="dropdown-btn">Syllabus Explorer
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="syllabus-exam-map.html">Syllabus-Exam Map</a>
+                        <a href="index.html">G3→G4 Evolution Map</a>
+                        <a href="archetype-explorer.html">Archetype Explorer</a>
+                    </div>
+                </div>
                 <span class="nav-divider">|</span>
                 <a href="study-portal.html">Study Portal</a>
                 <span class="nav-divider">|</span>
@@ -764,11 +875,15 @@
                     if (panZoomInstance) {
                         try {
                             panZoomInstance.resize(); 
-                            panZoomInstance.fit();   
-                            panZoomInstance.center(); 
+                            const sizes = panZoomInstance.getSizes();
+                            // FIX: Only fit/center if the SVG container has a valid size.
+                            if (sizes.width > 1 && sizes.height > 1) {
+                                panZoomInstance.fit();
+                                panZoomInstance.center();
+                            }
                             updateZoomIndicator();
                         } catch (e) {
-                            console.error("Error during pan/zoom initialization:", e);
+                            console.error("Error during pan/zoom post-initialization:", e);
                         }
                     }
                 }, 1200); // Increased timeout to wait for CSS animations
