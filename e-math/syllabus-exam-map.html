@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Math Syllabus & Exam Map</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bg-gradient-to-br {
+            background-image: linear-gradient(to bottom right, #0f172a, #1e3a8a, #0f172a);
+        }
+    </style>
+</head>
+<body class="bg-slate-900">
+    <div id="app" class="min-h-screen text-white p-6 font-sans">
+        <!-- App content will be rendered here by JavaScript -->
+    </div>
+
+    <script>
+        const syllabusTopics = [
+            // Strand 1: Algebra (9 topics)
+            { id: 'ALG1', strand: 'Algebra', grade: 'G3', name: 'Algebraic Manipulation', type: 'strengthening', pre: [] },
+            { id: 'ALG2', strand: 'Algebra', grade: 'G3', name: 'Equations', type: 'strengthening', pre: ['ALG1'] },
+            { id: 'ALG3', strand: 'Algebra', grade: 'G3', name: 'Inequalities', type: 'extending', pre: ['ALG2'] },
+            { id: 'ALG4', strand: 'Algebra', grade: 'G3', name: 'Functions', type: 'extending', pre: ['ALG1'] },
+            { id: 'ALG5', strand: 'Algebra', grade: 'G4', name: 'Graphs of Functions', type: 'extending', pre: ['ALG4'] },
+            { id: 'ALG6', strand: 'Algebra', grade: 'G4', name: 'Modelling', type: 'integrative', pre: ['ALG2', 'ALG5'] },
+            { id: 'ALG7', strand: 'Algebra', grade: 'G4', name: 'Indices & Standard Form', type: 'strengthening', pre: ['ALG1'] },
+            { id: 'ALG8', strand: 'Algebra', grade: 'G4', name: 'Matrices', type: 'new', pre: [] }, // Added for mapping
+            { id: 'ALG9', strand: 'Algebra', grade: 'G4', name: 'Sequences', type: 'new', pre: ['ALG6'] }, // Added for mapping
+
+            // Strand 2: Geometry & Mensuration (7 topics)
+            { id: 'GEO1', strand: 'Geometry', grade: 'G3', name: 'Plane Geometry', type: 'strengthening', pre: [] },
+            { id: 'GEO2', strand: 'Geometry', grade: 'G3', name: 'Mensuration', type: 'extending', pre: ['GEO1'] },
+            { id: 'GEO3', strand: 'Geometry', grade: 'G3', name: 'Similarity & Congruency', type: 'integrative', pre: ['GEO1'] },
+            { id: 'GEO4', strand: 'Geometry', grade: 'G4', name: '3D Mensuration', type: 'extending', pre: ['GEO2'] },
+            { id: 'GEO5', strand: 'Geometry', grade: 'G4', name: 'Bearings', type: 'new', pre: ['GEO1'] },
+            { id: 'GEO6', strand: 'Geometry', grade: 'G4', name: 'Loci & Construction', type: 'new', pre: ['GEO1'] },
+            { id: 'GEO7', strand: 'Geometry', grade: 'G4', name: 'Vectors', type: 'new', pre: ['GEO1'] }, // Added for mapping
+
+            // Strand 3: Trigonometry & Coordinate Geometry (4 topics)
+            { id: 'TRG1', strand: 'Trigonometry', grade: 'G3', name: 'Basic Trigonometry', type: 'new', pre: ['GEO1'] },
+            { id: 'TRG2', strand: 'Trigonometry', grade: 'G3', name: 'Coordinate Geometry', type: 'integrative', pre: ['ALG2', 'GEO1'] },
+            { id: 'TRG3', strand: 'Trigonometry', grade: 'G4', name: '3D Trigonometry', type: 'extending', pre: ['TRG1', 'GEO4'] },
+            { id: 'TRG4', strand: 'Trigonometry', grade: 'G4', name: 'Applications with Bearings', type: 'integrative', pre: ['TRG1', 'GEO5'] },
+
+            // Strand 4: Statistics, Probability & Proportion (5 topics)
+            { id: 'STP1', strand: 'Statistics', grade: 'G3', name: 'Data Representation', type: 'strengthening', pre: [] },
+            { id: 'STP2', strand: 'Statistics', grade: 'G3', name: 'Probability', type: 'extending', pre: ['STP1'] },
+            { id: 'STP3', strand: 'Statistics', grade: 'G3', name: 'Ratio', type: 'strengthening', pre: [] },
+            { id: 'STP4', strand: 'Statistics', grade: 'G3', name: 'Percentages', type: 'extending', pre: ['STP3'] },
+            { id: 'STP5', strand: 'Statistics', grade: 'G4', name: 'Interpretation & Reasoning', type: 'integrative', pre: ['STP1', 'STP2'] }
+        ];
+
+        const examTopics = [
+            // G3 Exam Topics
+            { id: 'g3c1', num: '01', cat: 'core', grade: 'G3', name: 'Trigonometry', topics: ['TRG1'], wt: '20-25%', g3f: 7, g4f: 10, prog: 'Right → Any triangle' },
+            { id: 'g3c2', num: '02', cat: 'core', grade: 'G3', name: 'Quadratic Graphs', topics: ['ALG4', 'ALG5'], wt: '15-20%', g3f: 8, g4f: 10, prog: 'Expands function types' },
+            { id: 'g3c3', num: '03', cat: 'core', grade: 'G3', name: 'Algebra', topics: ['ALG1', 'ALG2', 'ALG3'], wt: '15-18%', g3f: 9, g4f: 10, prog: 'Adds complexity' },
+            { id: 'g3c4', num: '04', cat: 'core', grade: 'G3', name: 'Circle & Similarity', topics: ['GEO1', 'GEO3'], wt: '12-15%', g3f: 7, g4f: 9, prog: 'Completes theorems' },
+            { id: 'g3c5', num: '05', cat: 'core', grade: 'G3', name: 'Statistics & Prob', topics: ['STP1', 'STP2'], wt: '8-12%', g3f: 5, g4f: 8, prog: 'Inferential stats' },
+            { id: 'g3c6', num: '06', cat: 'core', grade: 'G3', name: 'Financial Maths', topics: ['STP3', 'STP4'], wt: '8-10%', g3f: 6, g4f: 8, prog: 'Real-world models' },
+            { id: 'g3s1', num: '07', cat: 'satellite', grade: 'G3', name: 'Mensuration', topics: ['GEO2'], wt: '6-8%', g3f: 6, g4f: 7, prog: 'Composite solids' },
+            { id: 'g3s2', num: '08', cat: 'satellite', grade: 'G3', name: 'Coord Geometry', topics: ['TRG2'], wt: '4-6%', g3f: 5, g4f: 6, prog: 'Perpendicularity' },
+            { id: 'g3s3', num: '09', cat: 'satellite', grade: 'G3', name: 'Sequences', topics: ['ALG9'], wt: '3-4%', g3f: 0, g4f: 4, prog: '🆕 New in G4' },
+            { id: 'g3s4', num: '10', cat: 'satellite', grade: 'G3', name: 'Vectors & Matrices', topics: ['GEO7', 'ALG8'], wt: '4-6%', g3f: 0, g4f: 5, prog: '🆕 New in G4' },
+            
+            // G4 Exam Topics
+            { id: 'g4c1', num: '11', cat: 'core', grade: 'G4', name: 'Geometry & Mensuration', topics: ['GEO1', 'GEO2', 'GEO3', 'GEO4', 'GEO5', 'GEO6'], wt: '25-30%', g3f: 0, g4f: 10, prog: 'Sine/Cosine Rule + Circle Theorems' },
+            { id: 'g4c2', num: '12', cat: 'core', grade: 'G4', name: 'Algebra Mastery', topics: ['ALG1', 'ALG2', 'ALG3', 'ALG4', 'ALG5', 'ALG6', 'ALG7'], wt: '20-25%', g3f: 0, g4f: 10, prog: 'Quadratic Formula + Completing Square' },
+            { id: 'g4c3', num: '13', cat: 'core', grade: 'G4', name: 'Statistics & Probability', topics: ['STP1', 'STP2', 'STP5'], wt: '15-18%', g3f: 0, g4f: 9, prog: 'Standard Deviation + Tree Diagrams' },
+            { id: 'g4c4', num: '14', cat: 'core', grade: 'G4', name: 'Financial & Proportion', topics: ['STP3', 'STP4'], wt: '12-15%', g3f: 0, g4f: 8, prog: 'Compound Interest + HCF/LCM' },
+            { id: 'g4s1', num: '15', cat: 'satellite', grade: 'G4', name: 'Coordinate Geometry', topics: ['TRG2'], wt: '6-8%', g3f: 0, g4f: 6, prog: 'Perpendicular + Intersection' },
+            { id: 'g4s2', num: '16', cat: 'satellite', grade: 'G4', name: 'Vectors 2D', topics: ['GEO7'], wt: '5-7%', g3f: 0, g4f: 5, prog: 'Collinear Points + Magnitude' },
+            { id: 'g4s3', num: '17', cat: 'satellite', grade: 'G4', name: 'Matrices', topics: ['ALG8'], wt: '4-6%', g3f: 0, g4f: 5, prog: 'Matrix Multiplication' },
+            { id: 'g4s4', num: '18', cat: 'satellite', grade: 'G4', name: 'Sequences & Patterns', topics: ['ALG9'], wt: '3-5%', g3f: 0, g4f: 4, prog: 'AP/GP + nth term' }
+        ];
+
+
+        const colors = { new: '#EF4444', extending: '#F59E0B', strengthening: '#EAB308', integrative: '#8B5CF6' };
+        const labels = { new: '🆕 New', extending: '🧩 Extending', strengthening: '⚙️ Strengthening', integrative: '🏗️ Integrative' };
+        const icons = {
+            Circle: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>`,
+            Target: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+            BookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+            TrendingUp: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+            ArrowRight: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`,
+            Sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8-5.8 1.9 5.8 1.9L12 18l1.9-5.8 5.8-1.9-5.8-1.9z"/></svg>`,
+            CheckCircle: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+        };
+
+        // --- STATE MANAGEMENT ---
+        let state = {
+            selectedTopic: null,
+            selectedExamTopic: null,
+            filter: 'all',
+            hoveredTopic: null,
+            viewMode: 'galaxy',
+            masteredTopics: [], 
+            selectedGrade: 'G3',
+        };
+
+        // --- RENDER FUNCTIONS ---
+        const app = document.getElementById('app');
+
+        function render() {
+            const filtered = getFilteredSyllabusTopics();
+            app.className = "min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white p-6 font-sans";
+            app.innerHTML = `
+                <div class="max-w-7xl mx-auto mb-6">
+                    <h1 class="text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                        E-Math Syllabus & Exam Map
+                    </h1>
+                    <p class="text-sm text-slate-400 mb-6">Interactive map: Syllabus Topics (${syllabusTopics.length}) ↔ Exam Topics (${examTopics.length})</p>
+                    ${renderHeaderStats()}
+                </div>
+
+                <div class="max-w-7xl mx-auto mb-6 space-y-4" id="controls">
+                    ${renderControls()}
+                </div>
+
+                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    ${state.viewMode === 'galaxy' ? renderGalaxyView(filtered) : renderMatrixView()}
+                    <div class="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                        ${renderDetailsPanel()}
+                    </div>
+                </div>
+            `;
+            addEventListeners();
+        }
+        
+        function renderHeaderStats() {
+            const coreCount = examTopics.filter(t => t.grade === state.selectedGrade && t.cat === 'core').length;
+            const satelliteCount = examTopics.filter(t => t.grade === state.selectedGrade && t.cat === 'satellite').length;
+            const g4NewCount = syllabusTopics.filter(t => t.grade === 'G4' && t.type === 'new').length;
+
+            return `
+                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                    <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700">
+                        <div class="text-slate-400">Mastered (Syllabus)</div>
+                        <div class="text-xl font-bold text-green-400">${state.masteredTopics.length}/${syllabusTopics.length}</div>
+                    </div>
+                    <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700">
+                        <div class="text-slate-400">Core Topics (${state.selectedGrade})</div>
+                        <div class="text-xl font-bold text-yellow-400">${coreCount} (~80%)</div>
+                    </div>
+                     <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700">
+                        <div class="text-slate-400">Satellite Topics (${state.selectedGrade})</div>
+                        <div class="text-xl font-bold text-cyan-400">${satelliteCount} (~20%)</div>
+                    </div>
+                     <div class="bg-slate-800/60 p-3 rounded-lg border border-slate-700">
+                        <div class="text-slate-400">G4 New Syllabus Topics</div>
+                        <div class="text-xl font-bold text-red-400">${g4NewCount}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderControls() {
+            const strands = [...new Set(syllabusTopics.map(t => t.strand))];
+
+             return `
+                <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
+                    <div class="flex items-center p-1 rounded-lg bg-slate-800/70">
+                        <button data-viewmode="galaxy" class="py-2 px-4 rounded-md text-sm font-semibold transition-colors duration-300 flex items-center justify-center gap-2 ${state.viewMode === 'galaxy' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:bg-slate-700'}">
+                            ${icons.Circle} Galaxy View
+                        </button>
+                        <button data-viewmode="matrix" class="py-2 px-4 rounded-md text-sm font-semibold transition-colors duration-300 flex items-center justify-center gap-2 ${state.viewMode === 'matrix' ? 'bg-purple-600 text-white' : 'text-slate-300 hover:bg-slate-700'}">
+                            ${icons.Target} Exam Matrix
+                        </button>
+                    </div>
+                    <div class="flex items-center p-1 rounded-lg bg-slate-800/70">
+                        <button data-grade="G3" class="py-2 px-4 rounded-md text-sm font-semibold transition-colors duration-300 ${state.selectedGrade === 'G3' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-700'}">Context: G3</button>
+                        <button data-grade="G4" class="py-2 px-4 rounded-md text-sm font-semibold transition-colors duration-300 ${state.selectedGrade === 'G4' ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-700'}">Context: G4</button>
+                    </div>
+                </div>
+                 <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-medium">
+                    <button data-filter="all" class="px-3 py-1.5 rounded-md ${state.filter === 'all' ? 'bg-blue-600 text-white' : 'bg-slate-700/80 text-slate-300 hover:bg-slate-600'}">All Strands</button>
+                    ${strands.map(s => `<button data-filter-strand="${s}" class="px-3 py-1.5 rounded-md ${state.filter === s ? 'bg-teal-600 text-white' : 'bg-slate-700/80 text-slate-300 hover:bg-slate-600'}">${s}</button>`).join('')}
+                    <button data-filter="mastered" class="px-3 py-1.5 rounded-md ${state.filter === 'mastered' ? 'bg-green-600 text-white' : 'bg-slate-700/80 text-slate-300 hover:bg-slate-600'}">✓ Mastered (${state.masteredTopics.length})</button>
+                </div>
+            `;
+        }
+        
+        function renderGalaxyView(filtered) {
+            const strands = [...new Set(syllabusTopics.map(t => t.strand))];
+            const clusterCenters = {
+                Algebra: { x: 25, y: 28 },
+                Geometry: { x: 75, y: 28 },
+                Trigonometry: { x: 25, y: 72 },
+                Statistics: { x: 75, y: 72 },
+            };
+            const clusterRadius = 18;
+
+            const getPos = (topic, topicsInStrand) => {
+                const center = clusterCenters[topic.strand];
+                const totalInStrand = topicsInStrand.length;
+                const idx = topicsInStrand.findIndex(t => t.id === topic.id);
+                const a = (idx / totalInStrand) * 2 * Math.PI - (Math.PI / 2);
+                return {
+                    x: center.x + clusterRadius * Math.cos(a),
+                    y: center.y + clusterRadius * Math.sin(a),
+                };
+            };
+
+            let subtitle = 'Displaying all 25 Syllabus Topics across 4 strands.';
+            if (state.filter !== 'all') {
+                subtitle = `Displaying ${filtered.length} Syllabus Topics for the '${state.filter}' strand.`;
+                 if(state.filter === 'mastered') {
+                    subtitle = `Displaying ${filtered.length} Mastered Syllabus Topics`;
+                }
+            }
+
+            const lines = filtered.map(t => {
+                const topicsInTStrand = filtered.filter(f => f.strand === t.strand);
+                const pos = getPos(t, topicsInTStrand);
+                return t.pre.map(p => {
+                    const pTopic = filtered.find(f => f.id === p);
+                    if (!pTopic) return '';
+                    const topicsInPStrand = filtered.filter(f => f.strand === pTopic.strand);
+                    const ppos = getPos(pTopic, topicsInPStrand);
+                    const hl = state.hoveredTopic === t.id || state.hoveredTopic === p;
+                    return `<line class="transition-all" key="${p}-${t.id}" x1="${ppos.x}" y1="${ppos.y}" x2="${pos.x}" y2="${pos.y}" stroke="${hl ? '#60A5FA' : '#475569'}" stroke-width="${hl ? '0.4' : '0.2'}" opacity="${hl ? '0.9' : '0.4'}" />`;
+                }).join('');
+            }).join('');
+
+            const nodes = strands.map(strand => {
+                const topicsInStrand = filtered.filter(f => f.strand === strand);
+                if (topicsInStrand.length === 0) return '';
+                const center = clusterCenters[strand];
+
+                return `
+                    <text x="${center.x}" y="${center.y - clusterRadius - 4}" text-anchor="middle" font-size="3" font-weight="bold" class="fill-purple-300">${strand}</text>
+                    ${topicsInStrand.map((t) => {
+                        const pos = getPos(t, topicsInStrand);
+                        const hov = state.hoveredTopic === t.id;
+                        const sel = state.selectedTopic?.id === t.id;
+                        const mas = state.masteredTopics.includes(t.id);
+                        const sz = 2.5;
+
+                        let hoverLabel = '';
+                        if (hov) {
+                            let labelY = pos.y + sz + 3; // Default: below the node
+                            let textAnchor = 'middle';
+        
+                            // Adjust vertical position if too close to the bottom
+                            if (pos.y > 85) { // Check if near bottom edge (viewBox is 0-100)
+                                labelY = pos.y - sz - 2; // Move above the node
+                            }
+                            
+                            // Adjust horizontal alignment if too close to the edges
+                            if (pos.x > 80) { // Check if near right edge
+                                textAnchor = 'end';
+                            } else if (pos.x < 20) { // Check if near left edge
+                                textAnchor = 'start';
+                            }
+                            
+                            hoverLabel = `<text x="${pos.x}" y="${labelY}" text-anchor="${textAnchor}" fill="white" font-size="1.8" font-weight="600">${t.name}</text>`;
+                        }
+
+                        return `
+                            <g class="cursor-pointer" data-topic-id="${t.id}">
+                                ${hov ? `<circle cx="${pos.x}" cy="${pos.y}" r="${sz + 1}" fill="${colors[t.type]}" opacity="0.3" class="animate-pulse" />` : ''}
+                                <circle cx="${pos.x}" cy="${pos.y}" r="${hov ? sz * 1.2 : sz}" fill="${colors[t.type]}" stroke="${sel ? '#FFF' : mas ? '#10B981' : 'none'}" stroke-width="0.3" opacity="${mas ? '0.7' : '1'}" />
+                                <text x="${pos.x}" y="${pos.y + 0.8}" text-anchor="middle" fill="${t.grade === 'G3' ? 'white' : '#111'}" font-size="1.5" font-weight="bold">${t.id.replace(t.strand.substring(0,3).toUpperCase(),'')}</text>
+                                ${hoverLabel}
+                            </g>
+                        `;
+                    }).join('')}
+                `;
+            }).join('');
+
+            return `
+                <div class="lg:col-span-2 bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+                    <div class="mb-4 text-center">
+                        <h4 class="text-lg font-semibold text-purple-300">Syllabus Topic Galaxy</h4>
+                        <p class="text-sm text-slate-400">${subtitle}</p>
+                    </div>
+                    <div class="relative w-full" style="padding-bottom: 100%;">
+                        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                            ${lines}
+                            ${nodes}
+                        </svg>
+                    </div>
+                    <div class="mt-2 space-y-4 text-sm">
+                        ${renderLegend()}
+                    </div>
+                </div>`;
+        }
+
+
+        function renderLegend() {
+            return `
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                    <div>
+                        <div class="flex items-center gap-2 font-semibold mb-1">
+                            <div class="w-4 h-4 rounded-full bg-red-500 flex-shrink-0"></div>
+                            <span>🆕 New</span>
+                        </div>
+                        <p class="text-xs text-slate-400 ml-6">A foundational, brand-new branch of mathematics.</p>
+                    </div>
+                     <div>
+                        <div class="flex items-center gap-2 font-semibold mb-1">
+                            <div class="w-4 h-4 rounded-full bg-yellow-500 flex-shrink-0"></div>
+                            <span>⚙️ Strengthening</span>
+                        </div>
+                        <p class="text-xs text-slate-400 ml-6">Increases the depth and complexity of a core skill.</p>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 font-semibold mb-1">
+                            <div class="w-4 h-4 rounded-full bg-orange-500 flex-shrink-0"></div>
+                            <span>🧩 Extending</span>
+                        </div>
+                        <p class="text-xs text-slate-400 ml-6">Applies a known concept to a new context.</p>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 font-semibold mb-1">
+                            <div class="w-4 h-4 rounded-full bg-purple-500 flex-shrink-0"></div>
+                            <span>🏗️ Integrative</span>
+                        </div>
+                        <p class="text-xs text-slate-400 ml-6">Combines skills from multiple different topics.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMatrixView() {
+            const coreTopics = examTopics.filter(t => t.cat === 'core' && t.grade === state.selectedGrade);
+            const satelliteTopics = examTopics.filter(t => t.cat === 'satellite' && t.grade === state.selectedGrade);
+            return `
+                 <div class="lg:col-span-2 bg-slate-800/50 rounded-2xl p-6 border border-slate-700 overflow-y-auto max-h-[80vh]">
+                    <h3 class="text-2xl font-bold mb-4 text-purple-400">Exam Topics (${state.selectedGrade})</h3>
+                    <div class="mb-6">
+                        <h4 class="text-xl font-bold mb-3 text-yellow-400">🔥 Core — ~80%</h4>
+                        ${coreTopics.map(renderExamTopicCard).join('')}
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold mb-3 text-cyan-400">📌 Satellite — ~20%</h4>
+                        ${satelliteTopics.map(renderExamTopicCard).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderExamTopicCard(t) {
+             const isSelected = state.selectedExamTopic?.id === t.id;
+             const ringColor = t.cat === 'core' ? 'ring-yellow-400' : 'ring-cyan-400';
+             const isMastered = t.topics.every(tid => state.masteredTopics.includes(tid));
+             return `
+                <div data-exam-topic-id="${t.id}" class="rounded-lg p-3 mb-3 cursor-pointer transition-all hover:bg-slate-700/50 ${isSelected ? 'ring-2 ' + ringColor : ''} ${isMastered ? 'bg-green-900/40 border border-green-600/50' : 'bg-slate-700/30'}">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                             <h5 class="font-bold flex items-center gap-2">${t.num}. ${t.name} ${isMastered ? `<span class="text-green-400">${icons.CheckCircle.replace('width="12"','width="16"').replace('height="12"','height="16"')}</span>` : ''}</h5>
+                            <div class="flex gap-2 mt-1">
+                                ${t.topics.map(tid => `<button data-goto-syllabus="${tid}" class="px-2 py-1 bg-slate-600 hover:bg-slate-500 rounded text-xs">${tid}</button>`).join('')}
+                            </div>
+                        </div>
+                        <div class="text-sm font-bold text-yellow-300">${t.wt}</div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center gap-2"><span class="text-blue-300">G3:</span>
+                            <div class="flex-1 bg-slate-600 h-1 rounded"><div class="h-full bg-blue-500" style="width: ${t.g3f * 10}%"></div></div>
+                            <span>${t.g3f}/10</span>
+                        </div>
+                        <div class="flex items-center gap-2"><span class="text-orange-300">G4:</span>
+                            <div class="flex-1 bg-slate-600 h-1 rounded"><div class="h-full bg-orange-500" style="width: ${t.g4f * 10}%"></div></div>
+                            <span>${t.g4f}/10</span>
+                        </div>
+                    </div>
+                    <div class="text-xs text-purple-300 mt-2">🔄 ${t.prog}</div>
+                </div>
+             `;
+        }
+
+        function renderDetailsPanel() {
+            if (state.selectedTopic) {
+                const topic = state.selectedTopic;
+                const isMastered = state.masteredTopics.includes(topic.id);
+                return `
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <h3 class="text-2xl font-bold text-blue-400">${topic.id}</h3>
+                                <button id="mastery-btn" class="px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1.5 transition-colors ${isMastered ? 'bg-green-600 text-white' : 'bg-slate-700 hover:bg-slate-600'}">
+                                    ${isMastered ? `${icons.CheckCircle} Mastered` : 'Mark as Mastered'}
+                                </button>
+                            </div>
+                            <h4 class="text-xl font-semibold mb-2">${topic.name}</h4>
+                            <div class="px-3 py-1 rounded-lg text-sm font-medium inline-block" style="background-color: ${colors[topic.type]}20; color: ${colors[topic.type]}">
+                                ${labels[topic.type]}
+                            </div>
+                        </div>
+                        <div class="bg-slate-700/50 rounded-lg p-4">
+                            <h5 class="font-semibold text-sm text-blue-300 mb-2 flex items-center gap-2">${icons.BookOpen} G3 Content</h5>
+                            <p class="text-sm">${topic.grade === 'G3' ? 'This is a G3 Topic.' : 'No specific G3 content.'}</p>
+                        </div>
+                        <div class="flex justify-center text-yellow-400">${icons.ArrowRight}</div>
+                        <div class="bg-slate-700/50 rounded-lg p-4">
+                            <h5 class="font-semibold text-sm text-orange-300 mb-2 flex items-center gap-2">${icons.TrendingUp} G4 Content</h5>
+                             <p class="text-sm">${topic.grade === 'G4' ? 'This is a G4 Topic.' : 'Content extends into G4.'}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (state.selectedExamTopic) {
+                const topic = state.selectedExamTopic;
+                 return `
+                     <div class="space-y-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold ${topic.cat === 'core' ? 'bg-yellow-600' : 'bg-cyan-600'}">
+                                    ${topic.cat === 'core' ? '🔥 CORE' : '📌 SATELLITE'}
+                                </span>
+                                <span class="text-lg font-bold text-purple-300">${topic.wt}</span>
+                            </div>
+                            <h3 class="text-2xl font-bold">${topic.num}. ${topic.name}</h3>
+                        </div>
+                        <div class="bg-blue-900/20 rounded-lg p-4 border border-blue-500/30">
+                            <h5 class="font-semibold text-sm text-blue-300 mb-2">Related Syllabus Topics</h5>
+                            <div class="flex flex-wrap gap-2">
+                                ${topic.topics.map(tid => {
+                                    const st = syllabusTopics.find(t => t.id === tid);
+                                    if (!st) return '';
+                                    const isMastered = state.masteredTopics.includes(st.id);
+                                    return `
+                                        <button data-goto-syllabus="${st.id}" class="p-2 bg-slate-700 hover:bg-slate-600 rounded text-xs text-left w-full flex items-center justify-between">
+                                            <div>
+                                                <div class="font-semibold text-white">${st.id}: ${st.name}</div>
+                                                <div style="color: ${colors[st.type]}">${labels[st.type]}</div>
+                                            </div>
+                                            ${isMastered ? `<span class="text-green-400">${icons.CheckCircle.replace('width="12"','width="16"').replace('height="12"','height="16"')}</span>` : ''}
+                                        </button>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-blue-900/20 rounded p-3 border border-blue-500/30">
+                                <div class="text-xs text-blue-300 font-semibold mb-2">G3 Focus</div>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 bg-slate-600 h-2 rounded"><div class="h-full bg-blue-500" style="width: ${topic.g3f * 10}%"></div></div>
+                                    <span class="text-xs">${topic.g3f}/10</span>
+                                </div>
+                            </div>
+                            <div class="bg-orange-900/20 rounded p-3 border border-orange-500/30">
+                                <div class="text-xs text-orange-300 font-semibold mb-2">G4 Focus</div>
+                                <div class="flex items-center gap-2">
+                                    <div class="flex-1 bg-slate-600 h-2 rounded"><div class="h-full bg-orange-500" style="width: ${topic.g4f * 10}%"></div></div>
+                                    <span class="text-xs">${topic.g4f}/10</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-900/20 rounded-lg p-3 border border-purple-500/30">
+                            <div class="text-xs font-semibold text-purple-300 mb-1">🔄 Progression</div>
+                            <div class="text-sm">${topic.prog}</div>
+                        </div>
+                    </div>
+                `;
+            } else if (state.filter === 'mastered' && state.masteredTopics.length === 0) {
+                 return `
+                    <div class="h-full flex flex-col items-center justify-center text-center text-slate-400">
+                        <div class="text-green-500 opacity-50 mb-4">${icons.CheckCircle.replace('width="12"','width="48"').replace('height="12"','height="48"')}</div>
+                        <p class="text-lg font-medium mb-2">No Mastered Topics Yet</p>
+                        <p class="text-sm">Click a topic in the Galaxy to mark it as mastered.</p>
+                    </div>`;
+            } else {
+                return `
+                    <div class="h-full flex flex-col items-center justify-center text-center text-slate-400 p-4">
+                        <div class="opacity-60 mb-4 text-purple-400">${icons.Sparkles.replace('width="48"','width="64"').replace('height="48"','height="64"')}</div>
+                        <h3 class="text-xl font-bold mb-3 text-slate-200">Welcome to the E-Math Galaxy!</h3>
+                        <div class="bg-slate-700/50 rounded-lg p-4 w-full text-sm mb-4">
+                            <div class="grid grid-cols-3 divide-x divide-slate-600 text-center">
+                                <div>
+                                    <div class="font-bold text-lg text-blue-300">${syllabusTopics.length}</div>
+                                    <div class="text-xs text-slate-400">Syllabus Topics</div>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-lg text-yellow-300">${examTopics.filter(t=>t.grade==='G3').length}</div>
+                                    <div class="text-xs text-slate-400">G3 Exam Topics</div>
+                                </div>
+                                <div>
+                                    <div class="font-bold text-lg text-orange-300">${examTopics.filter(t=>t.grade==='G4').length}</div>
+                                    <div class="text-xs text-slate-400">G4 Exam Topics</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-left text-slate-300 space-y-2 text-sm w-full">
+                            <p class="font-semibold text-slate-200">How to use this tool:</p>
+                            <p><strong>1. Explore the Galaxy:</strong> Click any node (e.g., ALG1) to see details.</p>
+                            <p><strong>2. Analyze the Matrix:</strong> Switch to "Exam Matrix" to see how topics are tested.</p>
+                            <p><strong>3. Track Progress:</strong> Mark topics as "Mastered" to track your learning.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // --- EVENT HANDLING ---
+        function addEventListeners() {
+            // View Mode Buttons
+            document.querySelectorAll('[data-viewmode]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.viewMode = btn.dataset.viewmode;
+                    render();
+                });
+            });
+
+            // Filter Buttons
+            document.querySelectorAll('[data-filter]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.filter = btn.dataset.filter;
+                    state.viewMode = 'galaxy';
+                    render();
+                });
+            });
+            document.querySelectorAll('[data-filter-strand]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.filter = btn.dataset.filterStrand;
+                    state.viewMode = 'galaxy';
+                    render();
+                });
+            });
+
+
+            // Grade Toggle Buttons
+            document.querySelectorAll('[data-grade]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    state.selectedGrade = btn.dataset.grade;
+                    render();
+                });
+            });
+
+            // Galaxy Node interactions
+            if (state.viewMode === 'galaxy') {
+                document.querySelectorAll('g[data-topic-id]').forEach(node => {
+                    const topicId = node.dataset.topicId;
+                    node.addEventListener('mouseenter', () => {
+                        state.hoveredTopic = topicId;
+                        render();
+                    });
+                    node.addEventListener('mouseleave', () => {
+                        state.hoveredTopic = null;
+                        render();
+                    });
+                    node.addEventListener('click', () => {
+                        state.selectedTopic = syllabusTopics.find(t => t.id === topicId);
+                        state.selectedExamTopic = null;
+                        render();
+                    });
+                });
+            }
+
+            // Exam Topic Card clicks
+            document.querySelectorAll('[data-exam-topic-id]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const topicId = card.dataset.examTopicId;
+                    state.selectedExamTopic = examTopics.find(t => t.id === topicId);
+                    state.selectedTopic = null;
+                    render();
+                });
+            });
+
+            // Go to Syllabus buttons
+            document.querySelectorAll('[data-goto-syllabus]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const topicId = btn.dataset.gotoSyllabus;
+                    state.selectedTopic = syllabusTopics.find(s => s.id === topicId);
+                    state.selectedExamTopic = null;
+                    state.viewMode = 'galaxy';
+                    render();
+                });
+            });
+
+            // Syllabus Mastery button
+            const masteryBtn = document.getElementById('mastery-btn');
+            if (masteryBtn) {
+                masteryBtn.addEventListener('click', () => {
+                    const topicId = state.selectedTopic.id;
+                    if (state.masteredTopics.includes(topicId)) {
+                        state.masteredTopics = state.masteredTopics.filter(id => id !== topicId);
+                    } else {
+                        state.masteredTopics.push(topicId);
+                    }
+                    render();
+                });
+            }
+        }
+
+        // --- UTILS ---
+        function getFilteredSyllabusTopics() {
+            return syllabusTopics.filter(t => {
+                if (state.filter === 'all') return true;
+                if (state.filter === 'mastered') {
+                    return state.masteredTopics.includes(t.id);
+                }
+                // Filter by strand
+                if (['Algebra', 'Geometry', 'Trigonometry', 'Statistics'].includes(state.filter)) {
+                    return t.strand === state.filter;
+                }
+                return true;
+            });
+        }
+        
+        // --- INITIAL RENDER ---
+        document.addEventListener('DOMContentLoaded', render);
+    </script>
+</body>
+</html>
