@@ -196,6 +196,8 @@
         .nav-dropdown {
             position: relative;
             display: inline-block;
+            padding-bottom: 15px; /* Add padding to bridge the gap for hover */
+            margin-bottom: -15px; /* Negative margin to maintain original layout */
         }
         
         .dropdown-btn {
@@ -597,7 +599,7 @@
                     </button>
                     <div class="dropdown-content">
                         <a href="syllabus-exam-map.html">Syllabus-Exam Map</a>
-                        <a href="index.html">G3→G4 Evolution Map</a>
+                        <a href="g3-g4-evolution-map.html">G3→G4 Evolution Map</a>
                         <a href="archetype-explorer.html">Archetype Explorer</a>
                     </div>
                 </div>
@@ -910,8 +912,11 @@
                 if (isSVGTab && panZoomInstance) {
                     setTimeout(() => {
                         panZoomInstance.resize();
-                        panZoomInstance.fit();
-                        panZoomInstance.center();
+                        const sizes = panZoomInstance.getSizes();
+                         if (sizes.width > 1 && sizes.height > 1) {
+                            panZoomInstance.fit();
+                            panZoomInstance.center();
+                        }
                         updateZoomIndicator();
                     }, 50);
                 }
@@ -1082,8 +1087,11 @@
                     resizeTimeout = setTimeout(() => {
                         if (panZoomInstance && elements.svgMapContainer.classList.contains('active')) {
                             panZoomInstance.resize();
-                            panZoomInstance.fit();
-                            panZoomInstance.center();
+                             const sizes = panZoomInstance.getSizes();
+                             if (sizes.width > 1 && sizes.height > 1) {
+                                panZoomInstance.fit();
+                                panZoomInstance.center();
+                            }
                         }
                     }, 250);
                 });
