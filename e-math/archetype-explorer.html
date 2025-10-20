@@ -43,6 +43,53 @@
             font-size: 18px;
             color: #a0aec0;
         }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #667eea;
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 40px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #a0aec0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 8px;
+        }
         
         .controls-container {
             background: rgba(255, 255, 255, 0.05);
@@ -265,6 +312,10 @@
         <div class="header">
             <h1>🗺️ SOP Relationship Map</h1>
             <p>O-Level E-Math Learning Pathway</p>
+        </div>
+
+        <div class="stats-grid" id="stats-grid-container">
+            <!-- Stats will be rendered here by JS -->
         </div>
 
         <div class="controls-container">
@@ -972,10 +1023,45 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initialization logic
             loadDrillLinks();
+            renderStats(); // Add this call
             populateTopicFilter();
             renderMap();
             setupEventListeners();
         });
+
+        function renderStats() {
+            const container = document.getElementById('stats-grid-container');
+            if (!container || typeof ARCHETYPES_DATA === 'undefined') return;
+
+            const stats = {
+                topics: new Set(ARCHETYPES_DATA.map(a => a.topic)).size,
+                archetypes: ARCHETYPES_DATA.length,
+                levels: new Set(ARCHETYPES_DATA.map(a => a.level)).size
+            };
+
+            container.innerHTML = `
+                <div class="stat-card" style="animation-delay: 0.1s;">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-value">${stats.topics}</div>
+                    <div class="stat-label">Topics</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.2s;">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value">${stats.archetypes}</div>
+                    <div class="stat-label">Archetypes</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.3s;">
+                    <div class="stat-icon">📶</div>
+                    <div class="stat-value">${stats.levels}</div>
+                    <div class="stat-label">Levels</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.4s;">
+                    <div class="stat-icon">🔗</div>
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">SOP Chains</div>
+                </div>
+            `;
+        }
 
         function populateTopicFilter() {
             const topicSelect = document.getElementById('topicSelect');
@@ -1381,3 +1467,4 @@
     </script>
 </body>
 </html>
+
