@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Archetype Explorer | E-Math O-Level</title>
+    <title>SOP Relationship Map</title>
     <style>
         * {
             margin: 0;
@@ -13,782 +13,287 @@
 
         body {
             font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: #fff;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            animation: slideIn 0.6s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .header {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            padding: 28px 36px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        .header-left h1 {
-            font-size: 32px;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-
-        .header-left p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .manage-drills-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .manage-drills-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(245, 87, 108, 0.4);
-        }
-
-        .filter-bar {
-            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-            padding: 20px 36px;
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .filter-label {
-            color: #e2e8f0;
-            font-weight: 600;
-            font-size: 13px;
-        }
-
-        select {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 10px;
-            background: white;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .strand-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .strand-btn {
-            padding: 8px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            background: transparent;
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .strand-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .strand-btn.active {
-            background: white;
-            color: #4a5568;
-        }
-
-        .view-toggle {
-            margin-left: auto;
-            display: flex;
-            gap: 8px;
-        }
-
-        .view-btn {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .view-btn.active {
-            background: white;
-            color: #4a5568;
-        }
-
-        .stats-bar {
-            background: #f7fafc;
-            padding: 14px 36px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .stats-item {
-            font-size: 13px;
-            color: #4a5568;
-        }
-
-        .stats-item strong {
-            color: #667eea;
-            font-size: 20px;
-        }
-
-        .main-content {
-            display: flex;
-            min-height: 700px;
-        }
-
-        .archetype-grid {
-            flex: 1;
-            padding: 32px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            max-height: 800px;
-            overflow-y: auto;
-            background: #f7fafc;
-        }
-
-        .archetype-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-            cursor: pointer;
-            border: 2px solid transparent;
-        }
-
-        .archetype-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
-        }
-
-        .archetype-card.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 100%);
-        }
-
-        .card-header {
+        .header h1 {
+            font-size: 48px;
             margin-bottom: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .archetype-name {
+        .header p {
             font-size: 18px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 8px;
-        }
-
-        .card-badges {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .grade-tag {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-weight: 700;
-            border: 2px solid;
-        }
-
-        .grade-tag.G3 {
-            background: #fff5f5;
-            color: #e53e3e;
-            border-color: #fc8181;
-        }
-
-        .grade-tag.G4 {
-            background: #f0fff4;
-            color: #38a169;
-            border-color: #68d391;
-        }
-
-        .archetype-badge {
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .archetype-badge.CORE {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .archetype-badge.SAT {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .card-description {
-            font-size: 14px;
-            color: #718096;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
-
-        .card-concepts {
-            background: #f7fafc;
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 16px;
-        }
-
-        .concepts-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
-
-        .concepts-list {
-            font-size: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .concept-tag {
-            background: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            border: 1px solid #e2e8f0;
-            color: #4a5568;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: white;
-        }
-
-        .view-sop-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .view-sop-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 14px rgba(102, 126, 234, 0.4);
-        }
-
-        .view-drills-btn {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-        }
-
-        .view-drills-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 14px rgba(250, 112, 154, 0.4);
-        }
-
-        .content-panel {
-            width: 480px;
-            background: white;
-            border-left: 2px solid #e2e8f0;
-            padding: 32px;
-            overflow-y: auto;
-            transition: all 0.4s;
-        }
-
-        .content-panel.hidden {
-            width: 0;
-            padding: 0;
-            opacity: 0;
-        }
-
-        .panel-welcome {
-            text-align: center;
             color: #a0aec0;
-            padding: 100px 20px;
         }
-
-        .panel-welcome h3 {
-            font-size: 24px;
-            margin: 20px 0 12px;
-            color: #4a5568;
-        }
-
-        .panel-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
+        
+        .controls-container {
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            margin-bottom: 24px;
-        }
-
-        .panel-header h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-
-        .panel-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .panel-tab {
-            padding: 12px 20px;
-            border: none;
-            background: transparent;
-            color: #718096;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            border-bottom: 3px solid transparent;
-        }
-
-        .panel-tab.active {
-            color: #667eea;
-            border-bottom-color: #667eea;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 16px;
-        }
-
-        .sop-steps {
-            background: #f7fafc;
-            border-radius: 14px;
             padding: 20px;
-        }
-
-        .sop-step {
-            margin-bottom: 18px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .sop-step:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .step-title {
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .step-content {
-            font-size: 13px;
-            color: #4a5568;
-            line-height: 1.7;
-        }
-
-        .pitfalls-section, .tips-section {
-            margin-top: 20px;
-        }
-
-        .pitfall-item, .tip-item {
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid;
-        }
-
-        .pitfall-item {
-            border-color: #f56565;
-            background: #fff5f5;
-        }
-
-        .tip-item {
-            border-color: #48bb78;
-            background: #f0fff4;
-        }
-
-        .pitfall-type, .tip-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .pitfall-type {
-            color: #f56565;
-        }
-
-        .tip-label {
-            color: #48bb78;
-        }
-
-        .drill-link-item {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            transition: all 0.3s;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .drill-link-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
-            transform: translateX(4px);
-        }
-
-        .drill-platform-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-
-        .drill-platform-icon.google {
-            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
-        }
-
-        .drill-platform-icon.notion {
-            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
-        }
-
-        .drill-link-content {
-            flex: 1;
-        }
-
-        .drill-link-title {
-            font-weight: 600;
-            color: #2d3748;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .drill-link-desc {
-            font-size: 12px;
-            color: #718096;
-        }
-
-        .external-link-icon {
-            font-size: 20px;
-            color: #a0aec0;
-        }
-
-        .no-drills-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: #a0aec0;
-        }
-
-        .add-drill-btn {
-            margin-top: 16px;
-            padding: 10px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .loading-sop {
-            text-align: center;
-            padding: 40px;
-            color: #a0aec0;
-        }
-
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .loading-content {
-            text-align: center;
-            color: white;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 32px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-header h2 {
-            font-size: 24px;
-            color: #2d3748;
-        }
-
-        .modal-close {
-            font-size: 28px;
-            cursor: pointer;
-            color: #a0aec0;
-            background: none;
-            border: none;
-        }
-
-        .form-group {
             margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #4a5568;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 14px;
-        }
-
-        .form-actions {
+        .controls {
             display: flex;
+            justify-content: center;
             gap: 12px;
-            justify-content: flex-end;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
-        .btn-cancel {
-            padding: 12px 24px;
-            background: #e2e8f0;
-            color: #4a5568;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-submit {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .control-btn, select {
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            border: none;
-            border-radius: 10px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding-right: 35px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        
+        select option {
+            background: #2d3748;
+            color: white;
         }
 
-        .error-message {
-            background: #fff5f5;
-            border: 2px solid #fc8181;
-            border-radius: 12px;
+        .control-btn:hover, select:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 87, 108, 0.5);
+            border-radius: 20px;
+            background: rgba(255, 87, 108, 0.2);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .reset-btn.visible { display: inline-block; }
+        .reset-btn:hover { background: rgba(255, 87, 108, 0.4); transform: translateY(-2px); }
+
+        .map-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: auto;
+        }
+        
+        #connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #connection-lines path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw-line 0.8s ease-out forwards;
+        }
+
+        @keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+        .level-section { margin-bottom: 60px; animation: slideUp 0.6s ease-out; transition: opacity 0.3s; }
+        .level-section:last-child { margin-bottom: 0; }
+        .level-header { display: flex; align-items: center; gap: 16px; margin-bottom: 30px; }
+        .level-badge { padding: 8px 20px; border-radius: 20px; font-size: 16px; font-weight: 800; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .level-badge.L1 { background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%); }
+        .level-badge.L2 { background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%); }
+        .level-badge.L3 { background: linear-gradient(135deg, #cb2d3e 0%, #ef473a 100%); }
+        .level-title { font-size: 28px; font-weight: 700; }
+        .level-desc { color: #a0aec0; font-size: 14px; margin-left: auto; }
+        .nodes-container { display: flex; flex-wrap: wrap; gap: 20px; min-height: 150px; }
+
+        .node {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
             padding: 20px;
-            margin: 20px;
-            color: #c53030;
+            width: 300px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
         }
 
-        .error-message h3 {
-            margin-bottom: 10px;
+        .node-content {
+            flex-grow: 1;
         }
+
+        .node:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4); border-color: #667eea; background: rgba(102, 126, 234, 0.2); }
+        .node.dimmed { opacity: 0.25; filter: grayscale(0.5); }
+        .node.highlighted { border-color: #f093fb; background: rgba(240, 147, 251, 0.2); box-shadow: 0 8px 24px rgba(240, 147, 251, 0.5); transform: scale(1.02); z-index: 10; }
+        .node.in-chain { border-color: #667eea; background: rgba(102, 126, 234, 0.25); box-shadow: 0 8px 24px rgba(102, 126, 234, 0.6); transform: translateY(-2px); z-index: 5; }
+        .node-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .node-name { font-size: 16px; font-weight: 700; color: #fff; margin-right: 10px; }
+        .node-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+        .grade-tag, .archetype-badge { font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 700; }
+        .grade-tag { border: 1px solid; }
+        .grade-tag.G3 { background: #fff5f5; color: #e53e3e; border-color: #fc8181; }
+        .grade-tag.G4 { background: #f0fff4; color: #38a169; border-color: #68d391; }
+        .archetype-badge.CORE { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; }
+        .archetype-badge.SAT { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; }
+        .node-topic { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: rgba(255, 255, 255, 0.2); margin-bottom: 12px; }
+        .node-desc { font-size: 13px; color: #cbd5e0; line-height: 1.5; margin-bottom: 12px; }
+        .node-connections { margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .connection-label { font-size: 11px; color: #a0aec0; font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center;}
+        .connection-links { display: flex; flex-wrap: wrap; gap: 6px; }
+        .connection-link { padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 600; background: rgba(102, 126, 234, 0.3); border: 1px solid rgba(102, 126, 234, 0.5); cursor: pointer; transition: all 0.2s; }
+        .connection-link:hover { background: rgba(102, 126, 234, 0.5); transform: scale(1.05); }
+        .connection-link.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.5); }
+        .visualize-btn { background: none; border: none; color: #a0aec0; font-size: 11px; font-weight: 600; cursor: pointer; transition: color .3s; padding: 4px 8px; border-radius: 6px; }
+        .visualize-btn:hover { color: white; background: rgba(255,255,255,0.1); }
+        
+        .info-panel { position: fixed; top: 50%; right: 20px; transform: translate(calc(100% + 20px), -50%); width: 400px; background: rgba(255, 255, 255, 0.98); border-radius: 16px; padding: 24px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); color: #2d3748; max-height: 90vh; overflow-y: auto; transition: transform 0.4s ease-in-out; z-index: 1000; backdrop-filter: blur(10px); }
+        .info-panel.visible { transform: translate(0, -50%); }
+        .info-panel .panel-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .info-panel .panel-header h2 { font-size: 20px; margin-bottom: 4px;}
+        .info-panel .close-btn { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: #e2e8f0; border: none; cursor: pointer; font-size: 20px; line-height: 1; color: #4a5568; }
+        .sop-step { background: #f7fafc; border-radius: 10px; padding: 12px; margin-bottom: 10px; border-left: 4px solid #667eea; }
+        .sop-step-interactive { background: #f0f5ff; border-left: 4px solid #818cf8; cursor: pointer; transition: background-color 0.2s; }
+        .sop-step-interactive:hover { background: #e0e7ff; }
+        .sop-link { font-weight: bold; color: #667eea; text-decoration: underline; cursor: pointer; }
+        .section-title { font-size: 16px; font-weight: 700; color: #2d3748; margin: 20px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+        .panel-tabs { display: flex; border-bottom: 1px solid #e2e8f0; margin-bottom: 20px;}
+        .panel-tab { padding: 10px 16px; cursor: pointer; color: #718096; font-weight: 600; border-bottom: 3px solid transparent; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; font-size: inherit; }
+        .panel-tab.active { color: #667eea; border-bottom-color: #667eea; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .no-drills-message { text-align: center; padding: 40px 20px; color: #a0aec0; }
+        .no-drills-message p:first-child { font-size: 48px; margin-bottom: 16px; }
+        .add-drill-btn { padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; color: white; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s; margin-top: 16px; }
+        .add-drill-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(102, 126, 234, 0.4); }
+        .drill-link-item { display: flex; align-items: center; gap: 12px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; text-decoration: none; color: #2d3748; transition: all 0.3s; }
+        .drill-link-item:hover { border-color: #667eea; background: #f0f4ff; transform: translateX(4px); }
+        .drill-platform-icon { font-size: 24px; }
+        .drill-link-content { flex: 1; }
+        .drill-link-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .drill-link-desc { font-size: 12px; color: #718096; }
+        .external-link-icon { font-size: 18px; color: #a0aec0; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background-color: #fefefe; padding: 32px; border-radius: 20px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; color: #333; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-header h2 { font-size: 24px; color: #2d3748; }
+        .modal-close { font-size: 28px; cursor: pointer; color: #a0aec0; background: none; border: none; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; color: #4a5568; margin-bottom: 8px; font-size: 14px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 14px; }
+        .form-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+        .btn-cancel { padding: 12px 24px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .btn-submit { padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .pitfall-item, .tip-item { background: white; padding: 14px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid; }
+        .pitfall-item { border-color: #f56565; background: #fff5f5; }
+        .tip-item { border-color: #48bb78; background: #f0fff4; }
+        .pitfall-type { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: #c53030; }
+
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
     </style>
 </head>
 <body>
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <h2>Loading Archetypes...</h2>
-            <p id="loadingStatus">Initializing...</p>
-        </div>
-    </div>
-
     <div class="container">
         <div class="header">
-            <div class="header-left">
-                <h1>🗺️ Archetype Explorer</h1>
-                <p>O-Level E-Math • Problem Pattern Library</p>
-            </div>
-            <button class="manage-drills-btn" onclick="openDrillManager()">
-                ⚙️ Manage Drill Links
-            </button>
+            <h1>🗺️ SOP Relationship Map</h1>
+            <p>O-Level E-Math Learning Pathway</p>
         </div>
 
-        <div class="filter-bar">
-            <div class="filter-group">
-                <span class="filter-label">Grade:</span>
+        <div class="controls-container">
+            <div class="controls">
+                <button class="control-btn active" data-topic="all">All Topics</button>
+                <button class="control-btn" data-topic="trigonometry">Trigonometry</button>
+                <button class="control-btn" data-topic="algebra">Algebra</button>
+                <button class="control-btn" data-topic="geometry">Geometry</button>
+                <button class="control-btn" data-topic="meta">Meta Skills</button>
+                <button class="control-btn" data-topic="numbers">Numbers</button>
+                <button class="control-btn" data-topic="mensuration">Mensuration</button>
+                <button class="control-btn" data-topic="statistics">Statistics</button>
                 <select id="gradeSelect">
                     <option value="all">All Grades</option>
-                    <option value="G3" selected>G3 Only</option>
-                    <option value="G4">G4 Only</option>
+                    <option value="G3">G3</option>
+                    <option value="G4">G4</option>
                 </select>
-            </div>
-
-            <div class="filter-group">
-                <span class="filter-label">Category:</span>
                 <select id="categorySelect">
                     <option value="all">All Categories</option>
-                    <option value="CORE">Core Topics Only</option>
-                    <option value="SAT">Satellite Topics Only</option>
+                    <option value="CORE">CORE</option>
+                    <option value="SAT">SAT</option>
                 </select>
-            </div>
-
-            <div class="filter-group">
-                <span class="filter-label">Topic:</span>
-                <div class="strand-buttons">
-                    <button class="strand-btn active" data-topic="all">All</button>
-                    <button class="strand-btn" data-topic="trigonometry">Trigonometry</button>
-                    <button class="strand-btn" data-topic="algebra">Algebra</button>
-                    <button class="strand-btn" data-topic="geometry">Geometry</button>
-                    <button class="strand-btn" data-topic="numbers">Numbers</button>
-                    <button class="strand-btn" data-topic="mensuration">Mensuration</button>
-                    <button class="strand-btn" data-topic="statistics">Statistics</button>
-                </div>
-            </div>
-
-            <div class="view-toggle">
-                <button class="view-btn active" data-view="grid">⊞</button>
-                <button class="view-btn" data-view="list">☰</button>
+                 <button class="control-btn" onclick="openDrillManager()">⚙️ Manage Drills</button>
+                <button class="reset-btn" id="resetBtn" onclick="resetHighlight()">🔄 Reset View</button>
             </div>
         </div>
 
-        <div class="stats-bar">
-            <div class="stats-item">
-                <strong id="displayCount">0</strong> archetypes displayed
-            </div>
-            <div class="stats-item">
-                <span style="color: #e53e3e;">●</span> G3: <strong id="g3Count">0</strong> | 
-                <span style="color: #38a169;">●</span> G4: <strong id="g4Count">0</strong>
-            </div>
-            <div class="stats-item">
-                <span style="color: #f5576c;">●</span> CORE: <strong id="coreCount">0</strong> | 
-                <span style="color: #00f2fe;">●</span> SAT: <strong id="satCount">0</strong>
-            </div>
-        </div>
-
-        <div class="main-content">
-            <div class="archetype-grid" id="archetypeGrid"></div>
-
-            <div class="content-panel hidden" id="contentPanel">
-                <div class="panel-welcome">
-                    <div style="font-size:72px">🎯</div>
-                    <h3>Welcome!</h3>
-                    <p>Select any archetype to view its SOP and practice drills</p>
-                </div>
+        <div class="map-container" id="mapContainer">
+            <svg id="connection-lines"></svg>
+            <div id="nodes-wrapper">
+                <!-- Content will be generated by JavaScript -->
             </div>
         </div>
     </div>
 
-    <div class="modal" id="drillModal">
+    <div class="info-panel" id="infoPanel">
+        <button class="close-btn" onclick="closeInfoPanel()">×</button>
+        <div id="infoPanelContent"></div>
+    </div>
+
+    <div id="drillModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Add Drill Link</h2>
-                <button class="modal-close" onclick="closeDrillManager()">×</button>
+                <button class="modal-close" onclick="closeDrillManager()">&times;</button>
             </div>
             <form id="drillForm">
                 <div class="form-group">
@@ -797,7 +302,7 @@
                 </div>
                 <div class="form-group">
                     <label>Drill Name</label>
-                    <input type="text" id="drillName" placeholder="e.g., Bearing Problems - Prototype Set" required>
+                    <input type="text" id="drillName" placeholder="e.g., Bearing Problems - Set A" required>
                 </div>
                 <div class="form-group">
                     <label>Platform</label>
@@ -812,9 +317,9 @@
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea id="drillDescription" rows="3" placeholder="Brief description"></textarea>
+                    <textarea id="drillDescription" rows="2" placeholder="Brief description of the drill set"></textarea>
                 </div>
-                <div class="form-actions">
+                 <div class="form-actions">
                     <button type="button" class="btn-cancel" onclick="closeDrillManager()">Cancel</button>
                     <button type="submit" class="btn-submit">Add Drill</button>
                 </div>
@@ -823,485 +328,439 @@
     </div>
 
     <script>
+        const ARCHETYPES = [
+          { "id": "ARCH-L1-ALG-01", "level": "L1", "name": "Factorisation", "topic": "algebra", "badge": "CORE", "description": "Factorising expressions using common factor, difference of squares, or cross-multiplication method.", "sop": { "goal": "Break down an algebraic expression into a product of simpler factors.", "steps": [ "1. Common Factor: Always look for a common factor first.", "2. Formula: Check for Difference of Squares (a²-b²) or Perfect Squares.", "3. Cross-Method: Use the cross-multiplication method for trinomials." ] } },
+          { "id": "ARCH-L1-ALG-02", "level": "L1", "name": "Solving Fractional Equations", "topic": "algebra", "badge": "CORE", "description": "Solving fractional equations that reduce to linear or quadratic by clearing denominators.", "sop": { "goal": "Eliminate fractions and solve for the variable", "triggers": ["solve", "equation with fractions"], "steps": [ "1. Identify the LCD of all denominators in the equation.", "2. Multiply every term by the LCD: This eliminates all fractions.", "3. Simplify and solve: You now have a standard linear or quadratic equation.", "4. Check for extraneous solutions: Substitute back to ensure denominators ≠ 0." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forgetting to multiply ALL terms (including constants) by the LCD" }, { "type": "COMMON", "text": "Not checking if solutions make any denominator zero" } ], "pro_tips": [ "Write 'LCD = ...' at the top before multiplying", "Circle any values that would make denominators zero—these cannot be solutions" ] } },
+          { "id": "ARCH-L1-ALG-03", "level": "L1", "name": "Forming Expressions", "topic": "algebra", "badge": "CORE", "description": "Translating word problems or scenarios into mathematical algebraic expressions.", "sop": { "goal": "Represent a real-world situation using algebraic terms.", "steps": [ "1. Define Variable: Let the unknown be x.", "2. Translate Keywords: Convert words like 'more than' (+), 'product' (×) into math symbols.", "3. Write Expression." ] } },
+          { "id": "ARCH-L1-ALG-04", "level": "L1", "name": "Adding/Subtracting Algebraic Fractions", "topic": "algebra", "badge": "CORE", "description": "Combining fractions with algebraic denominators into a single fraction.", "sop": { "goal": "Combine fractions with algebraic denominators into a single fraction", "triggers": ["add", "subtract", "fractions with different denominators"], "steps": [ "1. Find the LCD (Lowest Common Denominator): Factor all denominators if needed, then find LCD.", "2. Convert each fraction: Multiply numerator and denominator by whatever makes the denominator = LCD.", "3. Combine numerators: Add or subtract the numerators over the common denominator.", "4. Simplify: Factor and cancel common factors if possible." ], "pitfalls": [ { "type": "CRITICAL", "text": "Not distributing the negative sign when subtracting fractions" }, { "type": "COMMON", "text": "Forgetting to multiply both numerator AND denominator when converting" } ], "pro_tips": [ "When subtracting, put brackets around the entire second numerator: (a) - (b + c)", "Always factor the final numerator and denominator to check for further simplification" ] } },
+          { "id": "ARCH-L1-ALG-05", "level": "L1", "name": "Changing the Subject of a Formula", "topic": "algebra", "badge": "CORE", "description": "Rearranging a complex formula to isolate a specified variable.", "sop": { "goal": "Rearrange to isolate a specified variable", "triggers": ["make x the subject", "express y in terms of"], "steps": [ "1. Identify the target variable: Circle or highlight what you're solving for.", "2. Isolate terms containing the target: Move all other terms to the opposite side.", "3. If target appears multiple times, factor it out: x(stuff) = other stuff.", "4. Final isolation: Divide both sides to leave target alone.", "5. Simplify if needed: Especially with fractions." ], "pitfalls": [ { "type": "CRITICAL", "text": "Not factoring out when the variable appears in multiple terms" }, { "type": "COMMON", "text": "Sign errors when moving terms across the equals sign" } ], "pro_tips": [ "When target is in denominator, first multiply both sides by that denominator", "If target is squared, remember to take ± square root at the end" ] } },
+          { "id": "ARCH-L1-ALG-06", "level": "L1", "name": "Solving Simultaneous Equations", "topic": "algebra", "badge": "CORE", "description": "Finding values that satisfy a system of two linear equations.", "sop": { "goal": "Find values that satisfy both equations", "triggers": ["simultaneous equations", "solve the system"], "steps": [ "1. Choose your method: Substitution (if one equation is already solved for a variable) or Elimination.", "2. Elimination method: Multiply equations to make coefficients of one variable equal, then add/subtract to eliminate.", "3. Solve for first variable: You'll get a simple equation in one variable.", "4. Substitute back: Plug the value into either original equation to find the other variable.", "5. Verify: Check both values satisfy both original equations." ], "pitfalls": [ { "type": "CRITICAL", "text": "Not multiplying the entire equation when preparing for elimination" }, { "type": "COMMON", "text": "Forgetting to find the second variable after eliminating the first" } ], "pro_tips": [ "Label equations as ① and ② to track your work", "If coefficients are already opposites, add. If they're the same, subtract" ] } },
+          { "id": "ARCH-L1-TRIG-01", "level": "L1", "name": "Solving 2D Bearing / Geometry Problems", "topic": "trigonometry", "badge": "CORE", "description": "Application of Sine/Cosine rules in 2D real-world contexts.", "sop": { "goal": "To find unknown lengths or angles in non-right-angled triangles", "triggers": ["Bearing of", "due east", "diagrams with non-right-angled triangles"], "steps": [ "1. Annotate & Convert: Draw all North lines. Convert all given bearings into internal angles of the key triangle using parallel line properties.", "2. Assess the Triangle: Count the knowns. Do you have SAS/SSS or AAS/SSA?", "3. Select the Right Tool: If SAS or SSS, use the Cosine Rule. If AAS or SSA, use the Sine Rule.", "4. Calculate & Check: Solve for the unknown. If finding an angle with the Sine Rule, check if an obtuse angle (180° - θ) is possible." ], "pitfalls": [ { "type": "CRITICAL", "text": "Mixing up the Sine Rule and Cosine Rule formulas" }, { "type": "COMMON", "text": "Forgetting to check for the obtuse angle possibility when using Sine Rule" } ], "pro_tips": [ "Memorize: 'If the problem gives you three sides (SSS) or a Side-Angle-Side sandwich (SAS), you need the Cosine Rule. For almost everything else, it's the Sine Rule'", "Always draw North lines first to visualize the bearing angles clearly" ] } },
+          { "id": "ARCH-L1-TRIG-02", "level": "L1", "name": "Finding Shortest Distance via Area Method", "topic": "trigonometry", "badge": "CORE", "description": "Finding the perpendicular distance from a point to a line using area.", "sop": { "goal": "To find the perpendicular distance from a point to a line using area", "triggers": ["shortest distance", "perpendicular distance", "from point to line"], "steps": [ "1. Identify the Triangle: The point and the two endpoints of the line segment form a triangle.", "2. Calculate Area Using Sine: Use Area = ½ab sin C with the known sides and included angle.", "3. Use Area = ½ × base × height: Set the line segment as the base, and solve for the perpendicular height (which is the shortest distance).", "4. Verify: The shortest distance should be less than any direct distance from the point to the line's endpoints." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forgetting that Area = ½ × base × height must use the perpendicular height" }, { "type": "COMMON", "text": "Using the wrong side as the base" } ], "pro_tips": [ "This method bypasses the need to find the angle at the base", "Double-check: shortest distance < any slant distance" ] } },
+          { "id": "ARCH-L1-TRIG-03", "level": "L1", "name": "Bearings", "topic": "trigonometry", "badge": "CORE", "description": "Interpreting and using bearings to find angles within geometric problems.", "sop": { "goal": "Convert bearing information into usable angles for triangle calculations.", "steps": [ "1. Draw North Lines at all relevant points.", "2. Measure Clockwise from North.", "3. Use Geometry (alternate/interior angles) to find triangle's internal angles." ] } },
+          { "id": "ARCH-L1-TRIG-04", "level": "L1", "name": "Elevation/Depression", "topic": "trigonometry", "badge": "CORE", "description": "Solving problems involving angles of elevation and depression, typically using SOH-CAH-TOA.", "sop": { "goal": "Solve right-angled triangle problems in a vertical plane.", "steps": [ "1. Draw a right-angled triangle.", "2. Identify Horizontal (adjacent) and Vertical (opposite) sides.", "3. Use SOH-CAH-TOA." ] } },
+          { "id": "ARCH-L1-QUAD-01", "level": "L1", "name": "Completing the Square", "topic": "algebra", "badge": "CORE", "grade": "G3", "description": "Converting a quadratic from standard form to completed square form.", "sop": { "goal": "Convert quadratic from standard form to completed square form", "triggers": ["complete the square", "express in the form (x + p)² + q"], "steps": [ "1. Identify coefficient of x²: If it's not 1, factor it out first.", "2. Take half of the x coefficient, square it: For x² + bx, take (b/2)².", "3. Add and subtract this value inside: x² + bx + (b/2)² - (b/2)².", "4. Group to form perfect square: (x + b/2)² - (b/2)² + c.", "5. Simplify the constant term: Combine constants to get final form (x + p)² + q." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forgetting to factor out the coefficient of x² before completing the square" }, { "type": "COMMON", "text": "Not squaring the half-coefficient correctly" } ], "pro_tips": [ "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²", "Check your answer by expanding back to verify" ] } },
+          { "id": "ARCH-L1-QUAD-02", "level": "L1", "name": "Graph Sketching (Quadratics)", "topic": "algebra", "badge": "CORE", "grade": "G3", "description": "Sketching a parabola with all key features labeled.", "sop": { "goal": "Sketch the parabola with all key features labeled", "triggers": ["sketch the graph", "draw the curve"], "steps": [ "1. Identify the turning point: Use completed square form (x + p)² + q gives turning point (-p, q).", "2. Determine if it opens up or down: Positive coefficient of x² → opens up, Negative → opens down.", "3. Find y-intercept: Set x = 0 and calculate y.", "4. Find x-intercepts (if they exist): Set y = 0 and solve the quadratic (use formula if needed).", "5. Sketch: Draw smooth U-shape through all labeled points." ], "pitfalls": [ { "type": "CRITICAL", "text": "Getting the sign wrong for the turning point coordinates" }, { "type": "COMMON", "text": "Forgetting to label all intercepts and the turning point" } ], "pro_tips": [ "If completing the square gives (x - a)² + b, turning point is (a, b) not (-a, b)", "Always mark minimum/maximum value clearly" ] } },
+          { "id": "ARCH-L1-QUAD-03", "level": "L1", "name": "Finding Equation from Graph", "topic": "algebra", "badge": "CORE", "grade": "G3", "description": "Determining the quadratic equation given key features of the graph.", "sop": { "goal": "Determine the quadratic equation given key features of the graph", "triggers": ["find the equation", "given turning point and another point"], "steps": [ "1. Start with completed square form: Use y = a(x - h)² + k where (h, k) is the turning point.", "2. Substitute the other given point: Plug in the coordinates to find the value of a.", "3. Solve for a: Isolate a in the equation.", "4. Write the final equation: Either in completed square form or expand to standard form if required." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forgetting to include the coefficient a in front" }, { "type": "COMMON", "text": "Sign errors when substituting coordinates with negative values" } ], "pro_tips": [ "Always use y = a(x - h)² + k form first, it's faster than y = ax² + bx + c", "Verify by checking if the turning point satisfies your final equation" ] } },
+          { "id": "ARCH-L1-GEO-01", "level": "L1", "name": "Proving Similarity (AA Criterion)", "topic": "geometry", "badge": "CORE", "description": "Proving two triangles are similar, mainly using the AA criterion.", "sop": { "goal": "Prove two triangles are similar using Angle-Angle", "triggers": ["prove triangles are similar", "show similarity"], "steps": [ "1. Identify the two triangles: Label vertices clearly (e.g., △ABC and △DEF).", "2. Find two pairs of equal angles: Use properties like vertically opposite angles, corresponding angles, alternate angles, or angles in the same segment.", "3. State the equal angles explicitly: Write ∠ABC = ∠DEF and ∠BAC = ∠EDF with reasons.", "4. Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'." ], "pitfalls": [ { "type": "CRITICAL", "text": "Not providing geometric reasons for why angles are equal" }, { "type": "COMMON", "text": "Mixing up corresponding vertices when stating similarity" } ], "pro_tips": [ "Common angle reasons: vertically opposite, corresponding (parallel lines), alternate (parallel lines), angles in same segment", "Always write the triangle correspondence correctly: △ABC ~ △DEF means A↔D, B↔E, C↔F" ] } },
+          { "id": "ARCH-L1-GEO-02", "level": "L1", "name": "Proving Congruency (SAS, SSS, ASA, RHS)", "topic": "geometry", "badge": "CORE", "description": "Proving two triangles are congruent using one of the four standard criteria.", "sop": { "goal": "Prove two triangles are congruent", "triggers": ["prove triangles are congruent", "show congruency"], "steps": [ "1. Identify the two triangles: Label all vertices.", "2. List what you know: Mark equal sides and angles on the diagram.", "3. Determine which test applies: SAS (Side-Angle-Side), SSS (Side-Side-Side), ASA (Angle-Side-Angle), or RHS (Right angle-Hypotenuse-Side).", "4. State the equal elements with reasons: e.g., 'AB = DE (given)', '∠ABC = ∠DEF (common angle)'.", "5. Conclude: State '△ABC ≅ △DEF (SAS)' with the appropriate criterion." ], "pitfalls": [ { "type": "CRITICAL", "text": "Using the wrong congruency criterion (e.g., trying to use AAA)" }, { "type": "COMMON", "text": "For SAS, the angle must be BETWEEN the two equal sides" } ], "pro_tips": [ "SAS: The angle must be included between the two sides", "Common reasons: 'common side', 'given', 'opposite equal angles', 'radii of same circle'", "ASA vs AAS: For ASA, the side must be between the two angles" ] } },
+          { "id": "ARCH-L1-GEO-03", "level": "L1", "name": "Using Similarity to Find Unknown Lengths", "topic": "geometry", "badge": "CORE", "description": "Calculating unknown side lengths using the properties of similar triangles.", "sop": { "goal": "Calculate unknown side lengths using similar triangles", "triggers": ["find the length", "calculate x", "given similar triangles"], "steps": [ "1. Confirm similarity: Either it's stated or prove it using SOP 1.", "2. Set up the ratio: Write corresponding sides as a proportion. e.g., AB/DE = BC/EF = AC/DF.", "3. Substitute known values: Plug in all given lengths.", "4. Solve for unknown: Cross-multiply if needed, then isolate the unknown.", "5. Check reasonableness: Does the answer make geometric sense?" ], "pitfalls": [ { "type": "CRITICAL", "text": "Setting up ratios with non-corresponding sides" }, { "type": "COMMON", "text": "Inverting the ratio (getting it upside down)" } ], "pro_tips": [ "Draw the triangles separately if they overlap, matching corresponding vertices", "Write the similarity statement first (△ABC ~ △DEF) to ensure correct correspondence" ] } },
+          { "id": "ARCH-L1-GEO-04", "level": "L1", "name": "Shortest Distance", "topic": "geometry", "badge": "CORE", "description": "Finding the shortest distance from a point to a line, which is the perpendicular distance.", "sop": { "goal": "Calculate the perpendicular distance from a point to a line.", "steps": [ "1. Identify the point and the line.", "2. Recognize that the shortest distance is the perpendicular distance.", "3. Often involves using area formulas (Area = 1/2 * base * height) or trigonometry." ] } },
+          { "id": "ARCH-L1-STAT-01", "level": "L1", "name": "Interpreting Stem-and-Leaf Diagrams", "topic": "statistics", "badge": "SAT", "description": "Quickly and accurately extracting mode, median, and mean from stem-and-leaf diagrams.", "sop": { "goal": "Quickly and accurately extract mode, median, and mean", "triggers": ["stem-and-leaf diagram is presented"], "steps": [ "1. Count Total (N): Write N beside the diagram—this controls the median.", "2. Mode: Scan for the most frequent leaf (recombine with stem).", "3. Median: Position is (N + 1) ÷ 2. If N odd → whole position (e.g., 11th). If N even → average of the two middle values (e.g., 13th and 14th).", "4. Mean: Sum all values (stem+leaf) and divide by N. Use calculator carefully." ], "pitfalls": [ { "type": "CRITICAL", "text": "For even N, forgetting to average the two middle values" }, { "type": "COMMON", "text": "Miscounting N" } ], "pro_tips": [ "Write N = … on top before doing median", "When N is even, pre-write Median = (____ + ____ ) ÷ 2" ] } },
+          { "id": "ARCH-L1-STAT-02", "level": "L1", "name": "Interpreting Grouped Frequency Tables", "topic": "statistics", "badge": "SAT", "description": "Estimating the mean from a grouped frequency table.", "sop": { "goal": "Estimate the mean from a grouped frequency table", "triggers": ["table with class intervals", "140 < h ≤ 150"], "steps": [ "1. Midpoint (x): For each class, midpoint = (lower + upper) ÷ 2. Example: (140 + 150) ÷ 2 = 145.", "2. Compute fx: Multiply midpoint x by frequency f.", "3. Sum: Σf (often given) and Σ(fx).", "4. Estimate Mean: Mean = Σ(fx) ÷ Σf." ], "pitfalls": [ { "type": "CRITICAL", "text": "Using interval boundaries instead of midpoints" }, { "type": "COMMON", "text": "Forgetting to compute an fx column for each row" } ], "pro_tips": [ "Add explicit columns for Midpoint (x) and fx", "Do totals (Σf, Σfx) in a separate line to avoid slips" ] } },
+          { "id": "ARCH-L1-PROB-01", "level": "L1", "name": "Solving Basic Probability Problems", "topic": "statistics", "badge": "SAT", "description": "Accurately calculating the probability of a single event.", "sop": { "goal": "Accurately calculate the probability of an event", "triggers": ["probability", "at random"], "steps": [ "1. Total Outcomes: Identify the size of the sample space.", "2. Favourable Outcomes: List them explicitly (do not 'do it in your head'). Example: 'even and divisible by 3' → list evens, then circle those divisible by 3: 6, 12, 18.", "3. Compute Probability: P(Event) = Favourable ÷ Total.", "4. Simplify the fraction." ], "pitfalls": [ { "type": "CRITICAL", "text": "Miscounting outcomes for compound 'and/or'" }, { "type": "COMMON", "text": "Leaving the fraction unsimplified" } ], "pro_tips": [ "Always list the favourable outcomes—never rely on mental counting", "Reduce the final fraction (or convert to simplest decimal/percentage if required)" ] } },
+          { "id": "ARCH-L1-CG-01", "level": "L1", "name": "Finding the Equation of a Straight Line", "topic": "geometry", "badge": "SAT", "description": "Finding the equation of a line in the form y = mx + c.", "sop": { "goal": "To find the equation connecting any two points", "triggers": ["Find the equation of the line", "equation passing through"], "steps": [ "1. Find the Gradient (m): m = (y₂ − y₁) ÷ (x₂ − x₁). Pro-Tip: Label points (x₁,y₁) and (x₂,y₂) before calculating.", "2. Write the Partial Equation: y = (your m)x + c.", "3. Find the y-intercept (c): Substitute coordinates of one known point (use simpler one) into y = mx + c and solve for c.", "4. Write the Final Equation: Combine your m and c values." ], "pitfalls": [ { "type": "CRITICAL", "text": "Swapping x and y when substituting into y = mx + c" }, { "type": "COMMON", "text": "Computing m with (x₁,y₁) and (x₂,y₂) reversed by mistake" } ], "pro_tips": [ "Label points clearly (x₁,y₁), (x₂,y₂) before any calculation", "After finding m, immediately write y = mx + c, then plug in the simplest point to get c" ] } },
+          { "id": "ARCH-L1-CG-02", "level": "L1", "name": "Parallel & Perpendicular Lines", "topic": "geometry", "badge": "SAT", "description": "Finding the equation of a new line based on its relationship to another line.", "sop": { "goal": "To find the equation of a new line based on its relationship to another line", "triggers": ["parallel to", "perpendicular to"], "steps": [ "1. Extract the Original Gradient (m₁): Rearrange the given line to y = mx + c first if needed. Gradient m₁ = ...", "2. Determine the New Gradient (m₂): Parallel: m₂ = m₁. Perpendicular: m₂ = −1 ÷ m₁ (flip the fraction and change the sign).", "3. Use SOP for Line Equation: With m₂ and a point on the new line, repeat steps to find the final equation." ], "pitfalls": [ { "type": "CRITICAL", "text": "For perpendicular lines, forgetting to flip AND change sign" }, { "type": "COMMON", "text": "Not rearranging a general form (like ax + by = c) before reading m" } ], "pro_tips": [ "Box m₁ first, then write m₂ = m₁ (parallel) or m₂ = −1/m₁ (perpendicular)", "Once m₂ is fixed, jump straight into the standard line equation flow to finish quickly" ] } },
+          { "id": "ARCH-L1-CG-03", "level": "L1", "name": "Finding Length & Area (Coordinate Plane)", "topic": "geometry", "badge": "SAT", "description": "Calculating the distance between points or the area of a polygon on a coordinate plane.", "sop": { "goal": "To calculate the distance between points or the area of a triangle", "triggers": ["Find the length of", "Find the area of"], "steps": [ "1. Length of a Line Segment: Distance = √[(x₂−x₁)² + (y₂−y₁)²].", "2. Area of a Triangle (axis-aligned side): If one side is horizontal or vertical, use it as the base. Height is the perpendicular distance from the third vertex. Area = ½ × base × height.", "3. Area of a General Triangle (Shoelace): List the vertices anti-clockwise and repeat the first at the end. Area = ½ × |(x₁y₂ + ...) − (y₁x₂ + ...)|." ], "pitfalls": [ { "type": "CRITICAL", "text": "Misordering coordinates in Shoelace → wrong magnitude/sign" }, { "type": "COMMON", "text": "Dropping negative signs in distance/area calculations" } ], "pro_tips": [ "For Shoelace, write points anti-clockwise and repeat the first at the bottom", "If any side is axis-aligned, prefer ½ × base × height over Shoelace" ] } },
+          { "id": "ARCH-L1-MEN-01", "level": "L1", "name": "Master SOP for ALL Mensuration Problems", "topic": "mensuration", "badge": "SAT", "description": "A master strategy to never lose marks due to formula or calculation errors in mensuration.", "sop": { "goal": "To never lose marks due to formula or calculation errors", "triggers": ["area", "surface area", "volume", "capacity"], "steps": [ "1. Identify the Shape(s): Name them immediately (e.g., cone + hemisphere).", "2. Write the Formula FIRST: e.g., write CSA = πrl before substituting. (Secures method marks).", "3. List Variables: Example: r = 8, l = 17.", "4. Substitute and Calculate: Carefully.", "5. Final Check (Units & Accuracy): Correct units (e.g., cm², cm³) and required s.f./d.p." ], "pitfalls": [ { "type": "CRITICAL", "text": "Missing/incorrect units → lose accuracy/answer marks" }, { "type": "COMMON", "text": "Substituting numbers before writing the exact formula" } ], "pro_tips": [ "Always write the formula first to lock in method marks", "Box the final answer with units and accuracy" ] } },
+          { "id": "ARCH-L1-MEN-02", "level": "L1", "name": "Similar Figures & Solids", "topic": "mensuration", "badge": "SAT", "description": "Correctly using scaling laws for length, area, and volume for similar figures.", "sop": { "goal": "Correctly use scaling laws for length, area, and volume", "triggers": ["similar", "same shape but different size"], "steps": [ "1. Find the Length Ratio (k) FIRST: k = Length₁ ÷ Length₂.", "2. Identify the Target: Area or Volume/Capacity/Mass?", "3. Apply Power Rule: Area ratio = k². Volume/Capacity/Mass ratio = k³.", "4. Set up Proportion & Solve: Plug numbers into the correct ratio equation." ], "pitfalls": [ { "type": "CRITICAL", "text": "Using k for area/volume without squaring/cubing" }, { "type": "COMMON", "text": "Swapping numerator/denominator (wrong object on top)" } ], "pro_tips": [ "Always write k first, then immediately write k² or k³ before numbers", "Draw a mini table with three rows: Length / Area / Volume = k / k² / k³" ] } },
+          { "id": "ARCH-L1-MEN-03", "level": "L1", "name": "Composite Solids", "topic": "mensuration", "badge": "SAT", "description": "Finding the Total Surface Area (TSA) or Total Volume of combined shapes.", "sop": { "goal": "Find Total Surface Area (TSA) or Total Volume of combined shapes", "triggers": ["combined shapes", "cone + hemisphere", "composite solid"], "steps": [ "1. Deconstruct the Shape: List the basic parts clearly.", "2. Calculate Each Part Separately: Volume: sum volumes of parts. TSA (TRAP): only exposed surfaces count. Do NOT add base areas that are glued/hidden.", "3. Sum the Exposed Parts for TSA; sum volumes for total volume." ], "pitfalls": [ { "type": "CRITICAL", "text": "Double-counting hidden/glued faces in TSA" }, { "type": "COMMON", "text": "Mixing up CSA vs TSA formulas or incorrectly adding base areas" } ], "pro_tips": [ "Make a checklist of faces; mark 'hidden' vs 'exposed'", "Calculate and label each part with units before summing" ] } },
+          { "id": "ARCH-L1-MEN-04", "level": "L1", "name": "Sector & Segment Problems", "topic": "mensuration", "badge": "SAT", "description": "Accurately calculating properties of circle parts like sectors and segments.", "sop": { "goal": "Accurately calculate properties of circle parts", "triggers": ["sector", "segment", "arc length"], "steps": [ "1. Check Angle Unit: Degrees vs radians determines formulas.", "2. Sector First: Arc length: (θ÷360)×2πr (degrees) or rθ (radians). Sector area: (θ÷360)×πr² (degrees) or ½r²θ (radians).", "3. Segment: Master idea: Area of Segment = Area of Sector − Area of Triangle. Triangle area (using included angle): ½ab sinC. Perform the subtraction." ], "pitfalls": [ { "type": "CRITICAL", "text": "Using degree formulas on radian inputs (or vice-versa)" }, { "type": "COMMON", "text": "Forgetting to subtract the triangle for a segment" } ], "pro_tips": [ "Circle the angle unit at the start", "Always write 'Segment = Sector − Triangle' before substituting numbers" ] } },
+          { "id": "ARCH-L1-INEQ-01", "level": "L1", "name": "Solving Compound Inequalities", "topic": "algebra", "badge": "SAT", "description": "Finding the final, single range of x for a compound inequality.", "sop": { "goal": "To find the final, single range of x", "triggers": ["two inequality signs", "A < B ≤ C"], "steps": [ "1. SPLIT: Break into two simpler inequalities. Example: 3x − 1 < 2x + 9 ≤ 15 → Part A & Part B.", "2. SOLVE: Solve Part A and Part B individually.", "3. CRITICAL RULE: If you multiply or divide by a negative, you MUST flip the inequality sign.", "4. DRAW: Draw a number line and mark key values.", "5. PLOT & OVERLAP: Plot both solutions; the final answer is the overlap.", "6. WRITE: Write as a single compound inequality (e.g., 4 < x ≤ 10)." ], "pitfalls": [ { "type": "CRITICAL", "text": "Not flipping the sign after multiplying/dividing by a negative" }, { "type": "COMMON", "text": "Using the wrong open/closed circle on the number line" } ], "pro_tips": [ "Write a banner note at the top: '× or ÷ negative → flip sign'", "Always sketch the number line before writing the final compound form" ] } },
+          { "id": "ARCH-L1-INEQ-02", "level": "L1", "name": "Modelling with Inequalities", "topic": "algebra", "badge": "SAT", "description": "Translating real-world language into a precise inequality.", "sop": { "goal": "Translate real-world language into a precise inequality", "triggers": ["at least", "no more than", "minimum", "maximum"], "steps": [ "1. DEFINE: 'Let x be …' (define the variable clearly).", "2. TRANSLATE KEYWORDS: at least/minimum → ≥, at most/maximum/no more than → ≤, more than → >, less than → <.", "3. CONSTRUCT: Build the inequality with the numbers and your symbol." ], "pitfalls": [ { "type": "CRITICAL", "text": "Misreading 'at least/at most' leading to the wrong inequality direction" }, { "type": "COMMON", "text": "Forgetting to define the variable first" } ], "pro_tips": [ "Underline the keyword and immediately write its symbol (≥, ≤, >, <)", "Start with 'Let x = …' to anchor the model" ] } },
+          { "id": "ARCH-L1-INEQ-03", "level": "L1", "name": "Finding Max/Min Values in a Range", "topic": "algebra", "badge": "SAT", "description": "Finding the absolute maximum or minimum value of an expression within given ranges.", "sop": { "goal": "To find the absolute maximum or minimum value of an expression", "triggers": ["largest value", "smallest value", "with given ranges"], "steps": [ "1. LIST BOUNDARIES: Write x_min, x_max, y_min, y_max.", "2. ANALYZE THE GOAL: To maximize y - x³, choose y_max and the smallest possible x³. To minimize y - 2x, choose y_min and the largest possible 2x.", "3. CALCULATE: Substitute boundary values and compute." ], "pitfalls": [ { "type": "CRITICAL", "text": "Choosing the wrong boundary combination (entire result wrong)" }, { "type": "COMMON", "text": "Forgetting that odd powers keep sign (e.g., (−9)³ = −729)" } ], "pro_tips": [ "Draw a quick 2×2 boundary table for x and y, then pick the combo that matches the goal", "Do a quick mental 'sanity check' before finalizing" ] } },
+          { "id": "ARCH-L1-IND-01", "level": "L1", "name": "Simplifying Complex Index Expressions", "topic": "algebra", "badge": "SAT", "description": "Reducing complicated expressions to simplest form with positive indices.", "sop": { "goal": "Reduce complicated expressions to simplest form with positive indices", "triggers": ["Simplify", "expressions with powers, roots, negatives"], "steps": [ "1. Brackets First (Power of a Power): Multiply indices inside brackets. Examples: (p³)² = p⁶.", "2. Handle Negatives & Roots: Negative indices → reciprocals: x⁻³ = 1 ÷ x³. Roots → fractional indices: √x = x^(1/2).", "3. Combine Same Bases: Multiply same base → add indices. Divide same base → subtract indices.", "4. Calculate Coefficients: Manage normal numbers separately; then recombine." ], "pitfalls": [ { "type": "CRITICAL", "text": "Treating negative indices as negative numbers (instead of reciprocals)" }, { "type": "COMMON", "text": "Forgetting to distribute powers across brackets and coefficients" } ], "pro_tips": [ "Convert roots to fractional indices and negatives to reciprocals FIRST", "Separate coefficient arithmetic from index manipulation, then recombine" ] } },
+          { "id": "ARCH-L1-IND-02", "level": "L1", "name": "Solving Exponential Equations", "topic": "algebra", "badge": "SAT", "description": "Finding the unknown in the exponent by unifying the base.", "sop": { "goal": "Find the unknown in the exponent", "triggers": ["Solve", "variables appear as powers"], "steps": [ "1. Unify the Base (Golden Rule): Write all numbers as powers of the SAME base. Examples: 9 = 3², 27 = 3³.", "2. Simplify Both Sides: Use simplification rules until you get base^a = base^b.", "3. Equate the Indices: Set a = b.", "4. Solve: Finish the (usually linear) equation." ], "pitfalls": [ { "type": "CRITICAL", "text": "Trying to equate indices BEFORE unifying the base" }, { "type": "COMMON", "text": "Mishandling fractional/negative powers during simplification" } ], "pro_tips": [ "Always rewrite numbers as prime-base powers first", "Keep a tiny scratch list of common conversions (e.g., 8 = 2³, 81 = 3⁴)" ] } },
+          { "id": "ARCH-L1-IND-03", "level": "L1", "name": "Handling '+' or '−' in Exponential Equations", "topic": "algebra", "badge": "SAT", "description": "Solving exponential equations that involve addition or subtraction by factoring.", "sop": { "goal": "Solve exponential equations that involve addition or subtraction", "triggers": ["Sums/differences of like exponentials"], "steps": [ "1. Identify the Trap: Index laws do NOT apply across + or −.", "2. Factor / Combine Like Terms: Treat repeated exponentials like like-terms. Examples: 3³ + 3³ + 3³ = 3 × (3³); 2^(x+1) − 2^x = 2^x (2 − 1).", "3. Simplify → Switch to Solving Exponential Equations SOP: Reduce to a standard exponential form." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forcing index laws over sums/differences" }, { "type": "COMMON", "text": "Forgetting to factor out the common exponential term" } ], "pro_tips": [ "'Apples with apples': combine identical bases/powers first", "After factoring, look for the single-base structure and revert to the standard solving SOP" ] } },
+          { "id": "ARCH-L1-IND-04", "level": "L1", "name": "Calculating with Standard Form", "topic": "algebra", "badge": "SAT", "description": "Performing calculations with scientific notation and ensuring the final answer is in proper standard form.", "sop": { "goal": "Perform calculations with A × 10^n and end in proper standard form (1 ≤ A < 10)", "triggers": ["numbers given in scientific notation"], "steps": [ "1. Multiplication / Division: 1) Multiply/divide the A parts. 2) Apply index laws to the 10^n parts. 3) Adjust to make 1 ≤ A < 10.", "2. Addition / Subtraction: 1) Unify the exponent. 2) Factor out the common 10^n. 3) Add/subtract the A parts. 4) Adjust A back to [1, 10) if needed." ], "pitfalls": [ { "type": "CRITICAL", "text": "Adding/subtracting without matching powers of 10" }, { "type": "COMMON", "text": "Leaving A outside [1, 10)" } ], "pro_tips": [ "For +/−, match exponents first, then work on the A parts", "Always do a final 'standard-form check'" ] } },
+          { "id": "ARCH-L1-RATIO-01", "level": "L1", "name": "Map Scale Problems", "topic": "numbers", "badge": "SAT", "description": "Accurately converting between map distances and actual distances/areas.", "sop": { "goal": "Accurately convert between map distances and actual distances/areas", "triggers": ["Scale 1 : n", "area on the map", "actual area"], "steps": [ "1. Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km. Area scale: 1 cm² : (n ÷ 100,000)² km².", "2. Select the Correct Scale: Decide if it's length or area.", "3. Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)." ], "pitfalls": [ { "type": "CRITICAL", "text": "Using the length scale to compute an area" }, { "type": "COMMON", "text": "Forgetting to square when switching to area" } ], "pro_tips": [ "Always write BOTH scales first (length and area)", "Circle the word 'Area' in the question → write 'square it' beside it" ] } },
+          { "id": "ARCH-L1-RATIO-02", "level": "L1", "name": "Percentage Change & Reverse Percentage", "topic": "numbers", "badge": "SAT", "description": "Calculating the new value after a percentage change, or recovering the original value.", "sop": { "goal": "Calculate the new value after change, or recover the original value", "triggers": ["increase by X%", "discount", "GST", "after the increase"], "steps": [ "1. Identify the '100%': Always the original value / cost price / pre-tax price.", "2. Compute New Percentage: Increase 15% → new % = 115%. Discount 20% → new % = 80%.", "3. Execute: Forward (new value): New = Original × (New% ÷ 100). Reverse (original): Original = New ÷ (New% ÷ 100)." ], "pitfalls": [ { "type": "CRITICAL", "text": "In reverse percentage, multiplying instead of dividing by the new percentage" }, { "type": "COMMON", "text": "Setting '100%' to the new (changed) value" } ], "pro_tips": [ "Underline the '100% reference' (Original/Cost/Pre-tax) before any calculation", "Write a reminder: 'Original? → divide by new%'" ] } },
+          { "id": "ARCH-L1-RATIO-03", "level": "L1", "name": "Simple & Compound Interest", "topic": "numbers", "badge": "SAT", "description": "Computing total amount and interest for simple and compound interest scenarios.", "sop": { "goal": "Compute total amount and interest for simple/compound interest", "triggers": ["simple interest", "compound interest", "per annum", "compounded quarterly/half-yearly"], "steps": [ "1. Identify Type & Parameters: P = Principal, R = annual rate, T = time (years), n = compounding per year.", "2. Write Formula: Simple: I = P × (R ÷ 100) × T. Compound: A = P × (1 + (R ÷ n) ÷ 100)^(n × T).", "3. Substitute Carefully & Calculate: For compound, divide R by n, multiply T by n.", "4. Answer the Question: If they want interest, use A − P." ], "pitfalls": [ { "type": "CRITICAL", "text": "Forgetting R → R/n and T → nT for compounding" }, { "type": "COMMON", "text": "Confusing interest vs total amount" } ], "pro_tips": [ "As soon as you read 'compounded …', jot n = …, then write R → R/n, T → nT", "If the question says 'interest', remember to compute A − P" ] } },
+          { "id": "ARCH-L2-TRIG-01", "level": "L2", "name": "2D/3D Trigonometry in Context", "topic": "trigonometry", "badge": "CORE", "grade": "G4", "description": "Multi-step problems requiring students to model a real-world scenario on a 2D plane, solve for 'bridge' values, and then use them in a vertical 2D plane to solve 3D elevation/depression problems.", "constituent_l1_ids": ["ARCH-L1-TRIG-01", "ARCH-L1-TRIG-03", "ARCH-L1-TRIG-04", "ARCH-L1-GEO-04"], "sop": { "goal": "Solve a complex 3D problem by breaking it down into 2D triangle calculations.", "steps": [ "1. Call SOP-L1-BEARING: Convert all bearings to internal angles to solve the 'ground plane' triangle.", "2. Call SOP-L1-TRIG-RULES: Use Sine/Cosine Rule to solve the 'ground plane' triangle.", "3. Call SOP-L1-SOHCAHTOA: Use the result from step 2 as the 'bridge' to solve the 'vertical plane' right-angled triangle.", "4. (If needed) Call SOP-L1-SHORTEST-DIST: Use the Area Method if the question asks for 'greatest angle of elevation'." ] } },
+          { "id": "ARCH-L2-QUAD-01", "level": "L2", "name": "Graphical Analysis of Functions", "topic": "algebra", "badge": "CORE", "grade": "G4", "description": "Problems that require students to plot a function (quadratic or cubic) and use the graph to solve equations by finding intersections with a suitable straight line, or finding the gradient of a tangent.", "constituent_l1_ids": ["ARCH-L1-QUAD-02", "ARCH-L1-ALG-02", "ARCH-L1-CG-01"], "sop": { "goal": "Use a plotted graph to solve related equations and find gradients.", "steps": [ "1. Call SOP-L1-PLOT-GRAPH: Accurately plot points and draw a smooth curve.", "2. Call SOP-L1-ALG-TRANSFORM: Algebraically manipulate the target equation to isolate the original function y on one side. The other side is the y=mx+c to be drawn.", "3. Call SOP-L1-LINE-DRAW: Find two points and draw the straight line.", "4. Call SOP-L1-READ-GRAPH: Read the coordinates of intersection points or draw a tangent to find the gradient." ] } },
+          { "id": "ARCH-L2-GEO-01", "level": "L2", "name": "Similarity & Congruency Application", "topic": "geometry", "badge": "CORE", "grade": "G4", "description": "Problems where proving similarity or congruency is the first step. The results (e.g., proportional sides) are then used as tools to perform subsequent calculations for unknown lengths, area ratios, etc.", "constituent_l1_ids": ["ARCH-L1-GEO-01", "ARCH-L1-GEO-02", "ARCH-L1-GEO-03"], "sop": { "goal": "Use the properties of similar or congruent triangles to solve for other unknown quantities.", "steps": [ "1. Call SOP-L1-PROVE-SIMILAR: Use AA to prove the required triangles are similar. Write this out formally.", "2. Call SOP-L1-RATIO-SETUP: Set up the correct ratio of corresponding sides or the ratio of areas (by squaring the length ratio).", "3. Call SOP-L1-SOLVE-PROPORTION: Substitute known values and solve for the unknown length or area." ] } },
+          { "id": "ARCH-L2-ALG-01", "level": "L2", "name": "Algebraic Modelling in Context", "topic": "algebra", "badge": "CORE", "grade": "G4", "description": "Word problems (e.g., speed/distance/time, financial) where the student must first translate the text into one or more algebraic equations (often fractional or quadratic) and then solve them.", "constituent_l1_ids": ["ARCH-L1-ALG-02", "ARCH-L1-ALG-03", "ARCH-L1-RATIO-02"], "sop": { "goal": "Create and solve an algebraic equation from a real-world scenario.", "steps": [ "1. Call SOP-L1-FORM-EXPRESSION: Translate the words into mathematical expressions (e.g., Time = Distance/Speed).", "2. Call SOP-L1-FORM-EQUATION: Link the expressions with the final piece of information (e.g., 'the difference in time is 20 minutes') to form an equation.", "3. Call SOP-L1-SOLVE-EQUATION: Use algebraic manipulation to solve the resulting equation." ] } },
+          { "id": "ARCH-L3-SYN-01", "level": "L3", "name": "Multi-Representation Synthesis", "topic": "meta", "badge": "CORE", "grade": "G4", "description": "Tasks where students must synthesize information from multiple representations – algebraic equations, geometric diagrams, and data tables – to arrive at a solution. The core skill is fluently translating between them.", "source_l2_ids": ["ARCH-L2-QUAD-01", "ARCH-L2-TRIG-01"], "sop": { "goal": "Integrate information from different mathematical formats to solve a complex problem.", "steps": [ "1. Deconstruct & Diagram: Read the entire problem. Use a highlighter. Draw a large, clear diagram. Translate all textual information onto this diagram.", "2. Analyze & Archetype: Look at your diagram. Ask: 'What L2 Archetypes does this problem contain?'", "3. Route & Plan: Create a quick, step-by-step plan linking the different parts of the problem.", "4. Execute & Explain: Execute the plan step-by-step, calling upon the necessary L2 and L1 SOPs. Write down every step clearly, showing your formulas and reasoning." ] } },
+          { "id": "ARCH-L3-MOD-01", "level": "L3", "name": "Contextual Modelling & Justification", "topic": "meta", "badge": "CORE", "grade": "G4", "description": "Represents the highest level of application, where the problem is open-ended and may not have a single 'correct' answer. The student must select appropriate models, state assumptions, perform calculations, and justify their final decision.", "source_l2_ids": ["ARCH-L2-ALG-01", "ARCH-L2-TRIG-01"], "sop": { "goal": "Develop a mathematical model for an open-ended problem and justify the conclusion.", "steps": [ "1. Deconstruct & Diagram: Read the entire problem. Highlight key data and constraints. Draw a diagram.", "2. Analyze & Archetype: Identify the underlying L2 problem type (e.g., 'This is a Trig problem') and the additional justification element.", "3. Route & Plan: Create a step-by-step plan. 'First, I will solve the L2 part. Second, I will calculate the costs/options. Finally, I will compare and write my conclusion.'", "4. Execute & Explain: Execute the plan clearly. For 'Justify' questions, write your final answer in a full sentence, referencing your calculations." ] } }
+        ];
+
         // Global state
-        let ARCHETYPES = [];
-        let ARCHETYPE_CONFIG = null;
-        let LOADED_GRADES = {};
-        let drillLinks = JSON.parse(localStorage.getItem('drillLinks') || '{}');
-        let currentFilter = {grade: 'G3', category: 'all', topic: 'all', view: 'grid'};
-        let selectedArchetype = null;
-        let sopCache = {};
+        let drillLinks = {};
+        let currentFilters = { topic: 'all', grade: 'all', category: 'all' };
+        let selectedNodeId = null;
+        let highlightedChain = [];
 
-        // Update loading status
-        function updateLoadingStatus(message) {
-            const statusEl = document.getElementById('loadingStatus');
-            if (statusEl) {
-                statusEl.textContent = message;
-            }
-            console.log(`📊 ${message}`);
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDrillLinks();
+            renderMap();
+            setupEventListeners();
+        });
 
-        // Load configuration file
-        async function loadConfig() {
-            try {
-                updateLoadingStatus('Loading configuration...');
-                const response = await fetch('./data/archetypes/archetypes-config.json');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                ARCHETYPE_CONFIG = await response.json();
-                console.log(`✅ Loaded config v${ARCHETYPE_CONFIG.version}`);
-                updateLoadingStatus(`Config v${ARCHETYPE_CONFIG.version} loaded`);
-                return true;
-            } catch (error) {
-                console.error('❌ Failed to load config:', error);
-                updateLoadingStatus('Config load failed');
-                return false;
-            }
-        }
-
-        // Load archetypes for a specific grade
-        async function loadGradeData(grade) {
-            if (LOADED_GRADES[grade]) {
-                console.log(`✅ Using cached data for ${grade}`);
-                return LOADED_GRADES[grade];
-            }
-
-            if (!ARCHETYPE_CONFIG || !ARCHETYPE_CONFIG.data_sources || !ARCHETYPE_CONFIG.data_sources[grade]) {
-                console.warn(`⚠️ Grade ${grade} not configured`);
-                return [];
-            }
-
-            const gradeConfig = ARCHETYPE_CONFIG.data_sources[grade];
-            if (!gradeConfig.enabled) {
-                console.warn(`⚠️ Grade ${grade} is disabled`);
-                return [];
-            }
-
-            try {
-                const filename = gradeConfig.file;
-                updateLoadingStatus(`Loading ${grade} data...`);
-                
-                const response = await fetch(`./data/archetypes/${filename}`);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                let data = await response.json();
-                
-                // Handle the data structure - the file might have archetypes directly or nested
-                let archetypes = [];
-                if (Array.isArray(data)) {
-                    archetypes = data;
-                } else if (data.archetypes && Array.isArray(data.archetypes)) {
-                    archetypes = data.archetypes;
-                } else {
-                    console.error('Unexpected data structure:', data);
-                    return [];
-                }
-                
-                console.log(`✅ Loaded ${archetypes.length} archetypes for ${grade}`);
-                updateLoadingStatus(`${archetypes.length} ${grade} archetypes loaded`);
-                
-                LOADED_GRADES[grade] = archetypes;
-                return archetypes;
-            } catch (error) {
-                console.error(`❌ Failed to load ${grade} data:`, error);
-                updateLoadingStatus(`Failed to load ${grade} data`);
-                return [];
-            }
-        }
-
-        // Initialize and load default grade
-        async function init() {
-            try {
-                const configLoaded = await loadConfig();
-                if (!configLoaded) {
-                    showError('Failed to load configuration file. Please check that data/archetypes/archetypes-config.json exists.');
-                    return;
-                }
-
-                // Load default grade data
-                const defaultGrade = ARCHETYPE_CONFIG.default_grade || 'G3';
-                ARCHETYPES = await loadGradeData(defaultGrade);
-                
-                if (ARCHETYPES.length === 0) {
-                    showError(`No archetypes loaded for ${defaultGrade}. Please check that data files exist.`);
-                    return;
-                }
-                
-                // Hide loading screen
-                document.getElementById('loadingScreen').style.display = 'none';
-                
-                renderArchetypes();
-                updateStats();
-                setupEventListeners();
-                
-                console.log(`✅ Initialization complete - ${ARCHETYPES.length} archetypes loaded`);
-            } catch (error) {
-                console.error('❌ Initialization failed:', error);
-                showError(`Initialization failed: ${error.message}`);
-            }
-        }
-
-        // Show error message
-        function showError(message) {
-            document.getElementById('loadingScreen').style.display = 'none';
-            const grid = document.getElementById('archetypeGrid');
-            grid.innerHTML = `
-                <div class="error-message" style="grid-column: 1/-1;">
-                    <h3>⚠️ Error Loading Data</h3>
-                    <p>${message}</p>
-                    <p style="margin-top: 10px; font-size: 14px;">
-                        Expected file structure:<br>
-                        <code>data/archetypes/archetypes-config.json</code><br>
-                        <code>data/archetypes/archetypes-g3.json</code><br>
-                        <code>data/archetypes/archetypes-g4.json</code>
-                    </p>
-                </div>
-            `;
-        }
-
-        // Update statistics display
-        function updateStats() {
-            let g3Count = 0, g4Count = 0, coreCount = 0, satCount = 0;
-            
-            if (ARCHETYPE_CONFIG && ARCHETYPE_CONFIG.data_sources) {
-                if (LOADED_GRADES['G3']) {
-                    g3Count = LOADED_GRADES['G3'].length;
-                } else if (ARCHETYPE_CONFIG.data_sources['G3']) {
-                    g3Count = ARCHETYPE_CONFIG.data_sources['G3'].total_archetypes;
-                }
-
-                if (LOADED_GRADES['G4']) {
-                    g4Count = LOADED_GRADES['G4'].length;
-                } else if (ARCHETYPE_CONFIG.data_sources['G4']) {
-                    g4Count = ARCHETYPE_CONFIG.data_sources['G4'].total_archetypes;
-                }
-            } else {
-                g3Count = ARCHETYPES.filter(a => a.grade === 'G3').length;
-                g4Count = ARCHETYPES.filter(a => a.grade === 'G4').length;
-            }
-
-            coreCount = ARCHETYPES.filter(a => a.badge === 'CORE').length;
-            satCount = ARCHETYPES.filter(a => a.badge === 'SAT').length;
-
-            document.getElementById('g3Count').textContent = g3Count;
-            document.getElementById('g4Count').textContent = g4Count;
-            document.getElementById('coreCount').textContent = coreCount;
-            document.getElementById('satCount').textContent = satCount;
-        }
-
-        function renderArchetypes() {
-            const grid = document.getElementById('archetypeGrid');
-            const filtered = ARCHETYPES.filter(arch => {
-                const gradeMatch = currentFilter.grade === 'all' || arch.grade === currentFilter.grade;
-                const categoryMatch = currentFilter.category === 'all' || arch.badge === currentFilter.category;
-                const topicMatch = currentFilter.topic === 'all' || arch.topic === currentFilter.topic;
-                return gradeMatch && categoryMatch && topicMatch;
+        function setupEventListeners() {
+            document.querySelectorAll('.control-btn[data-topic]').forEach(btn => {
+                btn.addEventListener('click', e => {
+                    document.querySelector('.control-btn[data-topic].active').classList.remove('active');
+                    e.currentTarget.classList.add('active');
+                    currentFilters.topic = e.currentTarget.dataset.topic;
+                    renderMap();
+                    resetHighlight();
+                });
             });
 
-            document.getElementById('displayCount').textContent = filtered.length;
+            document.getElementById('gradeSelect').addEventListener('change', e => {
+                currentFilters.grade = e.target.value;
+                renderMap();
+                resetHighlight();
+            });
 
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align:center; padding:60px 20px; color:#a0aec0;">
-                        <p style="font-size:48px; margin-bottom:16px;">🔍</p>
-                        <p style="font-size:18px; font-weight:600;">No archetypes match your filters</p>
-                        <p style="font-size:14px; margin-top:12px;">Try adjusting your filter selection</p>
-                    </div>
-                `;
-                return;
+            document.getElementById('categorySelect').addEventListener('change', e => {
+                currentFilters.category = e.target.value;
+                renderMap();
+                resetHighlight();
+            });
+
+            document.getElementById('drillForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const archId = document.getElementById('drillArchetype').value;
+                const drill = {
+                    name: document.getElementById('drillName').value,
+                    platform: document.getElementById('drillPlatform').value,
+                    url: document.getElementById('drillUrl').value,
+                    description: document.getElementById('drillDescription').value
+                };
+
+                if (!drillLinks[archId]) drillLinks[archId] = [];
+                drillLinks[archId].push(drill);
+                
+                saveDrillLinks();
+                closeDrillManager();
+                
+                if (selectedNodeId === archId) {
+                    showNodeInfo(archId);
+                    setTimeout(() => {
+                        const drillsTab = document.querySelector('.panel-tab[onclick*="drills"]');
+                        if (drillsTab) drillsTab.click();
+                    }, 100);
+                }
+            });
+
+             window.addEventListener('resize', () => {
+                if (highlightedChain.length > 0) {
+                     setTimeout(() => {
+                        const startNodeId = highlightedChain[0]; // The first node is always the start of the chain
+                        drawLines(startNodeId);
+                     }, 100);
+                }
+            });
+        }
+
+
+        function loadDrillLinks() {
+            try {
+                const stored = localStorage.getItem('drillLinks');
+                drillLinks = stored ? JSON.parse(stored) : {};
+            } catch (e) {
+                console.error('Error loading drill links:', e);
+                drillLinks = {};
             }
+        }
 
-            grid.innerHTML = filtered.map(arch => {
-                const concepts = arch.key_concepts || arch.concepts || [];
-                return `
-                    <div class="archetype-card" data-id="${arch.id}">
-                        <div class="card-header">
-                            <div class="archetype-name">${arch.name}</div>
-                            <div class="card-badges">
-                                <span class="grade-tag ${arch.grade}">${arch.grade}</span>
+        function saveDrillLinks() {
+            localStorage.setItem('drillLinks', JSON.stringify(drillLinks));
+        }
+        
+        function renderMap() {
+            const container = document.getElementById('nodes-wrapper');
+            if (!container) return;
+
+            const levels = ['L3', 'L2', 'L1'];
+            const levelNames = { 'L3': 'Level 3: Meta-Strategy', 'L2': 'Level 2: Integrated Application', 'L1': 'Level 1: Foundational Skills' };
+            const levelDescs = { 'L3': 'Complex strategic thinking and synthesis', 'L2': 'Multi-step problems requiring integration of L1 skills', 'L1': 'Basic procedures and single-step solutions' };
+
+            let html = '';
+            levels.forEach(level => {
+                const archetypes = ARCHETYPES.filter(a => {
+                    const levelMatch = a.level === level;
+                    const topicMatch = currentFilters.topic === 'all' || a.topic === currentFilters.topic;
+                    const gradeMatch = currentFilters.grade === 'all' || !a.grade || a.grade === currentFilters.grade;
+                    const categoryMatch = currentFilters.category === 'all' || a.badge === currentFilters.category;
+                    return levelMatch && topicMatch && gradeMatch && categoryMatch;
+                });
+
+                if (archetypes.length > 0) {
+                    html += `
+                        <div class="level-section" data-level="${level}">
+                            <div class="level-header">
+                                <div class="level-badge ${level}">${level}</div>
+                                <div class="level-title">${levelNames[level]}</div>
+                                <div class="level-desc">${levelDescs[level]}</div>
+                            </div>
+                            <div class="nodes-container">
+                                ${archetypes.map(arch => renderNode(arch)).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            container.innerHTML = html || '<p>No archetypes match filters.</p>';
+            setTimeout(() => {
+                const mapContainer = document.getElementById('mapContainer');
+                const svg = document.getElementById('connection-lines');
+                if(mapContainer && svg) svg.style.height = `${mapContainer.scrollHeight}px`;
+            }, 50);
+        }
+
+        function renderNode(arch) {
+            const connections = arch.constituent_l1_ids || arch.source_l2_ids || [];
+            let connectionLabel = '';
+            if (arch.level === 'L3' && arch.source_l2_ids) connectionLabel = '↓ Calls L2 Skills:';
+            else if (arch.level === 'L2' && arch.constituent_l1_ids) connectionLabel = '↓ Calls L1 Skills:';
+
+            return `
+                <div class="node" data-id="${arch.id}" onclick="showNodeInfo('${arch.id}')">
+                    <div class="node-content">
+                        <div class="node-header">
+                            <span class="node-name">${arch.name}</span>
+                            <div class="node-badges">
+                                ${arch.grade ? `<span class="grade-tag ${arch.grade}">${arch.grade}</span>` : ''}
                                 <span class="archetype-badge ${arch.badge}">${arch.badge}</span>
                             </div>
                         </div>
-                        <p class="card-description">${arch.description}</p>
-                        <div class="card-concepts">
-                            <div class="concepts-title">Key Concepts</div>
-                            <div class="concepts-list">
-                                ${concepts.map(c => `<span class="concept-tag">${c}</span>`).join('')}
+                        <div class="node-topic">${arch.topic}</div>
+                        <div class="node-desc">${arch.description}</div>
+                    </div>
+                    <div class="node-connections">
+                        <div style="flex-grow: 1;">
+                        ${connections.length > 0 ? `
+                            <div class="connection-label">
+                                <span>${connectionLabel}</span>
+                                <button class="visualize-btn" onclick="event.stopPropagation(); highlightChain('${arch.id}')" title="Visualize Path">
+                                    🔀 Visualize
+                                </button>
                             </div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="action-btn view-sop-btn" onclick="viewSOP('${arch.id}')">📋 View SOP</button>
-                            <button class="action-btn view-drills-btn" onclick="viewDrills('${arch.id}')">🎯 Drills</button>
+                            <div class="connection-links">
+                                ${connections.map(id => `<span class="connection-link" data-connection-id="${id}" onclick="event.stopPropagation(); showNodeInfo('${id}')">${id.split('-').slice(2).join('-')}</span>`).join('')}
+                            </div>
+                        ` : `
+                            <div class="connection-label">
+                                <span>No downstream skills.</span>
+                            </div>
+                        `}
                         </div>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `;
         }
 
-        async function loadSOP(archId) {
-            const arch = ARCHETYPES.find(a => a.id === archId);
-            if (!arch) return null;
-
-            if (arch.sop) {
-                return arch.sop;
-            }
-
-            if (!arch.sop_reference || arch.sop_reference.index === null) {
-                return null;
-            }
-
-            const cacheKey = `${arch.sop_reference.file}-${arch.sop_reference.index}`;
-            if (sopCache[cacheKey]) return sopCache[cacheKey];
-
-            try {
-                const response = await fetch(`./data/topics/${arch.sop_reference.file}`);
-                if (!response.ok) throw new Error('File not found');
-                const data = await response.json();
-                const sop = data.sops[arch.sop_reference.index];
-                sopCache[cacheKey] = sop;
-                return sop;
-            } catch (error) {
-                console.error(`Failed to load SOP for ${archId}:`, error);
-                return null;
-            }
+        function getChildren(parentId, archetypes) {
+            const parent = archetypes.find(p => p.id === parentId);
+            if (!parent) return [];
+            const children = parent.constituent_l1_ids || parent.source_l2_ids || [];
+            let allChildren = [...children];
+            children.forEach(c => allChildren.push(...getChildren(c, archetypes)));
+            return [...new Set(allChildren)];
         }
 
-        async function viewSOP(archId) {
-            selectedArchetype = archId;
-            const arch = ARCHETYPES.find(a => a.id === archId);
-            const panel = document.getElementById('contentPanel');
+        function highlightChain(nodeId) {
+            selectedNodeId = nodeId;
+            highlightedChain = [nodeId, ...getChildren(nodeId, ARCHETYPES)];
             
-            document.querySelectorAll('.archetype-card').forEach(card => {
-                card.classList.remove('selected');
-                if (card.dataset.id === archId) {
-                    card.classList.add('selected');
-                    card.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-                }
+            document.querySelectorAll('.node').forEach(nodeEl => {
+                const id = nodeEl.dataset.id;
+                nodeEl.classList.remove('highlighted', 'in-chain', 'dimmed');
+                if(id === nodeId) nodeEl.classList.add('highlighted');
+                else if (highlightedChain.includes(id)) nodeEl.classList.add('in-chain');
+                else nodeEl.classList.add('dimmed');
             });
-
-            panel.classList.remove('hidden');
-            panel.innerHTML = `
-                <div class="panel-content">
-                    <div class="panel-header">
-                        <h2>${arch.name}</h2>
-                        <p>${arch.grade} • ${arch.badge}</p>
-                    </div>
-                    <div class="panel-tabs">
-                        <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
-                        <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
-                    </div>
-                    <div class="loading-sop"><p>⏳ Loading SOP...</p></div>
-                </div>
-            `;
-
-            const sop = await loadSOP(archId);
-
-            if (!sop) {
-                panel.innerHTML = `
-                    <div class="panel-content">
-                        <div class="panel-header"><h2>${arch.name}</h2><p>${arch.grade} • ${arch.badge}</p></div>
-                        <div class="panel-tabs">
-                            <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
-                            <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
-                        </div>
-                        <div class="tab-content active" id="sopTab">
-                            <div class="no-drills-message">
-                                <p>📝</p>
-                                <p>SOP not available yet</p>
-                                <p style="font-size:12px; margin-top:10px;">Check data/topics/${arch.sop_reference?.file || 'unknown'}</p>
-                            </div>
-                        </div>
-                        <div class="tab-content" id="drillsTab">${renderDrillsContent(archId)}</div>
-                    </div>
-                `;
-                return;
-            }
-
-            panel.innerHTML = `
-                <div class="panel-content">
-                    <div class="panel-header"><h2>${arch.name}</h2><p>${arch.grade} • ${arch.badge}</p></div>
-                    <div class="panel-tabs">
-                        <button class="panel-tab active" onclick="switchTab('sop')">📋 SOP</button>
-                        <button class="panel-tab" onclick="switchTab('drills')">🎯 Drills</button>
-                    </div>
-                    <div class="tab-content active" id="sopTab">
-                        <div class="section-title">🎯 Goal</div>
-                        <p style="color:#4a5568;margin-bottom:20px;line-height:1.6;">${sop.goal}</p>
-                        <div class="section-title">📝 Steps</div>
-                        <div class="sop-steps">
-                            ${sop.steps.map((step, i) => `
-                                <div class="sop-step">
-                                    <div class="step-title">STEP ${i + 1}</div>
-                                    <div class="step-content">${step}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                        ${sop.pitfalls && sop.pitfalls.length > 0 ? `
-                            <div class="pitfalls-section">
-                                <div class="section-title">⚠️ Common Pitfalls</div>
-                                ${sop.pitfalls.map(p => `
-                                    <div class="pitfall-item">
-                                        <div class="pitfall-type">${p.type}</div>
-                                        <div style="font-size:13px;color:#2d3748;">${p.text}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                        ${sop.pro_tips && sop.pro_tips.length > 0 ? `
-                            <div class="tips-section">
-                                <div class="section-title">💡 Pro Tips</div>
-                                ${sop.pro_tips.map(tip => `
-                                    <div class="tip-item">
-                                        <div class="tip-label">PRO TIP</div>
-                                        <div style="font-size:13px;color:#2d3748;">${tip}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div class="tab-content" id="drillsTab">${renderDrillsContent(archId)}</div>
-                </div>
-            `;
-        }
-
-        function viewDrills(archId) {
-            viewSOP(archId);
-            setTimeout(() => switchTab('drills'), 100);
-        }
-
-        function switchTab(tab) {
-            document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
-            if (tab === 'sop') {
-                document.querySelectorAll('.panel-tab')[0].classList.add('active');
-                document.getElementById('sopTab').classList.add('active');
-            } else {
-                document.querySelectorAll('.panel-tab')[1].classList.add('active');
-                document.getElementById('drillsTab').classList.add('active');
+            setTimeout(() => drawLines(nodeId), 50);
+            document.getElementById('resetBtn').classList.add('visible');
+        }
+
+        function getAnchorPoint(nodeEl, side = 'bottom') {
+            const container = document.getElementById('mapContainer');
+            const containerRect = container.getBoundingClientRect();
+            const nodeRect = nodeEl.getBoundingClientRect();
+            const x = nodeRect.left - containerRect.left + (nodeRect.width / 2);
+            let y = (side === 'top') ? nodeRect.top - containerRect.top : nodeRect.bottom - containerRect.top;
+            return { x: x + container.scrollLeft, y: y + container.scrollTop };
+        }
+
+        function drawLines(startNodeId) {
+            const svg = document.getElementById('connection-lines');
+            svg.innerHTML = '';
+            const toProcess = [startNodeId];
+            const processed = new Set();
+
+            while(toProcess.length > 0) {
+                const currentId = toProcess.shift();
+                if(processed.has(currentId)) continue;
+                processed.add(currentId);
+
+                const parentEl = document.querySelector(`.node[data-id="${currentId}"]`);
+                if(!parentEl) continue;
+
+                const directChildrenIds = ARCHETYPES.find(a => a.id === currentId)?.constituent_l1_ids || ARCHETYPES.find(a => a.id === currentId)?.source_l2_ids || [];
+
+                directChildrenIds.forEach(childId => {
+                    const childEl = document.querySelector(`.node[data-id="${childId}"]`);
+                    if (childEl) {
+                        const startPoint = getAnchorPoint(parentEl, 'bottom');
+                        const endPoint = getAnchorPoint(childEl, 'top');
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        const d = `M ${startPoint.x} ${startPoint.y} C ${startPoint.x} ${startPoint.y + 70}, ${endPoint.x} ${endPoint.y - 70}, ${endPoint.x} ${endPoint.y}`;
+                        path.setAttribute('d', d);
+                        path.setAttribute('stroke', '#818cf8');
+                        path.setAttribute('stroke-width', '2.5');
+                        path.setAttribute('fill', 'none');
+                        svg.appendChild(path);
+                        toProcess.push(childId);
+                    }
+                });
             }
+        }
+        
+        function resetHighlight() {
+            highlightedChain = [];
+            document.querySelectorAll('.node').forEach(node => node.classList.remove('highlighted', 'in-chain', 'dimmed'));
+            document.getElementById('connection-lines').innerHTML = '';
+            document.getElementById('resetBtn').classList.remove('visible');
+            closeInfoPanel();
+        }
+
+        function showNodeInfo(id) {
+            const arch = ARCHETYPES.find(a => a.id === id);
+            if (!arch) return;
+            selectedNodeId = id;
+
+            const panel = document.getElementById('infoPanel');
+            const content = document.getElementById('infoPanelContent');
+            
+            let sopHtml = renderSOPContent(arch);
+            let drillsHtml = renderDrillsContent(id);
+
+            content.innerHTML = `
+                <div class="panel-header">
+                    <h2>${arch.name}</h2>
+                    <p>${arch.level} • ${arch.grade || ''} • ${arch.badge}</p>
+                </div>
+                <div class="panel-tabs">
+                    <button class="panel-tab active" onclick="switchTab(event, 'sopTabContent')">SOP</button>
+                    <button class="panel-tab" onclick="switchTab(event, 'drillsTabContent')">Drills</button>
+                </div>
+                <div id="sopTabContent" class="tab-content active">${sopHtml}</div>
+                <div id="drillsTabContent" class="tab-content">${drillsHtml}</div>
+            `;
+            panel.classList.add('visible');
+        }
+        
+        function renderSOPContent(arch) {
+             const sop = arch.sop;
+             if (!sop) return `<p>SOP details not available.</p>`;
+
+             const connections = arch.constituent_l1_ids || arch.source_l2_ids || [];
+             const constituentArchetypes = connections.map(id => ARCHETYPES.find(a => a.id === id));
+             const parentArchetypes = ARCHETYPES.filter(p => (p.constituent_l1_ids && p.constituent_l1_ids.includes(arch.id)) || (p.source_l2_ids && p.source_l2_ids.includes(arch.id)));
+
+             let html = `<div class="section-title">🎯 Goal</div><p>${sop.goal}</p>`;
+             
+             if(sop.triggers) {
+                html += `<div class="section-title">⚡️ Triggers</div><p><em>${sop.triggers.join(', ')}</em></p>`;
+             }
+
+             if (sop.steps) {
+                 html += `<div class="section-title">📝 Steps</div>` + sop.steps.map((step, i) => `<div class="sop-step"><strong>Step ${i+1}:</strong> ${step.substring(step.indexOf('.') > -1 ? step.indexOf('.') + 1 : step.indexOf(':') + 1).trim()}</div>`).join('');
+             }
+
+             if (sop.pitfalls) {
+                html += `<div class="section-title">⚠️ Pitfalls</div>` + sop.pitfalls.map(p => `
+                    <div class="pitfall-item">
+                        <div class="pitfall-type">${p.type}</div>
+                        <p>${p.text}</p>
+                    </div>
+                `).join('');
+             }
+
+             if (sop.pro_tips) {
+                html += `<div class="section-title">💡 Pro Tips</div>` + sop.pro_tips.map(tip => `
+                    <div class="tip-item">
+                        <p>${tip}</p>
+                    </div>
+                `).join('');
+             }
+
+             if (parentArchetypes.length > 0) {
+                 html += `<div class="section-title">⬆️ Called By</div>` + parentArchetypes.map(p => `<div class="constituent-skill-link" onclick="showNodeInfo('${p.id}')">${p.name} (${p.level})</div>`).join('');
+             }
+             if (constituentArchetypes.length > 0) {
+                 html += `<div class="section-title">⬇️ Calls</div>` + constituentArchetypes.map(c => c ? `<div class="constituent-skill-link" onclick="showNodeInfo('${c.id}')">${c.name} (${c.level})</div>` : '').join('');
+             }
+             return html;
         }
 
         function renderDrillsContent(archId) {
-            const drills = drillLinks[archId] || [];
-            
-            if (drills.length === 0) {
-                return `
-                    <div class="no-drills-message">
-                        <p>📚</p><p>No practice drills added yet</p>
-                        <button class="add-drill-btn" onclick="openDrillManager('${archId}')">➕ Add First Drill</button>
-                    </div>
-                `;
-            }
-
-            return `
-                <div class="section-title">🎯 Practice Drills</div>
-                ${drills.map(drill => `
-                    <a href="${drill.url}" target="_blank" rel="noopener noreferrer" class="drill-link-item">
-                        <div class="drill-platform-icon ${drill.platform}">${drill.platform === 'google' ? '📁' : '📝'}</div>
+             const drills = drillLinks[archId] || [];
+             if (drills.length === 0) {
+                 return `
+                     <div class="no-drills-message">
+                         <p>📚</p><p>No practice drills added yet.</p>
+                         <button class="add-drill-btn" onclick="openDrillManager('${archId}')">➕ Add First Drill</button>
+                     </div>
+                 `;
+             }
+             return `
+                 <div class="section-title">🎯 Practice Drills</div>
+                 ${drills.map(drill => `
+                     <a href="${drill.url}" target="_blank" class="drill-link-item">
+                        <div class="drill-platform-icon">${drill.platform === 'google' ? '📁' : '📝'}</div>
                         <div class="drill-link-content">
                             <div class="drill-link-title">${drill.name}</div>
-                            <div class="drill-link-desc">${drill.description || 'Practice exercises'}</div>
+                            <div class="drill-link-desc">${drill.description}</div>
                         </div>
                         <div class="external-link-icon">↗</div>
-                    </a>
-                `).join('')}
-                <button class="add-drill-btn" onclick="openDrillManager('${archId}')" style="width:100%;">➕ Add More Drills</button>
-            `;
+                     </a>
+                 `).join('')}
+                 <button class="add-drill-btn" style="width:100%" onclick="openDrillManager('${archId}')">➕ Add More Drills</button>
+             `;
+        }
+
+        function switchTab(evt, tabId) {
+            const panel = evt.target.closest('.info-panel');
+            panel.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            panel.querySelectorAll('.panel-tab').forEach(pt => pt.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        function closeInfoPanel() {
+            document.getElementById('infoPanel').classList.remove('visible');
+            if (!highlightedChain.length) { // Only deselect if not in a visualization
+                document.querySelectorAll('.node').forEach(n => n.classList.remove('highlighted'));
+                selectedNodeId = null;
+            }
+        }
+        
+        function filterTopic(topic) {
+            currentFilters.topic = topic;
+            renderMap();
+            resetHighlight();
+        }
+        function filterGrade(grade) {
+            currentFilters.grade = grade;
+            renderMap();
+            resetHighlight();
+        }
+        function filterCategory(category) {
+            currentFilters.category = category;
+            renderMap();
+            resetHighlight();
         }
 
         function openDrillManager(archId = null) {
             const modal = document.getElementById('drillModal');
             const select = document.getElementById('drillArchetype');
-            
-            select.innerHTML = ARCHETYPES.map(arch => 
-                `<option value="${arch.id}" ${arch.id === archId ? 'selected' : ''}>${arch.name} (${arch.grade} • ${arch.badge})</option>`
-            ).join('');
-
+            select.innerHTML = ARCHETYPES.sort((a,b) => a.name.localeCompare(b.name)).map(a => `<option value="${a.id}">${a.name}</option>`).join('');
+            if (archId) select.value = archId;
             modal.classList.add('active');
-            document.getElementById('drillForm').reset();
-            if (archId) {
-                document.getElementById('drillArchetype').value = archId;
-            }
         }
 
         function closeDrillManager() {
             document.getElementById('drillModal').classList.remove('active');
         }
 
-        document.getElementById('drillForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const archId = document.getElementById('drillArchetype').value;
-            const drill = {
-                name: document.getElementById('drillName').value,
-                platform: document.getElementById('drillPlatform').value,
-                url: document.getElementById('drillUrl').value,
-                description: document.getElementById('drillDescription').value
-            };
-
-            if (!drillLinks[archId]) drillLinks[archId] = [];
-            drillLinks[archId].push(drill);
-            
-            localStorage.setItem('drillLinks', JSON.stringify(drillLinks));
-            closeDrillManager();
-            
-            if (selectedArchetype === archId) viewDrills(archId);
-
-            alert('✅ Drill link added successfully!');
-        });
-
-        async function setupEventListeners() {
-            document.getElementById('gradeSelect').addEventListener('change', async (e) => {
-                const newGrade = e.target.value;
-                currentFilter.grade = newGrade;
-                
-                if (newGrade === 'all') {
-                    const allArchetypes = [];
-                    if (ARCHETYPE_CONFIG && ARCHETYPE_CONFIG.available_grades) {
-                        for (const grade of ARCHETYPE_CONFIG.available_grades) {
-                            const gradeData = await loadGradeData(grade);
-                            allArchetypes.push(...gradeData);
-                        }
-                        ARCHETYPES = allArchetypes;
-                    }
-                } else {
-                    ARCHETYPES = await loadGradeData(newGrade);
-                }
-                
-                renderArchetypes();
-                updateStats();
-            });
-
-            document.getElementById('categorySelect').addEventListener('change', (e) => {
-                currentFilter.category = e.target.value;
-                renderArchetypes();
-            });
-
-            document.querySelectorAll('.strand-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.strand-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentFilter.topic = e.target.dataset.topic;
-                    renderArchetypes();
-                });
-            });
-
-            document.querySelectorAll('.view-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentFilter.view = e.target.dataset.view;
-                });
-            });
-
-            document.getElementById('drillModal').addEventListener('click', (e) => {
-                if (e.target.id === 'drillModal') closeDrillManager();
-            });
-        }
-
-        // Start initialization
-        init();
     </script>
 </body>
 </html>
+
+
+
