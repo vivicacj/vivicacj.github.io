@@ -850,6 +850,20 @@
                 loadingSpinner: document.getElementById('loading-spinner'),
                 svg: document.getElementById('evolution-map-svg')
             };
+
+            function safeFitAndCenter() {
+                if (panZoomInstance) {
+                    try {
+                        const sizes = panZoomInstance.getSizes();
+                        if (sizes.width > 1 && sizes.height > 1) {
+                            panZoomInstance.fit();
+                            panZoomInstance.center();
+                        }
+                    } catch (e) {
+                         console.error("Error during fit/center:", e);
+                    }
+                }
+            }
             
             /**
              * Initialize Pan & Zoom.
@@ -875,18 +889,9 @@
                 // After a short timeout to let the DOM and CSS animations settle, resize and center the map.
                 setTimeout(() => {
                     if (panZoomInstance) {
-                        try {
-                            panZoomInstance.resize(); 
-                            const sizes = panZoomInstance.getSizes();
-                            // FIX: Only fit/center if the SVG container has a valid size.
-                            if (sizes.width > 1 && sizes.height > 1) {
-                                panZoomInstance.fit();
-                                panZoomInstance.center();
-                            }
-                            updateZoomIndicator();
-                        } catch (e) {
-                            console.error("Error during pan/zoom post-initialization:", e);
-                        }
+                        panZoomInstance.resize(); 
+                        safeFitAndCenter();
+                        updateZoomIndicator();
                     }
                 }, 1200); // Increased timeout to wait for CSS animations
             }
@@ -912,11 +917,7 @@
                 if (isSVGTab && panZoomInstance) {
                     setTimeout(() => {
                         panZoomInstance.resize();
-                        const sizes = panZoomInstance.getSizes();
-                         if (sizes.width > 1 && sizes.height > 1) {
-                            panZoomInstance.fit();
-                            panZoomInstance.center();
-                        }
+                        safeFitAndCenter();
                         updateZoomIndicator();
                     }, 50);
                 }
@@ -1008,10 +1009,7 @@
                     switch(e.key) {
                         case 'r':
                         case 'R':
-                            if (panZoomInstance) {
-                                panZoomInstance.fit();
-                                panZoomInstance.center();
-                            }
+                            safeFitAndCenter();
                             break;
                         case '+':
                         case '=':
@@ -1055,10 +1053,7 @@
                 elements.figmaTabButton.addEventListener('click', () => switchTab('figma'));
                 
                 elements.resetBtn.addEventListener('click', () => {
-                    if (panZoomInstance) {
-                        panZoomInstance.fit();
-                        panZoomInstance.center();
-                    }
+                    safeFitAndCenter();
                 });
                 
                 elements.zoomInBtn.addEventListener('click', () => {
@@ -1087,11 +1082,7 @@
                     resizeTimeout = setTimeout(() => {
                         if (panZoomInstance && elements.svgMapContainer.classList.contains('active')) {
                             panZoomInstance.resize();
-                             const sizes = panZoomInstance.getSizes();
-                             if (sizes.width > 1 && sizes.height > 1) {
-                                panZoomInstance.fit();
-                                panZoomInstance.center();
-                            }
+                            safeFitAndCenter();
                         }
                     }, 250);
                 });
