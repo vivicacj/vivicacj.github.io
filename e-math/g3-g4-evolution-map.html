@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>G3→G4 Evolution Map · Hierarchical View</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+    
+    * {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated gradient background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+      animation: gradientShift 15s ease infinite;
+      z-index: -1;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    /* Abstract Icon Style */
+    .icon {
+        width: 1em;
+        height: 1em;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    /* Glass morphism effect */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Navigation bar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 3s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    /* Hero section */
+    .hero {
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      animation: fadeInUp 1.2s ease-out;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--glass), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+
+    .stat-card:hover::before {
+      transform: translateX(100%);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--primary);
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      animation: float 3s ease-in-out infinite;
+      color: var(--accent);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 0.5rem;
+    }
+
+    /* Control panel */
+    .control-panel {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3rem;
+      animation: fadeInUp 1.4s ease-out;
+    }
+
+    .btn {
+      padding: 0.875rem 1.75rem;
+      border-radius: 1rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--glass);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--primary);
+    }
+    
+    .btn .icon {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    /* Search box */
+    .search-container {
+      max-width: 750px; /* Increased length */
+      margin: 0 auto 3rem;
+      position: relative;
+      animation: fadeInUp 1.6s ease-out;
+      width: 100%;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 1rem 3.5rem 1rem 3.5rem; /* Reduced height */
+      border-radius: 1.5rem;
+      border: 2px solid var(--glass-border);
+      background: var(--glass);
+      color: var(--text-primary);
+      font-size: 1rem;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-secondary);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .search-box:not(:placeholder-shown) + .search-clear {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    /* Content sections */
+    .section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .section-title .icon {
+        width: 1.5em;
+        height: 1.5em;
+        color: var(--primary);
+    }
+    
+    #diagram .section-title {
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    #diagram .section-title .icon {
+        color: var(--primary); /* Keep icon color consistent */
+    }
+
+
+    .section-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .badge-g3 {
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      color: white;
+    }
+
+    .badge-g4 {
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+    }
+
+    /* Topic grid */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .topic-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Topic card - The star of the show */
+    .topic-card {
+      background: linear-gradient(135deg, var(--glass), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      border-radius: 2rem;
+      padding: 0;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .topic-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.1), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .topic-card:hover::after {
+      opacity: 1;
+    }
+
+    .topic-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--primary);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);
+    }
+
+    .topic-card.card-core {
+      border-left: 4px solid var(--primary);
+    }
+
+    .topic-card.card-satellite {
+      border-left: 4px solid var(--success);
+    }
+
+    .topic-card.card-new {
+      border-left: 4px solid var(--warning);
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(255, 255, 255, 0.02));
+    }
+
+    .topic-header {
+      padding: 2rem;
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .topic-title-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .topic-icon {
+      font-size: 2rem;
+      animation: float 3s ease-in-out infinite;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+    
+    .topic-icon .icon {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+
+    .topic-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .topic-subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .pill {
+      padding: 0.375rem 0.875rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .pill-core {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.3));
+      color: #a5b4fc;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+
+    .pill-satellite {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.3));
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .pill-new {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.3));
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .evolution-badge {
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .evolution-badge .icon {
+        width: 1.2em;
+        height: 1.2em;
+    }
+
+    .badge-deepening {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.3));
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-extension {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.3));
+      color: #c4b5fd;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .badge-addition {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(249, 115, 22, 0.3));
+      color: #fdba74;
+      border: 1px solid rgba(249, 115, 22, 0.3);
+    }
+
+    .badge-meta {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.3));
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .expand-indicator {
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .expand-indicator .icon {
+      width: 1.2em;
+      height: 1.2em;
+    }
+
+    .topic-card.expanded .expand-indicator {
+      transform: rotate(180deg);
+    }
+
+    .topic-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .topic-card.expanded .topic-content {
+      max-height: 2000px; /* Increased to accommodate catalog */
+    }
+
+    .topic-body {
+      padding: 2rem;
+    }
+
+    .archetype-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .archetype-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .archetype-card.level-1 {
+      border-left: 3px solid #3b82f6;
+    }
+
+    .archetype-card.level-2 {
+      border-left: 3px solid #8b5cf6;
+    }
+
+    .archetype-card.level-3 {
+      border-left: 3px solid #ef4444;
+    }
+
+    .archetype-title {
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .level-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .level-1 .level-badge {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+
+    .level-2 .level-badge {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+    }
+
+    .level-3 .level-badge {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+    }
+
+    .sop-chain {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      line-height: 1.6;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Catalog section */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .catalog-card {
+      background: linear-gradient(135deg, var(--glass), rgba(255, 255, 255, 0.02));
+      border: 1px solid var(--glass-border);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+
+    .catalog-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .catalog-card .archetype-list li {
+        font-size: 1rem;
+        padding: 0.75rem 0;
+        color: var(--text-secondary);
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .catalog-card .archetype-list li:last-child {
+        border-bottom: none;
+    }
+
+
+    .catalog-card.level-1 {
+      border-top: 3px solid #3b82f6;
+    }
+
+    .catalog-card.level-2 {
+      border-top: 3px solid #8b5cf6;
+    }
+
+    .catalog-card.level-3 {
+      border-top: 3px solid #ef4444;
+    }
+    
+    .catalog-card .level-badge {
+        margin-right: 0.5rem;
+    }
+    
+    .catalog-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+
+    /* Mermaid diagram */
+    .diagram-container {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 2rem;
+      padding: 2rem;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mermaid {
+      background: transparent !important;
+      min-width: 1200px;
+    }
+
+    /* Floating action button */
+    .fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+      transition: all 0.3s;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .fab .icon {
+        width: 1.8em;
+        height: 1.8em;
+    }
+
+    .fab:hover {
+      transform: scale(1.1) rotate(90deg);
+      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.6);
+    }
+
+    /* Scroll to top */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      cursor: pointer;
+      font-size: 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    
+    .scroll-top .icon {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .scroll-top:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    /* Tooltip */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      padding: 0.5rem 1rem;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 1000;
+    }
+
+    [data-tooltip]:hover::after {
+      opacity: 1;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+
+    ::selection {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* --- CSS for Archetype/SOP Hierarchical View (方案1) --- */
+    .archetype-sop-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .archetype-sop-group {
+      position: relative;
+    }
+    
+    .archetype-sop-group .archetype-card {
+        margin-bottom: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    .archetype-sop-group .archetype-title {
+        margin-bottom: 0; /* Remove bottom margin inside the card */
+    }
+
+    .sop-connector {
+      position: relative;
+      padding-left: 2.5rem; /* Space for the connector line */
+      margin-top: -1px; /* Overlap slightly for a seamless look */
+    }
+    
+    .sop-connector .sop-chain {
+        margin-top: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .sop-connector::before {
+      content: '';
+      position: absolute;
+      left: 1.25rem;
+      top: 0px;
+      width: 1.25rem;
+      height: 1.7rem; 
+      border-left: 2px solid var(--glass-border);
+      border-bottom: 2px solid var(--glass-border);
+      border-bottom-left-radius: 0.75rem;
+    }
+    /* --- End of Hierarchical View CSS --- */
+    
+    /* Legend Section */
+    #legend {
+      position: fixed;
+      top: 50%;
+      right: 2rem;
+      transform: translate(120%, -50%);
+      width: 300px;
+      z-index: 1001;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #legend.visible {
+       transform: translate(0, -50%);
+    }
+    .legend-card {
+        border-radius: 1.5rem;
+        padding: 1.5rem;
+    }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .legend-item:last-child {
+        margin-bottom: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
+      <div class="logo">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V6.2C4 5.0799 4 4.51984 4.21799 4.09202C4.40973 3.71569 4.71569 3.40973 5.09202 3.21799C5.51984 3 6.0799 3 7.2 3H16.8C17.9201 3 18.4802 3 18.908 3.21799C19.2843 3.40973 19.5903 3.71569 19.782 4.09202C20 4.51984 20 5.0799 20 6.2V17H6C4.89543 17 4 17.8954 4 19ZM4 19C4 20.1046 4.89543 21 6 21H20V19H4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        G3→G4 Evolution
+      </div>
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <button class="btn btn-secondary" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" data-tooltip="Back to Top">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="btn btn-secondary" onclick="toggleAllCards()" id="expandBtn" data-tooltip="Expand/Collapse All">
+          <svg class="icon" id="expand-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1 class="hero-title">G3 → G4 Mathematics Evolution</h1>
+    <p class="hero-subtitle">
+      An interactive journey through 18 topics, 45 archetypes, and comprehensive SOP chains. 
+      Explore how concepts <strong>deepen</strong>, <strong>extend</strong>, and expand across Secondary 3 to 4.
+    </p>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V6.2C4 5.0799 4 4.51984 4.21799 4.09202C4.40973 3.71569 4.71569 3.40973 5.09202 3.21799C5.51984 3 6.0799 3 7.2 3H16.8C17.9201 3 18.4802 3 18.908 3.21799C19.2843 3.40973 19.5903 3.71569 19.782 4.09202C20 4.51984 20 5.0799 20 6.2V17H6C4.89543 17 4 17.8954 4 19ZM4 19C4 20.1046 4.89543 21 6 21H20V19H4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat-value">18</div>
+        <div class="stat-label">Topics</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21ZM12 21V16M12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat-value">45</div>
+        <div class="stat-label">Archetypes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 16V13M12 16V8M6 16V11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="stat-value">3</div>
+        <div class="stat-label">Levels</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14.5 9.5C14.5 7.84315 13.1569 6.5 11.5 6.5C9.84315 6.5 8.5 7.84315 8.5 9.5C8.5 11.1569 9.84315 12.5 11.5 12.5H12.5C14.1569 12.5 15.5 13.8431 15.5 15.5C15.5 17.1569 14.1569 18.5 12.5 18.5C10.8431 18.5 9.5 17.1569 9.5 15.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="stat-value">∞</div>
+        <div class="stat-label">SOP Chains</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="control-panel">
+      <div class="search-container" style="margin: 0;">
+        <span class="search-icon">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <input type="text" class="search-box" id="searchInput" placeholder="Search topics, archetypes, SOPs... (Ctrl+K)" oninput="filterContent(this.value)">
+        <span class="search-clear" onclick="clearSearch()">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="control-panel">
+      <button class="btn btn-primary" onclick="scrollToSection('g3')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 19V6.2C4 5.0799 4 4.51984 4.21799 4.09202C4.40973 3.71569 4.71569 3.40973 5.09202 3.21799C5.51984 3 6.0799 3 7.2 3H16.8C17.9201 3 18.4802 3 18.908 3.21799C19.2843 3.40973 19.5903 3.71569 19.782 4.09202C20 4.51984 20 5.0799 20 6.2V17H6C4.89543 17 4 17.8954 4 19ZM4 19C4 20.1046 4.89543 21 6 21H20V19H4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Explore G3 Topics
+      </button>
+      <button class="btn btn-primary" onclick="scrollToSection('g4')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21L12 3M12 3L17 8M12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Explore G4 Topics
+      </button>
+      <button class="btn btn-secondary" onclick="scrollToSection('catalog')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3H4V9H9V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 15H4V21H9V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 3H15V9H20V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15H15V21H20V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        View Catalog
+      </button>
+      <button class="btn btn-secondary" onclick="scrollToSection('diagram')">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 20L3 17V4L9 7M9 20L15 17M9 20V7M15 17L21 20V7L15 4M15 17V4M15 4L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Evolution Map
+      </button>
+    </div>
+  </section>
+
+  <!-- G3 Topics Section -->
+  <section class="section" id="g3">
+    <div class="section-header">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <h2 class="section-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21L19 17L12 13L5 17L12 21ZM12 21V13M12 13L5 9L12 5L19 9L12 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>G3 Topics</span>
+        </h2>
+        <span class="section-badge badge-g3">Foundation Level</span>
+      </div>
+      <span style="color: var(--text-secondary); font-size: 0.875rem;">Core + Satellite</span>
+    </div>
+
+    <div class="topic-grid">
+      <!-- G3 Core Topics -->
+      <div class="topic-card card-core" data-keywords="algebra manipulation equations fractions modelling factorisation simultaneous" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 10H4V4H20V10ZM20 20H4V14H20V20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Algebra</div>
+              <div class="topic-subtitle">Manipulation, equations, algebraic fractions</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-core">Core</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+          <div class="topic-body">
+            <div class="archetype-sop-container">
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-ALG-01 · Factorisation</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-Factorise → SOP-CommonFactor → SOP-DiffSquares / SOP-Trinomial</div></div>
+              </div>
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-ALG-02 · Algebraic Fractions</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-AlgebraicFractions → SOP-LCD → SOP-Simplify</div></div>
+              </div>
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-ALG-05 · Simultaneous Equations</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-Simultaneous (Elimination / Substitution)</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="geometry mensuration circle similarity congruency area volume sector" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 21L21 3L12 12L3 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Geometry & Mensuration</div>
+              <div class="topic-subtitle">Circle properties, Similarity & Congruency</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-core">Core</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+          <div class="topic-body">
+            <div class="archetype-sop-container">
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-GEO-01 · Prove Similarity</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-ProveSimilarity → SOP-RatioSetup → SOP-SolveProportion</div></div>
+              </div>
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-GEO-02 · Prove Congruency</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-ProveCongruency → SOP-IdentifyConditions → SOP-StateConclusion</div></div>
+              </div>
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-MEN-02 · Sector Area & Arc Length</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-SectorArea → SOP-CompositeArea</div></div>
+              </div>
+              <div class="archetype-sop-group">
+                <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-GEO-04 · Circle Theorems</div></div>
+                <div class="sop-connector"><div class="sop-chain">SOP-IdentifyTheorem → SOP-FormEquation → SOP-Solve</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="quadratic graphs completing square sketching parabola vertex" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3V21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 15L11 9L15 13L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Quadratic & Graphs</div>
+              <div class="topic-subtitle">Completing square, sketching, finding equations</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-core">Core</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-QUAD-01 · Completing the Square</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-CompleteSquare → SOP-FindVertex/Axis/Intercepts</div></div>
+                  </div>
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-QUAD-02 · Sketching Quadratics</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-FindKeyPoints → SOP-TableOfValues → SOP-PlotCurve</div></div>
+                  </div>
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-QUAD-03 · Find Equation from Graph</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-IdentifyRoots/Vertex → SOP-FormEquation → SOP-VerifyPoint</div></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="trigonometry sohcahtoa sine cosine rule" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21L21 12L12 3L3 12L12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="2"/></svg></span>
+            <div>
+              <div class="topic-title">Trigonometry</div>
+              <div class="topic-subtitle">SOHCAHTOA, Sine & Cosine Rules</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-core">Core</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-TRIG-01 · SOHCAHTOA</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-SOHCAHTOA → SOP-RightTriangleSolve</div></div>
+                  </div>
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-TRIG-02 · Sine & Cosine Rules</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-IdentifyRule → SOP-ApplyFormula → SOP-Solve</div></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- G3 Satellite Topics -->
+      <div class="topic-card card-satellite" data-keywords="coordinate geometry line gradient distance midpoint parallel perpendicular" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/><path d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="2"/></svg></span>
+            <div>
+              <div class="topic-title">Coordinate Geometry</div>
+              <div class="topic-subtitle">Lines, gradients, distance formulas</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-CG-01/02/03 · Lines & Properties</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-CalcGradient → SOP-UsePointSlope → SOP-FindIntersection</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="inequalities linear compound number line region" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21H3L9 3H15L21 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.5 15.5H17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Inequalities</div>
+              <div class="topic-subtitle">Linear and compound inequalities</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-INEQ-01 · Linear Inequalities</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-SolveCompoundInequality → SOP-DrawNumberLine → SOP-ShadeRegion</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="indices standard form laws exponents power scientific notation" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 12L12 2L17 12L12 22L7 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Indices & Standard Form</div>
+              <div class="topic-subtitle">Laws of indices, scientific notation</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-IND-01/02 · Indices & Standard Form</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-ApplyIndexRules → SOP-ConvertToStdForm → SOP-Compute</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="number ratio proportion percentage financial rate speed time distance" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8.5C15 7.67157 14.3284 7 13.5 7H10.5C9.67157 7 9 7.67157 9 8.5V8.5C9 9.32843 9.67157 10 10.5 10H13.5C14.3284 10 15 10.6716 15 11.5V11.5C15 12.3284 14.3284 13 13.5 13H10.5C9.67157 13 9 13.6716 9 14.5V14.5C9 15.3284 9.67157 16 10.5 16H13.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Number, Proportion & Financial</div>
+              <div class="topic-subtitle">Ratio, percentage, rates, financial problems</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-RP-01/02/03 · Ratio, Percentage & Rates</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-RateUnitize → SOP-ProportionSetup → SOP-PercentMultiStep</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="sequences patterns arithmetic quadratic nth term formula" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 8H20M4 16H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Sequences & Patterns</div>
+              <div class="topic-subtitle">Arithmetic and quadratic sequences</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-SEQ-01/02 · Sequences</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-FindDifferences → SOP-FormNthTerm → SOP-ValidateTerm</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+       <div class="topic-card card-satellite" data-keywords="statistics probability mean median mode histogram boxplot tree diagram cumulative frequency" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="12" width="4" height="8" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="10" y="4" width="4" height="16" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="17" y="8" width="4" height="12" rx="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Statistics & Probability</div>
+              <div class="topic-subtitle">Central tendency, distributions, tree diagrams</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-STAT-01/02/03 · Data Representation & Analysis</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-GroupData → SOP-CalcMean/Median → SOP-CompareDistributions</div></div>
+                  </div>
+                  <div class="archetype-sop-group">
+                    <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-PROB-01/02 · Combined Events & Tree Diagrams</div></div>
+                    <div class="sop-connector"><div class="sop-chain">SOP-TreeDiagram → SOP-MultiplyBranches → SOP-AddOutcomes</div></div>
+                  </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- G4 Topics Section -->
+  <section class="section" id="g4">
+    <div class="section-header">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <h2 class="section-title">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21L12 3M12 3L17 8M12 3L7 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>G4 Topics</span>
+        </h2>
+        <span class="section-badge badge-g4">Advanced Level</span>
+      </div>
+      <span style="color: var(--text-secondary); font-size: 0.875rem;">Core + Satellite</span>
+    </div>
+
+    <div class="topic-grid">
+      <!-- G4 Core Topics -->
+      <div class="topic-card card-core" data-keywords="algebraic modelling context variables equations real world" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 10H4V4H20V10ZM20 20H4V14H20V20Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Algebraic Modelling</div>
+              <div class="topic-subtitle">Algebra applied to real-world contexts</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-core">Core</span>
+            <span class="evolution-badge badge-extension"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.023 9.348L12 13.372L7.977 9.348" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12C2 7.02944 6.02944 3 11 3C15.9706 3 20 7.02944 20 12C20 16.9706 15.9706 21 11 21C7.88684 21 5.15653 19.5592 3.5 17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Extension</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-2"><div class="archetype-title"><span class="level-badge">L2</span> ARCH-L2-ALG-01 · Algebraic Modelling in Context</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L1: ALG-03, ALG-04, RP-02, INEQ-01 → L2: ALG-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="functions graphs graphical analysis transformation quadratic" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 3V21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 15L11 9L15 13L20 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Functions & Graphs</div>
+              <div class="topic-subtitle">Graphical analysis and transformations</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-core">Core</span>
+            <span class="evolution-badge badge-deepening"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Deepening</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-2"><div class="archetype-title"><span class="level-badge">L2</span> ARCH-L2-QUAD-01 · Graphical Analysis of Functions</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L1: QUAD-01~03, ALG-02, CG-01 → L2: QUAD-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="trigonometry 3d bearings elevation depression context sine cosine" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3C14.7614 3 17 7.02944 17 12C17 16.9706 14.7614 21 12 21C9.23858 21 7 16.9706 7 12C7 7.02944 9.23858 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Trig 3D & Bearings</div>
+              <div class="topic-subtitle">2D/3D trigonometry in real contexts</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-core">Core</span>
+            <span class="evolution-badge badge-deepening"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Deepening</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-2"><div class="archetype-title"><span class="level-badge">L2</span> ARCH-L2-TRIG-01 · 2D/3D Trigonometry in Context</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L1: TRIG-01~04, GEO-04, MEN-02 → L2: TRIG-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-core" data-keywords="geometry mensuration similarity congruency application proof advanced" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.5 15.5L15.5 20.5L8.5 13.5L13.5 8.5L20.5 15.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 10.5L4.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 4.5L19.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Geometry & Mensuration (Advanced)</div>
+              <div class="topic-subtitle">Applied similarity and congruency</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-core">Core</span>
+            <span class="evolution-badge badge-deepening"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Deepening</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-2"><div class="archetype-title"><span class="level-badge">L2</span> ARCH-L2-GEO-01 · Similarity & Congruency Application</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L1: GEO-01, GEO-02, MEN-02 → L2: GEO-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- G4 Satellite Topics -->
+      <div class="topic-card card-satellite" data-keywords="data analysis reasoning statistics synthesis multi representation" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 14L12 12L14 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 10L12 12L14 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Data Analysis & Reasoning</div>
+              <div class="topic-subtitle">Multi-representation synthesis</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="evolution-badge badge-extension"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.023 9.348L12 13.372L7.977 9.348" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12C2 7.02944 6.02944 3 11 3C15.9706 3 20 7.02944 20 12C20 16.9706 15.9706 21 11 21C7.88684 21 5.15653 19.5592 3.5 17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Extension</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-3"><div class="archetype-title"><span class="level-badge">L3</span> ARCH-L3-SYN-01 · Multi-Representation Synthesis</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L1: STAT-01, PROB-01 → L2: STAT-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+       <div class="topic-card card-satellite" data-keywords="vectors matrices operations proof collinearity parallel addition multiplication new" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4V20M12 4L8 8M12 4L16 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Vectors & Matrices</div>
+              <div class="topic-subtitle">Geometrical vectors & matrix operations</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="evolution-badge badge-addition"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12L12 6M12 12L6 12M12 12L12 18M12 12L18 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Addition</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-VEC-01/02 · Vector Basics & Proofs</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-VectorAdd/Sub → SOP-ScalarMultiply → SOP-ProveCollinear</div></div>
+                    </div>
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-1"><div class="archetype-title"><span class="level-badge">L1</span> ARCH-L1-MAT-01/02 · Matrix Operations & Applications</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-MatrixOps → SOP-SetupContext → SOP-InterpretResult</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="geometrical construction loci bisector" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2"/><path d="M5.63607 5.63604L18.364 18.364" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5.63603 18.364L18.364 5.63607" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+            <div>
+              <div class="topic-title">Geometrical Construction & Loci</div>
+              <div class="topic-subtitle">Constructing shapes and paths</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="evolution-badge badge-deepening"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Deepening</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-2"><div class="archetype-title"><span class="level-badge">L2</span> ARCH-L2-LOCI-01 · Perpendicular & Angle Bisectors</div></div>
+                      <div class="sop-connector"><div class="sop-chain">SOP-ConstructLocus → SOP-IdentifyRegion</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="topic-card card-satellite" data-keywords="modelling variables context justification ratio percentage real world dare" onclick="toggleCard(this)">
+        <div class="topic-header">
+          <div class="topic-title-group">
+            <span class="topic-icon"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 10V4.5A2.5 2.5 0 0 0 11.5 2H6.5A2.5 2.5 0 0 0 4 4.5V10H9.5A2.5 2.5 0 0 1 12 12.5V14.5A2.5 2.5 0 0 0 14.5 17H20V11.5A2.5 2.5 0 0 0 17.5 9H14V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <div>
+              <div class="topic-title">Modelling Variables</div>
+              <div class="topic-subtitle">Contextual modelling and justification</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="pill pill-satellite">Satellite</span>
+            <span class="evolution-badge badge-meta"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 10V4.5A2.5 2.5 0 0 0 11.5 2H6.5A2.5 2.5 0 0 0 4 4.5V10H9.5A2.5 2.5 0 0 1 12 12.5V14.5A2.5 2.5 0 0 0 14.5 17H20V11.5A2.5 2.5 0 0 0 17.5 9H14V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Meta-Integration</span>
+            <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="topic-content">
+            <div class="topic-body">
+                <div class="archetype-sop-container">
+                    <div class="archetype-sop-group">
+                      <div class="archetype-card level-3"><div class="archetype-title"><span class="level-badge">L3</span> ARCH-L3-MOD-01 · Contextual Modelling & Justification</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L2: ALG-01, TRIG-01, QUAD-01 → L3: MOD-01</div></div>
+                    </div>
+                     <div class="archetype-sop-group">
+                      <div class="archetype-card level-3"><div class="archetype-title"><span class="level-badge">L3</span> ARCH-L3-SYN-01 · Multi-Representation Synthesis</div></div>
+                      <div class="sop-connector"><div class="sop-chain">L2: QUAD-01, GEO-01, STAT-01 → L3: SYN-01</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Archetype Catalog Section -->
+  <section class="section" id="catalog">
+    <div class="section-header">
+      <h2 class="section-title" style="visibility: hidden; height: 0; margin: 0;">
+        <span>Archetype Catalog</span>
+      </h2>
+    </div>
+    <!-- Collapsible Topic Card for Catalog -->
+    <div class="topic-card" onclick="toggleCard(this)">
+      <div class="topic-header">
+        <div class="topic-title-group">
+          <span class="topic-icon">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3H4V9H9V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 15H4V21H9V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 3H15V9H20V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 15H15V21H20V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <div>
+            <div class="topic-title">Archetype Catalog</div>
+            <div class="topic-subtitle">Browse all 45 archetypes by level</div>
+          </div>
+        </div>
+        <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+      <div class="topic-content">
+        <div class="topic-body">
+          <div class="catalog-grid">
+            <div class="catalog-card level-1">
+                <h3 class="catalog-title">Level 1 Archetypes</h3>
+                <ul class="archetype-list">
+                    <li><span class="level-badge">L1</span> ARCH-L1-GEO-01 · Prove Similarity</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-GEO-02 · Prove Congruency</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-GEO-03 · Tangent Properties</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-GEO-04 · Circle Theorems</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-MEN-01 · Composite Solids Volume & Surface Area</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-MEN-02 · Sector Area & Arc Length</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-MEN-03 · Map Scales & Proportionality</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-TRIG-01 · SOHCAHTOA</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-TRIG-02 · Sine & Cosine Rules</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-01 · Factorisation</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-02 · Algebraic Fractions</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-03 · Form Expressions</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-04 · Linear Equations</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-05 · Simultaneous Equations</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-06 · Change Subject of Formula</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-ALG-07 · Solving Fractional Equations</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-QUAD-01 · Completing the Square</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-QUAD-02 · Sketching Quadratics</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-QUAD-03 · Find Equation from Graph</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-QUAD-04 · Quadratic Formula Application</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-STAT-01/02/03 · Data Representation & Analysis</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-STAT-04 · Cumulative Frequency & Ogives</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-STAT-05 · Standard Deviation</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-PROB-01/02 · Combined Events & Tree Diagrams</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-PROB-03 · Possibility Diagrams & Grids</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-RP-01/02/03 · Ratio, Percentage & Rates</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-FIN-01 · Simple & Compound Interest</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-CG-01/02/03 · Lines & Properties</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-CG-04 · Properties of Quadrilaterals using Coordinates</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-INEQ-01 · Linear Inequalities</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-INEQ-02 · Graphical Representation of Inequalities</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-IND-01/02 · Indices & Standard Form</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-SEQ-01/02 · Sequences</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-VEC-01/02 · Vector Basics & Proofs</li>
+                    <li><span class="level-badge">L1</span> ARCH-L1-MAT-01/02 · Matrix Operations & Applications</li>
+                </ul>
+            </div>
+            <div class="catalog-card level-2">
+                <h3 class="catalog-title">Level 2 Archetypes</h3>
+                 <ul class="archetype-list">
+                    <li><span class="level-badge">L2</span> ARCH-L2-TRIG-01 · 2D/3D Trigonometry in Context</li>
+                    <li><span class="level-badge">L2</span> ARCH-L2-QUAD-01 · Graphical Analysis of Functions</li>
+                    <li><span class="level-badge">L2</span> ARCH-L2-ALG-01 · Algebraic Modelling in Context</li>
+                    <li><span class="level-badge">L2</span> ARCH-L2-GEO-01 · Similarity & Congruency Application</li>
+                    <li><span class="level-badge">L2</span> ARCH-L2-PROB-01 · Conditional Probability</li>
+                    <li><span class="level-badge">L2</span> ARCH-L2-MEN-01 · Advanced Mensuration (Frustums)</li>
+                </ul>
+            </div>
+            <div class="catalog-card level-3">
+                <h3 class="catalog-title">Level 3 Archetypes</h3>
+                 <ul class="archetype-list">
+                    <li><span class="level-badge">L3</span> ARCH-L3-SYN-01 · Multi-Representation Synthesis</li>
+                    <li><span class="level-badge">L3</span> ARCH-L3-MOD-01 · Contextual Modelling & Justification</li>
+                    <li><span class="level-badge">L3</span> ARCH-L3-GEO-01 · Geometric Proofs with Multiple Theorems</li>
+                    <li><span class="level-badge">L3</span> ARCH-L3-ALG-01 · Optimisation Problems using Quadratics</li>
+                </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evolution Map Diagram -->
+  <section class="section" id="diagram">
+    <div class="section-header">
+      <h2 class="section-title">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 20L3 17V4L9 7M9 20L15 17M9 20V7M15 17L21 20V7L15 4M15 17V4M15 4L9 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>Evolution Map</span>
+      </h2>
+    </div>
+    <div class="diagram-container">
+      <div class="mermaid">
+graph TD
+    subgraph G3["G3 Foundation"]
+        C1["C1 Algebra"]
+        C2["C2 Geometry & Mensuration"]
+        C3["C3 Quadratic & Graphs"]
+        C4["C4 Trigonometry"]
+        S1["S1 Coordinate Geometry"]
+        S2["S2 Inequalities"]
+        S4["S4 Number, Proportion & Financial"]
+        S6["S6 Statistics & Probability"]
+    end
+
+    subgraph G4["G4 Advanced"]
+        C5["C5 Algebraic Modelling"]
+        C6["C6 Functions & Graphs"]
+        C7["C7 Trig 3D & Bearings"]
+        C8["C8 Geometry & Mensuration Adv"]
+        S7["S7 Data Analysis & Reasoning"]
+        S9["S9 Geometrical Construction & Loci"]
+    end
+
+    subgraph NEW["G4 New Topics & Meta-Integration"]
+        S8["S8 Vectors & Matrices"]
+        S10["S10 Modelling Variables"]
+    end
+
+    C1 -->|Extension| C5
+    S4 -->|Extension| C5
+    S2 -->|Integration| C5
+    C3 -->|Deepening| C6
+    S1 -->|Extension| C6
+    C4 -->|Deepening| C7
+    C2 -->|Deepening| C8
+    C2 -->|Deepening| S9
+    S6 -->|Extension| S7
+    
+    C5 -.->|Meta| S10
+    C6 -.->|Meta| S10
+    C7 -.->|Meta| S10
+
+    classDef core fill:#6366f1,stroke:#a5b4fc,color:#fff,stroke-width:2px
+    classDef satellite fill:#10b981,stroke:#6ee7b7,color:#fff,stroke-width:2px
+    classDef newTopic fill:#f59e0b,stroke:#fbbf24,color:#fff,stroke-width:2px
+    classDef meta fill:#ef4444,stroke:#fca5a5,color:#fff,stroke-width:2px
+    
+    class C1,C2,C3,C4,C5,C6,C7,C8 core
+    class S1,S2,S4,S6,S7,S9 satellite
+    class S8 newTopic
+    class S10 meta
+</div>
+    </div>
+  </section>
+
+  <!-- Legend (Initially Hidden) -->
+  <div id="legend">
+    <div class="glass legend-card">
+      <h3 class="catalog-title" style="margin-bottom: 1rem;">Legend</h3>
+      <div class="legend-item">
+        <span class="pill pill-core">Core</span> <span> - Fundamental topic stream</span>
+      </div>
+      <div class="legend-item">
+        <span class="pill pill-satellite">Satellite</span> <span> - Important but less central topic</span>
+      </div>
+       <hr style="border-color: var(--glass-border); margin: 1rem 0;">
+      <div class="legend-item">
+        <span class="evolution-badge badge-deepening"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M12 5L6 11M12 5L18 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Deepening</span> <span> - Existing topic studied in greater depth</span>
+      </div>
+      <div class="legend-item">
+        <span class="evolution-badge badge-extension"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16.023 9.348L12 13.372L7.977 9.348" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12C2 7.02944 6.02944 3 11 3C15.9706 3 20 7.02944 20 12C20 16.9706 15.9706 21 11 21C7.88684 21 5.15653 19.5592 3.5 17.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> Extension</span> <span> - Existing topic applied to new contexts</span>
+      </div>
+      <div class="legend-item">
+        <span class="evolution-badge badge-addition"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12L12 6M12 12L6 12M12 12L12 18M12 12L18 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Addition</span> <span> - Introduction of a completely new topic</span>
+      </div>
+      <div class="legend-item">
+        <span class="evolution-badge badge-meta"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 10V4.5A2.5 2.5 0 0 0 11.5 2H6.5A2.5 2.5 0 0 0 4 4.5V10H9.5A2.5 2.5 0 0 1 12 12.5V14.5A2.5 2.5 0 0 0 14.5 17H20V11.5A2.5 2.5 0 0 0 17.5 9H14V10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Meta-Integration</span> <span> - Cross-topic synthesis</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Buttons -->
+  <button id="scrollTop" class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" data-tooltip="Scroll to Top">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 19V5M12 5L18 11M12 5L6 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button class="fab" onclick="toggleLegend()" data-tooltip="Toggle Legend">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12ZM12 12V20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  
+  <script>
+    mermaid.initialize({ 
+      startOnLoad: true, 
+      theme: 'dark',
+      flowchart: { curve: 'basis' }
+    });
+    
+    let allExpanded = false;
+
+    // Toggles a single card's expanded state
+    function toggleCard(card) {
+      card.classList.toggle('expanded');
+    }
+
+    // Toggles all cards between expanded and collapsed
+    function toggleAllCards() {
+        const cards = document.querySelectorAll('.topic-card');
+        const expandIcon = document.getElementById('expand-icon-svg');
+        allExpanded = !allExpanded;
+        cards.forEach(card => {
+            if (allExpanded) {
+            card.classList.add('expanded');
+            } else {
+            card.classList.remove('expanded');
+            }
+        });
+        if (expandIcon) {
+            if (allExpanded) {
+                expandIcon.innerHTML = `<path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
+            } else {
+                expandIcon.innerHTML = `<path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+            }
+        }
+    }
+
+    // Smoothly scrolls to a given section
+    function scrollToSection(id) { 
+      const element = document.getElementById(id);
+      if(element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      }
+    }
+
+    // Filters visible cards based on search query
+    function filterContent(query) {
+      const cards = document.querySelectorAll('.topic-card');
+      const lowerQuery = query.toLowerCase();
+      cards.forEach(card => {
+        if (!query) { card.style.display = 'block'; return; }
+        const keywords = card.getAttribute('data-keywords') || '';
+        const text = card.textContent.toLowerCase();
+        const matches = keywords.includes(lowerQuery) || text.includes(lowerQuery);
+        card.style.display = matches ? 'block' : 'none';
+        if (matches && !card.classList.contains('expanded')) { card.classList.add('expanded'); }
+      });
+    }
+
+    // Clears the search input and resets the filter
+    function clearSearch() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      filterContent('');
+    }
+
+    // Toggles the visibility of the legend
+    function toggleLegend() {
+      document.getElementById('legend').classList.toggle('visible');
+    }
+
+    // Adds a glowing effect on card hover that follows the mouse
+    document.querySelectorAll('.topic-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x}%`);
+        card.style.setProperty('--mouse-y', `${y}%`);
+      });
+    });
+
+    // Manages visibility of the "scroll to top" button
+    window.addEventListener('scroll', () => {
+      const scrollTopBtn = document.getElementById('scrollTop');
+      if (window.pageYOffset > 300) { scrollTopBtn.classList.add('visible'); } 
+      else { scrollTopBtn.classList.remove('visible'); }
+    });
+
+    // Keyboard shortcuts for search
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { 
+        e.preventDefault(); 
+        document.getElementById('searchInput').focus(); 
+      }
+      if (e.key === 'Escape') { 
+        clearSearch(); 
+        document.getElementById('searchInput').blur(); 
+      }
+    });
+
+    // Intersection observer for fade-in animations on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.topic-card, .catalog-card, .stat-card, .diagram-container').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(30px)';
+      el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
