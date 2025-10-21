@@ -909,7 +909,8 @@
 
             // Combine details into allTopicsData
             allTopicsData.forEach(topic => {
-                const key = `${topic.category.toUpperCase()}-${topic.grade.toUpperCase()}-${topic.id}`;
+                const categoryKey = topic.category === 'satellite' ? 'SAT' : topic.category.toUpperCase();
+                const key = `${categoryKey}-${topic.grade.toUpperCase()}-${topic.id}`;
                 topic.details = allDetailsData[key] || {};
             });
 
@@ -1109,5 +1110,6 @@
     </script>
 </body>
 </html>
-" and want to make the following changes.
+
+
 
