@@ -40,6 +40,7 @@
             margin-bottom: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
+            z-index: 20; /* Ensure header is above other content */
         }
 
         header h1 {
@@ -83,11 +84,15 @@
         .header-nav {
             position: absolute;
             bottom: 25px;
-            left: 40px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             gap: 15px;
             align-items: center;
             flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            padding: 0 40px;
         }
         
         .header-nav a {
@@ -106,6 +111,72 @@
             color: #f59e0b;
             font-weight: bold;
         }
+
+        /* --- Dropdown Styles --- */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s;
+        }
+
+        .dropdown-btn:hover {
+            color: #f59e0b;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: rgba(30, 60, 114, 0.9);
+            backdrop-filter: blur(15px);
+            min-width: 220px;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+            z-index: 10;
+            border-radius: 12px;
+            padding: 10px 0;
+            top: 120%; /* Position below the button */
+            left: 50%;
+            transform: translateX(-50%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            font-size: 0.95em;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        .nav-dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        /* --- End Dropdown Styles --- */
         
         .controls {
             background: rgba(255, 255, 255, 0.1);
@@ -541,7 +612,7 @@
 
         .scroll-top:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-show: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
     </style>
 </head>
@@ -555,15 +626,24 @@
             <div class="subtitle">Memorisation • Procedural • Conceptual</div>
             <div class="tag">#G3 & #G4</div>
             <div class="header-nav">
-                <a href="#/">Resource Portal</a>
+                <a href="resource-portal.html">Resource Portal</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">Archetype Explorer</a>
+                <a href="archetype-explorer.html">Archetype Explorer</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">Study Portal</a>
+                <div class="nav-dropdown">
+                    <button class="dropdown-btn">Syllabus Explorer
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="syllabus-exam-map.html">Syllabus-Exam Map</a>
+                        <a href="g3-g4-evolution-map.html">G3→G4 Evolution Map</a>
+                        <a href="archetype-explorer.html">Archetype Explorer</a>
+                    </div>
+                </div>
                 <span class="nav-divider">|</span>
                 <a href="#">Task Tracker</a>
                 <span class="nav-divider">|</span>
-                <a href="#/">RSRM System</a>
+                <a href="rsrm_system.html">RSRM System</a>
                 <span class="nav-divider">|</span>
                 <a href="https://quizlet.com/join/yPrK6hvAG?i=118urv&x=1bqt" target="_blank">Flashcard Sets</a>
             </div>
@@ -758,63 +838,63 @@
             
             // --- G4 SATELLITE DATA (Restored) ---
              "SATELLITE-G4-COORD_G4": {
-                recap: { title: "G3 Foundation Recap", points: ["Requires knowledge of finding gradient, distance, and the equation y = mx + c from G3."] },
-                extension_points: { title: "G4 Core Extension Points", points: ["Solving problems involving parallel and perpendicular lines.", "Finding the midpoint of a line segment.", "Determining the point of intersection of two lines using simultaneous equations."] },
-                tier1: { flashcards: [
-                    { front: 'Parallel Lines Property', back: 'They have the <strong>same gradient</strong>. (<code>m₁ = m₂</code>)' },
-                    { front: 'Perpendicular Lines Property', back: 'The product of their gradients is <strong>-1</strong>. (<code>m₁ × m₂ = -1</code>)' },
-                    { front: 'Midpoint of a Line Segment', back: '<code>( (x₁+x₂)/2 , (y₁+y₂)/2 )</code>' },
-                    { front: 'Horizontal & Vertical Lines', back: 'Horizontal: <code>y = k</code>, Gradient = <code>0</code>.<br>Vertical: <code>x = h</code>, Gradient is <strong>undefined</strong>.' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Finding the Equation of a Line', goal: 'To find the equation of a straight line given certain properties.', triggers: 'Find the equation of the line...', steps: ['<strong>Find the Gradient (m):</strong><br> - If given two points: Use <code>(y₂ - y₁) / (x₂ - x₁)</code>.<br> - If parallel to another line: Use that line\'s gradient.<br> - If perpendicular to another line: Use <code>m = -1/m₁</code>.', '<strong>Find the y-intercept (c):</strong><br> - Substitute `m` and a known point `(x, y)` into <code>y = mx + c</code> and solve for `c`.', '<strong>Write the Final Equation:</strong><br> - State the equation in <code>y = mx + c</code> form.'] },
-                    { title: 'SOP: Finding the Point of Intersection of Two Lines', goal: 'To find the coordinates where two lines meet.', triggers: 'point of intersection, solve simultaneously', steps: ['Set up Simultaneous Equations using the two line equations.', 'Solve the system using either Substitution or Elimination method.', 'Find the value for the first variable (e.g., `x`).', 'Substitute this value back into either original equation to find the second variable (e.g., `y`).', 'State the answer as a coordinate pair `(x, y)`.'] }
-                ]},
-                tier3: { prompts: ["Explain what the 'gradient' of a line actually means. If a line has a gradient of 3, what does that tell you? What about a gradient of -1/2?", "Try to explain why the product of the gradients of two perpendicular lines is -1. Use a simple right-angled triangle on a grid to demonstrate."] }
-            },
-            "SATELLITE-G4-VECTORS_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Vectors provide a new way to describe movement and position in geometry.", "Key skills include vector addition/subtraction and using position vectors.", "Used to prove geometric properties like collinearity and parallelism."] },
-                tier1: { flashcards: [
-                    { front: 'Vector Addition', back: '<code>AB + BC = AC</code> (Triangle Law)' },
-                    { front: 'Vector Subtraction / Position Vectors', back: '<code>AB = OB - OA</code>' },
-                    { front: 'Magnitude of a Vector', back: 'If <code>v = (x, y)</code>, then <code>|v| = √(x² + y²)</code>. This is the length.' },
-                    { front: 'Parallel Vectors', back: 'Vector <strong>a</strong> is parallel to vector <strong>b</strong> if <strong>a</strong> = k<strong>b</strong>, where k is a scalar.' },
-                    { front: 'Collinear Points (A, B, C)', back: '<code>AB</code> is parallel to <code>BC</code> (i.e., <code>AB = k * BC</code>) AND they share a common point (B).' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Proving Three Points (A, B, C) are Collinear', goal: 'To prove three points lie on the same straight line.', triggers: 'Show that... are collinear', steps: ['Express two vectors that share a common point (e.g., `AB` and `BC`).', 'Use Position Vectors to find expressions for them: <code>AB = OB - OA</code> and <code>BC = OC - OB</code>.', 'Show that one vector is a scalar multiple of the other by factoring out a constant (e.g., show <code>AB = k * BC</code>).', 'State the conclusion: "Since `AB = k * BC` and point B is common, A, B, and C are collinear."'] },
-                    { title: 'SOP: Finding the Coordinates of a Point using Vectors', goal: 'To find a point\'s location using vector paths.', triggers: 'Find the coordinates of...', steps: ['Set up a vector equation from the origin `O` to the unknown point `R` (e.g., <code>OR = OP + PR</code>).', 'Substitute known vectors and relationships (e.g., <code>PR = ½ PQ</code>).', 'Calculate the resultant position vector `OR` as a single column vector <code>(x, y)</code>.', 'State the coordinates of R, which are `(x, y)`.'] }
-                ]},
-                tier3: { prompts: ["What exactly is a 'position vector'? Why is it useful to always relate vectors back to a common origin 'O'?", "Explain the subtle but crucial difference between proving two vectors are *parallel* and proving three points are *collinear*."] }
-            },
-            "SATELLITE-G4-MATRICES_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Matrices are a tool for organizing data in rows and columns.", "Focus is on matrix multiplication and its application in solving real-world contextual problems."] },
-                tier1: { flashcards: [
-                    { front: 'Matrix Order', back: '<code>rows × columns</code>' },
-                    { front: 'Condition for Matrix Multiplication (A × B)', back: 'Number of <strong>columns</strong> in matrix A must equal the number of <strong>rows</strong> in matrix B.' },
-                    { front: 'Order of Resulting Matrix', back: 'If `A` is `m × n` and `B` is `n × p`, then `AB` is `m × p`.' },
-                    { front: 'Identity Matrix (I)', back: 'A square matrix with `1`s on the main diagonal and `0`s elsewhere. `AI = IA = A`.' },
-                    { front: 'Non-Commutativity', back: 'In general, `AB ≠ BA`.' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Solving a Contextual Problem with Matrix Multiplication', goal: 'To use matrices to combine two sets of data and find a meaningful result.', triggers: 'Use matrices to calculate...', steps: ['Identify the two data sets (e.g., number of items vs. cost per item).', 'Form Matrix A and Matrix B with appropriate dimensions.', 'Determine the Order of Multiplication: Arrange `A × B` or `B × A` so the inner dimensions match and the outer dimensions give a meaningful result (e.g., total cost per outlet).', 'Perform the row-by-column multiplication.', 'Interpret the Result: Clearly state what each element in the resulting matrix represents.'] }
-                ]},
-                tier3: { prompts: ["Explain why the 'row-by-column' rule for matrix multiplication makes sense using a simple example of a shop's sales over several days.", "Why must the inner dimensions match for two matrices to be multiplied?"] }
-            },
-            "SATELLITE-G4-SEQ_G4": {
-                recap: null,
-                extension_points: { title: "G4 New Topic", points: ["Introduces the formal study of sequences, particularly Arithmetic and Geometric Progressions.", "Focus is on finding the formula for the nth term to describe a pattern."] },
-                tier1: { flashcards: [
-                    { front: 'Arithmetic Progression (AP) - nth term', back: '<code>Tₙ = a + (n-1)d</code> (where *a* is the first term, *d* is the common difference).' },
-                    { front: 'Geometric Progression (GP) - nth term', back: '<code>Tₙ = arⁿ⁻¹</code> (where *a* is the first term, *r* is the common ratio).' }
-                ]},
-                tier2: { sops: [
-                    { title: 'SOP: Finding the nth term of a Sequence', goal: 'To find a formula for any term in a sequence.', triggers: 'Find the nth term, find an expression for...', steps: ['<strong>Check for Common Difference (AP):</strong><br> - Calculate `T₂-T₁`, `T₃-T₂`. If constant (`d`), it\'s an AP. Use the formula <code>Tₙ = a + (n-1)d</code>.', '<strong>Check for Common Ratio (GP):</strong><br> - Calculate `T₂/T₁`, `T₃/T₂`. If constant (`r`), it\'s a GP. Use the formula <code>Tₙ = arⁿ⁻¹</code>.', '<strong>Check for Other Patterns:</strong><br> - If not AP or GP, look for patterns related to squares (`n²`), cubes (`n³`), or simple combinations (e.g., `2n+1`, `n²-1`).'] }
-                ]},
-                tier3: { prompts: ["What is the purpose of finding an 'nth term' for a sequence? Why is it more powerful than just listing out the next few terms?", "How would you use the nth term to quickly find the 100th term of a sequence without writing everything out?"] }
-            }
+                 recap: { title: "G3 Foundation Recap", points: ["Requires knowledge of finding gradient, distance, and the equation y = mx + c from G3."] },
+                 extension_points: { title: "G4 Core Extension Points", points: ["Solving problems involving parallel and perpendicular lines.", "Finding the midpoint of a line segment.", "Determining the point of intersection of two lines using simultaneous equations."] },
+                 tier1: { flashcards: [
+                     { front: 'Parallel Lines Property', back: 'They have the <strong>same gradient</strong>. (<code>m₁ = m₂</code>)' },
+                     { front: 'Perpendicular Lines Property', back: 'The product of their gradients is <strong>-1</strong>. (<code>m₁ × m₂ = -1</code>)' },
+                     { front: 'Midpoint of a Line Segment', back: '<code>( (x₁+x₂)/2 , (y₁+y₂)/2 )</code>' },
+                     { front: 'Horizontal & Vertical Lines', back: 'Horizontal: <code>y = k</code>, Gradient = <code>0</code>.<br>Vertical: <code>x = h</code>, Gradient is <strong>undefined</strong>.' }
+                 ]},
+                 tier2: { sops: [
+                     { title: 'SOP: Finding the Equation of a Line', goal: 'To find the equation of a straight line given certain properties.', triggers: 'Find the equation of the line...', steps: ['<strong>Find the Gradient (m):</strong><br> - If given two points: Use <code>(y₂ - y₁) / (x₂ - x₁)</code>.<br> - If parallel to another line: Use that line\'s gradient.<br> - If perpendicular to another line: Use <code>m = -1/m₁</code>.', '<strong>Find the y-intercept (c):</strong><br> - Substitute `m` and a known point `(x, y)` into <code>y = mx + c</code> and solve for `c`.', '<strong>Write the Final Equation:</strong><br> - State the equation in <code>y = mx + c</code> form.'] },
+                     { title: 'SOP: Finding the Point of Intersection of Two Lines', goal: 'To find the coordinates where two lines meet.', triggers: 'point of intersection, solve simultaneously', steps: ['Set up Simultaneous Equations using the two line equations.', 'Solve the system using either Substitution or Elimination method.', 'Find the value for the first variable (e.g., `x`).', 'Substitute this value back into either original equation to find the second variable (e.g., `y`).', 'State the answer as a coordinate pair `(x, y)`.'] }
+                 ]},
+                 tier3: { prompts: ["Explain what the 'gradient' of a line actually means. If a line has a gradient of 3, what does that tell you? What about a gradient of -1/2?", "Try to explain why the product of the gradients of two perpendicular lines is -1. Use a simple right-angled triangle on a grid to demonstrate."] }
+             },
+             "SATELLITE-G4-VECTORS_G4": {
+                 recap: null,
+                 extension_points: { title: "G4 New Topic", points: ["Vectors provide a new way to describe movement and position in geometry.", "Key skills include vector addition/subtraction and using position vectors.", "Used to prove geometric properties like collinearity and parallelism."] },
+                 tier1: { flashcards: [
+                     { front: 'Vector Addition', back: '<code>AB + BC = AC</code> (Triangle Law)' },
+                     { front: 'Vector Subtraction / Position Vectors', back: '<code>AB = OB - OA</code>' },
+                     { front: 'Magnitude of a Vector', back: 'If <code>v = (x, y)</code>, then <code>|v| = √(x² + y²)</code>. This is the length.' },
+                     { front: 'Parallel Vectors', back: 'Vector <strong>a</strong> is parallel to vector <strong>b</strong> if <strong>a</strong> = k<strong>b</strong>, where k is a scalar.' },
+                     { front: 'Collinear Points (A, B, C)', back: '<code>AB</code> is parallel to <code>BC</code> (i.e., <code>AB = k * BC</code>) AND they share a common point (B).' }
+                 ]},
+                 tier2: { sops: [
+                     { title: 'SOP: Proving Three Points (A, B, C) are Collinear', goal: 'To prove three points lie on the same straight line.', triggers: 'Show that... are collinear', steps: ['Express two vectors that share a common point (e.g., `AB` and `BC`).', 'Use Position Vectors to find expressions for them: <code>AB = OB - OA</code> and <code>BC = OC - OB</code>.', 'Show that one vector is a scalar multiple of the other by factoring out a constant (e.g., show <code>AB = k * BC</code>).', 'State the conclusion: "Since `AB = k * BC` and point B is common, A, B, and C are collinear."'] },
+                     { title: 'SOP: Finding the Coordinates of a Point using Vectors', goal: 'To find a point\'s location using vector paths.', triggers: 'Find the coordinates of...', steps: ['Set up a vector equation from the origin `O` to the unknown point `R` (e.g., <code>OR = OP + PR</code>).', 'Substitute known vectors and relationships (e.g., <code>PR = ½ PQ</code>).', 'Calculate the resultant position vector `OR` as a single column vector <code>(x, y)</code>.', 'State the coordinates of R, which are `(x, y)`.'] }
+                 ]},
+                 tier3: { prompts: ["What exactly is a 'position vector'? Why is it useful to always relate vectors back to a common origin 'O'?", "Explain the subtle but crucial difference between proving two vectors are *parallel* and proving three points are *collinear*."] }
+             },
+             "SATELLITE-G4-MATRICES_G4": {
+                 recap: null,
+                 extension_points: { title: "G4 New Topic", points: ["Matrices are a tool for organizing data in rows and columns.", "Focus is on matrix multiplication and its application in solving real-world contextual problems."] },
+                 tier1: { flashcards: [
+                     { front: 'Matrix Order', back: '<code>rows × columns</code>' },
+                     { front: 'Condition for Matrix Multiplication (A × B)', back: 'Number of <strong>columns</strong> in matrix A must equal the number of <strong>rows</strong> in matrix B.' },
+                     { front: 'Order of Resulting Matrix', back: 'If `A` is `m × n` and `B` is `n × p`, then `AB` is `m × p`.' },
+                     { front: 'Identity Matrix (I)', back: 'A square matrix with `1`s on the main diagonal and `0`s elsewhere. `AI = IA = A`.' },
+                     { front: 'Non-Commutativity', back: 'In general, `AB ≠ BA`.' }
+                 ]},
+                 tier2: { sops: [
+                     { title: 'SOP: Solving a Contextual Problem with Matrix Multiplication', goal: 'To use matrices to combine two sets of data and find a meaningful result.', triggers: 'Use matrices to calculate...', steps: ['Identify the two data sets (e.g., number of items vs. cost per item).', 'Form Matrix A and Matrix B with appropriate dimensions.', 'Determine the Order of Multiplication: Arrange `A × B` or `B × A` so the inner dimensions match and the outer dimensions give a meaningful result (e.g., total cost per outlet).', 'Perform the row-by-column multiplication.', 'Interpret the Result: Clearly state what each element in the resulting matrix represents.'] }
+                 ]},
+                 tier3: { prompts: ["Explain why the 'row-by-column' rule for matrix multiplication makes sense using a simple example of a shop's sales over several days.", "Why must the inner dimensions match for two matrices to be multiplied?"] }
+             },
+             "SATELLITE-G4-SEQ_G4": {
+                 recap: null,
+                 extension_points: { title: "G4 New Topic", points: ["Introduces the formal study of sequences, particularly Arithmetic and Geometric Progressions.", "Focus is on finding the formula for the nth term to describe a pattern."] },
+                 tier1: { flashcards: [
+                     { front: 'Arithmetic Progression (AP) - nth term', back: '<code>Tₙ = a + (n-1)d</code> (where *a* is the first term, *d* is the common difference).' },
+                     { front: 'Geometric Progression (GP) - nth term', back: '<code>Tₙ = arⁿ⁻¹</code> (where *a* is the first term, *r* is the common ratio).' }
+                 ]},
+                 tier2: { sops: [
+                     { title: 'SOP: Finding the nth term of a Sequence', goal: 'To find a formula for any term in a sequence.', triggers: 'Find the nth term, find an expression for...', steps: ['<strong>Check for Common Difference (AP):</strong><br> - Calculate `T₂-T₁`, `T₃-T₂`. If constant (`d`), it\'s an AP. Use the formula <code>Tₙ = a + (n-1)d</code>.', '<strong>Check for Common Ratio (GP):</strong><br> - Calculate `T₂/T₁`, `T₃/T₂`. If constant (`r`), it\'s a GP. Use the formula <code>Tₙ = arⁿ⁻¹</code>.', '<strong>Check for Other Patterns:</strong><br> - If not AP or GP, look for patterns related to squares (`n²`), cubes (`n³`), or simple combinations (e.g., `2n+1`, `n²-1`).'] }
+                 ]},
+                 tier3: { prompts: ["What is the purpose of finding an 'nth term' for a sequence? Why is it more powerful than just listing out the next few terms?", "How would you use the nth term to quickly find the 100th term of a sequence without writing everything out?"] }
+             }
         };
 
         // --- DOM MANIPULATION & LOGIC ---
