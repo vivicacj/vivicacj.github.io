@@ -998,7 +998,13 @@
 
             // Combine details into allTopicsData
             allTopicsData.forEach(topic => {
-                const categoryKey = topic.category === 'satellite' ? 'SAT' : topic.category.toUpperCase();
+                let categoryKey;
+                if (topic.category === 'satellite') {
+                    // G3 satellite topics use 'SAT', G4 satellite topics use 'SATELLITE'
+                    categoryKey = (topic.grade === 'g3') ? 'SAT' : 'SATELLITE';
+                } else {
+                    categoryKey = topic.category.toUpperCase();
+                }
                 const key = `${categoryKey}-${topic.grade.toUpperCase()}-${topic.id}`;
                 topic.details = allDetailsData[key] || {};
             });
@@ -1235,6 +1241,7 @@
     </script>
 </body>
 </html>
+
 
 
 
