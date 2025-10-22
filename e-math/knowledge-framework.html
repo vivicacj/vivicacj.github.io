@@ -234,6 +234,40 @@
             margin: 0 10px;
         }
 
+        .filter-select {
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 10px 35px 10px 20px; /* Right padding for arrow */
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+            font-family: inherit; /* Ensure it uses the body font */
+
+            /* Custom Arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 1em;
+        }
+
+        .filter-select:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-select option {
+            background: #1e3c72; /* Dark blue from gradient */
+            color: white;
+        }
+
         .topic-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -295,6 +329,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-wrap: wrap; /* Allow badges to wrap */
         }
 
         .topic-badge {
@@ -322,6 +357,29 @@
         .connection-badge.extended { background-color: #5eb3f0; } 
         .connection-badge.upgraded { background-color: #ab84ef; }
         .connection-badge.new { background-color: #f2a84e; }
+
+        .mastered-toggle-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .mastered-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        .mastered-toggle-btn.mastered {
+            background: #f59e0b;
+            color: #1e293b;
+            border-color: #f59e0b;
+        }
 
         .toggle-icon {
             font-size: 1.5em;
@@ -655,15 +713,24 @@
                 <button class="nav-btn" onclick="toggleAll(false)">Collapse All</button>
                 <div class="divider"></div>
                  <div class="filter-group" id="grade-filters">
-                    <button class="nav-btn grade-btn active" onclick="filterContent('grade', 'all', this)">All Grades</button>
-                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g3', this)">G3</button>
-                    <button class="nav-btn grade-btn" onclick="filterContent('grade', 'g4', this)">G4</button>
+                    <select id="grade-select" class="filter-select" onchange="filterContent('grade', this.value)">
+                        <option value="all">All Grades</option>
+                        <option value="g3">G3</option>
+                        <option value="g4">G4</option>
+                    </select>
                 </div>
                 <div class="divider"></div>
                 <div class="filter-group" id="category-filters">
-                    <button class="nav-btn category-btn active" onclick="filterContent('category', 'all', this)">All Topics</button>
-                    <button class="nav-btn category-btn" onclick="filterContent('category', 'core', this)">Core Topics</button>
-                    <button class="nav-btn category-btn" onclick="filterContent('category', 'satellite', this)">Satellite Topics</button>
+                    <select id="category-select" class="filter-select" onchange="filterContent('category', this.value)">
+                        <option value="all">All Topics</option>
+                        <option value="core">Core Topics</option>
+                        <option value="satellite">Satellite Topics</option>
+                    </select>
+                </div>
+                <div class="divider"></div>
+                <div class="filter-group" id="mastered-filters">
+                    <button class="nav-btn mastered-btn active" onclick="filterContent('mastered', 'all', this)">All Status</button>
+                    <button class="nav-btn mastered-btn" id="mastered-counter-btn" onclick="filterContent('mastered', 'mastered', this)">Mastered (0)</button>
                 </div>
             </div>
         </div>
@@ -898,14 +965,36 @@
         };
 
         // --- DOM MANIPULATION & LOGIC ---
+        const MASTERY_KEY = 'eMathMastery';
+
+        // Helper function to get mastered topics from localStorage
+        function getMasteredTopics() {
+            const stored = localStorage.getItem(MASTERY_KEY);
+            return stored ? new Set(JSON.parse(stored)) : new Set();
+        }
+
+        // Helper function to save mastered topics to localStorage
+        function setMasteredTopics(masteredSet) {
+            localStorage.setItem(MASTERY_KEY, JSON.stringify(Array.from(masteredSet)));
+        }
+
+        // Updates the counter button text
+        function updateMasteredCounter() {
+            const count = getMasteredTopics().size;
+            const btn = document.getElementById('mastered-counter-btn');
+            if (btn) btn.textContent = `Mastered (${count})`;
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             renderAllTopics();
+            updateMasteredCounter(); // Update counter on initial load
         });
 
         function renderAllTopics() {
             const container = document.getElementById('topics-container');
             if (!container) return;
+
+            const masteredSet = getMasteredTopics();
 
             // Combine details into allTopicsData
             allTopicsData.forEach(topic => {
@@ -914,10 +1003,14 @@
                 topic.details = allDetailsData[key] || {};
             });
 
-            container.innerHTML = allTopicsData.map(createTopicCardHTML).join('');
+            container.innerHTML = allTopicsData.map(topic => createTopicCardHTML(topic, masteredSet)).join('');
         }
 
-        function createTopicCardHTML(topic) {
+        function createTopicCardHTML(topic, masteredSet) {
+            const isMastered = masteredSet.has(topic.id);
+            const masteredClass = isMastered ? 'mastered' : '';
+            const masteredText = isMastered ? '✓ Mastered' : 'Mark as Mastered';
+
             return `
                 <div class="topic-card" data-category="${topic.category}" data-grade="${topic.grade}" data-topic-id="${topic.id}">
                     <div class="topic-header" onclick="toggleTopic(this)">
@@ -928,6 +1021,7 @@
                         <div class="topic-badges">
                             ${createConnectionBadgeHTML(topic.connection)}
                             <span class="topic-badge">${topic.grade.toUpperCase()}</span>
+                            <button class="mastered-toggle-btn ${masteredClass}" onclick="toggleMastery(event, '${topic.id}')">${masteredText}</button>
                             <span class="toggle-icon">▼</span>
                         </div>
                     </div>
@@ -1055,12 +1149,34 @@
         
         let currentGrade = 'all';
         let currentCategory = 'all';
+        let currentMastered = 'all';
 
         function toggleTopic(headerElement) {
             const content = headerElement.nextElementSibling;
             const icon = headerElement.querySelector('.toggle-icon');
             content.classList.toggle('show');
             icon.classList.toggle('open');
+        }
+
+        // Toggles the mastery status for a topic
+        function toggleMastery(event, topicId) {
+            event.stopPropagation(); // Prevent the topic card from expanding/collapsing
+            const masteredSet = getMasteredTopics();
+            const button = event.target;
+
+            if (masteredSet.has(topicId)) {
+                masteredSet.delete(topicId);
+                button.classList.remove('mastered');
+                button.textContent = 'Mark as Mastered';
+            } else {
+                masteredSet.add(topicId);
+                button.classList.add('mastered');
+                button.textContent = '✓ Mastered';
+            }
+
+            setMasteredTopics(masteredSet);
+            updateMasteredCounter();
+            applyFilters(); // Re-apply filters if the user is in "Mastered" view
         }
 
         function toggleAll(expand) {
@@ -1080,8 +1196,12 @@
         function filterContent(type, value, clickedButton) {
             if (type === 'grade') currentGrade = value;
             else if (type === 'category') currentCategory = value;
+            else if (type === 'mastered') currentMastered = value;
             
-            updateActiveButton(document.querySelectorAll(`#${type}-filters .nav-btn`), clickedButton);
+            // Only update active button if it's a button click (not a select change)
+            if (clickedButton) {
+                updateActiveButton(document.querySelectorAll(`#${type}-filters .nav-btn`), clickedButton);
+            }
             applyFilters();
         }
 
@@ -1091,10 +1211,15 @@
         }
 
         function applyFilters() {
+            const masteredSet = getMasteredTopics();
             document.querySelectorAll('.topic-card').forEach(topic => {
                 const gradeMatch = (currentGrade === 'all') || (topic.dataset.grade === currentGrade);
                 const categoryMatch = (currentCategory === 'all') || (topic.dataset.category === currentCategory);
-                topic.style.display = (gradeMatch && categoryMatch) ? 'block' : 'none';
+                
+                const isMastered = masteredSet.has(topic.dataset.topicId);
+                const masteredMatch = (currentMastered === 'all') || (currentMastered === 'mastered' && isMastered);
+
+                topic.style.display = (gradeMatch && categoryMatch && masteredMatch) ? 'block' : 'none';
             });
         }
 
@@ -1110,6 +1235,7 @@
     </script>
 </body>
 </html>
+
 
 
 
