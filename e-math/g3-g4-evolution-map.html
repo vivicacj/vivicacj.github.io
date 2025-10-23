@@ -435,6 +435,13 @@
       border-color: var(--primary);
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 60px rgba(99, 102, 241, 0.3);
     }
+    
+    /* === CODE FIX START === */
+    .topic-card.expanded {
+      overflow: visible; /* Allow content to flow out */
+      z-index: 10;       /* Ensure it stacks on top of other elements */
+    }
+    /* === CODE FIX END === */
 
     .topic-card.card-core {
       border-left: 4px solid var(--primary);
@@ -582,7 +589,7 @@
     }
 
     .topic-card.expanded .topic-content {
-      max-height: 3000px;
+      max-height: 5000px;
     }
 
     .topic-body {
@@ -839,9 +846,7 @@
       cursor: pointer;
     }
     
-    .archetype-sop-group.details-expanded {
-      z-index: 2;
-    }
+    
     
     .archetype-sop-group .archetype-card {
         margin-bottom: 0;
@@ -887,7 +892,7 @@
     .archetype-sop-group.details-expanded .archetype-expand-indicator {
       transform: rotate(45deg);
     }
-
+      /* 第 898-911 行改为： */
     .archetype-details {
       max-height: 0;
       overflow: hidden;
@@ -897,11 +902,13 @@
       border-bottom-right-radius: 1rem;
       border: 1px solid var(--glass-border);
       border-top: none;
+      position: relative;
     }
 
     .archetype-sop-group.details-expanded .archetype-details {
-      max-height: 1000px;
-    }
+    max-height: 5000px;
+    overflow: visible;
+    }   
     
     .sop-details-content {
       padding: 1rem 1.5rem 1.5rem 2.5rem;
@@ -968,6 +975,7 @@
   </style>
 </head>
 <body>
+ 
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div style="max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between;">
