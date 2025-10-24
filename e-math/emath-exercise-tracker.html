@@ -24,6 +24,7 @@
         body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%); min-height: 100vh; color: var(--text-color); }
         .hidden { display: none !important; }
         
+        /* 恢复了 Auth 样式 */
         #auth-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
         .auth-box { background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
         .auth-box h2 { margin-bottom: 20px; color: var(--text-color); }
@@ -69,8 +70,13 @@
         .practice-card { background: var(--card-background); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); transition: all 0.3s ease; overflow: visible; position: relative; }
         .practice-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15); }
         .card-header { padding: 20px; color: white; position: relative; border-radius: 16px 16px 0 0; }
-        .card-header-core { background: linear-gradient(135deg, #1e40af, #3b82f6); }
-        .card-header-satellite { background: linear-gradient(135deg, #6b21a8, #a855f7); }
+        
+        /* Updated card headers for 4 categories */
+        .card-header-g3Core { background: linear-gradient(135deg, #1e40af, #3b82f6); } /* G3 Core - Blue */
+        .card-header-g3Satellite { background: linear-gradient(135deg, #047857, #10b981); } /* G3 Satellite - Green */
+        .card-header-g4Core { background: linear-gradient(135deg, #6b21a8, #a855f7); } /* G4 Core - Purple */
+        .card-header-g4Satellite { background: linear-gradient(135deg, #b91c1c, #ef4444); } /* G4 Satellite - Red */
+
         .topic-badge { display: inline-block; background: rgba(255,255,255,0.25); padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
         .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 5px; line-height: 1.3; }
         .card-meta { font-size: 0.85rem; opacity: 0.9; }
@@ -112,6 +118,7 @@
 </head>
 <body>
 
+    <!-- 恢复了 Auth Container -->
     <div id="auth-container">
         <div class="auth-box">
             <div id="login-view">
@@ -137,13 +144,16 @@
         </div>
     </div>
     
+    <!-- 恢复了 'hidden' 类 -->
     <div id="main-app-container" class="hidden">
         <header class="header">
             <div class="container">
                 <div class="header-content">
                     <div class="logo">📐 E-Math Practice Tracker</div>
                     <div class="header-user-info">
+                        <!-- 恢复了 user-email-display -->
                         <span id="user-email-display"></span>
+                        <!-- 恢复了 Logout 按钮 -->
                         <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
                     </div>
                 </div>
@@ -153,7 +163,8 @@
         <main class="main-content">
             <div class="container">
                 <div class="content-header">
-                    <h1 class="section-title" id="sectionTitle">Core Topics</h1>
+                    <!-- 标题默认为 G3 Core -->
+                    <h1 class="section-title" id="sectionTitle">G3 Core Topics</h1>
                     <div class="action-buttons">
                         <button class="btn btn-primary" onclick="openPracticeModal()">➕ Add Practice</button>
                         <button class="btn btn-secondary" onclick="exportProgress()">📊 Export Progress</button>
@@ -171,11 +182,14 @@
                         <label><input type="radio" name="statusFilter" value="practicing"> <span class="status-indicator practicing"></span> Practicing</label>
                         <label><input type="radio" name="statusFilter" value="mastered"> <span class="status-indicator mastered"></span> Mastered</label>
                     </div>
-                    <select class="form-select" id="sectionSelect" onchange="changeSection()" style="max-width: 250px; min-width: 200px;">
-                        <option value="core">Core Topics</option>
-                        <option value="satellite">Satellite Topics</option>
-                        <option value="all-sections">🔍 View All Topics</option>
-                    </select>
+                    <!-- Updated G3/G4 select options -->
+                    <select id="sectionSelect" class="form-select" style="max-width:200px;" onchange="changeSection()">
+                            <option value="g3Core">G3 Core</option>
+                            <option value="g3Satellite">G3 Satellite</option>
+                            <option value="g4Core">G4 Core</option>
+                            <option value="g4Satellite">G4 Satellite</option>
+                            <option value="all-sections">All Topics</option>
+                        </select>
                 </div>
                 <div class="practice-grid" id="practiceGrid"></div>
             </div>
@@ -192,6 +206,7 @@
                 </div>
                 <div class="form-group">
                     <label class="form-label">Topic Type</label>
+                    <!-- This select is now populated dynamically based on topicTypes -->
                     <select class="form-select" id="practiceType"></select>
                 </div>
                 <div class="form-group">
@@ -276,13 +291,39 @@
         
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
+        // NEW: Added the 27 topics grouped by the 4 categories
         const topicTypes = {
-            'core': ['Trigonometry Application in Context', 'Quadratic Functions & Graphs', 'Comprehensive Algebraic Manipulation', 'Geometric Proofs & Similarity/Congruency'],
-            'satellite': ['Indices & Standard Form', 'Statistics & Probability', 'Ratio & Percentage in Context', 'Coordinate Geometry', 'Mensuration', 'Inequalities']
+            'g3Core': [
+                'Trigonometry (Foundation)', 'Similarity & Congruency', 'Circle Properties (Intro)', 
+                'Algebraic Manipulation', 'Equations & Inequalities', 'Functions & Graphs', 
+                'Number Theory', 'Ratio/Proportion/Rate', 'Percentages & Simple Interest', 
+                'Data Analysis & Representation'
+            ],
+            'g3Satellite': [
+                'Coordinate Geometry (basic)', 'Mensuration (prisms & cylinders)'
+            ],
+            'g4Core': [
+                'Full Trigonometry (Sine/Cosine Rules)', 'Mensuration Extension (cones/pyramids/spheres)', 'Circle Theorems', 
+                'Advanced Quadratics', 'Algebraic Fractions', 'Quadratic Inequalities & Functions (Transformations)', 
+                'Compound Interest & Depreciation', 'Direct/Inverse Proportions', 
+                'Grouped Data & Measures of Spread, Probability'
+            ],
+            'g4Satellite': [
+                'Advanced Mensuration (composite solids)', 'Coordinate Geometry (intersection, locus)', 
+                'Sequences, Surds', 'Simultaneous Quad-Linear Systems', 
+                'Exchange Rate, Speed/Time/Distance in Complex Contexts', 'Probability Trees & Compound Events'
+            ]
         };
 
-        let practicesData = { core: [], satellite: [] };
-        let currentSection = 'core';
+        // Updated practicesData structure
+        let practicesData = {
+                g3Core: [],
+                g3Satellite: [],
+                g4Core: [],
+                g4Satellite: []
+            };
+        // Default section changed to g3Core
+        let currentSection = 'g3Core';
         let currentStatusFilter = 'all';
         let user = null;
         let userDocRef = null;
@@ -310,6 +351,7 @@
             modal.style.display = 'flex';
         }
 
+        // 恢复了 toggleAuthView
         window.toggleAuthView = function() {
             document.getElementById('login-view').classList.toggle('hidden');
             document.getElementById('register-view').classList.toggle('hidden');
@@ -317,7 +359,7 @@
             document.getElementById('register-error').textContent = '';
         };
 
-        // --- AUTHENTICATION ---
+        // --- AUTHENTICATION (恢复) ---
 
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -337,6 +379,7 @@
             });
         });
 
+        // 恢复了 handleLogout
         window.handleLogout = function() {
              showSystemModal({
                 title: 'Confirm Logout',
@@ -348,33 +391,48 @@
             });
         };
 
+        // 恢复了原始的 onAuthStateChanged 逻辑，并修复了登出 bug
         onAuthStateChanged(auth, async (firebaseUser) => {
             if (unsubscribe) unsubscribe(); // Detach old listener
 
             if (firebaseUser) {
                 user = firebaseUser;
-                const userId = auth.currentUser?.uid || 'anonymous_user';
+                // 使用 firebaseUser.uid 作为 userId
+                const userId = firebaseUser.uid;
                 userDocRef = doc(db, 'artifacts', appId, 'users', userId, 'user_data', 'emath-practices');
                 
+                // 显示主应用, 隐藏登录框
                 document.getElementById('auth-container').classList.add('hidden');
                 document.getElementById('main-app-container').classList.remove('hidden');
                 document.getElementById('user-email-display').textContent = user.email || 'Authenticated User';
 
+                // Firestore 加载逻辑 (使用 G3/G4 结构)
                 const docSnap = await getDoc(userDocRef);
                 if (!docSnap.exists()) {
-                    await setDoc(userDocRef, { core: [], satellite: [] });
+                    await setDoc(userDocRef, { g3Core: [], g3Satellite: [], g4Core: [], g4Satellite: [] });
                 }
 
+                // Listen for real-time updates
                 unsubscribe = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        practicesData = { core: data.core || [], satellite: data.satellite || [] };
+                        // Load data for all 4 categories, providing empty array fallbacks
+                        practicesData = { 
+                            g3Core: data.g3Core || [], 
+                            g3Satellite: data.g3Satellite || [],
+                            g4Core: data.g4Core || [],
+                            g4Satellite: data.g4Satellite || []
+                        };
                     }
                     renderPractices();
                 });
             } else {
+                // 这是修复登出 bug 的关键:
+                // 用户未登录，显示登录框, 隐藏主应用
                 user = null;
-                // Don't show auth container immediately, wait for auto-login attempt
+                document.getElementById('auth-container').classList.remove('hidden');
+                document.getElementById('main-app-container').classList.add('hidden');
+                document.getElementById('user-email-display').textContent = '';
             }
         });
 
@@ -383,13 +441,17 @@
         function renderPractices() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
-            let sourceItems;
+            let sourceItems = [];
             if (currentSection === 'all-sections') {
+                // Combine all 4 arrays, adding a _section property to each item
                 sourceItems = [
-                    ...practicesData.core.map(p => ({ ...p, _section: 'core' })),
-                    ...practicesData.satellite.map(p => ({ ...p, _section: 'satellite' }))
+                    ...practicesData.g3Core.map(p => ({ ...p, _section: 'g3Core' })),
+                    ...practicesData.g3Satellite.map(p => ({ ...p, _section: 'g3Satellite' })),
+                    ...practicesData.g4Core.map(p => ({ ...p, _section: 'g4Core' })),
+                    ...practicesData.g4Satellite.map(p => ({ ...p, _section: 'g4Satellite' }))
                 ];
             } else {
+                // Get items from the currently selected section
                 sourceItems = (practicesData[currentSection] || []).map(p => ({ ...p, _section: currentSection }));
             }
 
@@ -403,7 +465,15 @@
 
             const grid = document.getElementById('practiceGrid');
             grid.innerHTML = filteredItems.length ? filteredItems.map(p => {
-                const badge = p._section === 'core' ? 'CORE TOPIC' : 'SATELLITE TOPIC';
+                // Updated badge logic for 4 categories
+                const badgeText = {
+                    g3Core: 'G3 Core',
+                    g3Satellite: 'G3 Satellite',
+                    g4Core: 'G4 Core',
+                    g4Satellite: 'G4 Satellite'
+                };
+                const badge = badgeText[p._section] || 'Topic';
+                
                 const isLink = p.documentContent && (p.documentContent.trim().startsWith('http://') || p.documentContent.trim().startsWith('https://'));
                 const btn = isLink 
                     ? `<a href="${p.documentContent}" target="_blank" class="btn btn-primary" style="width:100%">Open Document</a>`
@@ -411,6 +481,7 @@
                 const arch = p.archetype ? `<div class="archetype-label">Problem Archetype</div><div class="archetype-text">${p.archetype}</div>` : '';
                 
                 return `<div class="practice-card">
+                    <!-- Updated header class to use p._section -->
                     <div class="card-header card-header-${p._section}">
                         <div class="topic-badge">${badge}</div>
                         <h3 class="card-title">${p.name}</h3>
@@ -444,20 +515,34 @@
             form.dataset.editingId = id || '';
             
             // --- UPDATED LOGIC ---
-            // Always show all topics, grouped by category, for better UX.
+            // Populate dropdown with all 27 topics, grouped by category
             const practiceTypeSelect = document.getElementById('practiceType');
-            let optionsHtml = '<optgroup label="Core Topics">';
-            optionsHtml += topicTypes.core.map(t => `<option value="${t}">${t}</option>`).join('');
+            let optionsHtml = '';
+            optionsHtml += '<optgroup label="G3 Core Topics">';
+            optionsHtml += topicTypes.g3Core.map(t => `<option value="${t}">${t}</option>`).join('');
             optionsHtml += '</optgroup>';
-            optionsHtml += '<optgroup label="Satellite Topics">';
-            optionsHtml += topicTypes.satellite.map(t => `<option value="${t}">${t}</option>`).join('');
+            optionsHtml += '<optgroup label="G3 Satellite Topics">';
+            optionsHtml += topicTypes.g3Satellite.map(t => `<option value="${t}">${t}</option>`).join('');
+            optionsHtml += '</optgroup>';
+            optionsHtml += '<optgroup label="G4 Core Topics">';
+            optionsHtml += topicTypes.g4Core.map(t => `<option value="${t}">${t}</option>`).join('');
+            optionsHtml += '</optgroup>';
+            optionsHtml += '<optgroup label="G4 Satellite Topics">';
+            optionsHtml += topicTypes.g4Satellite.map(t => `<option value="${t}">${t}</option>`).join('');
             optionsHtml += '</optgroup>';
             practiceTypeSelect.innerHTML = optionsHtml;
             // --- END OF UPDATE ---
             
             if (id) {
                 document.getElementById('modalTitle').textContent = 'Edit Practice';
-                const p = [...practicesData.core, ...practicesData.satellite].find(pr => pr.id == id);
+                // Search all 4 arrays for the practice item
+                const p = [
+                    ...practicesData.g3Core, 
+                    ...practicesData.g3Satellite,
+                    ...practicesData.g4Core,
+                    ...practicesData.g4Satellite
+                ].find(pr => pr.id == id);
+                
                 if (p) {
                     document.getElementById('practiceName').value = p.name;
                     document.getElementById('practiceType').value = p.type;
@@ -473,6 +558,9 @@
                  // When adding new, pre-select the first item of the current section if it's not 'all-sections'
                  if(currentSection !== 'all-sections' && topicTypes[currentSection].length > 0){
                      practiceTypeSelect.value = topicTypes[currentSection][0];
+                 } else if (topicTypes.g3Core.length > 0) {
+                     // Default to first G3 Core topic
+                     practiceTypeSelect.value = topicTypes.g3Core[0];
                  }
             }
             modal.style.display = 'flex';
@@ -484,16 +572,6 @@
 
         document.getElementById('practiceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
-            // This check is no longer strictly necessary with the new dropdown,
-            // but it's good practice to guide the user.
-             if (currentSection === 'all-sections' && !document.getElementById('practiceForm').dataset.editingId) {
-                showSystemModal({
-                    title: 'Action Required',
-                    message: 'You are in the "All Topics" view. Please ensure you have selected the correct "Topic Type" for the new practice.',
-                    buttons: [{ text: 'OK', class: 'btn-primary' }]
-                });
-            }
 
             const id = document.getElementById('practiceForm').dataset.editingId ? Number(document.getElementById('practiceForm').dataset.editingId) : null;
             const data = {
@@ -507,26 +585,32 @@
                 estimatedTime: parseInt(document.getElementById('estimatedTime').value) || 30
             };
 
-            const newSection = topicTypes.core.includes(data.type) ? 'core' : 'satellite';
+            // NEW: Determine the correct section (g3Core, g3Satellite, etc.) based on the selected topic type
+            let newSection = 'g3Core'; // Default
+            if (topicTypes.g3Satellite.includes(data.type)) newSection = 'g3Satellite';
+            else if (topicTypes.g4Core.includes(data.type)) newSection = 'g4Core';
+            else if (topicTypes.g4Satellite.includes(data.type)) newSection = 'g4Satellite';
+            // else it remains 'g3Core'
 
             if (id) { // Editing
                 let oldSection = null;
                 let practiceIndex = -1;
                 
-                practiceIndex = practicesData.core.findIndex(p => p.id === id);
-                if (practiceIndex !== -1) oldSection = 'core';
-                else {
-                    practiceIndex = practicesData.satellite.findIndex(p => p.id === id);
-                    if (practiceIndex !== -1) oldSection = 'satellite';
-                }
+                // Find which array the practice item is currently in
+                if (practiceIndex === -1) { practiceIndex = practicesData.g3Core.findIndex(p => p.id === id); if (practiceIndex !== -1) oldSection = 'g3Core'; }
+                if (practiceIndex === -1) { practiceIndex = practicesData.g3Satellite.findIndex(p => p.id === id); if (practiceIndex !== -1) oldSection = 'g3Satellite'; }
+                if (practiceIndex === -1) { practiceIndex = practicesData.g4Core.findIndex(p => p.id === id); if (practiceIndex !== -1) oldSection = 'g4Core'; }
+                if (practiceIndex === -1) { practiceIndex = practicesData.g4Satellite.findIndex(p => p.id === id); if (practiceIndex !== -1) oldSection = 'g4Satellite'; }
 
                 if (oldSection) {
                     const originalPractice = practicesData[oldSection][practiceIndex];
                     const updatedPractice = { ...originalPractice, ...data };
+                    
                     if (oldSection === newSection) {
+                        // Category hasn't changed, just update it
                         practicesData[oldSection][practiceIndex] = updatedPractice;
                     } else {
-                        // Re-categorize the practice item
+                        // Category changed, remove from old array and add to new one
                         practicesData[oldSection].splice(practiceIndex, 1);
                         practicesData[newSection].push(updatedPractice);
                     }
@@ -540,6 +624,7 @@
                 practicesData[newSection].push(newPractice);
             }
 
+            // Save the entire practicesData object back to Firestore
             await setDoc(userDocRef, practicesData);
             closePracticeModal();
         });
@@ -551,8 +636,11 @@
                 buttons: [
                     { text: 'Cancel' },
                     { text: 'Delete', class: 'btn-danger', onClick: async () => {
-                        practicesData.core = practicesData.core.filter(p => p.id != id);
-                        practicesData.satellite = practicesData.satellite.filter(p => p.id != id);
+                        // Filter all 4 arrays
+                        practicesData.g3Core = practicesData.g3Core.filter(p => p.id != id);
+                        practicesData.g3Satellite = practicesData.g3Satellite.filter(p => p.id != id);
+                        practicesData.g4Core = practicesData.g4Core.filter(p => p.id != id);
+                        practicesData.g4Satellite = practicesData.g4Satellite.filter(p => p.id != id);
                         await setDoc(userDocRef, practicesData);
                     }}
                 ]
@@ -560,7 +648,14 @@
         };
 
         window.markAsCompleted = async function(id) {
-            const p = [...practicesData.core, ...practicesData.satellite].find(pr => pr.id == id);
+            // Find the practice item in any of the 4 arrays
+            const p = [
+                ...practicesData.g3Core, 
+                ...practicesData.g3Satellite,
+                ...practicesData.g4Core,
+                ...practicesData.g4Satellite
+            ].find(pr => pr.id == id);
+            
             if (p) {
                 p.status = 'mastered';
                 p.completedDate = new Date().toISOString().split('T')[0];
@@ -569,7 +664,14 @@
         };
 
         window.viewContent = function(id) {
-            const p = [...practicesData.core, ...practicesData.satellite].find(pr => pr.id == id);
+            // Find the practice item in any of the 4 arrays
+            const p = [
+                ...practicesData.g3Core, 
+                ...practicesData.g3Satellite,
+                ...practicesData.g4Core,
+                ...practicesData.g4Satellite
+            ].find(pr => pr.id == id);
+
             if (!p) return;
             const modal = document.createElement('div');
             modal.className = 'modal';
@@ -596,7 +698,14 @@
         };
         
         window.exportProgress = function() {
-            const all = [...practicesData.core, ...practicesData.satellite];
+            // Combine all 4 arrays
+            const all = [
+                ...practicesData.g3Core, 
+                ...practicesData.g3Satellite,
+                ...practicesData.g4Core,
+                ...practicesData.g4Satellite
+            ];
+            
             if (all.length === 0) {
                 showSystemModal({ title: 'Export', message: 'There is no data to export.', buttons: [{text: 'OK', class: 'btn-primary'}] });
                 return;
@@ -610,8 +719,11 @@
             };
 
             let csv = "Category,Topic,Name,Archetype,Difficulty,Status,Time,Date\n";
-            practicesData.core.forEach(p => { csv += `"Core","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\n`; });
-            practicesData.satellite.forEach(p => { csv += `"Satellite","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\n`; });
+            // Export rows for all 4 categories
+            practicesData.g3Core.forEach(p => { csv += `"G3 Core","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\n`; });
+            practicesData.g3Satellite.forEach(p => { csv += `"G3 Satellite","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\n`; });
+            practicesData.g4Core.forEach(p => { csv += `"G4 Core","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\n`; });
+            practicesData.g4Satellite.forEach(p => { csv += `"G4 Satellite","${p.type}","${p.name}","${p.archetype||''}","${p.difficulty}","${p.status}","${p.estimatedTime}","${p.dateAdded}"\N`; });
 
             const link = document.createElement("a");
             link.setAttribute("href", 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
@@ -631,7 +743,14 @@
 
         window.changeSection = function() {
             currentSection = document.getElementById('sectionSelect').value;
-            const titles = { core: 'Core Topics', satellite: 'Satellite Topics', 'all-sections': 'All Topics Overview' };
+            // Updated titles object for 4 categories + all
+            const titles = { 
+                'g3Core': 'G3 Core Topics', 
+                'g3Satellite': 'G3 Satellite Topics', 
+                'g4Core': 'G4 Core Topics', 
+                'g4Satellite': 'G4 Satellite Topics', 
+                'all-sections': 'All Topics Overview' 
+            };
             document.getElementById('sectionTitle').textContent = titles[currentSection];
             renderPractices();
         };
@@ -655,27 +774,10 @@
             }
         });
 
-        // --- APP INITIALIZATION ---
-        async function initializeAppAuth() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else if (auth.currentUser === null) {
-                    // This case is for when the app is used outside the platform
-                    // and no user is signed in.
-                    document.getElementById('auth-container').classList.remove('hidden');
-                    document.getElementById('main-app-container').classList.add('hidden');
-                }
-            } catch (error) {
-                console.error("Error during automatic sign-in:", error);
-                 // If token fails, show manual login
-                document.getElementById('auth-container').classList.remove('hidden');
-                document.getElementById('main-app-container').classList.add('hidden');
-            }
-        }
-
-        initializeAppAuth();
+        // 移除了 initializeAppAuth() 函数
+        // onAuthStateChanged 会自动处理初始状态
 
     </script>
 </body>
 </html>
+
