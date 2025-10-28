@@ -277,59 +277,124 @@
         height: 1.2em;
     }
 
-    .search-container {
-      max-width: 750px;
-      margin: 0 auto 3rem;
+    /* === Archetype Finder Styles === */
+    .archetype-finder {
+      max-width: 900px;
+      margin: 2rem auto 2.5rem;
       position: relative;
       animation: fadeInUp 1.6s ease-out;
       width: 100%;
     }
 
-    .search-box {
-      width: 100%;
-      padding: 1rem 3.5rem 1rem 3.5rem;
+    .archetype-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .archetype-input {
+      flex: 1;
+      padding: 1.25rem 1.5rem;
       border-radius: 1.5rem;
       border: 2px solid var(--glass-border);
       background: var(--glass);
       color: var(--text-primary);
-      font-size: 1rem;
+      font-size: 1.125rem;
       transition: all 0.3s;
       backdrop-filter: blur(10px);
     }
 
-    .search-box:focus {
+    .archetype-input:focus {
       outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.2);
       background: rgba(255, 255, 255, 0.08);
     }
 
-    .search-icon {
-      position: absolute;
-      left: 1.25rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.25rem;
+    .archetype-input::placeholder {
       color: var(--text-secondary);
-      pointer-events: none;
+      opacity: 0.7;
     }
 
-    .search-clear {
-      position: absolute;
-      right: 1.25rem;
-      top: 50%;
-      transform: translateY(-50%);
+    .archetype-find-btn {
+      padding: 1.25rem 2rem;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      color: white;
+      border: none;
+      border-radius: 1.5rem;
       cursor: pointer;
-      color: var(--text-secondary);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
     }
 
-    .search-box:not(:placeholder-shown) + .search-clear {
-      opacity: 1;
-      pointer-events: all;
+    .archetype-find-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
     }
+
+    .archetype-find-btn .icon {
+      width: 1.25em;
+      height: 1.25em;
+    }
+
+    /* Highlight found Archetype */
+    .archetype-sop-group.highlighted {
+      animation: highlightPulse 2s ease-in-out;
+    }
+
+    .archetype-sop-group.highlighted .archetype-card {
+      border-color: var(--accent) !important;
+      box-shadow: 0 0 30px rgba(6, 182, 212, 0.6) !important;
+      background: rgba(6, 182, 212, 0.1);
+    }
+
+    @keyframes highlightPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    /* Search result hint */
+    .search-result-hint {
+      text-align: center;
+      padding: 1rem 1.75rem;
+      margin: 1rem auto 0;
+      max-width: 900px;
+      border-radius: 1.25rem;
+      background: var(--glass);
+      border: 2px solid var(--glass-border);
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: none;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-result-hint.show {
+      display: block;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .search-result-hint.success {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.15);
+      color: var(--accent);
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);
+    }
+
+    .search-result-hint.error {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);
+    }
+    /* === END NEW: Archetype Finder Styles === */
     
     .section {
       max-width: 1400px;
@@ -1002,16 +1067,22 @@
       Explore how concepts <strong>deepen</strong>, <strong>extend</strong>, and expand across Secondary 3 to 4.
     </p>
     <div class="stats-grid" id="stats-grid-container"></div>
-    <div class="control-panel">
-      <div class="search-container" style="margin: 0;">
-        <span class="search-icon">
+    <!-- Archetype Finder -->
+    <div class="archetype-finder">
+      <div class="archetype-input-wrapper">
+        <input 
+          type="text" 
+          id="archetypeInput" 
+          class="archetype-input" 
+          placeholder="🎯 Find Archetype by ID (e.g., ARCH-L1-ALG-01) or Name to view SOP..."
+          onkeypress="if(event.key==='Enter') findArchetype()"
+        />
+        <button class="archetype-find-btn" onclick="findArchetype()">
           <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-        <input type="text" class="search-box" id="searchInput" placeholder="Search topics, archetypes, SOPs... (Ctrl+K)" oninput="filterContent(this.value)">
-        <span class="search-clear" onclick="clearSearch()">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
+          Find SOP
+        </button>
       </div>
+      <div id="searchResultHint" class="search-result-hint"></div>
     </div>
     <div class="control-panel">
       <button class="btn btn-primary" onclick="scrollToSection('g3')">
@@ -1432,6 +1503,22 @@ graph TD
         ]}
       },
       {
+        "id": "ARCH-L1-GEO-05", "level": "L1", "name": "Circle Properties & Theorems", "topic": "geometry", "badge": "CORE",
+        "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
+        "sop": { "goal": "Use circle theorems to find or prove angles and relationships within a circle.", "triggers": ["tangent", "angle in the same segment", "angle at centre", "cyclic quadrilateral"], "steps": [
+            "1. Identify the known elements: radii, tangents, or cyclic quadrilateral.",
+            "2. Apply the correct theorem: e.g., Tangent ⊥ Radius; ∠at Centre = 2×∠at Circumference; Opposite Angles in a Cyclic Quadrilateral add up to 180°.",
+            "3. State reasons explicitly for each equal angle.",
+            "4. Combine with geometry reasoning to find unknowns."
+        ], "pitfalls": [
+            { "type": "CRITICAL", "text": "Forgetting to write the geometric reason for each equal angle" },
+            { "type": "COMMON", "text": "Mixing up centre vs circumference angles" }
+        ], "pro_tips": [
+            "Write theorem abbreviations beside diagram: (T⊥R), (∠C = 2∠A), (Opp ∠s = 180°)",
+            "Draw a clear diagram and mark all known angles before applying theorems"
+        ]}
+      },
+      {
         "id": "ARCH-L1-STAT-01", "level": "L1", "name": "Interpreting Stem-and-Leaf Diagrams", "topic": "statistics", "badge": "SAT",
         "description": "Quickly and accurately extracting mode, median, and mean from stem-and-leaf diagrams.",
         "sop": { "goal": "Quickly and accurately extract mode, median, and mean", "triggers": ["stem-and-leaf diagram is presented"], "steps": [
@@ -1523,6 +1610,22 @@ graph TD
         ], "pro_tips": [
             "For Shoelace, write points anti-clockwise and repeat the first at the bottom",
             "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
+        ]}
+      },
+      {
+        "id": "ARCH-L1-CG-04", "level": "L1", "name": "Coordinate Geometry (Gradient, Midpoint & Locus)", "topic": "geometry", "badge": "SAT",
+        "description": "Solving coordinate geometry problems involving gradient, midpoint, distance, and locus of points.",
+        "sop": { "goal": "Use coordinate geometry formulas to find gradient, midpoint, and the equation of a locus.", "triggers": ["midpoint", "gradient", "locus", "point equidistant from"], "steps": [
+            "1. Gradient: m = (y₂ − y₁) ÷ (x₂ − x₁).",
+            "2. Midpoint: ((x₁ + x₂)/2, (y₁ + y₂)/2).",
+            "3. Distance: √[(x₂ − x₁)² + (y₂ − y₁)²].",
+            "4. Locus: Translate 'equidistant from …' into an equation using distance formula or perpendicular bisector concept."
+        ], "pitfalls": [
+            { "type": "CRITICAL", "text": "Swapping x and y coordinates in formulas" },
+            { "type": "COMMON", "text": "Leaving midpoint coordinates as fractions un-simplified" }
+        ], "pro_tips": [
+            "Label points A(x₁,y₁), B(x₂,y₂) before substituting",
+            "For locus problems, set up the equation before simplifying"
         ]}
       },
       {
@@ -1942,7 +2045,7 @@ graph TD
             fullSopHtml += '</div>';
 
             return `
-            <div class="archetype-sop-group" onclick="toggleArchetypeDetails(this)">
+            <div class="archetype-sop-group" data-archetype-id="${arch.id}" data-archetype-name="${arch.name.toLowerCase()}" onclick="toggleArchetypeDetails(this)">
                 <div class="archetype-card level-${arch.level.charAt(1)}">
                     <div class="archetype-title">
                         <span class="level-badge">${arch.level}</span>
@@ -2034,13 +2137,11 @@ graph TD
         });
 
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') { 
-                e.preventDefault(); 
-                document.getElementById('searchInput').focus(); 
-            }
             if (e.key === 'Escape') { 
-                clearSearch(); 
-                document.getElementById('searchInput').blur(); 
+                // Clear archetype finder
+                document.getElementById('archetypeInput').value = '';
+                document.getElementById('searchResultHint').classList.remove('show');
+                document.getElementById('archetypeInput').blur();
             }
         });
     }
@@ -2083,32 +2184,84 @@ graph TD
       }
     }
 
-    function filterContent(query) {
-      const cards = document.querySelectorAll('.topic-card');
-      const lowerQuery = query.toLowerCase().trim();
-      let foundMatch = false;
-
-      cards.forEach(card => {
-        if (!query) { 
-          card.style.display = 'block'; 
-          return; 
-        }
-        const keywords = card.getAttribute('data-keywords') || '';
-        const matches = keywords.toLowerCase().includes(lowerQuery);
-        card.style.display = matches ? 'block' : 'none';
-        if(matches) foundMatch = true;
-      });
-    }
-
-    function clearSearch() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
-      filterContent('');
-    }
-
     function toggleLegend() {
       document.getElementById('legend').classList.toggle('visible');
     }
+
+    // === NEW: Archetype Finder Function ===
+    function findArchetype() {
+        const input = document.getElementById('archetypeInput').value.trim();
+        const hint = document.getElementById('searchResultHint');
+        
+        if (!input) {
+            showHint('⚠️ Please enter an Archetype ID or name', 'error');
+            return;
+        }
+
+        // Clear previous highlights
+        document.querySelectorAll('.archetype-sop-group.highlighted').forEach(el => {
+            el.classList.remove('highlighted');
+        });
+
+        // Search for matching Archetype using data attributes
+        const inputLower = input.toLowerCase();
+        const matchedElement = Array.from(document.querySelectorAll('.archetype-sop-group')).find(el => {
+            const id = el.getAttribute('data-archetype-id')?.toLowerCase();
+            const name = el.getAttribute('data-archetype-name')?.toLowerCase();
+            return id === inputLower || id?.includes(inputLower) || name?.includes(inputLower);
+        });
+
+        if (matchedElement) {
+            // Found a match
+            const topicCard = matchedElement.closest('.topic-card');
+            
+            // Expand Topic card if not already expanded
+            if (topicCard && !topicCard.classList.contains('expanded')) {
+                topicCard.classList.add('expanded');
+            }
+            
+            // Expand Archetype details if not already expanded
+            if (!matchedElement.classList.contains('details-expanded')) {
+                matchedElement.classList.add('details-expanded');
+            }
+            
+            // Add highlight effect
+            matchedElement.classList.add('highlighted');
+            
+            // Scroll to the element
+            setTimeout(() => {
+                matchedElement.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'center' 
+                });
+            }, 300);
+            
+            // Show success message
+            const archetypeId = matchedElement.getAttribute('data-archetype-id');
+            const archetypeName = matchedElement.querySelector('.archetype-title')?.textContent.trim().replace(/^L\d+\s*/, '') || 'Archetype';
+            
+            showHint(`✓ Found: ${archetypeId} - ${archetypeName}`, 'success');
+            
+            // Remove highlight after 3 seconds
+            setTimeout(() => {
+                matchedElement.classList.remove('highlighted');
+            }, 3000);
+        } else {
+            // No match found
+            showHint(`✗ No Archetype found matching "${input}". Try ID like "ARCH-L1-ALG-01" or name like "Factorisation"`, 'error');
+        }
+    }
+
+    function showHint(message, type) {
+        const hint = document.getElementById('searchResultHint');
+        hint.textContent = message;
+        hint.className = `search-result-hint show ${type}`;
+        
+        setTimeout(() => {
+            hint.classList.remove('show');
+        }, 4000);
+    }
+    // === END NEW ===
 
     // Initialize the application once the DOM is fully loaded.
     document.addEventListener('DOMContentLoaded', initializeApp);
@@ -2116,4 +2269,3 @@ graph TD
   </script>
 </body>
 </html>
-
