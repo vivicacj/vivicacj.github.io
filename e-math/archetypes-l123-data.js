@@ -1,4 +1,3 @@
-```javascript
 const ARCHETYPES_DATA = [
   {
     "id": "ARCH-L1-ALG-01",
@@ -399,6 +398,32 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+    {
+  "id": "ARCH-L1-GEO-05",
+  "level": "L1",
+  "name": "Circle Properties & Theorems",
+  "topic": "geometry",
+  "badge": "CORE",
+  "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
+  "sop": {
+    "goal": "Use circle theorems to find or prove angles and relationships within a circle.",
+    "triggers": ["tangent", "angle in the same segment", "angle at centre", "cyclic quadrilateral"],
+    "steps": [
+      "1. Identify the known elements: radii, tangents, or cyclic quadrilateral.",
+      "2. Apply the correct theorem: e.g., Tangent ⊥ Radius; ∠at Centre = 2×∠at Circumference; Opposite Angles in a Cyclic Quadrilateral add up to 180°.",
+      "3. State reasons explicitly for each equal angle.",
+      "4. Combine with geometry reasoning to find unknowns."
+    ],
+    "pitfalls": [
+      { "type": "CRITICAL", "text": "Forgetting to write the geometric reason for each equal angle" },
+      { "type": "COMMON", "text": "Mixing up centre vs circumference angles" }
+    ],
+    "pro_tips": [
+      "Write theorem abbreviations beside diagram: (T⊥R), (∠C = 2∠A), (Opp ∠s = 180°)",
+      "Circle geometry marks are mostly for reasons—always write them!"
+    ]
+  }
+},
   {
     "id": "ARCH-L1-STAT-01",
     "level": "L1",
@@ -551,6 +576,32 @@ const ARCHETYPES_DATA = [
             "For Shoelace, write points anti-clockwise and repeat the first at the bottom",
             "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
         ]
+    }
+  },
+    {
+    "id": "ARCH-L1-CG-04",
+    "level": "L1",
+    "name": "Coordinate Geometry (Gradient, Midpoint & Locus)",
+    "topic": "geometry",
+    "badge": "SAT",
+    "description": "Solving coordinate geometry problems involving gradient, midpoint, distance, and locus of points.",
+    "sop": {
+      "goal": "Use coordinate geometry formulas to find gradient, midpoint, and the equation of a locus.",
+      "triggers": ["midpoint", "gradient", "locus", "point equidistant from"],
+      "steps": [
+        "1. Gradient: m = (y₂ − y₁) ÷ (x₂ − x₁).",
+        "2. Midpoint: ((x₁ + x₂)/2, (y₁ + y₂)/2).",
+        "3. Distance: √[(x₂ − x₁)² + (y₂ − y₁)²].",
+        "4. Locus: Translate 'equidistant from …' into an equation using distance formula or perpendicular bisector concept."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Swapping x and y coordinates in formulas" },
+        { "type": "COMMON", "text": "Leaving midpoint coordinates as fractions un-simplified" }
+      ],
+      "pro_tips": [
+        "Label points A(x₁,y₁), B(x₂,y₂) before substituting",
+        "For 'equidistant' loci, start with 'PA = PB' and square both sides to remove roots"
+      ]
     }
   },
   {
