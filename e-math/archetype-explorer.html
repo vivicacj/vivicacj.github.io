@@ -396,6 +396,93 @@
         .tip-item { border-color: #48bb78; background: #f0fff4; }
         .pitfall-type { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: #c53030; }
 
+        /* ==========================================
+           BRANCHES VISUALIZATION (in InfoPanel)
+           ========================================== */
+        .branches-overview {
+            margin: 20px 0;
+            padding: 16px;
+            background: #f0f5ff; /* Light blue background to fit panel */
+            border-radius: 8px;
+            border-left: 4px solid #667eea; /* Theme primary color */
+        }
+
+        .branches-overview h4 {
+            margin: 0 0 16px 0;
+            color: #667eea; /* Theme primary color */
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .branches-tree {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .branch-tree-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: #f7fafc; /* Light background */
+            border-radius: 6px;
+            border: 1px solid #e2e8f0; /* Light border */
+            transition: all 0.2s ease;
+        }
+
+        .branch-tree-item:hover {
+            background: #e0e7ff;
+            border-color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .branch-tree-item.clickable {
+            cursor: pointer;
+        }
+
+        .branch-tree-item.clickable:hover {
+            background: #c7d2fe;
+            border-color: #667eea;
+            transform: translateX(6px);
+        }
+
+        .branch-prefix {
+            color: #667eea; /* Theme primary color */
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            min-width: 24px;
+        }
+
+        .branch-name {
+            flex: 1;
+            color: #2d3748; /* Dark text */
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .branch-expand-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            color: #667eea; /* Theme primary color */
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .branch-expand-btn:hover {
+            color: #4f46e5; /* Theme primary dark */
+            transform: translateX(2px);
+        }
+        
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+        }
+
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -980,7 +1067,8 @@
         
         function renderSOPContent(arch) {
              const sop = arch.sop;
-             if (!sop) return `<p>SOP details not available.</p>`;
+             // MODIFIED: Check for branches as well
+             if (!sop && !arch.has_branches) return `<p>SOP details not available.</p>`;
 
              const connections = arch.constituent_l1_ids || arch.source_l2_ids || [];
              const constituentArchetypes = connections.map(id => ARCHETYPES_DATA.find(a => a.id === id));
@@ -992,32 +1080,72 @@
                  return stepParts.length > 1 ? stepParts[1].trim() : step;
              }
 
-             let html = `<div class="section-title">🎯 Goal</div><p>${sop.goal}</p>`;
+             // MODIFIED: Start with empty HTML
+             let html = '';
              
-             if(sop.triggers) {
-                 html += `<div class="section-title">⚡️ Triggers</div><p><em>${sop.triggers.join(', ')}</em></p>`;
-             }
-
-             if (sop.steps) {
-                  html += `<div class="section-title">📝 Steps</div>` + sop.steps.map((step, i) => `<div class="sop-step"><strong>Step ${i+1}:</strong> ${getStepText(step)}</div>`).join('');
-             }
-
-             if (sop.pitfalls) {
-                 html += `<div class="section-title">⚠️ Pitfalls</div>` + sop.pitfalls.map(p => `
-                     <div class="pitfall-item">
-                         <div class="pitfall-type">${p.type}</div>
-                         <p>${p.text}</p>
+             // ====== NEW: Show branches if available ======
+             if (arch.has_branches && arch.branches && arch.branches.length > 0) {
+                 html += `
+                     <div class="branches-overview">
+                         <h4>📂 Sub-Branches (${arch.branches.length})</h4>
+                         <div class="branches-tree">
+                 `;
+            
+                 arch.branches.forEach((branchId, index) => {
+                     const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                     if (branch) {
+                         const isLast = index === arch.branches.length - 1;
+                         const prefix = isLast ? '└─' : '├─';
+                         html += `
+                             <div class="branch-tree-item clickable" onclick="event.stopPropagation(); showNodeInfo('${branchId}')">
+                                 <span class="branch-prefix">${prefix}</span>
+                                 <span class="branch-name">${branch.name}</span>
+                                 <button class="branch-expand-btn">
+                                     <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                         <path d="M9 18L15 12L9 6"/>
+                                     </svg>
+                                 </button>
+                             </div>
+                         `;
+                     }
+                 });
+                
+                 html += `
+                         </div>
                      </div>
-                 `).join('');
+                 `;
              }
+             // ====== End new branches section ======
 
-             if (sop.pro_tips) {
-                 html += `<div class="section-title">💡 Pro Tips</div>` + sop.pro_tips.map(tip => `
-                     <div class="tip-item">
-                         <p>${tip}</p>
-                     </div>
-                 `).join('');
-             }
+             // MODIFIED: Check if SOP exists before rendering
+             if (sop) {
+                 html += `<div class="section-title">🎯 Goal</div><p>${sop.goal}</p>`;
+                 
+                 if(sop.triggers) {
+                     html += `<div class="section-title">⚡️ Triggers</div><p><em>${sop.triggers.join(', ')}</em></p>`;
+                 }
+
+                 if (sop.steps) {
+                      html += `<div class="section-title">📝 Steps</div>` + sop.steps.map((step, i) => `<div class="sop-step"><strong>Step ${i+1}:</strong> ${getStepText(step)}</div>`).join('');
+                 }
+
+                 if (sop.pitfalls) {
+                     html += `<div class="section-title">⚠️ Pitfalls</div>` + sop.pitfalls.map(p => `
+                         <div class="pitfall-item">
+                             <div class="pitfall-type">${p.type}</div>
+                             <p>${p.text}</p>
+                         </div>
+                     `).join('');
+                 }
+
+                 if (sop.pro_tips) {
+                     html += `<div class="section-title">💡 Pro Tips</div>` + sop.pro_tips.map(tip => `
+                         <div class="tip-item">
+                             <p>${tip}</p>
+                         </div>
+                     `).join('');
+                 }
+             } // End if(sop)
              
              // Helper for links to avoid code duplication
              const renderSkillLink = (skill) => `<div class="sop-step sop-step-interactive" onclick="showNodeInfo('${skill.id}')">${skill.name} (${skill.level})</div>`;
