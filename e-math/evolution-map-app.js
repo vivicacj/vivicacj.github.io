@@ -31,14 +31,17 @@ function renderStats() {
     const badges = { 'CORE': 0, 'SAT': 0 };
     
     ARCHETYPES_DATA.forEach(arch => {
-        if (levels[arch.level] !== undefined) levels[arch.level]++;
-        if (badges[arch.badge]) badges[arch.badge]++;
+        // Only count parent archetypes (not individual branches)
+        if (!arch.parent_id) {
+            if (levels[arch.level] !== undefined) levels[arch.level]++;
+            if (badges[arch.badge]) badges[arch.badge]++;
+        }
     });
     
     statsGrid.innerHTML = `
         <div class="stat-card">
             <div class="stat-icon">📚</div>
-            <div class="stat-value">${ARCHETYPES_DATA.length}</div>
+            <div class="stat-value">${levels['L1'] + levels['L2'] + levels['L3']}</div>
             <div class="stat-label">Total Archetypes</div>
         </div>
         <div class="stat-card">
@@ -64,6 +67,9 @@ function renderStats() {
  */
 function renderG3AndG4Topics() {
     const topics = ARCHETYPES_DATA.reduce((acc, arch) => {
+        // Skip branch archetypes (only show parent archetypes)
+        if (arch.parent_id) return acc;
+        
         if (!acc[arch.topic]) {
             acc[arch.topic] = { g3: [], g4: [] };
         }
@@ -105,6 +111,9 @@ function renderG3AndG4Topics() {
  */
 function sopChainSummary(arch) {
     if (arch.level === 'L1') {
+        if (arch.has_branches) {
+            return `${arch.branches.length} methods available`;
+        }
         return arch.sop?.steps ? `${arch.sop.steps.length} steps` : 'Basic procedure';
     } else if (arch.level === 'L2' && arch.constituent_l1_ids) {
         return `Calls: ${arch.constituent_l1_ids.join(', ')}`;
@@ -128,6 +137,40 @@ function renderTopicCard(topicKey, archetypes, gradeLevel) {
     
     const archetypesHtml = archetypes.map(arch => {
         let fullSopHtml = `<div class="sop-section">`;
+        
+        // ====== NEW: Show branches if available ======
+        if (arch.has_branches && arch.branches && arch.branches.length > 0) {
+            fullSopHtml += `
+                <div class="branches-overview">
+                    <h4>📂 Sub-Branches (${arch.branches.length})</h4>
+                    <div class="branches-tree">
+            `;
+            
+            arch.branches.forEach((branchId, index) => {
+                const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                if (branch) {
+                    const isLast = index === arch.branches.length - 1;
+                    const prefix = isLast ? '└─' : '├─';
+                    fullSopHtml += `
+                        <div class="branch-tree-item" data-branch-id="${branchId}">
+                            <span class="branch-prefix">${prefix}</span>
+                            <span class="branch-name">${branch.name}</span>
+                            <button class="branch-expand-btn" onclick="expandBranchDetails(event, '${branchId}')">
+                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none">
+                                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+            
+            fullSopHtml += `
+                    </div>
+                </div>
+            `;
+        }
+        // ====== End branches section ======
         
         if (arch.sop) {
             // Goal
@@ -183,15 +226,24 @@ function renderTopicCard(topicKey, archetypes, gradeLevel) {
         }
         fullSopHtml += '</div>';
 
+        // ====== Add has-branches class if applicable ======
+        const hasBranchesClass = arch.has_branches ? 'has-branches' : '';
+        
         return `
-            <div class="archetype-sop-group" data-archetype-id="${arch.id}" data-archetype-name="${arch.name.toLowerCase()}" onclick="toggleArchetypeDetails(this)">
+            <div class="archetype-sop-group ${hasBranchesClass}" 
+                 data-archetype-id="${arch.id}" 
+                 data-archetype-name="${arch.name.toLowerCase()}" 
+                 onclick="toggleArchetypeDetails(this)">
                 <div class="archetype-card level-${arch.level.charAt(1)}">
                     <div class="archetype-title">
                         <span class="level-badge">${arch.level}</span>
                         ${arch.name}
+                        ${arch.has_branches ? '<span class="branch-indicator">📂</span>' : ''}
                     </div>
                     <span class="archetype-expand-indicator">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 6V18M6 12H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 6V18M6 12H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
                     </span>
                 </div>
                 <div class="sop-connector">
@@ -228,13 +280,181 @@ function renderTopicCard(topicKey, archetypes, gradeLevel) {
     `;
 }
 
+
+/**
+ * Expand branch details in a modal
+ */
+function expandBranchDetails(event, branchId) {
+    event.stopPropagation();
+    
+    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+    if (!branch) {
+        console.error('Branch not found:', branchId);
+        return;
+    }
+    
+    // Remove any existing modals first
+    const existingModal = document.querySelector('.branch-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'branch-modal';
+    modal.innerHTML = `
+        <div class="branch-modal-content">
+            <div class="branch-modal-header">
+                <div>
+                    <h3>${branch.name}</h3>
+                    <p style="margin: 4px 0 0 0; color: #757575; font-size: 0.9em;">
+                        ${branch.has_branches ? '📂 Parent Archetype' : branch.parent_id ? '↳ Branch of ' + branch.parent_id : 'L1 Archetype'}
+                    </p>
+                </div>
+                <button class="branch-modal-close" onclick="this.closest('.branch-modal').remove(); document.body.style.overflow = '';">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none">
+                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="branch-modal-body">
+                ${renderBranchSopDetails(branch)}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            document.body.style.overflow = '';
+        }
+    });
+    
+    // Close on Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.body.style.overflow = '';
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+/**
+ * Render detailed SOP for a branch (or parent with branches)
+ */
+function renderBranchSopDetails(branch) {
+    let html = '<div class="sop-section">';
+    
+    // ====== NEW: If this is a parent with branches, show branches first ======
+    if (branch.has_branches && branch.branches && branch.branches.length > 0) {
+        html += `
+            <div class="branches-overview">
+                <h4>📂 Sub-Branches (${branch.branches.length})</h4>
+                <p style="margin-bottom: 16px;">
+                    This is a parent archetype with multiple solution methods. Click on any branch below to view its detailed SOP.
+                </p>
+                <div class="branches-tree">
+        `;
+        
+        branch.branches.forEach((branchId, index) => {
+            const childBranch = ARCHETYPES_DATA.find(a => a.id === branchId);
+            if (childBranch) {
+                const isLast = index === branch.branches.length - 1;
+                const prefix = isLast ? '└─' : '├─';
+                html += `
+                    <div class="branch-tree-item clickable" onclick="event.stopPropagation(); expandBranchDetails(event, '${branchId}')">
+                        <span class="branch-prefix">${prefix}</span>
+                        <span class="branch-name">${childBranch.name}</span>
+                        <button class="branch-expand-btn">
+                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            }
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+    }
+    // ====== End branches section ======
+    
+    if (branch.sop) {
+        // Goal
+        if (branch.sop.goal) {
+            html += `<h4>🎯 Goal</h4><p style="color: var(--text-secondary); line-height: 1.6;">${branch.sop.goal}</p>`;
+        }
+        
+        // Triggers
+        if (branch.sop.triggers && branch.sop.triggers.length > 0) {
+            html += `<h4>🔔 Triggers</h4><ul>`;
+            branch.sop.triggers.forEach(trigger => {
+                html += `<li>When you see: "${trigger}"</li>`;
+            });
+            html += `</ul>`;
+        }
+        
+        // Steps
+        if (branch.sop.steps && branch.sop.steps.length > 0) {
+            html += `<h4>📋 Steps</h4><ul>`;
+            branch.sop.steps.forEach(step => {
+                html += `<li>${step}</li>`;
+            });
+            html += `</ul>`;
+        }
+        
+        // Pitfalls
+        if (branch.sop.pitfalls && branch.sop.pitfalls.length > 0) {
+            html += `<h4>⚠️ Pitfalls</h4>`;
+            branch.sop.pitfalls.forEach(pitfall => {
+                html += `
+                    <div class="pitfall-item">
+                        <span class="pitfall-badge">${pitfall.type}</span>
+                        <span>${pitfall.text}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        // Pro Tips
+        if (branch.sop.pro_tips && branch.sop.pro_tips.length > 0) {
+            html += `<h4>💡 Pro Tips</h4>`;
+            branch.sop.pro_tips.forEach(tip => {
+                html += `
+                    <div class="pro-tip-item">
+                        <span class="pro-tip-badge">TIP</span>
+                        <span>${tip}</span>
+                    </div>
+                `;
+            });
+        }
+    } else {
+        html += '<p style="color: var(--text-secondary);">No detailed SOP available for this archetype.</p>';
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+
 /**
  * Render catalog organized by levels
  */
 function renderCatalog(container) {
     const levels = { 'L1': [], 'L2': [], 'L3': [] };
     ARCHETYPES_DATA.forEach(arch => {
-        if (levels[arch.level]) {
+        // Only show parent archetypes in catalog, not individual branches
+        if (levels[arch.level] && !arch.parent_id) {
             levels[arch.level].push(arch);
         }
     });
@@ -251,7 +471,14 @@ function renderCatalog(container) {
             </div>
             <div class="catalog-content">
                 <ul class="archetype-list">
-                    ${levels['L1'].sort((a,b) => a.id.localeCompare(b.id)).map(a => `<li><span class="level-badge">L1</span> ${a.name} (${a.topic})</li>`).join('')}
+                    ${levels['L1'].sort((a,b) => a.id.localeCompare(b.id)).map(a => {
+                        let item = `<li><span class="level-badge">L1</span> ${a.name} (${a.topic})`;
+                        if (a.has_branches) {
+                            item += ` <span class="branch-count-badge">📂 ${a.branches.length} branches</span>`;
+                        }
+                        item += `</li>`;
+                        return item;
+                    }).join('')}
                 </ul>
             </div>
         </div>
@@ -329,7 +556,7 @@ function setupEventListeners() {
  * Toggle topic card expansion
  */
 function toggleCard(card, event) {
-    if (event.target.closest('.archetype-sop-group')) {
+    if (event.target.closest('.archetype-sop-group') || event.target.closest('.branch-tree-item')) {
         return; 
     }
     card.classList.toggle('expanded');
@@ -436,7 +663,7 @@ function findArchetype() {
         
         // Show success message
         const archetypeId = matchedElement.getAttribute('data-archetype-id');
-        const archetypeName = matchedElement.querySelector('.archetype-title')?.textContent.trim().replace(/^L\d+\s*/, '') || 'Archetype';
+        const archetypeName = matchedElement.querySelector('.archetype-title')?.textContent.trim().replace(/^L\d+\s*/, '').replace('📂', '').trim() || 'Archetype';
         
         showHint(`✓ Found: ${archetypeId} - ${archetypeName}`, 'success');
         
@@ -446,7 +673,7 @@ function findArchetype() {
         }, 3000);
     } else {
         // No match found
-        showHint(`✗ No Archetype found matching "${input}". Try ID like "ARCH-L1-ALG-01" or name like "Factorisation"`, 'error');
+        showHint(`✗ No Archetype found matching "${input}". Try ID like "ARCH-L1-ALG-04" or name like "Quadratic"`, 'error');
     }
 }
 
