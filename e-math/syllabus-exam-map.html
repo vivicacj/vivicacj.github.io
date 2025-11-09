@@ -441,7 +441,61 @@
                                                 </ul>
                                             </div>
                                             ` : ''}
-                                            ${!arch.sop ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            
+                                            ${!arch.sop && !(arch.has_branches && arch.branches && arch.branches.length > 0) ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            
+                                            <!-- ====== FIXED BRANCHES LOGIC ====== -->
+                                            ${(arch.has_branches && arch.branches && arch.branches.length > 0) ? `
+                                            <div class="mt-3">
+                                                <strong class="text-purple-300">📂 Sub-Branches (${arch.branches.length}):</strong>
+                                                <div class="space-y-2 mt-2">
+                                                ${arch.branches.map(branchId => {
+                                                    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                                                    if (!branch) return '';
+                                                    return `
+                                                    <details class="bg-slate-800 rounded-lg overflow-hidden transition-all duration-300">
+                                                        <summary class="p-2 cursor-pointer hover:bg-slate-700 flex justify-between items-center text-xs">
+                                                            <div>
+                                                                <div class="font-bold text-slate-200">${branch.id}</div>
+                                                                <div class="text-slate-400">${branch.name}</div>
+                                                            </div>
+                                                            <span class="text-slate-500 text-xs px-2 arrow">▶</span>
+                                                        </summary>
+                                                        <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
+                                                            ${branch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${branch.sop.goal}</p>` : ''}
+                                                            ${branch.sop?.steps ? `
+                                                            <div>
+                                                                <strong class="text-purple-300">Steps:</strong>
+                                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
+                                                                </ol>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${branch.sop?.pitfalls ? `
+                                                            <div>
+                                                                <strong class="text-red-400">Pitfalls:</strong>
+                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${branch.sop?.pro_tips ? `
+                                                            <div>
+                                                                <strong class="text-green-400">Pro Tips:</strong>
+                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${!branch.sop ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>` : ''}
+                                                        </div>
+                                                    </details>
+                                                    `;
+                                                }).join('')}
+                                                </div>
+                                            </div>
+                                            ` : ''}
+                                            <!-- ====== END OF FIXED BRANCHES LOGIC ====== -->
                                         </div>
                                     </details>
                                 `).join('')}
@@ -524,7 +578,61 @@
                                                 </ul>
                                             </div>
                                             ` : ''}
-                                            ${!arch.sop ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            
+                                            ${!arch.sop && !(arch.has_branches && arch.branches && arch.branches.length > 0) ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            
+                                            <!-- ====== FIXED BRANCHES LOGIC ====== -->
+                                            ${(arch.has_branches && arch.branches && arch.branches.length > 0) ? `
+                                            <div class="mt-3">
+                                                <strong class="text-purple-300">📂 Sub-Branches (${arch.branches.length}):</strong>
+                                                <div class="space-y-2 mt-2">
+                                                ${arch.branches.map(branchId => {
+                                                    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                                                    if (!branch) return '';
+                                                    return `
+                                                    <details class="bg-slate-800 rounded-lg overflow-hidden transition-all duration-300">
+                                                        <summary class="p-2 cursor-pointer hover:bg-slate-700 flex justify-between items-center text-xs">
+                                                            <div>
+                                                                <div class="font-bold text-slate-200">${branch.id}</div>
+                                                                <div class="text-slate-400">${branch.name}</div>
+                                                            </div>
+                                                            <span class="text-slate-500 text-xs px-2 arrow">▶</span>
+                                                        </summary>
+                                                        <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
+                                                            ${branch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${branch.sop.goal}</p>` : ''}
+                                                            ${branch.sop?.steps ? `
+                                                            <div>
+                                                                <strong class="text-purple-300">Steps:</strong>
+                                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
+                                                                </ol>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${branch.sop?.pitfalls ? `
+                                                            <div>
+                                                                <strong class="text-red-400">Pitfalls:</strong>
+                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${branch.sop?.pro_tips ? `
+                                                            <div>
+                                                                <strong class="text-green-400">Pro Tips:</strong>
+                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                                                                    ${branch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
+                                                                </ul>
+                                                            </div>
+                                                            ` : ''}
+                                                            ${!branch.sop ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>` : ''}
+                                                        </div>
+                                                    </details>
+                                                    `;
+                                                }).join('')}
+                                                </div>
+                                            </div>
+                                            ` : ''}
+                                            <!-- ====== END OF FIXED BRANCHES LOGIC ====== -->
                                         </div>
                                     </details>
                                 `).join('')}
