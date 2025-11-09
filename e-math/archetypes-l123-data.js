@@ -1,4 +1,11 @@
+// archetypes-l123-data.js
+// Complete Archetype Data for e-Math G3→G4 Evolution Map
+// Updated with Quadratic Equations branches
+
 const ARCHETYPES_DATA = [
+  // ============================================
+  // LEVEL 1 ARCHETYPES - CORE ALGEBRA
+  // ============================================
   {
     "id": "ARCH-L1-ALG-01",
     "level": "L1",
@@ -57,32 +64,205 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
+  // ============================================
+  // ARCH-L1-ALG-04: QUADRATIC EQUATIONS (PARENT)
+  // ============================================
   {
     "id": "ARCH-L1-ALG-04",
     "level": "L1",
-    "name": "Adding/Subtracting Algebraic Fractions",
+    "name": "Quadratic Equations",
     "topic": "algebra",
     "badge": "CORE",
-    "description": "Combining fractions with algebraic denominators into a single fraction.",
+    "description": "Parent archetype for L1 Quadratic Equations covering: Completing the Square (CTS), Formula Method, Factorisation Method, Graph Sketching, Finding Equation from Graph, and Discriminant Analysis. Optimized for G3 consolidation with aligned SOPs.",
+    "has_branches": true,
+    "branches": [
+      "ARCH-L1-ALG-04-CTS",
+      "ARCH-L1-ALG-04-FORM",
+      "ARCH-L1-ALG-04-FACT",
+      "ARCH-L1-ALG-04-GRAPH",
+      "ARCH-L1-ALG-04-EQN",
+      "ARCH-L1-ALG-04-DISC"
+    ],
     "sop": {
-      "goal": "Combine fractions with algebraic denominators into a single fraction",
-      "triggers": ["add", "subtract", "fractions with different denominators"],
+      "goal": "Master all quadratic equation solving methods",
       "steps": [
-        "1. Find the LCD (Lowest Common Denominator): Factor all denominators if needed, then find LCD.",
-        "2. Convert each fraction: Multiply numerator and denominator by whatever makes the denominator = LCD.",
-        "3. Combine numerators: Add or subtract the numerators over the common denominator.",
-        "4. Simplify: Factor and cancel common factors if possible."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Not distributing the negative sign when subtracting fractions" },
-        { "type": "COMMON", "text": "Forgetting to multiply both numerator AND denominator when converting" }
-      ],
-      "pro_tips": [
-        "When subtracting, put brackets around the entire second numerator: (a) - (b + c)",
-        "Always factor the final numerator and denominator to check for further simplification"
+        "1. Identify the form: ax² + bx + c = 0",
+        "2. Choose method: Factorisation, Formula, Completing the Square, or Graphical",
+        "3. Apply the selected method",
+        "4. Verify solutions"
       ]
     }
   },
+
+  // Branch 1: Completing the Square
+  {
+    "id": "ARCH-L1-ALG-04-CTS",
+    "level": "L1",
+    "name": "Completing the Square",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Converting a quadratic from standard form to completed-square form (x + p)² + q.",
+    "sop": {
+      "goal": "Convert quadratic to completed-square form (x + p)² + q",
+      "triggers": ["complete the square", "express in the form (x + p)² + q"],
+      "steps": [
+        "1. Factor out coefficient of x² (if a ≠ 1)",
+        "2. Take half of coefficient of x, then square it",
+        "3. Add and subtract this value inside brackets",
+        "4. Group perfect square trinomial and simplify constant"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Forgetting to factor out 'a' first" },
+        { "type": "COMMON", "text": "Sign errors when adding/subtracting the squared term" }
+      ],
+      "pro_tips": [
+        "Always verify by expanding back to original form"
+      ]
+    }
+  },
+
+  // Branch 2: Formula Method
+  {
+    "id": "ARCH-L1-ALG-04-FORM",
+    "level": "L1",
+    "name": "Formula Method",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Solving quadratic equations using the quadratic formula x = [-b ± √(b²-4ac)] / 2a.",
+    "sop": {
+      "goal": "Solve quadratic equations using x = [-b ± √(b²-4ac)] / 2a",
+      "triggers": ["solve", "quadratic", "cannot factorise easily"],
+      "steps": [
+        "1. Identify coefficients a, b, c from standard form ax² + bx + c = 0",
+        "2. Calculate discriminant Δ = b² - 4ac",
+        "3. Apply quadratic formula with correct signs",
+        "4. Simplify and round to required decimal places"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Missing negative signs in coefficient identification" },
+        { "type": "COMMON", "text": "Forgetting the ± symbol" }
+      ],
+      "pro_tips": [
+        "Double-check discriminant calculation; use calculator for complex numbers"
+      ]
+    }
+  },
+
+  // Branch 3: Factorisation Method
+  {
+    "id": "ARCH-L1-ALG-04-FACT",
+    "level": "L1",
+    "name": "Factorisation Method",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Solving quadratic by factoring into (px + q)(rx + s) = 0.",
+    "sop": {
+      "goal": "Solve quadratic by factoring into (px + q)(rx + s) = 0",
+      "triggers": ["solve", "factorise", "nice integer solutions expected"],
+      "steps": [
+        "1. Check if discriminant is a perfect square (factorisation test)",
+        "2. Find factors of 'ac' that add to 'b'",
+        "3. Split middle term and factor by grouping",
+        "4. Set each factor equal to zero and solve"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Attempting to factor non-factorable quadratics" },
+        { "type": "COMMON", "text": "Incorrect splitting of middle term" }
+      ],
+      "pro_tips": [
+        "Use discriminant test first; verify by expanding factors"
+      ]
+    }
+  },
+
+  // Branch 4: Graph Sketching
+  {
+    "id": "ARCH-L1-ALG-04-GRAPH",
+    "level": "L1",
+    "name": "Graph Sketching (Quadratics)",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Sketching a parabola with all key features labeled.",
+    "sop": {
+      "goal": "Sketch parabola showing key features (vertex, intercepts, direction)",
+      "triggers": ["sketch the graph", "draw the curve"],
+      "steps": [
+        "1. Find vertex using x = -b/2a, then substitute for y-coordinate",
+        "2. Determine direction (upward if a > 0, downward if a < 0)",
+        "3. Find x-intercepts (set y = 0) and y-intercept (set x = 0)",
+        "4. Plot points and sketch smooth parabolic curve"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Wrong vertex calculation" },
+        { "type": "COMMON", "text": "Incorrect parabola direction" }
+      ],
+      "pro_tips": [
+        "Use symmetry about vertex line; check with additional points"
+      ]
+    }
+  },
+
+  // Branch 5: Finding Equation from Graph
+  {
+    "id": "ARCH-L1-ALG-04-EQN",
+    "level": "L1",
+    "name": "Finding Equation from Graph",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Determining the quadratic equation given key features of the graph.",
+    "sop": {
+      "goal": "Determine quadratic equation from graphical information",
+      "triggers": ["find the equation", "given turning point and another point"],
+      "steps": [
+        "1. Start with vertex form y = a(x - h)² + k using given vertex (h, k)",
+        "2. Use additional point to find coefficient 'a'",
+        "3. Expand to standard form if required",
+        "4. Verify equation with all given points"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using wrong form of equation" },
+        { "type": "COMMON", "text": "Calculation errors when finding 'a'" }
+      ],
+      "pro_tips": [
+        "Vertex form is usually easiest starting point"
+      ]
+    }
+  },
+
+  // Branch 6: Discriminant Analysis
+  {
+    "id": "ARCH-L1-ALG-04-DISC",
+    "level": "L1",
+    "name": "Discriminant Analysis",
+    "topic": "algebra",
+    "badge": "CORE",
+    "parent_id": "ARCH-L1-ALG-04",
+    "description": "Using b² - 4ac to determine the nature of roots without solving.",
+    "sop": {
+      "goal": "Determine nature of roots using discriminant Δ = b² - 4ac",
+      "triggers": ["nature of roots", "number of solutions", "real and distinct"],
+      "steps": [
+        "1. Identify coefficients a, b, c from standard form",
+        "2. Calculate discriminant Δ = b² - 4ac",
+        "3. Interpret results: Δ > 0 (two real roots), Δ = 0 (one repeated root), Δ < 0 (no real roots)",
+        "4. Relate to graph behavior (x-intercepts)"
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Calculation errors in discriminant" },
+        { "type": "COMMON", "text": "Misinterpreting discriminant values" }
+      ],
+      "pro_tips": [
+        "Connect to graphical interpretation; Δ tells you number of x-intercepts"
+      ]
+    }
+  },
+
   {
     "id": "ARCH-L1-ALG-05",
     "level": "L1",
@@ -91,25 +271,26 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "description": "Rearranging a complex formula to isolate a specified variable.",
     "sop": {
-        "goal": "Rearrange to isolate a specified variable",
-        "triggers": ["make x the subject", "express y in terms of"],
-        "steps": [
-            "1. Identify the target variable: Circle or highlight what you're solving for.",
-            "2. Isolate terms containing the target: Move all other terms to the opposite side.",
-            "3. If target appears multiple times, factor it out: x(stuff) = other stuff.",
-            "4. Final isolation: Divide both sides to leave target alone.",
-            "5. Simplify if needed: Especially with fractions."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Not factoring out when the variable appears in multiple terms" },
-            { "type": "COMMON", "text": "Sign errors when moving terms across the equals sign" }
-        ],
-        "pro_tips": [
-            "When target is in denominator, first multiply both sides by that denominator",
-            "If target is squared, remember to take ± square root at the end"
-        ]
+      "goal": "Rearrange to isolate a specified variable",
+      "triggers": ["make x the subject", "express y in terms of"],
+      "steps": [
+        "1. Identify the target variable: Circle or highlight what you're solving for.",
+        "2. Isolate terms containing the target: Move all other terms to the opposite side.",
+        "3. If target appears multiple times, factor it out: x(stuff) = other stuff.",
+        "4. Final isolation: Divide both sides to leave target alone.",
+        "5. Simplify if needed: Especially with fractions."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Not factoring out when the variable appears in multiple terms" },
+        { "type": "COMMON", "text": "Sign errors when moving terms across the equals sign" }
+      ],
+      "pro_tips": [
+        "When target is in denominator, first multiply both sides by that denominator",
+        "If target is squared, remember to take ± square root at the end"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-ALG-06",
     "level": "L1",
@@ -118,25 +299,29 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "description": "Finding values that satisfy a system of two linear equations.",
     "sop": {
-        "goal": "Find values that satisfy both equations",
-        "triggers": ["simultaneous equations", "solve the system"],
-        "steps": [
-            "1. Choose your method: Substitution (if one equation is already solved for a variable) or Elimination.",
-            "2. Elimination method: Multiply equations to make coefficients of one variable equal, then add/subtract to eliminate.",
-            "3. Solve for first variable: You'll get a simple equation in one variable.",
-            "4. Substitute back: Plug the value into either original equation to find the other variable.",
-            "5. Verify: Check both values satisfy both original equations."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Not multiplying the entire equation when preparing for elimination" },
-            { "type": "COMMON", "text": "Forgetting to find the second variable after eliminating the first" }
-        ],
-        "pro_tips": [
-            "Label equations as ① and ② to track your work",
-            "If coefficients are already opposites, add. If they're the same, subtract"
-        ]
+      "goal": "Find values that satisfy both equations",
+      "triggers": ["simultaneous equations", "solve the system"],
+      "steps": [
+        "1. Choose your method: Substitution (if one equation is already solved for a variable) or Elimination.",
+        "2. Elimination method: Multiply equations to make coefficients of one variable equal, then add/subtract to eliminate.",
+        "3. Solve for first variable: You'll get a simple equation in one variable.",
+        "4. Substitute back: Plug the value into either original equation to find the other variable.",
+        "5. Verify: Check both values satisfy both original equations."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Not multiplying the entire equation when preparing for elimination" },
+        { "type": "COMMON", "text": "Forgetting to find the second variable after eliminating the first" }
+      ],
+      "pro_tips": [
+        "Label equations as ① and ② to track your work",
+        "If coefficients are already opposites, add. If they're the same, subtract"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - TRIGONOMETRY
+  // ============================================
   {
     "id": "ARCH-L1-TRIG-01",
     "level": "L1",
@@ -163,6 +348,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-TRIG-02",
     "level": "L1",
@@ -189,6 +375,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-TRIG-03",
     "level": "L1",
@@ -205,6 +392,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-TRIG-04",
     "level": "L1",
@@ -221,86 +409,10 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-  {
-    "id": "ARCH-L1-QUAD-01",
-    "level": "L1",
-    "name": "Completing the Square",
-    "topic": "algebra",
-    "badge": "CORE",
-    "description": "Converting a quadratic from standard form to completed square form.",
-    "sop": {
-      "goal": "Convert quadratic from standard form to completed square form",
-      "triggers": ["complete the square", "express in the form (x + p)² + q"],
-      "steps": [
-        "1. Identify coefficient of x²: If it's not 1, factor it out first.",
-        "2. Take half of the x coefficient, square it: For x² + bx, take (b/2)².",
-        "3. Add and subtract this value inside: x² + bx + (b/2)² - (b/2)².",
-        "4. Group to form perfect square: (x + b/2)² - (b/2)² + c.",
-        "5. Simplify the constant term: Combine constants to get final form (x + p)² + q."
-      ],
-       "pitfalls": [
-        { "type": "CRITICAL", "text": "Forgetting to factor out the coefficient of x² before completing the square" },
-        { "type": "COMMON", "text": "Not squaring the half-coefficient correctly" }
-      ],
-      "pro_tips": [
-        "Always write out the add-and-subtract step explicitly: + (b/2)² - (b/2)²",
-        "Check your answer by expanding back to verify"
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L1-QUAD-02",
-    "level": "L1",
-    "name": "Graph Sketching (Quadratics)",
-    "topic": "algebra",
-    "badge": "CORE",
-    "description": "Sketching a parabola with all key features labeled.",
-    "sop": {
-      "goal": "Sketch the parabola with all key features labeled",
-      "triggers": ["sketch the graph", "draw the curve"],
-      "steps": [
-        "1. Identify the turning point: Use completed square form (x + p)² + q gives turning point (-p, q).",
-        "2. Determine if it opens up or down: Positive coefficient of x² → opens up, Negative → opens down.",
-        "3. Find y-intercept: Set x = 0 and calculate y.",
-        "4. Find x-intercepts (if they exist): Set y = 0 and solve the quadratic (use formula if needed).",
-        "5. Sketch: Draw smooth U-shape through all labeled points."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Getting the sign wrong for the turning point coordinates" },
-        { "type": "COMMON", "text": "Forgetting to label all intercepts and the turning point" }
-      ],
-      "pro_tips": [
-        "If completing the square gives (x - a)² + b, turning point is (a, b) not (-a, b)",
-        "Always mark minimum/maximum value clearly"
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L1-QUAD-03",
-    "level": "L1",
-    "name": "Finding Equation from Graph",
-    "topic": "algebra",
-    "badge": "CORE",
-    "description": "Determining the quadratic equation given key features of the graph.",
-    "sop": {
-        "goal": "Determine the quadratic equation given key features of the graph",
-        "triggers": ["find the equation", "given turning point and another point"],
-        "steps": [
-            "1. Start with completed square form: Use y = a(x - h)² + k where (h, k) is the turning point.",
-            "2. Substitute the other given point: Plug in the coordinates to find the value of a.",
-            "3. Solve for a: Isolate a in the equation.",
-            "4. Write the final equation: Either in completed square form or expand to standard form if required."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Forgetting to include the coefficient a in front" },
-            { "type": "COMMON", "text": "Sign errors when substituting coordinates with negative values" }
-        ],
-        "pro_tips": [
-            "Always use y = a(x - h)² + k form first, it's faster than y = ax² + bx + c",
-            "Verify by checking if the turning point satisfies your final equation"
-        ]
-    }
-  },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - GEOMETRY
+  // ============================================
   {
     "id": "ARCH-L1-GEO-01",
     "level": "L1",
@@ -327,6 +439,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-GEO-02",
     "level": "L1",
@@ -355,6 +468,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-GEO-03",
     "level": "L1",
@@ -382,6 +496,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-GEO-04",
     "level": "L1",
@@ -398,32 +513,37 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-    {
-  "id": "ARCH-L1-GEO-05",
-  "level": "L1",
-  "name": "Circle Properties & Theorems",
-  "topic": "geometry",
-  "badge": "CORE",
-  "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
-  "sop": {
-    "goal": "Use circle theorems to find or prove angles and relationships within a circle.",
-    "triggers": ["tangent", "angle in the same segment", "angle at centre", "cyclic quadrilateral"],
-    "steps": [
-      "1. Identify the known elements: radii, tangents, or cyclic quadrilateral.",
-      "2. Apply the correct theorem: e.g., Tangent ⊥ Radius; ∠at Centre = 2×∠at Circumference; Opposite Angles in a Cyclic Quadrilateral add up to 180°.",
-      "3. State reasons explicitly for each equal angle.",
-      "4. Combine with geometry reasoning to find unknowns."
-    ],
-    "pitfalls": [
-      { "type": "CRITICAL", "text": "Forgetting to write the geometric reason for each equal angle" },
-      { "type": "COMMON", "text": "Mixing up centre vs circumference angles" }
-    ],
-    "pro_tips": [
-      "Write theorem abbreviations beside diagram: (T⊥R), (∠C = 2∠A), (Opp ∠s = 180°)",
-      "Circle geometry marks are mostly for reasons—always write them!"
-    ]
-  }
-},
+
+  {
+    "id": "ARCH-L1-GEO-05",
+    "level": "L1",
+    "name": "Circle Properties & Theorems",
+    "topic": "geometry",
+    "badge": "CORE",
+    "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
+    "sop": {
+      "goal": "Use circle theorems to find or prove angles and relationships within a circle.",
+      "triggers": ["tangent", "angle in the same segment", "angle at centre", "cyclic quadrilateral"],
+      "steps": [
+        "1. Identify the known elements: radii, tangents, or cyclic quadrilateral.",
+        "2. Apply the correct theorem: e.g., Tangent ⊥ Radius; ∠at Centre = 2×∠at Circumference; Opposite Angles in a Cyclic Quadrilateral add up to 180°.",
+        "3. State reasons explicitly for each equal angle.",
+        "4. Combine with geometry reasoning to find unknowns."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Forgetting to write the geometric reason for each equal angle" },
+        { "type": "COMMON", "text": "Mixing up centre vs circumference angles" }
+      ],
+      "pro_tips": [
+        "Write theorem abbreviations beside diagram: (T⊥R), (∠C = 2∠A), (Opp ∠s = 180°)",
+        "Circle geometry marks are mostly for reasons—always write them!"
+      ]
+    }
+  },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - STATISTICS
+  // ============================================
   {
     "id": "ARCH-L1-STAT-01",
     "level": "L1",
@@ -450,6 +570,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-STAT-02",
     "level": "L1",
@@ -458,24 +579,25 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Estimating the mean from a grouped frequency table.",
     "sop": {
-        "goal": "Estimate the mean from a grouped frequency table",
-        "triggers": ["table with class intervals", "140 < h ≤ 150"],
-        "steps": [
-            "1. Midpoint (x): For each class, midpoint = (lower + upper) ÷ 2. Example: (140 + 150) ÷ 2 = 145.",
-            "2. Compute fx: Multiply midpoint x by frequency f.",
-            "3. Sum: Σf (often given) and Σ(fx).",
-            "4. Estimate Mean: Mean = Σ(fx) ÷ Σf."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Using interval boundaries instead of midpoints" },
-            { "type": "COMMON", "text": "Forgetting to compute an fx column for each row" }
-        ],
-        "pro_tips": [
-            "Add explicit columns for Midpoint (x) and fx",
-            "Do totals (Σf, Σfx) in a separate line to avoid slips"
-        ]
+      "goal": "Estimate the mean from a grouped frequency table",
+      "triggers": ["table with class intervals", "140 < h ≤ 150"],
+      "steps": [
+        "1. Midpoint (x): For each class, midpoint = (lower + upper) ÷ 2. Example: (140 + 150) ÷ 2 = 145.",
+        "2. Compute fx: Multiply midpoint x by frequency f.",
+        "3. Sum: Σf (often given) and Σ(fx).",
+        "4. Estimate Mean: Mean = Σ(fx) ÷ Σf."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using interval boundaries instead of midpoints" },
+        { "type": "COMMON", "text": "Forgetting to compute an fx column for each row" }
+      ],
+      "pro_tips": [
+        "Add explicit columns for Midpoint (x) and fx",
+        "Do totals (Σf, Σfx) in a separate line to avoid slips"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-PROB-01",
     "level": "L1",
@@ -484,24 +606,28 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Accurately calculating the probability of a single event.",
     "sop": {
-        "goal": "Accurately calculate the probability of an event",
-        "triggers": ["probability", "at random"],
-        "steps": [
-            "1. Total Outcomes: Identify the size of the sample space.",
-            "2. Favourable Outcomes: List them explicitly (do not 'do it in your head'). Example: 'even and divisible by 3' → list evens, then circle those divisible by 3: 6, 12, 18.",
-            "3. Compute Probability: P(Event) = Favourable ÷ Total.",
-            "4. Simplify the fraction."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Miscounting outcomes for compound 'and/or'" },
-            { "type": "COMMON", "text": "Leaving the fraction unsimplified" }
-        ],
-        "pro_tips": [
-            "Always list the favourable outcomes—never rely on mental counting",
-            "Reduce the final fraction (or convert to simplest decimal/percentage if required)"
-        ]
+      "goal": "Accurately calculate the probability of an event",
+      "triggers": ["probability", "at random"],
+      "steps": [
+        "1. Total Outcomes: Identify the size of the sample space.",
+        "2. Favourable Outcomes: List them explicitly (do not 'do it in your head'). Example: 'even and divisible by 3' → list evens, then circle those divisible by 3: 6, 12, 18.",
+        "3. Compute Probability: P(Event) = Favourable ÷ Total.",
+        "4. Simplify the fraction."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Miscounting outcomes for compound 'and/or'" },
+        { "type": "COMMON", "text": "Leaving the fraction unsimplified" }
+      ],
+      "pro_tips": [
+        "Always list the favourable outcomes—never rely on mental counting",
+        "Reduce the final fraction (or convert to simplest decimal/percentage if required)"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - COORDINATE GEOMETRY
+  // ============================================
   {
     "id": "ARCH-L1-CG-01",
     "level": "L1",
@@ -528,6 +654,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-CG-02",
     "level": "L1",
@@ -535,24 +662,25 @@ const ARCHETYPES_DATA = [
     "topic": "geometry",
     "badge": "SAT",
     "description": "Finding the equation of a new line based on its relationship to another line.",
-     "sop": {
-        "goal": "To find the equation of a new line based on its relationship to another line",
-        "triggers": ["parallel to", "perpendicular to"],
-        "steps": [
-            "1. Extract the Original Gradient (m₁): Rearrange the given line to y = mx + c first if needed. Gradient m₁ = ...",
-            "2. Determine the New Gradient (m₂): Parallel: m₂ = m₁. Perpendicular: m₂ = −1 ÷ m₁ (flip the fraction and change the sign).",
-            "3. Use SOP for Line Equation: With m₂ and a point on the new line, repeat steps to find the final equation."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "For perpendicular lines, forgetting to flip AND change sign" },
-            { "type": "COMMON", "text": "Not rearranging a general form (like ax + by = c) before reading m" }
-        ],
-        "pro_tips": [
-            "Box m₁ first, then write m₂ = m₁ (parallel) or m₂ = −1/m₁ (perpendicular)",
-            "Once m₂ is fixed, jump straight into the standard line equation flow to finish quickly"
-        ]
+    "sop": {
+      "goal": "To find the equation of a new line based on its relationship to another line",
+      "triggers": ["parallel to", "perpendicular to"],
+      "steps": [
+        "1. Extract the Original Gradient (m₁): Rearrange the given line to y = mx + c first if needed. Gradient m₁ = ...",
+        "2. Determine the New Gradient (m₂): Parallel: m₂ = m₁. Perpendicular: m₂ = −1 ÷ m₁ (flip the fraction and change the sign).",
+        "3. Use SOP for Line Equation: With m₂ and a point on the new line, repeat steps to find the final equation."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "For perpendicular lines, forgetting to flip AND change sign" },
+        { "type": "COMMON", "text": "Not rearranging a general form (like ax + by = c) before reading m" }
+      ],
+      "pro_tips": [
+        "Box m₁ first, then write m₂ = m₁ (parallel) or m₂ = −1/m₁ (perpendicular)",
+        "Once m₂ is fixed, jump straight into the standard line equation flow to finish quickly"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-CG-03",
     "level": "L1",
@@ -560,25 +688,26 @@ const ARCHETYPES_DATA = [
     "topic": "geometry",
     "badge": "SAT",
     "description": "Calculating the distance between points or the area of a polygon on a coordinate plane.",
-     "sop": {
-        "goal": "To calculate the distance between points or the area of a triangle",
-        "triggers": ["Find the length of", "Find the area of"],
-        "steps": [
-            "1. Length of a Line Segment: Distance = √[(x₂−x₁)² + (y₂−y₁)²].",
-            "2. Area of a Triangle (axis-aligned side): If one side is horizontal or vertical, use it as the base. Height is the perpendicular distance from the third vertex. Area = ½ × base × height.",
-            "3. Area of a General Triangle (Shoelace): List the vertices anti-clockwise and repeat the first at the end. Area = ½ × |(x₁y₂ + ...) − (y₁x₂ + ...)|."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Misordering coordinates in Shoelace → wrong magnitude/sign" },
-            { "type": "COMMON", "text": "Dropping negative signs in distance/area calculations" }
-        ],
-        "pro_tips": [
-            "For Shoelace, write points anti-clockwise and repeat the first at the bottom",
-            "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
-        ]
+    "sop": {
+      "goal": "To calculate the distance between points or the area of a triangle",
+      "triggers": ["Find the length of", "Find the area of"],
+      "steps": [
+        "1. Length of a Line Segment: Distance = √[(x₂−x₁)² + (y₂−y₁)²].",
+        "2. Area of a Triangle (axis-aligned side): If one side is horizontal or vertical, use it as the base. Height is the perpendicular distance from the third vertex. Area = ½ × base × height.",
+        "3. Area of a General Triangle (Shoelace): List the vertices anti-clockwise and repeat the first at the end. Area = ½ × |(x₁y₂ + ...) − (y₁x₂ + ...)|."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Misordering coordinates in Shoelace → wrong magnitude/sign" },
+        { "type": "COMMON", "text": "Dropping negative signs in distance/area calculations" }
+      ],
+      "pro_tips": [
+        "For Shoelace, write points anti-clockwise and repeat the first at the bottom",
+        "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
+      ]
     }
   },
-    {
+
+  {
     "id": "ARCH-L1-CG-04",
     "level": "L1",
     "name": "Coordinate Geometry (Gradient, Midpoint & Locus)",
@@ -604,6 +733,10 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - MENSURATION
+  // ============================================
   {
     "id": "ARCH-L1-MEN-01",
     "level": "L1",
@@ -631,6 +764,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-MEN-02",
     "level": "L1",
@@ -638,25 +772,26 @@ const ARCHETYPES_DATA = [
     "topic": "mensuration",
     "badge": "SAT",
     "description": "Correctly using scaling laws for length, area, and volume for similar figures.",
-     "sop": {
-        "goal": "Correctly use scaling laws for length, area, and volume",
-        "triggers": ["similar", "same shape but different size"],
-        "steps": [
-            "1. Find the Length Ratio (k) FIRST: k = Length₁ ÷ Length₂.",
-            "2. Identify the Target: Area or Volume/Capacity/Mass?",
-            "3. Apply Power Rule: Area ratio = k². Volume/Capacity/Mass ratio = k³.",
-            "4. Set up Proportion & Solve: Plug numbers into the correct ratio equation."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Using k for area/volume without squaring/cubing" },
-            { "type": "COMMON", "text": "Swapping numerator/denominator (wrong object on top)" }
-        ],
-        "pro_tips": [
-            "Always write k first, then immediately write k² or k³ before numbers",
-            "Draw a mini table with three rows: Length / Area / Volume = k / k² / k³"
-        ]
+    "sop": {
+      "goal": "Correctly use scaling laws for length, area, and volume",
+      "triggers": ["similar", "same shape but different size"],
+      "steps": [
+        "1. Find the Length Ratio (k) FIRST: k = Length₁ ÷ Length₂.",
+        "2. Identify the Target: Area or Volume/Capacity/Mass?",
+        "3. Apply Power Rule: Area ratio = k². Volume/Capacity/Mass ratio = k³.",
+        "4. Set up Proportion & Solve: Plug numbers into the correct ratio equation."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using k for area/volume without squaring/cubing" },
+        { "type": "COMMON", "text": "Swapping numerator/denominator (wrong object on top)" }
+      ],
+      "pro_tips": [
+        "Always write k first, then immediately write k² or k³ before numbers",
+        "Draw a mini table with three rows: Length / Area / Volume = k / k² / k³"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-MEN-03",
     "level": "L1",
@@ -664,24 +799,25 @@ const ARCHETYPES_DATA = [
     "topic": "mensuration",
     "badge": "SAT",
     "description": "Finding the Total Surface Area (TSA) or Total Volume of combined shapes.",
-     "sop": {
-        "goal": "Find Total Surface Area (TSA) or Total Volume of combined shapes",
-        "triggers": ["combined shapes", "cone + hemisphere", "composite solid"],
-        "steps": [
-            "1. Deconstruct the Shape: List the basic parts clearly.",
-            "2. Calculate Each Part Separately: Volume: sum volumes of parts. TSA (TRAP): only exposed surfaces count. Do NOT add base areas that are glued/hidden.",
-            "3. Sum the Exposed Parts for TSA; sum volumes for total volume."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Double-counting hidden/glued faces in TSA" },
-            { "type": "COMMON", "text": "Mixing up CSA vs TSA formulas or incorrectly adding base areas" }
-        ],
-        "pro_tips": [
-            "Make a checklist of faces; mark 'hidden' vs 'exposed'",
-            "Calculate and label each part with units before summing"
-        ]
+    "sop": {
+      "goal": "Find Total Surface Area (TSA) or Total Volume of combined shapes",
+      "triggers": ["combined shapes", "cone + hemisphere", "composite solid"],
+      "steps": [
+        "1. Deconstruct the Shape: List the basic parts clearly.",
+        "2. Calculate Each Part Separately: Volume: sum volumes of parts. TSA (TRAP): only exposed surfaces count. Do NOT add base areas that are glued/hidden.",
+        "3. Sum the Exposed Parts for TSA; sum volumes for total volume."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Double-counting hidden/glued faces in TSA" },
+        { "type": "COMMON", "text": "Mixing up CSA vs TSA formulas or incorrectly adding base areas" }
+      ],
+      "pro_tips": [
+        "Make a checklist of faces; mark 'hidden' vs 'exposed'",
+        "Calculate and label each part with units before summing"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-MEN-04",
     "level": "L1",
@@ -689,24 +825,28 @@ const ARCHETYPES_DATA = [
     "topic": "mensuration",
     "badge": "SAT",
     "description": "Accurately calculating properties of circle parts like sectors and segments.",
-     "sop": {
-        "goal": "Accurately calculate properties of circle parts",
-        "triggers": ["sector", "segment", "arc length"],
-        "steps": [
-            "1. Check Angle Unit: Degrees vs radians determines formulas.",
-            "2. Sector First: Arc length: (θ÷360)×2πr (degrees) or rθ (radians). Sector area: (θ÷360)×πr² (degrees) or ½r²θ (radians).",
-            "3. Segment: Master idea: Area of Segment = Area of Sector − Area of Triangle. Triangle area (using included angle): ½ab sinC. Perform the subtraction."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Using degree formulas on radian inputs (or vice-versa)" },
-            { "type": "COMMON", "text": "Forgetting to subtract the triangle for a segment" }
-        ],
-        "pro_tips": [
-            "Circle the angle unit at the start",
-            "Always write 'Segment = Sector − Triangle' before substituting numbers"
-        ]
+    "sop": {
+      "goal": "Accurately calculate properties of circle parts",
+      "triggers": ["sector", "segment", "arc length"],
+      "steps": [
+        "1. Check Angle Unit: Degrees vs radians determines formulas.",
+        "2. Sector First: Arc length: (θ÷360)×2πr (degrees) or rθ (radians). Sector area: (θ÷360)×πr² (degrees) or ½r²θ (radians).",
+        "3. Segment: Master idea: Area of Segment = Area of Sector − Area of Triangle. Triangle area (using included angle): ½ab sinC. Perform the subtraction."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using degree formulas on radian inputs (or vice-versa)" },
+        { "type": "COMMON", "text": "Forgetting to subtract the triangle for a segment" }
+      ],
+      "pro_tips": [
+        "Circle the angle unit at the start",
+        "Always write 'Segment = Sector − Triangle' before substituting numbers"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - INEQUALITIES
+  // ============================================
   {
     "id": "ARCH-L1-INEQ-01",
     "level": "L1",
@@ -735,6 +875,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-INEQ-02",
     "level": "L1",
@@ -743,23 +884,24 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Translating real-world language into a precise inequality.",
     "sop": {
-        "goal": "Translate real-world language into a precise inequality",
-        "triggers": ["at least", "no more than", "minimum", "maximum"],
-        "steps": [
-            "1. DEFINE: 'Let x be …' (define the variable clearly).",
-            "2. TRANSLATE KEYWORDS: at least/minimum → ≥, at most/maximum/no more than → ≤, more than → >, less than → <.",
-            "3. CONSTRUCT: Build the inequality with the numbers and your symbol."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Misreading 'at least/at most' leading to the wrong inequality direction" },
-            { "type": "COMMON", "text": "Forgetting to define the variable first" }
-        ],
-        "pro_tips": [
-            "Underline the keyword and immediately write its symbol (≥, ≤, >, <)",
-            "Start with 'Let x = …' to anchor the model"
-        ]
+      "goal": "Translate real-world language into a precise inequality",
+      "triggers": ["at least", "no more than", "minimum", "maximum"],
+      "steps": [
+        "1. DEFINE: 'Let x be …' (define the variable clearly).",
+        "2. TRANSLATE KEYWORDS: at least/minimum → ≥, at most/maximum/no more than → ≤, more than → >, less than → <.",
+        "3. CONSTRUCT: Build the inequality with the numbers and your symbol."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Misreading 'at least/at most' leading to the wrong inequality direction" },
+        { "type": "COMMON", "text": "Forgetting to define the variable first" }
+      ],
+      "pro_tips": [
+        "Underline the keyword and immediately write its symbol (≥, ≤, >, <)",
+        "Start with 'Let x = …' to anchor the model"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-INEQ-03",
     "level": "L1",
@@ -768,23 +910,27 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Finding the absolute maximum or minimum value of an expression within given ranges.",
     "sop": {
-        "goal": "To find the absolute maximum or minimum value of an expression",
-        "triggers": ["largest value", "smallest value", "with given ranges"],
-        "steps": [
-            "1. LIST BOUNDARIES: Write x_min, x_max, y_min, y_max.",
-            "2. ANALYZE THE GOAL: To maximize y - x³, choose y_max and the smallest possible x³. To minimize y - 2x, choose y_min and the largest possible 2x.",
-            "3. CALCULATE: Substitute boundary values and compute."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Choosing the wrong boundary combination (entire result wrong)" },
-            { "type": "COMMON", "text": "Forgetting that odd powers keep sign (e.g., (−9)³ = −729)" }
-        ],
-        "pro_tips": [
-            "Draw a quick 2×2 boundary table for x and y, then pick the combo that matches the goal",
-            "Do a quick mental 'sanity check' before finalizing"
-        ]
+      "goal": "To find the absolute maximum or minimum value of an expression",
+      "triggers": ["largest value", "smallest value", "with given ranges"],
+      "steps": [
+        "1. LIST BOUNDARIES: Write x_min, x_max, y_min, y_max.",
+        "2. ANALYZE THE GOAL: To maximize y - x³, choose y_max and the smallest possible x³. To minimize y - 2x, choose y_min and the largest possible 2x.",
+        "3. CALCULATE: Substitute boundary values and compute."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Choosing the wrong boundary combination (entire result wrong)" },
+        { "type": "COMMON", "text": "Forgetting that odd powers keep sign (e.g., (−9)³ = −729)" }
+      ],
+      "pro_tips": [
+        "Draw a quick 2×2 boundary table for x and y, then pick the combo that matches the goal",
+        "Do a quick mental 'sanity check' before finalizing"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - INDICES
+  // ============================================
   {
     "id": "ARCH-L1-IND-01",
     "level": "L1",
@@ -811,6 +957,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L1-IND-02",
     "level": "L1",
@@ -819,24 +966,25 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Finding the unknown in the exponent by unifying the base.",
     "sop": {
-        "goal": "Find the unknown in the exponent",
-        "triggers": ["Solve", "variables appear as powers"],
-        "steps": [
-            "1. Unify the Base (Golden Rule): Write all numbers as powers of the SAME base. Examples: 9 = 3², 27 = 3³.",
-            "2. Simplify Both Sides: Use simplification rules until you get base^a = base^b.",
-            "3. Equate the Indices: Set a = b.",
-            "4. Solve: Finish the (usually linear) equation."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Trying to equate indices BEFORE unifying the base" },
-            { "type": "COMMON", "text": "Mishandling fractional/negative powers during simplification" }
-        ],
-        "pro_tips": [
-            "Always rewrite numbers as prime-base powers first",
-            "Keep a tiny scratch list of common conversions (e.g., 8 = 2³, 81 = 3⁴)"
-        ]
+      "goal": "Find the unknown in the exponent",
+      "triggers": ["Solve", "variables appear as powers"],
+      "steps": [
+        "1. Unify the Base (Golden Rule): Write all numbers as powers of the SAME base. Examples: 9 = 3², 27 = 3³.",
+        "2. Simplify Both Sides: Use simplification rules until you get base^a = base^b.",
+        "3. Equate the Indices: Set a = b.",
+        "4. Solve: Finish the (usually linear) equation."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Trying to equate indices BEFORE unifying the base" },
+        { "type": "COMMON", "text": "Mishandling fractional/negative powers during simplification" }
+      ],
+      "pro_tips": [
+        "Always rewrite numbers as prime-base powers first",
+        "Keep a tiny scratch list of common conversions (e.g., 8 = 2³, 81 = 3⁴)"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-IND-03",
     "level": "L1",
@@ -845,23 +993,24 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Solving exponential equations that involve addition or subtraction by factoring.",
     "sop": {
-        "goal": "Solve exponential equations that involve addition or subtraction",
-        "triggers": ["Sums/differences of like exponentials"],
-        "steps": [
-            "1. Identify the Trap: Index laws do NOT apply across + or −.",
-            "2. Factor / Combine Like Terms: Treat repeated exponentials like like-terms. Examples: 3³ + 3³ + 3³ = 3 × (3³); 2^(x+1) − 2^x = 2^x (2 − 1).",
-            "3. Simplify → Switch to Solving Exponential Equations SOP: Reduce to a standard exponential form."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Forcing index laws over sums/differences" },
-            { "type": "COMMON", "text": "Forgetting to factor out the common exponential term" }
-        ],
-        "pro_tips": [
-            "'Apples with apples': combine identical bases/powers first",
-            "After factoring, look for the single-base structure and revert to the standard solving SOP"
-        ]
+      "goal": "Solve exponential equations that involve addition or subtraction",
+      "triggers": ["Sums/differences of like exponentials"],
+      "steps": [
+        "1. Identify the Trap: Index laws do NOT apply across + or −.",
+        "2. Factor / Combine Like Terms: Treat repeated exponentials like like-terms. Examples: 3³ + 3³ + 3³ = 3 × (3³); 2^(x+1) − 2^x = 2^x (2 − 1).",
+        "3. Simplify → Switch to Solving Exponential Equations SOP: Reduce to a standard exponential form."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Forcing index laws over sums/differences" },
+        { "type": "COMMON", "text": "Forgetting to factor out the common exponential term" }
+      ],
+      "pro_tips": [
+        "'Apples with apples': combine identical bases/powers first",
+        "After factoring, look for the single-base structure and revert to the standard solving SOP"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-IND-04",
     "level": "L1",
@@ -870,22 +1019,26 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Performing calculations with scientific notation and ensuring the final answer is in proper standard form.",
     "sop": {
-        "goal": "Perform calculations with A × 10^n and end in proper standard form (1 ≤ A < 10)",
-        "triggers": ["numbers given in scientific notation"],
-        "steps": [
-            "1. Multiplication / Division: 1) Multiply/divide the A parts. 2) Apply index laws to the 10^n parts. 3) Adjust to make 1 ≤ A < 10.",
-            "2. Addition / Subtraction: 1) Unify the exponent. 2) Factor out the common 10^n. 3) Add/subtract the A parts. 4) Adjust A back to [1, 10) if needed."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Adding/subtracting without matching powers of 10" },
-            { "type": "COMMON", "text": "Leaving A outside [1, 10)" }
-        ],
-        "pro_tips": [
-            "For +/−, match exponents first, then work on the A parts",
-            "Always do a final 'standard-form check'"
-        ]
+      "goal": "Perform calculations with A × 10^n and end in proper standard form (1 ≤ A < 10)",
+      "triggers": ["numbers given in scientific notation"],
+      "steps": [
+        "1. Multiplication / Division: 1) Multiply/divide the A parts. 2) Apply index laws to the 10^n parts. 3) Adjust to make 1 ≤ A < 10.",
+        "2. Addition / Subtraction: 1) Unify the exponent. 2) Factor out the common 10^n. 3) Add/subtract the A parts. 4) Adjust A back to [1, 10) if needed."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Adding/subtracting without matching powers of 10" },
+        { "type": "COMMON", "text": "Leaving A outside [1, 10)" }
+      ],
+      "pro_tips": [
+        "For +/−, match exponents first, then work on the A parts",
+        "Always do a final 'standard-form check'"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 1 ARCHETYPES - RATIO & NUMBERS
+  // ============================================
   {
     "id": "ARCH-L1-RATIO-01",
     "level": "L1",
@@ -894,23 +1047,24 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Accurately converting between map distances and actual distances/areas.",
     "sop": {
-        "goal": "Accurately convert between map distances and actual distances/areas",
-        "triggers": ["Scale 1 : n", "area on the map", "actual area"],
-        "steps": [
-            "1. Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km. Area scale: 1 cm² : (n ÷ 100,000)² km².",
-            "2. Select the Correct Scale: Decide if it's length or area.",
-            "3. Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Using the length scale to compute an area" },
-            { "type": "COMMON", "text": "Forgetting to square when switching to area" }
-        ],
-        "pro_tips": [
-            "Always write BOTH scales first (length and area)",
-            "Circle the word 'Area' in the question → write 'square it' beside it"
-        ]
+      "goal": "Accurately convert between map distances and actual distances/areas",
+      "triggers": ["Scale 1 : n", "area on the map", "actual area"],
+      "steps": [
+        "1. Write the 'Dual Scales': Length scale: 1 cm : (n ÷ 100,000) km. Area scale: 1 cm² : (n ÷ 100,000)² km².",
+        "2. Select the Correct Scale: Decide if it's length or area.",
+        "3. Proportion & Solve: Actual Distance = Map Distance × (length scale factor). Map Area = Actual Area ÷ (area scale factor)."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Using the length scale to compute an area" },
+        { "type": "COMMON", "text": "Forgetting to square when switching to area" }
+      ],
+      "pro_tips": [
+        "Always write BOTH scales first (length and area)",
+        "Circle the word 'Area' in the question → write 'square it' beside it"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-RATIO-02",
     "level": "L1",
@@ -919,23 +1073,24 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Calculating the new value after a percentage change, or recovering the original value.",
     "sop": {
-        "goal": "Calculate the new value after change, or recover the original value",
-        "triggers": ["increase by X%", "discount", "GST", "after the increase"],
-        "steps": [
-            "1. Identify the '100%': Always the original value / cost price / pre-tax price.",
-            "2. Compute New Percentage: Increase 15% → new % = 115%. Discount 20% → new % = 80%.",
-            "3. Execute: Forward (new value): New = Original × (New% ÷ 100). Reverse (original): Original = New ÷ (New% ÷ 100)."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "In reverse percentage, multiplying instead of dividing by the new percentage" },
-            { "type": "COMMON", "text": "Setting '100%' to the new (changed) value" }
-        ],
-        "pro_tips": [
-            "Underline the '100% reference' (Original/Cost/Pre-tax) before any calculation",
-            "Write a reminder: 'Original? → divide by new%'"
-        ]
+      "goal": "Calculate the new value after change, or recover the original value",
+      "triggers": ["increase by X%", "discount", "GST", "after the increase"],
+      "steps": [
+        "1. Identify the '100%': Always the original value / cost price / pre-tax price.",
+        "2. Compute New Percentage: Increase 15% → new % = 115%. Discount 20% → new % = 80%.",
+        "3. Execute: Forward (new value): New = Original × (New% ÷ 100). Reverse (original): Original = New ÷ (New% ÷ 100)."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "In reverse percentage, multiplying instead of dividing by the new percentage" },
+        { "type": "COMMON", "text": "Setting '100%' to the new (changed) value" }
+      ],
+      "pro_tips": [
+        "Underline the '100% reference' (Original/Cost/Pre-tax) before any calculation",
+        "Write a reminder: 'Original? → divide by new%'"
+      ]
     }
   },
+
   {
     "id": "ARCH-L1-RATIO-03",
     "level": "L1",
@@ -944,24 +1099,28 @@ const ARCHETYPES_DATA = [
     "badge": "SAT",
     "description": "Computing total amount and interest for simple and compound interest scenarios.",
     "sop": {
-        "goal": "Compute total amount and interest for simple/compound interest",
-        "triggers": ["simple interest", "compound interest", "per annum", "compounded quarterly/half-yearly"],
-        "steps": [
-            "1. Identify Type & Parameters: P = Principal, R = annual rate, T = time (years), n = compounding per year.",
-            "2. Write Formula: Simple: I = P × (R ÷ 100) × T. Compound: A = P × (1 + (R ÷ n) ÷ 100)^(n × T).",
-            "3. Substitute Carefully & Calculate: For compound, divide R by n, multiply T by n.",
-            "4. Answer the Question: If they want interest, use A − P."
-        ],
-        "pitfalls": [
-            { "type": "CRITICAL", "text": "Forgetting R → R/n and T → nT for compounding" },
-            { "type": "COMMON", "text": "Confusing interest vs total amount" }
-        ],
-        "pro_tips": [
-            "As soon as you read 'compounded …', jot n = …, then write R → R/n, T → nT",
-            "If the question says 'interest', remember to compute A − P"
-        ]
+      "goal": "Compute total amount and interest for simple/compound interest",
+      "triggers": ["simple interest", "compound interest", "per annum", "compounded quarterly/half-yearly"],
+      "steps": [
+        "1. Identify Type & Parameters: P = Principal, R = annual rate, T = time (years), n = compounding per year.",
+        "2. Write Formula: Simple: I = P × (R ÷ 100) × T. Compound: A = P × (1 + (R ÷ n) ÷ 100)^(n × T).",
+        "3. Substitute Carefully & Calculate: For compound, divide R by n, multiply T by n.",
+        "4. Answer the Question: If they want interest, use A − P."
+      ],
+      "pitfalls": [
+        { "type": "CRITICAL", "text": "Forgetting R → R/n and T → nT for compounding" },
+        { "type": "COMMON", "text": "Confusing interest vs total amount" }
+      ],
+      "pro_tips": [
+        "As soon as you read 'compounded …', jot n = …, then write R → R/n, T → nT",
+        "If the question says 'interest', remember to compute A − P"
+      ]
     }
   },
+
+  // ============================================
+  // LEVEL 2 ARCHETYPES
+  // ============================================
   {
     "id": "ARCH-L2-TRIG-01",
     "level": "L2",
@@ -981,6 +1140,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L2-QUAD-01",
     "level": "L2",
@@ -989,7 +1149,7 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "grade": "G4",
     "description": "Problems that require students to plot a function (quadratic or cubic) and use the graph to solve equations by finding intersections with a suitable straight line, or finding the gradient of a tangent.",
-    "constituent_l1_ids": ["ARCH-L1-QUAD-02", "ARCH-L1-ALG-02", "ARCH-L1-CG-01"],
+    "constituent_l1_ids": ["ARCH-L1-ALG-04-GRAPH", "ARCH-L1-ALG-04-EQN", "ARCH-L1-ALG-02", "ARCH-L1-CG-01"],
     "sop": {
       "goal": "Use a plotted graph to solve related equations and find gradients.",
       "steps": [
@@ -1000,6 +1160,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L2-GEO-01",
     "level": "L2",
@@ -1018,6 +1179,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L2-ALG-01",
     "level": "L2",
@@ -1036,6 +1198,10 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
+  // ============================================
+  // LEVEL 3 ARCHETYPES
+  // ============================================
   {
     "id": "ARCH-L3-SYN-01",
     "level": "L3",
@@ -1055,6 +1221,7 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
+
   {
     "id": "ARCH-L3-MOD-01",
     "level": "L3",
@@ -1075,3 +1242,11 @@ const ARCHETYPES_DATA = [
     }
   }
 ];
+
+// Validation check
+console.log(`✅ Loaded ${ARCHETYPES_DATA.length} archetypes successfully`);
+
+// Export for use in other modules (if needed)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = ARCHETYPES_DATA;
+}
