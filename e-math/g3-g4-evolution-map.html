@@ -4,11 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>G3→G4 Evolution Map · Hierarchical View</title>
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
     
+    /* ==========================================
+       GLOBAL & DARK THEME DEFINITIONS
+       ========================================== */
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
       margin: 0;
@@ -67,6 +71,12 @@
         display: inline-block;
         vertical-align: middle;
     }
+    
+    /* SVG icons smaller than 1em */
+    .icon-sm {
+        width: 16px;
+        height: 16px;
+    }
 
     .glass {
       background: var(--glass);
@@ -74,6 +84,10 @@
       border: 1px solid var(--glass-border);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
+
+    /* ==========================================
+       MAIN LAYOUT & COMPONENTS (DARK THEME)
+       ========================================== */
 
     .navbar {
       position: sticky;
@@ -254,10 +268,20 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
     }
+    
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
 
     .btn-secondary {
       background: linear-gradient(135deg, var(--secondary), var(--primary));
       color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: var(--secondary);
+        transform: translateY(-2px);
     }
 
     .btn-outline {
@@ -794,7 +818,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-
+    
     .finder-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4);
@@ -842,6 +866,263 @@
       margin: 0.5rem 0;
     }
 
+    /* =================================================
+       FIXED STYLES FOR BRANCHES & MODALS (DARK THEME)
+       ================================================= */
+
+    /* ==========================================
+       BRANCHES VISUALIZATION
+       ========================================== */
+
+    .branches-overview {
+      margin-bottom: 24px;
+      padding: 16px;
+      /* FIX: Use dark theme glass background */
+      background: var(--glass);
+      border-radius: 8px;
+      /* FIX: Use dark theme accent color for border */
+      border-left: 4px solid var(--accent);
+    }
+
+    .branches-overview h4 {
+      margin: 0 0 16px 0;
+      /* FIX: Use dark theme accent color */
+      color: var(--accent);
+      font-size: 1em;
+      font-weight: 600;
+    }
+
+    .branches-tree {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .branch-tree-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      /* FIX: Use transparent background */
+      background: transparent;
+      border-radius: 6px;
+      /* FIX: Use dark theme glass border */
+      border: 1px solid var(--glass-border);
+      transition: all 0.2s ease;
+    }
+
+    .branch-tree-item:hover {
+      /* FIX: Use dark theme glass hover */
+      background: var(--glass);
+      border-color: var(--accent);
+      transform: translateX(4px);
+      box-shadow: none;
+    }
+
+    .branch-tree-item.clickable {
+      cursor: pointer;
+    }
+
+    .branch-tree-item.clickable:hover {
+      /* FIX: Use dark theme secondary background */
+      background: var(--bg-secondary);
+      border-color: var(--accent);
+      transform: translateX(6px);
+    }
+
+    .branch-tree-item.clickable:active {
+      transform: translateX(6px) scale(0.98);
+    }
+
+    .branch-prefix {
+      /* FIX: Use dark theme accent color */
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      font-weight: bold;
+      font-size: 1.1em;
+      min-width: 24px;
+    }
+
+    .branch-name {
+      flex: 1;
+      /* FIX: Ensure text is from dark theme (already correct) */
+      color: var(--text-primary);
+      font-weight: 500;
+      font-size: 0.95em;
+    }
+
+    .branch-expand-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      /* FIX: Use dark theme accent color */
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .branch-expand-btn:hover {
+      /* FIX: Use dark theme primary color */
+      color: var(--primary);
+      transform: translateX(2px);
+    }
+
+    /* ==========================================
+       BRANCH MODAL
+       ========================================== */
+
+    .branch-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .branch-modal-content {
+      /* FIX: Use dark theme secondary background */
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .branch-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      /* FIX: Use dark theme glass border */
+      border-bottom: 2px solid var(--glass-border);
+      /* FIX: Use dark theme tertiary background */
+      background: var(--bg-tertiary);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .branch-modal-header h3 {
+      margin: 0;
+      /* FIX: Use dark theme accent color */
+      color: var(--accent);
+      font-size: 1.4em;
+    }
+
+    .branch-modal-close {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--text-secondary);
+      transition: all 0.2s ease;
+      border-radius: 50%;
+    }
+
+    .branch-modal-close:hover {
+      /* FIX: Use dark theme danger colors */
+      background: rgba(239, 68, 68, 0.1);
+      color: var(--danger);
+    }
+
+    .branch-modal-body {
+      padding: 24px;
+    }
+
+    .branch-modal .branches-overview {
+      margin-bottom: 24px;
+      padding: 20px;
+    }
+
+    .branch-modal .branches-tree {
+      gap: 10px;
+    }
+
+    .branch-modal .branches-overview h4 {
+      /* FIX: Use dark theme accent color */
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .branch-modal .branches-overview p {
+      color: var(--text-secondary);
+      font-size: 0.9em;
+      line-height: 1.5;
+    }
+
+    /* ==========================================
+       FIXED CATALOG & UTILITIES
+       ========================================== */
+    
+    /* This was the only new rule from the CATALOG block */
+    .branch-count-badge {
+      display: inline-block;
+      /* FIX: Use dark theme pill style */
+      background: rgba(99, 102, 241, 0.2);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.75em;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+
+    /* This was the only new rule from the UTILITIES block */
+    .highlighted {
+        animation: highlight 1s ease;
+    }
+
+    @keyframes highlight {
+        0%, 100% {
+            background: transparent;
+        }
+        50% {
+            /* FIX: Use dark theme warning color */
+            background: rgba(245, 158, 11, 0.2);
+        }
+    }
+    
+    /* REMOVED redundant .search-result-hint, .btn, .catalog-card rules
+      as they are already defined correctly in the dark theme section above.
+    */
+
+    /* ==========================================
+       RESPONSIVE
+       ========================================== */
+
     @media (max-width: 768px) {
       .hero-title {
         font-size: 2rem;
@@ -870,6 +1151,16 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
+      }
+      
+      /* Rules kept from the pasted responsive block */
+      .section-title {
+          font-size: 1.5rem;
+      }
+
+      .branch-modal-content {
+          max-width: 95vw;
+          max-height: 90vh;
       }
     }
   </style>
