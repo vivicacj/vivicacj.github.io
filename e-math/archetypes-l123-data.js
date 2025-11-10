@@ -1,320 +1,583 @@
-// archetypes-l123-data.js
-// Complete Archetype Data for e-Math G3→G4 Evolution Map
-// Updated with Quadratic Equations branches
+// =================================================================
+// E-MATH ARCHETYPES DATA (v2.0 - ALGEBRA RESTRUCTURE)
+// =================================================================
+// This is the complete, merged, and de-duplicated file.
+// It contains the 18 new Algebra archetypes + all other topics.
+// =================================================================
 
 const ARCHETYPES_DATA = [
   // ============================================
-  // LEVEL 1 ARCHETYPES - CORE ALGEBRA
+  // LEVEL 1 ARCHETYPES - NEW ALGEBRA (from PDF)
   // ============================================
   {
     "id": "ARCH-L1-ALG-01",
-    "level": "L1",
     "name": "Factorisation",
-    "topic": "algebra",
+    "description": "Factor algebraic expressions using common factors, grouping, or special identities (difference of squares, perfect squares).",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Factorising expressions using common factor, difference of squares, or cross-multiplication method.",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Break down an algebraic expression into a product of simpler factors.",
+      "goal": "Factor algebraic expressions using common factors, grouping, or identities.",
       "steps": [
-        "1. Common Factor: Always look for a common factor first.",
-        "2. Formula: Check for Difference of Squares (a²-b²) or Perfect Squares.",
-        "3. Cross-Method: Use the cross-multiplication method for trinomials."
+        "Identify common factors across all terms.",
+        "Apply grouping method if applicable.",
+        "Recognise special patterns (difference of squares, perfect squares).",
+        "Verify by expanding the factorised form."
+      ],
+      "pitfalls": [
+        { "type": "Common Error", "text": "Missing common factors before attempting advanced methods." },
+        { "type": "Sign Error", "text": "Incorrectly applying identities (sign errors)." }
+      ],
+      "pro_tips": [
+        "Always check for HCF first.",
+        "Verify by expansion to catch errors early."
       ]
     }
   },
   {
     "id": "ARCH-L1-ALG-02",
-    "level": "L1",
     "name": "Solving Fractional Equations",
-    "topic": "algebra",
+    "description": "Solve equations containing algebraic fractions by clearing denominators, factorising, and applying formula manipulation techniques.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Solving fractional equations that reduce to linear or quadratic by clearing denominators.",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Eliminate fractions and solve for the variable",
-      "triggers": ["solve", "equation with fractions"],
+      "goal": "Solve equations with algebraic fractions by finding a common denominator and solving the resulting numerator equation.",
       "steps": [
-        "1. Identify the LCD of all denominators in the equation.",
-        "2. Multiply every term by the LCD: This eliminates all fractions.",
-        "3. Simplify and solve: You now have a standard linear or quadratic equation.",
-        "4. Check for extraneous solutions: Substitute back to ensure denominators ≠ 0."
+        "Check if discriminant Δ = b²-4ac is a perfect square. If not, use Formula Method.",
+        "Find p, q, r, s such that: pr=a, qs=c, ps+qr=b.",
+        "Write factorised form: (px+q)(rx+s) = 0.",
+        "Apply zero-product property: px + q = 0 OR rx + s = 0.",
+        "Solve each linear equation for x.",
+        "Identify the target variable to isolate in the fractional equation.",
+        "Apply inverse operations to both sides systematically (e.g., multiply by LCD).",
+        "If target variable appears multiple times, collect terms first.",
+        "Factorise if needed to isolate the variable."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Forgetting to multiply ALL terms (including constants) by the LCD" },
-        { "type": "COMMON", "text": "Not checking if solutions make any denominator zero" }
+        { "type": "Process Error", "text": "Wasting time attempting to factor when Δ is not a perfect square." },
+        { "type": "Sign Error", "text": "Forgetting to apply operations to both sides of the equation." },
+        { "type": "Omission", "text": "Forgetting to solve BOTH factors." }
       ],
       "pro_tips": [
-        "Write 'LCD = ...' at the top before multiplying",
-        "Circle any values that would make denominators zero—these cannot be solutions"
+        "Use cross-multiplication method for a≠1.",
+        "Work step-by-step; do not skip operations."
       ]
     }
   },
   {
     "id": "ARCH-L1-ALG-03",
-    "level": "L1",
     "name": "Forming Expressions",
-    "topic": "algebra",
-    "badge": "CORE",
-    "description": "Translating word problems or scenarios into mathematical algebraic expressions.",
-    "sop": {
-      "goal": "Represent a real-world situation using algebraic terms.",
-      "steps": [
-        "1. Define Variable: Let the unknown be x.",
-        "2. Translate Keywords: Convert words like 'more than' (+), 'product' (×) into math symbols.",
-        "3. Write Expression."
-      ]
-    }
-  },
-
-  // ============================================
-  // ARCH-L1-ALG-04: QUADRATIC EQUATIONS (PARENT)
-  // ============================================
-  {
-    "id": "ARCH-L1-ALG-04",
+    "description": "Translate word problems into algebraic expressions and equations, then manipulate to isolate target variables.",
+    "topic": "Algebra",
     "level": "L1",
-    "name": "Quadratic Equations",
-    "topic": "algebra",
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Parent archetype for L1 Quadratic Equations covering: Completing the Square (CTS), Formula Method, Factorisation Method, Graph Sketching, Finding Equation from Graph, and Discriminant Analysis. Optimized for G3 consolidation with aligned SOPs.",
-    "has_branches": true,
-    "branches": [
-      "ARCH-L1-ALG-04-CTS",
-      "ARCH-L1-ALG-04-FORM",
-      "ARCH-L1-ALG-04-FACT",
-      "ARCH-L1-ALG-04-GRAPH",
-      "ARCH-L1-ALG-04-EQN",
-      "ARCH-L1-ALG-04-DISC"
-    ],
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Master all quadratic equation solving methods",
+      "goal": "Rearrange formulas to isolate a specified variable.",
       "steps": [
-        "1. Identify the form: ax² + bx + c = 0",
-        "2. Choose method: Factorisation, Formula, Completing the Square, or Graphical",
-        "3. Apply the selected method",
-        "4. Verify solutions"
-      ]
-    }
-  },
-
-  // Branch 1: Completing the Square
-  {
-    "id": "ARCH-L1-ALG-04-CTS",
-    "level": "L1",
-    "name": "Completing the Square",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Converting a quadratic from standard form to completed-square form (x + p)² + q.",
-    "sop": {
-      "goal": "Convert quadratic to completed-square form (x + p)² + q",
-      "triggers": ["complete the square", "express in the form (x + p)² + q"],
-      "steps": [
-        "1. Factor out coefficient of x² (if a ≠ 1)",
-        "2. Take half of coefficient of x, then square it",
-        "3. Add and subtract this value inside brackets",
-        "4. Group perfect square trinomial and simplify constant"
+        "Identify the target variable to isolate.",
+        "Apply inverse operations to both sides systematically.",
+        "If target variable appears multiple times, collect terms first.",
+        "Factorise if needed to isolate the variable."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Forgetting to factor out 'a' first" },
-        { "type": "COMMON", "text": "Sign errors when adding/subtracting the squared term" }
+        { "type": "Process Error", "text": "Forgetting to apply operations to both sides." },
+        { "type": "Sign Error", "text": "Sign errors when moving terms across the equals sign." }
       ],
       "pro_tips": [
-        "Always verify by expanding back to original form"
+        "Work step-by-step; do not skip operations.",
+        "Use factorisation when the variable appears in multiple terms."
       ]
     }
   },
-
-  // Branch 2: Formula Method
-  {
-    "id": "ARCH-L1-ALG-04-FORM",
-    "level": "L1",
-    "name": "Formula Method",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Solving quadratic equations using the quadratic formula x = [-b ± √(b²-4ac)] / 2a.",
-    "sop": {
-      "goal": "Solve quadratic equations using x = [-b ± √(b²-4ac)] / 2a",
-      "triggers": ["solve", "quadratic", "cannot factorise easily"],
-      "steps": [
-        "1. Identify coefficients a, b, c from standard form ax² + bx + c = 0",
-        "2. Calculate discriminant Δ = b² - 4ac",
-        "3. Apply quadratic formula with correct signs",
-        "4. Simplify and round to required decimal places"
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Missing negative signs in coefficient identification" },
-        { "type": "COMMON", "text": "Forgetting the ± symbol" }
-      ],
-      "pro_tips": [
-        "Double-check discriminant calculation; use calculator for complex numbers"
-      ]
-    }
-  },
-
-  // Branch 3: Factorisation Method
-  {
-    "id": "ARCH-L1-ALG-04-FACT",
-    "level": "L1",
-    "name": "Factorisation Method",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Solving quadratic by factoring into (px + q)(rx + s) = 0.",
-    "sop": {
-      "goal": "Solve quadratic by factoring into (px + q)(rx + s) = 0",
-      "triggers": ["solve", "factorise", "nice integer solutions expected"],
-      "steps": [
-        "1. Check if discriminant is a perfect square (factorisation test)",
-        "2. Find factors of 'ac' that add to 'b'",
-        "3. Split middle term and factor by grouping",
-        "4. Set each factor equal to zero and solve"
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Attempting to factor non-factorable quadratics" },
-        { "type": "COMMON", "text": "Incorrect splitting of middle term" }
-      ],
-      "pro_tips": [
-        "Use discriminant test first; verify by expanding factors"
-      ]
-    }
-  },
-
-  // Branch 4: Graph Sketching
-  {
-    "id": "ARCH-L1-ALG-04-GRAPH",
-    "level": "L1",
-    "name": "Graph Sketching (Quadratics)",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Sketching a parabola with all key features labeled.",
-    "sop": {
-      "goal": "Sketch parabola showing key features (vertex, intercepts, direction)",
-      "triggers": ["sketch the graph", "draw the curve"],
-      "steps": [
-        "1. Find vertex using x = -b/2a, then substitute for y-coordinate",
-        "2. Determine direction (upward if a > 0, downward if a < 0)",
-        "3. Find x-intercepts (set y = 0) and y-intercept (set x = 0)",
-        "4. Plot points and sketch smooth parabolic curve"
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Wrong vertex calculation" },
-        { "type": "COMMON", "text": "Incorrect parabola direction" }
-      ],
-      "pro_tips": [
-        "Use symmetry about vertex line; check with additional points"
-      ]
-    }
-  },
-
-  // Branch 5: Finding Equation from Graph
-  {
-    "id": "ARCH-L1-ALG-04-EQN",
-    "level": "L1",
-    "name": "Finding Equation from Graph",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Determining the quadratic equation given key features of the graph.",
-    "sop": {
-      "goal": "Determine quadratic equation from graphical information",
-      "triggers": ["find the equation", "given turning point and another point"],
-      "steps": [
-        "1. Start with vertex form y = a(x - h)² + k using given vertex (h, k)",
-        "2. Use additional point to find coefficient 'a'",
-        "3. Expand to standard form if required",
-        "4. Verify equation with all given points"
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Using wrong form of equation" },
-        { "type": "COMMON", "text": "Calculation errors when finding 'a'" }
-      ],
-      "pro_tips": [
-        "Vertex form is usually easiest starting point"
-      ]
-    }
-  },
-
-  // Branch 6: Discriminant Analysis
-  {
-    "id": "ARCH-L1-ALG-04-DISC",
-    "level": "L1",
-    "name": "Discriminant Analysis",
-    "topic": "algebra",
-    "badge": "CORE",
-    "parent_id": "ARCH-L1-ALG-04",
-    "description": "Using b² - 4ac to determine the nature of roots without solving.",
-    "sop": {
-      "goal": "Determine nature of roots using discriminant Δ = b² - 4ac",
-      "triggers": ["nature of roots", "number of solutions", "real and distinct"],
-      "steps": [
-        "1. Identify coefficients a, b, c from standard form",
-        "2. Calculate discriminant Δ = b² - 4ac",
-        "3. Interpret results: Δ > 0 (two real roots), Δ = 0 (one repeated root), Δ < 0 (no real roots)",
-        "4. Relate to graph behavior (x-intercepts)"
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Calculation errors in discriminant" },
-        { "type": "COMMON", "text": "Misinterpreting discriminant values" }
-      ],
-      "pro_tips": [
-        "Connect to graphical interpretation; Δ tells you number of x-intercepts"
-      ]
-    }
-  },
-
   {
     "id": "ARCH-L1-ALG-05",
-    "level": "L1",
     "name": "Changing the Subject of a Formula",
-    "topic": "algebra",
-    "badge": "CORE",
-    "description": "Rearranging a complex formula to isolate a specified variable.",
+    "description": "Rearrange formulas to isolate a specified variable, applying inverse operations systematically while maintaining equality.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "SAT",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Rearrange to isolate a specified variable",
-      "triggers": ["make x the subject", "express y in terms of"],
+      "goal": "Rearrange formulas to isolate a specified variable.",
       "steps": [
-        "1. Identify the target variable: Circle or highlight what you're solving for.",
-        "2. Isolate terms containing the target: Move all other terms to the opposite side.",
-        "3. If target appears multiple times, factor it out: x(stuff) = other stuff.",
-        "4. Final isolation: Divide both sides to leave target alone.",
-        "5. Simplify if needed: Especially with fractions."
+        "Identify the target variable to isolate.",
+        "Apply inverse operations to both sides systematically.",
+        "If target variable appears multiple times, collect terms first.",
+        "Factorise if needed to isolate the variable."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Not factoring out when the variable appears in multiple terms" },
-        { "type": "COMMON", "text": "Sign errors when moving terms across the equals sign" }
+        { "type": "Process Error", "text": "Forgetting to apply operations to both sides." },
+        { "type": "Sign Error", "text": "Sign errors when moving terms across the equals sign." }
       ],
       "pro_tips": [
-        "When target is in denominator, first multiply both sides by that denominator",
-        "If target is squared, remember to take ± square root at the end"
+        "Work step-by-step; do not skip operations.",
+        "Use factorisation when the variable appears in multiple terms."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-06",
+    "name": "Solving Simultaneous Equations",
+    "description": "Solve systems of two linear equations using elimination or substitution methods to find the values of two unknowns.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Solve systems of two linear equations.",
+      "steps": [
+        "Choose elimination or substitution method.",
+        "If using elimination: multiply equations to match coefficients.",
+        "Add/subtract equations to eliminate one variable.",
+        "Solve for the remaining variable.",
+        "Substitute back to find the other variable.",
+        "Verify by substituting both values into original equations."
+      ],
+      "pitfalls": [
+        { "type": "Arithmetic Error", "text": "Arithmetic errors when combining equations." },
+        { "type": "Verification Error", "text": "Forgetting to verify solutions in both original equations." }
+      ],
+      "pro_tips": [
+        "Elimination is often faster for equations in standard form.",
+        "Substitution is cleaner when one variable is already isolated."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-7", // PDF uses ALG-7, not 07
+    "name": "Solving Exponential Equations",
+    "description": "Solve equations involving exponential expressions by equating bases and exponents, applying index laws systematically.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G4",
+    "badge": "SAT",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply index laws and manipulate standard form expressions.",
+      "steps": [
+        "Apply index laws: a^m * a^n = a^(m+n), (a^m)^n = a^(mn).",
+        "Convert to same base when solving equations.",
+        "Equate exponents once bases match.",
+        "For standard form: express as A x 10^n where 1 ≤ A < 10."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Confusing addition and multiplication rules for exponents." },
+        { "type": "Calculation Error", "text": "Incorrect base conversions." }
+      ],
+      "pro_tips": [
+        "Always check if bases can be expressed as powers of each other.",
+        "Use standard form for very large/small numbers to avoid errors."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-8", // PDF uses ALG-8, not 08
+    "name": "Solving Compound Inequalities",
+    "description": "Solve compound inequalities (e.g., a < x < b) by treating each part separately while maintaining the relationship.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Solve linear inequalities and represent solutions.",
+      "steps": [
+        "Apply inverse operations as with equations.",
+        "REVERSE the inequality sign when multiplying/dividing by negative.",
+        "For compound inequalities, treat each part separately.",
+        "Represent solution on number line or in interval notation."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Forgetting to reverse inequality when multiplying/dividing by negative." },
+        { "type": "Conceptual Error", "text": "Incorrectly combining compound inequality solutions." }
+      ],
+      "pro_tips": [
+        "Use test values to verify your solution region.",
+        "Draw number lines to visualise compound inequalities."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-9", // PDF uses ALG-9, not 09
+    "name": "Modelling with Inequalities",
+    "description": "Translate real-world constraints into inequalities, solve them, and interpret solutions in context.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Solve linear inequalities and represent solutions.",
+      "steps": [
+        "Apply inverse operations as with equations.",
+        "REVERSE the inequality sign when multiplying/dividing by negative.",
+        "For compound inequalities, treat each part separately.",
+        "Represent solution on number line or in interval notation."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Forgetting to reverse inequality when multiplying/dividing by negative." },
+        { "type": "Conceptual Error", "text": "Incorrectly combining compound inequality solutions." }
+      ],
+      "pro_tips": [
+        "Use test values to verify your solution region.",
+        "Draw number lines to visualise compound inequalities."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-10",
+    "name": "Finding Max/Min Values in a Range",
+    "description": "Determine max/min values of quadratic functions over a specified domain by completing the square and evaluating at endpoints.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "SAT",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Transform quadratic expressions into vertex form a(x+p)²+q.",
+      "steps": [
+        "Identify the coefficient 'a' of x².",
+        "Factor out 'a' from the x² and x terms: a(x² + (b/a)x) + c.",
+        "Take coefficient of x (inside brackets), divide by 2, then square. Add and subtract this value inside the brackets.",
+        "Group the perfect square trinomial: (x+p)². Combine remaining constant terms.",
+        "Write final form: a(x+p)² + q. Identify vertex: (-p, q)."
+      ],
+      "pitfalls": [
+        { "type": "Process Error", "text": "Factoring 'a' from all three terms (must leave constant outside)." },
+        { "type": "Arithmetic Error", "text": "Forgetting to multiply the added/subtracted term by 'a' when moving out." },
+        { "type": "Sign Error", "text": "Sign errors when reading vertex coordinates (-p, q)." }
+      ],
+      "pro_tips": [
+        "Only factor 'a' from x² and x terms.",
+        "Vertex form immediately reveals: vertex at (-p, q)."
       ]
     }
   },
 
+  // --- L1 Archetype (Parent) ---
   {
-    "id": "ARCH-L1-ALG-06",
+    "id": "ARCH-L1-ALG-04",
+    "name": "Quadratic Equations (Parent)",
+    "description": "Parent container for all quadratic equation solving methods and analysis. Actual SOPs are distributed across six sub-archetypes.",
+    "topic": "Algebra",
     "level": "L1",
-    "name": "Solving Simultaneous Equations",
-    "topic": "algebra",
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Finding values that satisfy a system of two linear equations.",
+    "has_branches": true,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "branches": [
+      "ARCH-L1-ALG-04-CTS",
+      "ARCH-L1-ALG-04-DISC",
+      "ARCH-L1-ALG-04-EQN",
+      "ARCH-L1-ALG-04-FACT",
+      "ARCH-L1-ALG-04-FORM",
+      "ARCH-L1-ALG-04-GRAPH"
+    ],
     "sop": {
-      "goal": "Find values that satisfy both equations",
-      "triggers": ["simultaneous equations", "solve the system"],
+        "goal": "Solve quadratic equations and analyze their graphs using a variety of methods.",
+        "steps": [
+            "Select the appropriate method based on the question (Factorisation, Formula, Completing the Square).",
+            "Analyze the nature of roots using the Discriminant.",
+            "Sketch the quadratic graph by finding key points.",
+            "Determine the equation from a given graph."
+        ],
+        "pitfalls": [
+            { "type": "Selection Error", "text": "Using an inefficient method (e.g., formula when factorisation is simple)." },
+            { "type": "Conceptual Error", "text": "Confusing the different components (e.g., discriminant vs. vertex form)." }
+        ],
+        "pro_tips": [
+            "Use the Discriminant first to check the nature of roots.",
+            "Completing the Square is best for finding the vertex."
+        ]
+    }
+  },
+
+  // --- L1 Sub-Archetypes (Branches of ALG-04) ---
+  {
+    "id": "ARCH-L1-ALG-04-CTS",
+    "name": "Completing the Square",
+    "description": "Transform quadratic expressions into vertex form a(x+p)²+q by completing the square, enabling easy identification of vertex and solving equations.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Transform quadratic expressions into vertex form a(x+p)²+q.",
       "steps": [
-        "1. Choose your method: Substitution (if one equation is already solved for a variable) or Elimination.",
-        "2. Elimination method: Multiply equations to make coefficients of one variable equal, then add/subtract to eliminate.",
-        "3. Solve for first variable: You'll get a simple equation in one variable.",
-        "4. Substitute back: Plug the value into either original equation to find the other variable.",
-        "5. Verify: Check both values satisfy both original equations."
+        "Identify the coefficient 'a' of x².",
+        "Factor out 'a' from the x² and x terms: a(x² + (b/a)x) + c.",
+        "Take coefficient of x (inside brackets), divide by 2, then square. Add and subtract this value inside the brackets.",
+        "Group the perfect square trinomial: (x+p)². Combine remaining constant terms.",
+        "Write final form: a(x+p)² + q. Identify vertex: (-p, q)."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Not multiplying the entire equation when preparing for elimination" },
-        { "type": "COMMON", "text": "Forgetting to find the second variable after eliminating the first" }
+        { "type": "Process Error", "text": "Factoring 'a' from all three terms (must leave constant outside)." },
+        { "type": "Arithmetic Error", "text": "Forgetting to multiply the added/subtracted term by 'a' when moving out." },
+        { "type": "Sign Error", "text": "Sign errors when reading vertex coordinates (-p, q)." }
       ],
       "pro_tips": [
-        "Label equations as ① and ② to track your work",
-        "If coefficients are already opposites, add. If they're the same, subtract"
+        "Only factor 'a' from x² and x terms.",
+        "Vertex form immediately reveals: vertex at (-p, q).",
+        "If a>0: minimum at vertex; if a<0: maximum at vertex."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-04-DISC",
+    "name": "Discriminant Analysis",
+    "description": "Use the discriminant Δ=b²-4ac to predict the nature of roots and relate it to the parabola's x-axis intersections.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Predict solution types and graph behavior from the discriminant.",
+      "steps": [
+        "Calculate Δ = b² - 4ac.",
+        "If Δ > 0 → two distinct real roots (crosses x-axis twice).",
+        "If Δ = 0 → one repeated real root (touches x-axis once).",
+        "If Δ < 0 → no real roots (doesn't intersect x-axis).",
+        "Sketch to verify graphical interpretation."
+      ],
+      "pitfalls": [
+        { "type": "Arithmetic Error", "text": "Arithmetic errors when computing b² - 4ac (especially with negatives)." },
+        { "type": "Interpretation Error", "text": "Misinterpreting Δ=0 as 'no solution'." }
+      ],
+      "pro_tips": [
+        "Always write out Δ = b² - 4ac explicitly before substituting.",
+        "Use discriminant to choose solution method: if Δ is a perfect square, factorisation is possible."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-04-EQN",
+    "name": "Finding Equation from Graph",
+    "description": "Determine the quadratic equation from a given graph by identifying the vertex and using an additional point to find 'a'.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Determine quadratic equation from vertex and a point.",
+      "steps": [
+        "Read vertex (h, k) from graph.",
+        "Write in vertex form: y = a(x-h)² + k.",
+        "Substitute coordinates of another point on the curve.",
+        "Solve for 'a'.",
+        "Write final equation with determined 'a' value."
+      ],
+      "pitfalls": [
+        { "type": "Sign Error", "text": "Misreading vertex coordinates (especially signs)." },
+        { "type": "Process Error", "text": "Using the vertex point to solve for 'a' (leads to 0=0)." }
+      ],
+      "pro_tips": [
+        "Always use a point OTHER than the vertex to find 'a'.",
+        "Verify by checking multiple points from the graph."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-04-FACT",
+    "name": "Factorisation Method",
+    "description": "Solve quadratic equations by factorising into (px+q)(rx+s)=0 and applying the zero-product property.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Find roots by factorising and setting each factor to zero.",
+      "steps": [
+        "Check if Δ = b² - 4ac is a perfect square. If not, use Formula Method.",
+        "Find p, q, r, s such that: pr=a, qs=c, ps+qr=b.",
+        "Write factorised form: (px+q)(rx+s) = 0.",
+        "Apply zero-product property: px + q = 0 OR rx + s = 0.",
+        "Solve each linear equation for x.",
+        "State both solutions."
+      ],
+      "pitfalls": [
+        { "type": "Process Error", "text": "Wasting time attempting to factor when Δ is not a perfect square." },
+        { "type": "Sign Error", "text": "Sign errors when c or b is negative." },
+        { "type": "Omission", "text": "Forgetting to solve BOTH factors." }
+      ],
+      "pro_tips": [
+        "For a=1, find two numbers that multiply to c and add to b.",
+        "Use cross-multiplication method for a≠1.",
+        "Verify by substituting both roots back into original equation."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-04-FORM",
+    "name": "Formula Method",
+    "description": "Solve quadratic equations using the quadratic formula, suitable for all quadratics regardless of factorisability.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Calculate roots using x = [-b ± sqrt(Δ)] / 2a.",
+      "steps": [
+        "Rearrange equation to standard form: ax² + bx + c = 0.",
+        "Identify a, b, c (note signs carefully).",
+        "Calculate discriminant: Δ = b² - 4ac.",
+        "Substitute a, b, and Δ into formula: x = (-b ± sqrt(Δ)) / 2a.",
+        "Calculate two solutions: x₁ and x₂.",
+        "Simplify surds or round to specified decimal places."
+      ],
+      "pitfalls": [
+        { "type": "Prerequisite Error", "text": "Forgetting to rearrange equation to standard form first." },
+        { "type": "Sign Error", "text": "Missing negative signs (especially for b and c)." },
+        { "type": "Omission", "text": "Forgetting the ± symbol (only finding one root)." },
+        { "type": "Rounding Error", "text": "Premature rounding (round only at final step)." }
+      ],
+      "pro_tips": [
+        "Write a=, b=, c= explicitly.",
+        "Use parentheses when substituting negative values.",
+        "Keep exact surd form unless question asks for decimals."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L1-ALG-04-GRAPH",
+    "name": "Graph Sketching (Quadratics)",
+    "description": "Sketch accurate parabolas by identifying vertex, intercepts, axis of symmetry, and establishing the orientation.",
+    "topic": "Algebra",
+    "level": "L1",
+    "grade": "G3",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": "ARCH-L1-ALG-04",
+    "sop": {
+      "goal": "Draw accurate parabolic curve by finding key points.",
+      "steps": [
+        "Check sign of 'a': a>0 opens upward (U-shape), a<0 opens downward (n-shape).",
+        "Find y-intercept: substitute x=0.",
+        "Find x-intercepts: solve ax² + bx + c = 0 (use Δ to check if they exist).",
+        "Find vertex: x-coordinate = -b/2a. Subsitute x back into equation for y-coordinate.",
+        "Identify axis of symmetry: x = -b/2a.",
+        "Plot all key points and sketch a smooth, symmetric curve."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Confusing direction based on sign of c instead of a." },
+        { "type": "Calculation Error", "text": "Arithmetic errors when calculating -b/2a." },
+        { "type": "Drawing Error", "text": "Drawing a non-symmetric curve." }
+      ],
+      "pro_tips": [
+        "If Δ < 0, there are no x-intercepts.",
+        "The axis of symmetry always passes through the vertex.",
+        "Use symmetry to find additional points."
+      ]
+    }
+  },
+
+  // --- L2 Archetypes (from PDF) ---
+  {
+    "id": "ARCH-L2-ALG-01",
+    "name": "Algebraic Modelling in Context",
+    "description": "Apply algebraic techniques to solve complex real-world problems involving forming equations, manipulating formulas, and factorising.",
+    "topic": "Algebra",
+    "level": "L2",
+    "grade": "G4",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": ["ARCH-L1-ALG-01", "ARCH-L1-ALG-03", "ARCH-L1-ALG-05"],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Synthesize multiple L1 algebra skills to solve complex word problems.",
+      "steps": [
+        "Translate the word problem into algebraic expressions/equations (Links to ALG-03).",
+        "Identify the target variable required by the problem.",
+        "Manipulate and rearrange the complex formulas to isolate the target variable (Links to ALG-05).",
+        "Factorise expressions where necessary to simplify or solve (Links to ALG-01).",
+        "Interpret the final algebraic result in the context of the problem."
+      ],
+      "pitfalls": [
+        { "type": "Translation Error", "text": "Incorrectly forming the initial equation from the text." },
+        { "type": "Process Error", "text": "Getting lost in the manipulation and losing track of the target variable." }
+      ],
+      "pro_tips": [
+        "Define your variables clearly at the start.",
+        "Don't be afraid to break the problem into smaller L1 steps."
+      ]
+    }
+  },
+  {
+    "id": "ARCH-L2-ALG-02",
+    "name": "Graphical Analysis of Functions",
+    "description": "Analyse quadratic functions graphically by completing the square, sketching parabolas, and determining equations from graphs.",
+    "topic": "Algebra",
+    "level": "L2",
+    "grade": "G4",
+    "badge": "CORE",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": ["ARCH-L1-ALG-04-CTS", "ARCH-L1-ALG-04-GRAPH", "ARCH-L1-ALG-04-EQN"],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Integrate multiple quadratic techniques for comprehensive graph analysis.",
+      "steps": [
+        "Given an equation, complete the square to find vertex form (Links to ALG-04-CTS).",
+        "Use vertex form and intercepts to sketch the parabola accurately (Links to ALG-04-GRAPH).",
+        "Given a graph, identify the vertex and another point.",
+        "Use vertex form to determine the equation from the graph (Links to ALG-04-EQN).",
+        "Relate all components (vertex, intercepts, 'a' value, discriminant) to each other."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Unable to connect the algebraic form (vertex form) to the graphical features (vertex)." },
+        { "type": "Process Error", "text": "Mixing up the steps for sketching *from* an equation vs. finding an equation *from* a graph." }
+      ],
+      "pro_tips": [
+        "The vertex form a(x-h)²+k is the key that links all these skills.",
+        "Always cross-check: does the 'a' value match the graph's direction? Do the intercepts match the equation?"
       ]
     }
   },
@@ -326,7 +589,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-TRIG-01",
     "level": "L1",
     "name": "Solving 2D Bearing / Geometry Problems",
-    "topic": "trigonometry",
+    "topic": "Trigonometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Application of Sine/Cosine rules in 2D real-world contexts.",
     "sop": {
@@ -348,12 +611,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-TRIG-02",
     "level": "L1",
     "name": "Finding Shortest Distance via Area Method",
-    "topic": "trigonometry",
+    "topic": "Trigonometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Finding the perpendicular distance from a point to a line using area.",
     "sop": {
@@ -375,12 +637,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-TRIG-03",
     "level": "L1",
     "name": "Bearings",
-    "topic": "trigonometry",
+    "topic": "Trigonometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Interpreting and using bearings to find angles within geometric problems.",
     "sop": {
@@ -392,12 +653,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-TRIG-04",
     "level": "L1",
     "name": "Elevation/Depression",
-    "topic": "trigonometry",
+    "topic": "Trigonometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Solving problems involving angles of elevation and depression, typically using SOH-CAH-TOA.",
     "sop": {
@@ -417,7 +677,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-GEO-01",
     "level": "L1",
     "name": "Proving Similarity (AA Criterion)",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Proving two triangles are similar, mainly using the AA criterion.",
     "sop": {
@@ -439,12 +699,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-GEO-02",
     "level": "L1",
     "name": "Proving Congruency (SAS, SSS, ASA, RHS)",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Proving two triangles are congruent using one of the four standard criteria.",
     "sop": {
@@ -468,12 +727,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-GEO-03",
     "level": "L1",
     "name": "Using Similarity to Find Unknown Lengths",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Calculating unknown side lengths using the properties of similar triangles.",
     "sop": {
@@ -496,12 +754,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-GEO-04",
     "level": "L1",
     "name": "Shortest Distance",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Finding the shortest distance from a point to a line, which is the perpendicular distance.",
     "sop": {
@@ -513,12 +770,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-GEO-05",
     "level": "L1",
     "name": "Circle Properties & Theorems",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
     "sop": {
@@ -548,7 +804,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-STAT-01",
     "level": "L1",
     "name": "Interpreting Stem-and-Leaf Diagrams",
-    "topic": "statistics",
+    "topic": "Statistics", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Quickly and accurately extracting mode, median, and mean from stem-and-leaf diagrams.",
     "sop": {
@@ -570,12 +826,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-STAT-02",
     "level": "L1",
     "name": "Interpreting Grouped Frequency Tables",
-    "topic": "statistics",
+    "topic": "Statistics", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Estimating the mean from a grouped frequency table.",
     "sop": {
@@ -597,12 +852,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-PROB-01",
     "level": "L1",
     "name": "Solving Basic Probability Problems",
-    "topic": "statistics",
+    "topic": "Statistics", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Accurately calculating the probability of a single event.",
     "sop": {
@@ -632,7 +886,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-CG-01",
     "level": "L1",
     "name": "Finding the Equation of a Straight Line",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Finding the equation of a line in the form y = mx + c.",
     "sop": {
@@ -654,12 +908,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-CG-02",
     "level": "L1",
     "name": "Parallel & Perpendicular Lines",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Finding the equation of a new line based on its relationship to another line.",
     "sop": {
@@ -680,12 +933,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-CG-03",
     "level": "L1",
     "name": "Finding Length & Area (Coordinate Plane)",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Calculating the distance between points or the area of a polygon on a coordinate plane.",
     "sop": {
@@ -706,12 +958,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-CG-04",
     "level": "L1",
     "name": "Coordinate Geometry (Gradient, Midpoint & Locus)",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Solving coordinate geometry problems involving gradient, midpoint, distance, and locus of points.",
     "sop": {
@@ -741,7 +992,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-MEN-01",
     "level": "L1",
     "name": "Master SOP for ALL Mensuration Problems",
-    "topic": "mensuration",
+    "topic": "Mensuration", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "A master strategy to never lose marks due to formula or calculation errors in mensuration.",
     "sop": {
@@ -764,12 +1015,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-MEN-02",
     "level": "L1",
     "name": "Similar Figures & Solids",
-    "topic": "mensuration",
+    "topic": "Mensuration", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Correctly using scaling laws for length, area, and volume for similar figures.",
     "sop": {
@@ -791,12 +1041,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-MEN-03",
     "level": "L1",
     "name": "Composite Solids",
-    "topic": "mensuration",
+    "topic": "Mensuration", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Finding the Total Surface Area (TSA) or Total Volume of combined shapes.",
     "sop": {
@@ -817,12 +1066,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-MEN-04",
     "level": "L1",
     "name": "Sector & Segment Problems",
-    "topic": "mensuration",
+    "topic": "Mensuration", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Accurately calculating properties of circle parts like sectors and segments.",
     "sop": {
@@ -845,205 +1093,13 @@ const ARCHETYPES_DATA = [
   },
 
   // ============================================
-  // LEVEL 1 ARCHETYPES - INEQUALITIES
-  // ============================================
-  {
-    "id": "ARCH-L1-INEQ-01",
-    "level": "L1",
-    "name": "Solving Compound Inequalities",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Finding the final, single range of x for a compound inequality.",
-    "sop": {
-      "goal": "To find the final, single range of x",
-      "triggers": ["two inequality signs", "A < B ≤ C"],
-      "steps": [
-        "1. SPLIT: Break into two simpler inequalities. Example: 3x − 1 < 2x + 9 ≤ 15 → Part A & Part B.",
-        "2. SOLVE: Solve Part A and Part B individually.",
-        "3. CRITICAL RULE: If you multiply or divide by a negative, you MUST flip the inequality sign.",
-        "4. DRAW: Draw a number line and mark key values.",
-        "5. PLOT & OVERLAP: Plot both solutions; the final answer is the overlap.",
-        "6. WRITE: Write as a single compound inequality (e.g., 4 < x ≤ 10)."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Not flipping the sign after multiplying/dividing by a negative" },
-        { "type": "COMMON", "text": "Using the wrong open/closed circle on the number line" }
-      ],
-      "pro_tips": [
-        "Write a banner note at the top: '× or ÷ negative → flip sign'",
-        "Always sketch the number line before writing the final compound form"
-      ]
-    }
-  },
-
-  {
-    "id": "ARCH-L1-INEQ-02",
-    "level": "L1",
-    "name": "Modelling with Inequalities",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Translating real-world language into a precise inequality.",
-    "sop": {
-      "goal": "Translate real-world language into a precise inequality",
-      "triggers": ["at least", "no more than", "minimum", "maximum"],
-      "steps": [
-        "1. DEFINE: 'Let x be …' (define the variable clearly).",
-        "2. TRANSLATE KEYWORDS: at least/minimum → ≥, at most/maximum/no more than → ≤, more than → >, less than → <.",
-        "3. CONSTRUCT: Build the inequality with the numbers and your symbol."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Misreading 'at least/at most' leading to the wrong inequality direction" },
-        { "type": "COMMON", "text": "Forgetting to define the variable first" }
-      ],
-      "pro_tips": [
-        "Underline the keyword and immediately write its symbol (≥, ≤, >, <)",
-        "Start with 'Let x = …' to anchor the model"
-      ]
-    }
-  },
-
-  {
-    "id": "ARCH-L1-INEQ-03",
-    "level": "L1",
-    "name": "Finding Max/Min Values in a Range",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Finding the absolute maximum or minimum value of an expression within given ranges.",
-    "sop": {
-      "goal": "To find the absolute maximum or minimum value of an expression",
-      "triggers": ["largest value", "smallest value", "with given ranges"],
-      "steps": [
-        "1. LIST BOUNDARIES: Write x_min, x_max, y_min, y_max.",
-        "2. ANALYZE THE GOAL: To maximize y - x³, choose y_max and the smallest possible x³. To minimize y - 2x, choose y_min and the largest possible 2x.",
-        "3. CALCULATE: Substitute boundary values and compute."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Choosing the wrong boundary combination (entire result wrong)" },
-        { "type": "COMMON", "text": "Forgetting that odd powers keep sign (e.g., (−9)³ = −729)" }
-      ],
-      "pro_tips": [
-        "Draw a quick 2×2 boundary table for x and y, then pick the combo that matches the goal",
-        "Do a quick mental 'sanity check' before finalizing"
-      ]
-    }
-  },
-
-  // ============================================
-  // LEVEL 1 ARCHETYPES - INDICES
-  // ============================================
-  {
-    "id": "ARCH-L1-IND-01",
-    "level": "L1",
-    "name": "Simplifying Complex Index Expressions",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Reducing complicated expressions to simplest form with positive indices.",
-    "sop": {
-      "goal": "Reduce complicated expressions to simplest form with positive indices",
-      "triggers": ["Simplify", "expressions with powers, roots, negatives"],
-      "steps": [
-        "1. Brackets First (Power of a Power): Multiply indices inside brackets. Examples: (p³)² = p⁶.",
-        "2. Handle Negatives & Roots: Negative indices → reciprocals: x⁻³ = 1 ÷ x³. Roots → fractional indices: √x = x^(1/2).",
-        "3. Combine Same Bases: Multiply same base → add indices. Divide same base → subtract indices.",
-        "4. Calculate Coefficients: Manage normal numbers separately; then recombine."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Treating negative indices as negative numbers (instead of reciprocals)" },
-        { "type": "COMMON", "text": "Forgetting to distribute powers across brackets and coefficients" }
-      ],
-      "pro_tips": [
-        "Convert roots to fractional indices and negatives to reciprocals FIRST",
-        "Separate coefficient arithmetic from index manipulation, then recombine"
-      ]
-    }
-  },
-
-  {
-    "id": "ARCH-L1-IND-02",
-    "level": "L1",
-    "name": "Solving Exponential Equations",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Finding the unknown in the exponent by unifying the base.",
-    "sop": {
-      "goal": "Find the unknown in the exponent",
-      "triggers": ["Solve", "variables appear as powers"],
-      "steps": [
-        "1. Unify the Base (Golden Rule): Write all numbers as powers of the SAME base. Examples: 9 = 3², 27 = 3³.",
-        "2. Simplify Both Sides: Use simplification rules until you get base^a = base^b.",
-        "3. Equate the Indices: Set a = b.",
-        "4. Solve: Finish the (usually linear) equation."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Trying to equate indices BEFORE unifying the base" },
-        { "type": "COMMON", "text": "Mishandling fractional/negative powers during simplification" }
-      ],
-      "pro_tips": [
-        "Always rewrite numbers as prime-base powers first",
-        "Keep a tiny scratch list of common conversions (e.g., 8 = 2³, 81 = 3⁴)"
-      ]
-    }
-  },
-
-  {
-    "id": "ARCH-L1-IND-03",
-    "level": "L1",
-    "name": "Handling '+' or '−' in Exponential Equations",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Solving exponential equations that involve addition or subtraction by factoring.",
-    "sop": {
-      "goal": "Solve exponential equations that involve addition or subtraction",
-      "triggers": ["Sums/differences of like exponentials"],
-      "steps": [
-        "1. Identify the Trap: Index laws do NOT apply across + or −.",
-        "2. Factor / Combine Like Terms: Treat repeated exponentials like like-terms. Examples: 3³ + 3³ + 3³ = 3 × (3³); 2^(x+1) − 2^x = 2^x (2 − 1).",
-        "3. Simplify → Switch to Solving Exponential Equations SOP: Reduce to a standard exponential form."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Forcing index laws over sums/differences" },
-        { "type": "COMMON", "text": "Forgetting to factor out the common exponential term" }
-      ],
-      "pro_tips": [
-        "'Apples with apples': combine identical bases/powers first",
-        "After factoring, look for the single-base structure and revert to the standard solving SOP"
-      ]
-    }
-  },
-
-  {
-    "id": "ARCH-L1-IND-04",
-    "level": "L1",
-    "name": "Calculating with Standard Form",
-    "topic": "algebra",
-    "badge": "SAT",
-    "description": "Performing calculations with scientific notation and ensuring the final answer is in proper standard form.",
-    "sop": {
-      "goal": "Perform calculations with A × 10^n and end in proper standard form (1 ≤ A < 10)",
-      "triggers": ["numbers given in scientific notation"],
-      "steps": [
-        "1. Multiplication / Division: 1) Multiply/divide the A parts. 2) Apply index laws to the 10^n parts. 3) Adjust to make 1 ≤ A < 10.",
-        "2. Addition / Subtraction: 1) Unify the exponent. 2) Factor out the common 10^n. 3) Add/subtract the A parts. 4) Adjust A back to [1, 10) if needed."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Adding/subtracting without matching powers of 10" },
-        { "type": "COMMON", "text": "Leaving A outside [1, 10)" }
-      ],
-      "pro_tips": [
-        "For +/−, match exponents first, then work on the A parts",
-        "Always do a final 'standard-form check'"
-      ]
-    }
-  },
-
-  // ============================================
   // LEVEL 1 ARCHETYPES - RATIO & NUMBERS
   // ============================================
   {
     "id": "ARCH-L1-RATIO-01",
     "level": "L1",
     "name": "Map Scale Problems",
-    "topic": "numbers",
+    "topic": "Numbers", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Accurately converting between map distances and actual distances/areas.",
     "sop": {
@@ -1064,12 +1120,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-RATIO-02",
     "level": "L1",
     "name": "Percentage Change & Reverse Percentage",
-    "topic": "numbers",
+    "topic": "Numbers", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Calculating the new value after a percentage change, or recovering the original value.",
     "sop": {
@@ -1090,12 +1145,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L1-RATIO-03",
     "level": "L1",
     "name": "Simple & Compound Interest",
-    "topic": "numbers",
+    "topic": "Numbers", // <-- Fixed topic casing
     "badge": "SAT",
     "description": "Computing total amount and interest for simple and compound interest scenarios.",
     "sop": {
@@ -1119,13 +1173,13 @@ const ARCHETYPES_DATA = [
   },
 
   // ============================================
-  // LEVEL 2 ARCHETYPES
+  // LEVEL 2 ARCHETYPES (NON-ALGEBRA)
   // ============================================
   {
     "id": "ARCH-L2-TRIG-01",
     "level": "L2",
     "name": "2D/3D Trigonometry in Context",
-    "topic": "trigonometry",
+    "topic": "Trigonometry", // <-- Fixed topic casing
     "badge": "CORE",
     "grade": "G4",
     "description": "Multi-step problems requiring students to model a real-world scenario on a 2D plane, solve for 'bridge' values, and then use them in a vertical 2D plane to solve 3D elevation/depression problems.",
@@ -1140,32 +1194,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
-  {
-    "id": "ARCH-L2-QUAD-01",
-    "level": "L2",
-    "name": "Graphical Analysis of Functions",
-    "topic": "algebra",
-    "badge": "CORE",
-    "grade": "G4",
-    "description": "Problems that require students to plot a function (quadratic or cubic) and use the graph to solve equations by finding intersections with a suitable straight line, or finding the gradient of a tangent.",
-    "constituent_l1_ids": ["ARCH-L1-ALG-04-GRAPH", "ARCH-L1-ALG-04-EQN", "ARCH-L1-ALG-02", "ARCH-L1-CG-01"],
-    "sop": {
-      "goal": "Use a plotted graph to solve related equations and find gradients.",
-      "steps": [
-        "1. Call SOP-L1-PLOT-GRAPH: Accurately plot points and draw a smooth curve.",
-        "2. Call SOP-L1-ALG-TRANSFORM: Algebraically manipulate the target equation to isolate the original function y on one side. The other side is the y=mx+c to be drawn.",
-        "3. Call SOP-L1-LINE-DRAW: Find two points and draw the straight line.",
-        "4. Call SOP-L1-READ-GRAPH: Read the coordinates of intersection points or draw a tangent to find the gradient."
-      ]
-    }
-  },
-
   {
     "id": "ARCH-L2-GEO-01",
     "level": "L2",
     "name": "Similarity & Congruency Application",
-    "topic": "geometry",
+    "topic": "Geometry", // <-- Fixed topic casing
     "badge": "CORE",
     "grade": "G4",
     "description": "Problems where proving similarity or congruency is the first step. The results (e.g., proportional sides) are then used as tools to perform subsequent calculations for unknown lengths, area ratios, etc.",
@@ -1180,25 +1213,6 @@ const ARCHETYPES_DATA = [
     }
   },
 
-  {
-    "id": "ARCH-L2-ALG-01",
-    "level": "L2",
-    "name": "Algebraic Modelling in Context",
-    "topic": "algebra",
-    "badge": "CORE",
-    "grade": "G4",
-    "description": "Word problems (e.g., speed/distance/time, financial) where the student must first translate the text into one or more algebraic equations (often fractional or quadratic) and then solve them.",
-    "constituent_l1_ids": ["ARCH-L1-ALG-02", "ARCH-L1-ALG-03", "ARCH-L1-RATIO-02"],
-    "sop": {
-      "goal": "Create and solve an algebraic equation from a real-world scenario.",
-      "steps": [
-        "1. Call SOP-L1-FORM-EXPRESSION: Translate the words into mathematical expressions (e.g., Time = Distance/Speed).",
-        "2. Call SOP-L1-FORM-EQUATION: Link the expressions with the final piece of information (e.g., 'the difference in time is 20 minutes') to form an equation.",
-        "3. Call SOP-L1-SOLVE-EQUATION: Use algebraic manipulation to solve the resulting equation."
-      ]
-    }
-  },
-
   // ============================================
   // LEVEL 3 ARCHETYPES
   // ============================================
@@ -1206,11 +1220,11 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L3-SYN-01",
     "level": "L3",
     "name": "Multi-Representation Synthesis",
-    "topic": "meta",
+    "topic": "Meta", // <-- Fixed topic casing
     "badge": "SAT",
     "grade": "G4",
     "description": "Tasks where students must synthesize information from multiple representations – algebraic equations, geometric diagrams, and data tables – to arrive at a solution. The core skill is fluently translating between them.",
-    "source_l2_ids": ["ARCH-L2-QUAD-01", "ARCH-L2-TRIG-01"],
+    "source_l2_ids": ["ARCH-L2-ALG-02", "ARCH-L2-TRIG-01"], // <-- Fixed: PDF had L2-QUAD-01
     "sop": {
       "goal": "Integrate information from different mathematical formats to solve a complex problem.",
       "steps": [
@@ -1221,12 +1235,11 @@ const ARCHETYPES_DATA = [
       ]
     }
   },
-
   {
     "id": "ARCH-L3-MOD-01",
     "level": "L3",
     "name": "Contextual Modelling & Justification",
-    "topic": "meta",
+    "topic": "Meta", // <-- Fixed topic casing
     "badge": "SAT",
     "grade": "G4",
     "description": "Represents the highest level of application, where the problem is open-ended and may not have a single 'correct' answer. The student must select appropriate models, state assumptions, perform calculations, and justify their final decision.",
@@ -1237,7 +1250,7 @@ const ARCHETYPES_DATA = [
         "1. Deconstruct & Diagram: Read the entire problem. Highlight key data and constraints. Draw a diagram.",
         "2. Analyze & Archetype: Identify the underlying L2 problem type (e.g., 'This is a Trig problem') and the additional justification element.",
         "3. Route & Plan: Create a step-by-step plan. 'First, I will solve the L2 part. Second, I will calculate the costs/options. Finally, I will compare and write my conclusion.'",
-        "4. Execute & Explain: Execute the plan clearly. For 'Justify' questions, write your final answer in a full sentence, referencing your calculations."
+        "4. Execute & Explain: Execute the plan step-by-step, calling upon the necessary L2 and L1 SOPs. For 'Justify' questions, write your final answer in a full sentence, referencing your calculations."
       ]
     }
   }
