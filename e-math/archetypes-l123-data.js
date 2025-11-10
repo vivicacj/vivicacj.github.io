@@ -1,8 +1,9 @@
 // =================================================================
-// E-MATH ARCHETYPES DATA (v2.0 - ALGEBRA RESTRUCTURE)
+// E-MATH ARCHETYPES DATA (v2.1 - GEOMETRY RESTRUCTURE)
 // =================================================================
-// This is the complete, merged, and de-duplicated file.
-// It contains the 18 new Algebra archetypes + all other topics.
+// This file contains the 18 Algebra archetypes + the 23 new
+// Geometry archetypes (10 L1, 12 sub-models, 1 L2) + all other topics.
+// Total Archetypes: 18 (Alg) + 23 (Geo) + 14 (Other) = 55
 // =================================================================
 
 const ARCHETYPES_DATA = [
@@ -341,6 +342,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Transform quadratic expressions into vertex form a(x+p)²+q.",
       "steps": [
@@ -372,6 +375,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Predict solution types and graph behavior from the discriminant.",
       "steps": [
@@ -401,6 +406,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Determine quadratic equation from vertex and a point.",
       "steps": [
@@ -430,6 +437,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Find roots by factorising and setting each factor to zero.",
       "steps": [
@@ -462,6 +471,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Calculate roots using x = [-b ± sqrt(Δ)] / 2a.",
       "steps": [
@@ -495,6 +506,8 @@ const ARCHETYPES_DATA = [
     "badge": "CORE",
     "has_branches": false,
     "parent_id": "ARCH-L1-ALG-04",
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
       "goal": "Draw accurate parabolic curve by finding key points.",
       "steps": [
@@ -589,7 +602,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-TRIG-01",
     "level": "L1",
     "name": "Solving 2D Bearing / Geometry Problems",
-    "topic": "Trigonometry", // <-- Fixed topic casing
+    "topic": "Trigonometry", 
     "badge": "CORE",
     "description": "Application of Sine/Cosine rules in 2D real-world contexts.",
     "sop": {
@@ -615,7 +628,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-TRIG-02",
     "level": "L1",
     "name": "Finding Shortest Distance via Area Method",
-    "topic": "Trigonometry", // <-- Fixed topic casing
+    "topic": "Trigonometry", 
     "badge": "CORE",
     "description": "Finding the perpendicular distance from a point to a line using area.",
     "sop": {
@@ -641,7 +654,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-TRIG-03",
     "level": "L1",
     "name": "Bearings",
-    "topic": "Trigonometry", // <-- Fixed topic casing
+    "topic": "Trigonometry", 
     "badge": "CORE",
     "description": "Interpreting and using bearings to find angles within geometric problems.",
     "sop": {
@@ -657,7 +670,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-TRIG-04",
     "level": "L1",
     "name": "Elevation/Depression",
-    "topic": "Trigonometry", // <-- Fixed topic casing
+    "topic": "Trigonometry", 
     "badge": "CORE",
     "description": "Solving problems involving angles of elevation and depression, typically using SOH-CAH-TOA.",
     "sop": {
@@ -671,128 +684,376 @@ const ARCHETYPES_DATA = [
   },
 
   // ============================================
-  // LEVEL 1 ARCHETYPES - GEOMETRY
+  // LEVEL 1 ARCHETYPES - NEW GEOMETRY (v2.1)
   // ============================================
   {
     "id": "ARCH-L1-GEO-01",
+    "name": "Coordinate Geometry",
+    "description": "Apply coordinate geometry principles to find distances, midpoints, gradients, and equations of straight lines. Use coordinates to solve geometric problems involving triangles, collinearity, and sectioning of line segments.",
+    "topic": "Geometry",
     "level": "L1",
-    "name": "Proving Similarity (AA Criterion)",
-    "topic": "Geometry", // <-- Fixed topic casing
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Proving two triangles are similar, mainly using the AA criterion.",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Prove two triangles are similar using Angle-Angle",
-      "triggers": ["prove triangles are similar", "show similarity"],
+      "goal": "Apply coordinate geometry principles to solve problems involving points and lines.",
       "steps": [
-        "1. Identify the two triangles: Label vertices clearly (e.g., △ABC and △DEF).",
-        "2. Find two pairs of equal angles: Use properties like vertically opposite angles, corresponding angles, alternate angles, or angles in the same segment.",
-        "3. State the equal angles explicitly: Write ∠ABC = ∠DEF and ∠BAC = ∠EDF with reasons.",
-        "4. Conclude using AA: State 'Since two angles are equal, △ABC is similar to △DEF (AA)'."
+        "Calculate distance between two points using d = √[(x₂-x₁)² + (y₂-y₁)²]",
+        "Find midpoint using M = ((x₁+x₂)/2, (y₁+y₂)/2)",
+        "Calculate gradient using m = (y₂-y₁)/(x₂-x₁)",
+        "Determine equation of a line using y = mx + c or y - y₁ = m(x - x₁)",
+        "Use m₁ = m₂ for parallel lines and m₁m₂ = -1 for perpendicular lines",
+        "Solve intersection problems using simultaneous equations",
+        "Calculate triangle area using Shoelace formula or ½|x₁(y₂-y₃) + ...|",
+        "Test for collinearity using equal gradients or zero area"
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Not providing geometric reasons for why angles are equal" },
-        { "type": "COMMON", "text": "Mixing up corresponding vertices when stating similarity" }
+        { "type": "Formula Error", "text": "Mixing up formulas (e.g., distance vs. midpoint)." },
+        { "type": "Calculation Error", "text": "Sign errors when subtracting negative coordinates." },
+        { "type": "Conceptual Error", "text": "Confusing gradient 'rise over run' (Δy/Δx) with (Δx/Δy)." }
       ],
       "pro_tips": [
-        "Common angle reasons: vertically opposite, corresponding (parallel lines), alternate (parallel lines), angles in same segment",
-        "Always write the triangle correspondence correctly: △ABC ~ △DEF means A↔D, B↔E, C↔F"
+        "Always label your points (x₁, y₁) and (x₂, y₂) before substituting.",
+        "Draw a rough sketch on a coordinate grid to verify your answer makes sense.",
+        "For perpendicular lines, remember to 'flip and change sign' of the gradient."
       ]
     }
   },
   {
     "id": "ARCH-L1-GEO-02",
+    "name": "Similar Triangles & Polygons",
+    "description": "Identify similar triangles and polygons using AA, SAS, or SSS similarity criteria. Apply proportional reasoning to find unknown side lengths and scale factors.",
+    "topic": "Geometry",
     "level": "L1",
-    "name": "Proving Congruency (SAS, SSS, ASA, RHS)",
-    "topic": "Geometry", // <-- Fixed topic casing
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Proving two triangles are congruent using one of the four standard criteria.",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Prove two triangles are congruent",
-      "triggers": ["prove triangles are congruent", "show congruency"],
+      "goal": "Identify and use similar figures to find unknown lengths and scale factors.",
       "steps": [
-        "1. Identify the two triangles: Label all vertices.",
-        "2. List what you know: Mark equal sides and angles on the diagram.",
-        "3. Determine which test applies: SAS (Side-Angle-Side), SSS (Side-Side-Side), ASA (Angle-Side-Angle), or RHS (Right angle-Hypotenuse-Side).",
-        "4. State the equal elements with reasons: e.g., 'AB = DE (given)', '∠ABC = ∠DEF (common angle)'.",
-        "5. Conclude: State '△ABC ≅ △DEF (SAS)' with the appropriate criterion."
+        "Identify similar figures using criteria (AA, SAS, SSS).",
+        "Set up a proportion of corresponding sides (e.g., AB/DE = BC/EF).",
+        "Substitute known values and solve for the unknown side.",
+        "Calculate scale factor k = (side in new figure) / (side in old figure)."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Using the wrong congruency criterion (e.g., trying to use AAA)" },
-        { "type": "COMMON", "text": "For SAS, the angle must be BETWEEN the two equal sides" }
+        { "type": "Process Error", "text": "Matching non-corresponding sides in the ratio." },
+        { "type": "Process Error", "text": "Inconsistent ratio order (e.g., small/large = large/small)." },
+        { "type": "Conceptual Error", "text": "Confusing similarity (proportional) with congruence (equal)." }
       ],
       "pro_tips": [
-        "SAS: The angle must be included between the two sides",
-        "Common reasons: 'common side', 'given', 'opposite equal angles', 'radii of same circle'",
-        "ASA vs AAS: For ASA, the side must be between the two angles"
+        "AA (Angle-Angle) is the most common and fastest criterion to check.",
+        "Always label corresponding vertices in the same order (e.g., △ABC ~ △DEF)."
       ]
     }
   },
   {
     "id": "ARCH-L1-GEO-03",
+    "name": "Circle Theorems",
+    "description": "Apply circle theorems to find unknown angles and prove geometric properties. Use tangent-radius relationships, cyclic quadrilateral properties, and alternate segment theorem to solve circle problems.",
+    "topic": "Geometry",
     "level": "L1",
-    "name": "Using Similarity to Find Unknown Lengths",
-    "topic": "Geometry", // <-- Fixed topic casing
+    "grade": "G3",
     "badge": "CORE",
-    "description": "Calculating unknown side lengths using the properties of similar triangles.",
+    "has_branches": false,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
     "sop": {
-      "goal": "Calculate unknown side lengths using similar triangles",
-      "triggers": ["find the length", "calculate x", "given similar triangles"],
+      "goal": "Apply circle theorems to find unknown angles, lengths, and areas.",
       "steps": [
-        "1. Confirm similarity: Either it's stated or prove it using SOP 1.",
-        "2. Set up the ratio: Write corresponding sides as a proportion. e.g., AB/DE = BC/EF = AC/DF.",
-        "3. Substitute known values: Plug in all given lengths.",
-        "4. Solve for unknown: Cross-multiply if needed, then isolate the unknown.",
-        "5. Check reasonableness: Does the answer make geometric sense?"
+        "Identify key features: diameter, centre, tangent, chord, cyclic quad.",
+        "Select the appropriate theorem (e.g., Angle in Semicircle = 90°, Angle at Centre = 2x Angle at Circumference, Angles in Same Segment, Opp. angles of Cyclic Quad = 180°, Tangent ⊥ Radius, Alternate Segment Theorem).",
+        "Write the equation based on the theorem.",
+        "Solve for the unknown value.",
+        "For calculations, use arc length L = (θ/360)×2πr or sector area A = (θ/360)×πr²."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Setting up ratios with non-corresponding sides" },
-        { "type": "COMMON", "text": "Inverting the ratio (getting it upside down)" }
+        { "type": "Omission", "text": "Not verifying that a line is a diameter before applying semicircle theorem." },
+        { "type": "Process Error", "text": "Applying 'Angle at Centre' theorem when angles don't subtend the same arc." },
+        { "type": "Conceptual Error", "text": "Assuming a quadrilateral is cyclic without proof." }
       ],
       "pro_tips": [
-        "Draw the triangles separately if they overlap, matching corresponding vertices",
-        "Write the similarity statement first (△ABC ~ △DEF) to ensure correct correspondence"
+        "Always state the name of the theorem used as your reason.",
+        "Look for isosceles triangles formed by two radii.",
+        "Tangent ⊥ Radius and Angle in Semicircle are common ways to find 90° angles."
       ]
     }
   },
   {
     "id": "ARCH-L1-GEO-04",
+    "name": "Angle Properties (Parallel Lines)",
+    "description": "Master container for all parallel line angle relationships. Actual SOPs distributed across 12 specialized sub-models (M00-M11).",
+    "topic": "Geometry",
     "level": "L1",
-    "name": "Shortest Distance",
-    "topic": "Geometry", // <-- Fixed topic casing
+    "grade": "G2",
     "badge": "CORE",
-    "description": "Finding the shortest distance from a point to a line, which is the perpendicular distance.",
+    "has_branches": true,
+    "parent_id": null,
+    "constituent_l1_ids": [],
+    "source_l2_ids": [],
+    "branches": [
+      "CORE-01-M00", "CORE-01-M01", "CORE-01-M02", "CORE-01-M03",
+      "CORE-01-M04", "CORE-01-M05", "CORE-01-M06", "CORE-01-M07",
+      "CORE-01-M08", "CORE-01-M09", "CORE-01-M10", "CORE-01-M11"
+    ],
     "sop": {
-      "goal": "Calculate the perpendicular distance from a point to a line.",
+      "goal": "Apply properties of angles, parallel lines, triangles, and polygons to find unknown angles.",
       "steps": [
-        "1. Identify the point and the line.",
-        "2. Recognize that the shortest distance is the perpendicular distance.",
-        "3. Often involves using area formulas (Area = 1/2 * base * height) or trigonometry."
+        "Identify angle pattern (Corresponding 'F', Alternate 'Z', Co-interior 'C', Vertically Opposite 'X').",
+        "Apply triangle angle sum (180°) or exterior angle theorem.",
+        "Use polygon angle sum formula (n-2) × 180°.",
+        "Apply properties of isosceles (equal base angles) and equilateral (all 60°) triangles."
+      ],
+      "pitfalls": [
+        { "type": "Conceptual Error", "text": "Confusing angle rules (e.g., alternate are equal, co-interior sum to 180°)." },
+        { "type": "Omission", "text": "Not providing geometric reasons for each step in a proof." }
+      ],
+      "pro_tips": [
+        "Use pattern labels (F, Z, C) to quickly identify parallel line rules.",
+        "Mark all equal angles and parallel lines on the diagram as you find them."
       ]
     }
   },
   {
-    "id": "ARCH-L1-GEO-05",
-    "level": "L1",
-    "name": "Circle Properties & Theorems",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "CORE",
-    "description": "Applying standard circle theorems such as tangent-radius perpendicularity, angle at the centre equals twice the angle at the circumference, and angles in the same segment.",
+    "id": "CORE-01-M00",
+    "name": "Angles on a Straight Line",
+    "description": "Apply the principle that adjacent angles on a straight line sum to 180°.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
     "sop": {
-      "goal": "Use circle theorems to find or prove angles and relationships within a circle.",
-      "triggers": ["tangent", "angle in the same segment", "angle at centre", "cyclic quadrilateral"],
+      "goal": "Apply principle that adjacent angles on straight line sum to 180°",
+      "steps": ["Identify adjacent angles on a straight line", "Write equation: ∠1 + ∠2 + ... = 180°", "Substitute known values", "Solve for unknown angle"],
+      "pitfalls": [{ "type": "General", "text": "Including non-adjacent angles" }, { "type": "General", "text": "Not recognizing straight line configuration" }],
+      "pro_tips": ["Also called 'linear pair' or 'supplementary angles on a line'", "Visual check: angles should form a straight line (180° rotation)"]
+    }
+  },
+  {
+    "id": "CORE-01-M01",
+    "name": "Corresponding Angles (F-pattern)",
+    "description": "Identify and use corresponding angles formed when a transversal crosses parallel lines (F-pattern). Corresponding angles are equal.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Identify and use corresponding angles (F-pattern)",
+      "steps": ["Identify two parallel lines cut by a transversal", "Locate corresponding angles (same position relative to transversal)", "Apply property: corresponding angles are equal when lines are parallel", "Write equation and solve"],
+      "pitfalls": [{ "type": "General", "text": "Assuming lines are parallel without verification" }, { "type": "General", "text": "Confusing corresponding with alternate angles" }],
+      "pro_tips": ["Look for 'F-shape' pattern", "Corresponding angles are in matching corners", "If corresponding angles are equal, lines are parallel (converse)"]
+    }
+  },
+  {
+    "id": "CORE-01-M02",
+    "name": "Alternate Interior Angles (Z-pattern)",
+    "description": "Identify and use alternate interior angles formed when a transversal crosses parallel lines (Z-pattern). Alternate interior angles are equal.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Identify and use alternate interior angles (Z-pattern)",
+      "steps": ["Identify two parallel lines cut by a transversal", "Locate alternate interior angles (between parallel lines, opposite sides of transversal)", "Apply property: alternate interior angles are equal when lines are parallel", "Write equation and solve"],
+      "pitfalls": [{ "type": "General", "text": "Confusing interior and exterior angles" }, { "type": "General", "text": "Selecting angles on same side of transversal" }],
+      "pro_tips": ["Look for 'Z-shape' pattern", "Also called 'alternate angles'", "Very common in parallel line proofs"]
+    }
+  },
+  {
+    "id": "CORE-01-M03",
+    "name": "Co-Interior Angles (C-pattern)",
+    "description": "Identify and use co-interior angles formed when a transversal crosses parallel lines (C-pattern). Co-interior angles sum to 180°.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Identify and use co-interior angles (C-pattern)",
+      "steps": ["Identify two parallel lines cut by a transversal", "Locate co-interior angles (between parallel lines, same side of transversal)", "Apply property: co-interior angles sum to 180° when lines are parallel", "Write equation: ∠1 + ∠2 = 180° and solve"],
+      "pitfalls": [{ "type": "General", "text": "Thinking co-interior angles are equal (they're supplementary)" }, { "type": "General", "text": "Not recognizing C-pattern" }],
+      "pro_tips": ["Look for 'C-shape' pattern", "Also called 'interior angles on same side' or 'consecutive interior angles'", "Sum to 180° (not equal like alternate angles)"]
+    }
+  },
+  {
+    "id": "CORE-01-M04",
+    "name": "Vertically Opposite Angles (X-pattern)",
+    "description": "Apply the principle that vertically opposite angles formed by two intersecting lines are equal.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply property of vertically opposite angles",
+      "steps": ["Identify two intersecting lines forming X-shape", "Locate pairs of vertically opposite angles", "Apply property: vertically opposite angles are equal", "Write equation and solve"],
+      "pitfalls": [{ "type": "General", "text": "Confusing adjacent angles with opposite angles" }, { "type": "General", "text": "Not recognizing X-pattern intersection" }],
+      "pro_tips": ["Look for 'X-shape' pattern", "Also called 'vertical angles'", "Always equal regardless of line orientation"]
+    }
+  },
+  {
+    "id": "CORE-01-M05",
+    "name": "Triangle Angle Sum",
+    "description": "Apply the principle that the interior angles of a triangle sum to 180°.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply principle that interior angles of triangle sum to 180°",
+      "steps": ["Identify the three interior angles of triangle", "Write equation: ∠A + ∠B + ∠C = 180°", "Substitute known angle values", "Solve for unknown angle"],
+      "pitfalls": [{ "type": "General", "text": "Including exterior angles in the sum" }, { "type": "General", "text": "Arithmetic errors in subtraction" }],
+      "pro_tips": ["Fundamental triangle property - always 180°", "Use to find third angle when two are known", "Works for all triangles (scalene, isosceles, equilateral)"]
+    }
+  },
+  {
+    "id": "CORE-01-M06",
+    "name": "Exterior Angle of Triangle",
+    "description": "Apply the exterior angle theorem: an exterior angle of a triangle equals the sum of the two non-adjacent interior angles.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply exterior angle theorem for triangles",
+      "steps": ["Identify exterior angle of triangle", "Identify the two non-adjacent interior angles", "Apply theorem: exterior angle = sum of two non-adjacent interior angles", "Write equation and solve"],
+      "pitfalls": [{ "type": "General", "text": "Including adjacent interior angle in sum" }, { "type": "General", "text": "Confusing exterior angle with supplementary angle on straight line" }],
+      "pro_tips": ["Exterior angle is formed by extending one side of triangle", "Faster than using 180° - adjacent angle method", "∠exterior = ∠A + ∠B (where A and B are non-adjacent interior angles)"]
+    }
+  },
+  {
+    "id": "CORE-01-M07",
+    "name": "Isosceles Triangle Properties",
+    "description": "Use the property that base angles of an isosceles triangle are equal to find unknown angles.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply property that base angles of isosceles triangle are equal",
+      "steps": ["Identify isosceles triangle (two equal sides marked)", "Identify base angles (opposite the equal sides)", "Apply property: base angles are equal", "Use triangle angle sum (180°) to find unknown angles"],
+      "pitfalls": [{ "type": "General", "text": "Confusing which angles are the base angles" }, { "type": "General", "text": "Not recognizing isosceles triangle from given information" }],
+      "pro_tips": ["Base angles are opposite the two equal sides", "If two angles are equal, triangle is isosceles (converse)", "Vertex angle = 180° - 2 × (base angle)"]
+    }
+  },
+  {
+    "id": "CORE-01-M08",
+    "name": "Equilateral Triangle Properties",
+    "description": "Apply the property that all angles in an equilateral triangle are 60°.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply property that all angles in equilateral triangle are 60°",
+      "steps": ["Identify equilateral triangle (all three sides equal)", "Apply property: each interior angle = 60°", "Use in calculations or proofs"],
+      "pitfalls": [{ "type": "General", "text": "Confusing equilateral with isosceles" }, { "type": "General", "text": "Not recognizing equilateral from angle information" }],
+      "pro_tips": ["All sides equal → all angles 60°", "Converse: if all angles are 60°, triangle is equilateral", "Special case of isosceles triangle"]
+    }
+  },
+  {
+    "id": "CORE-01-M09",
+    "name": "Polygon Interior Angle Sum",
+    "description": "Use the formula (n-2) × 180° to find the sum of interior angles of an n-sided polygon.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Calculate sum of interior angles of n-sided polygon",
+      "steps": ["Count number of sides n", "Apply formula: Sum = (n - 2) × 180°", "Calculate result", "Use to find unknown angles if needed"],
+      "pitfalls": [{ "type": "General", "text": "Using wrong formula (e.g., n × 180° instead of (n-2) × 180°)" }, { "type": "General", "text": "Miscounting number of sides" }],
+      "pro_tips": ["Formula comes from dividing polygon into (n-2) triangles", "For triangle (n=3): (3-2) × 180° = 180° ✓", "For quadrilateral (n=4): (4-2) × 180° = 360° ✓"]
+    }
+  },
+  {
+    "id": "CORE-01-M10",
+    "name": "Regular Polygon Angles",
+    "description": "Calculate interior and exterior angles of regular polygons using symmetry and angle sum formulas.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Calculate interior and exterior angles of regular polygon",
+      "steps": ["Identify number of sides n", "Calculate sum of interior angles: (n-2) × 180°", "Calculate each interior angle: [(n-2) × 180°] / n", "Calculate each exterior angle: 360° / n", "Verify: interior + exterior = 180°"],
+      "pitfalls": [{ "type": "General", "text": "Forgetting to divide by n for individual angle" }, { "type": "General", "text": "Confusing interior and exterior angle formulas" }],
+      "pro_tips": ["Regular polygon: all sides and angles equal", "Each exterior angle = 360° / n (simpler formula)", "Each interior angle = 180° - (each exterior angle)", "Sum of all exterior angles always = 360°"]
+    }
+  },
+  {
+    "id": "CORE-01-M11",
+    "name": "Quadrilateral Angle Sum",
+    "description": "Apply the principle that the interior angles of a quadrilateral sum to 360°.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": "ARCH-L1-GEO-04", "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply principle that interior angles of quadrilateral sum to 360°",
+      "steps": ["Identify four interior angles of quadrilateral", "Write equation: ∠A + ∠B + ∠C + ∠D = 360°", "Substitute known values", "Solve for unknown angle"],
+      "pitfalls": [{ "type": "General", "text": "Confusing with triangle angle sum (180°)" }, { "type": "General", "text": "Including exterior angles in sum" }],
+      "pro_tips": ["Quadrilateral can be divided into two triangles: 2 × 180° = 360°", "Works for all quadrilaterals (square, rectangle, trapezoid, etc.)", "Special quadrilaterals have additional angle properties"]
+    }
+  },
+  {
+    "id": "ARCH-L1-GEO-05",
+    "name": "Congruent Triangles",
+    "description": "Identify congruent triangles using SSS, SAS, ASA, or RHS criteria and apply congruence to prove geometric properties.",
+    "topic": "Geometry", "level": "L1", "grade": "G3", "badge": "CORE", "has_branches": false, "parent_id": null, "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Identify and prove triangle congruence using SSS, SAS, ASA, or RHS.",
+      "steps": ["Identify the two triangles to prove congruent", "List known equal sides and angles with reasons (e.g., 'Given', 'Common Side', 'Vert. Opp. Angles')", "Identify which congruence criterion is satisfied (SSS, SAS, ASA, RHS)", "State conclusion: △ABC ≅ △DEF (criterion)"],
+      "pitfalls": [{ "type": "General", "text": "Using AAA (proves similarity, not congruence)" }, { "type": "General", "text": "Confusing SAS (angle must be *between* sides) with ASS (not a valid criterion)" }, { "type": "General", "text": "Not providing reasons for each equal part" }],
+      "pro_tips": ["SSS: three sides equal", "SAS: two sides and included angle equal", "ASA: two angles and included side equal", "RHS: right angle, hypotenuse, and one side equal", "CPCTC: Corresponding Parts of Congruent Triangles are Congruent (used *after* proving congruence)"]
+    }
+  },
+  {
+    "id": "ARCH-L1-GEO-06",
+    "name": "Pythagoras' Theorem",
+    "description": "Apply Pythagoras' theorem (a² + b² = c²) to find unknown sides in right-angled triangles and verify if a triangle is right-angled.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": null, "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply Pythagoras' theorem to find sides or verify right angles.",
+      "steps": ["Verify triangle has a right angle", "Identify hypotenuse 'c' (side opposite right angle)", "Apply formula: a² + b² = c²", "Substitute knowns and solve for unknown", "To verify a right angle: check if a² + b² = c² (where c is the longest side)"],
+      "pitfalls": [{ "type": "General", "text": "Confusing which side is the hypotenuse (it's always 'c')" }, { "type": "General", "text": "Applying the theorem to non-right-angled triangles" }, { "type": "General", "text": "Forgetting to take the square root at the end" }],
+      "pro_tips": ["Hypotenuse is always the longest side", "Look for common Pythagorean triples (3-4-5, 5-12-13, 8-15-17) to save time"]
+    }
+  },
+  {
+    "id": "ARCH-L1-GEO-07",
+    "name": "Construction & Loci",
+    "description": "Use compass and straightedge to construct perpendicular lines, angle bisectors, perpendicular bisectors, and loci of points satisfying specific conditions.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": null, "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Use compass and straightedge for geometric constructions and identifying loci.",
+      "steps": ["Construct perpendicular bisector of a line segment", "Construct bisector of an angle", "Construct perpendicular lines (from point to line, or at a point)", "Construct locus of points (e.g., equidistant from two points, or fixed distance from a point)"],
+      "pitfalls": [{ "type": "General", "text": "Inaccurate compass use (e.g., radius changes mid-construction)" }, { "type": "General", "text": "Erasing construction arcs (they must be visible)" }],
+      "pro_tips": ["Use a sharp pencil and a firm compass", "Locus of points equidistant from 2 points is the perpendicular bisector", "Locus of points equidistant from 2 lines is the angle bisector"]
+    }
+  },
+  {
+    "id": "ARCH-L1-GEO-08",
+    "name": "Bearings & Scale Drawings",
+    "description": "Read and interpret 3-figure bearings, calculate back bearings, and use scale drawings to solve problems involving distance and direction.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": null, "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Interpret bearings and use scale drawings to solve navigation problems.",
+      "steps": ["Interpret 3-figure bearing: measured clockwise from North (000° to 359°)", "Calculate back bearing: if bearing < 180°, add 180°; if bearing ≥ 180°, subtract 180°", "Use scale drawings: convert real distances using scale, draw diagram with ruler and protractor, measure required values from diagram"],
+      "pitfalls": [{ "type": "General", "text": "Measuring bearing clockwise from wrong direction (e.g., East)" }, { "type": "General", "text": "Forgetting to write bearing as 3 figures (e.g., 45° instead of 045°)" }, { "type": "General", "text": "Error in back bearing calculation" }],
+      "pro_tips": ["Always draw a North line at every point (A and B)", "Back bearing of A *from* B is the bearing of B *from* A ± 180°"]
+    }
+  },
+  {
+    "id": "ARCH-L1-GEO-09",
+    "name": "Geometric Transformations",
+    "description": "Apply geometric transformations (reflection, rotation, translation, enlargement) to shapes on coordinate planes, including combined transformations.",
+    "topic": "Geometry", "level": "L1", "grade": "G2", "badge": "CORE", "has_branches": false, "parent_id": null, "constituent_l1_ids": [], "source_l2_ids": [],
+    "sop": {
+      "goal": "Apply and describe geometric transformations on a coordinate plane.",
+      "steps": ["Perform Reflection: identify mirror line, plot points equidistant on opposite side", "Perform Rotation: identify centre, angle, and direction (clockwise/anti-clockwise)", "Perform Translation: identify vector (x, y), move all points by x and y", "Perform Enlargement: identify centre and scale factor k, multiply distance from centre by k", "Describe combined transformations, noting that order matters"],
+      "pitfalls": [{ "type": "General", "text": "Wrong centre of rotation or enlargement" }, { "type": "General", "text": "Negative scale factor for enlargement (flips shape through centre)" }, { "type": "General", "text": "Applying combined transformations in the wrong order" }],
+      "pro_tips": ["Use tracing paper to visualize rotations", "A translation is fully described by a vector", "An enlargement needs a centre and a scale factor", "A rotation needs a centre, angle, and direction"]
+    }
+  },
+
+  // ============================================
+  // LEVEL 2 ARCHETYPES - NEW GEOMETRY (v2.1)
+  // ============================================
+  {
+    "id": "ARCH-L2-GEO-01",
+    "name": "Multi-Step Geometric Proofs",
+    "description": "Construct formal geometric proofs requiring multiple steps and integration of angle properties, similarity, congruence, and circle theorems. Apply logical reasoning to justify each step.",
+    "topic": "Geometry", "level": "L2", "grade": "G3", "badge": "CORE", "has_branches": false, "parent_id": null,
+    "constituent_l1_ids": ["ARCH-L1-GEO-04", "ARCH-L1-GEO-02", "ARCH-L1-GEO-05", "ARCH-L1-GEO-03"],
+    "source_l2_ids": [],
+    "sop": {
+      "goal": "Construct formal geometric proofs by synthesizing multiple L1 theorems.",
       "steps": [
-        "1. Identify the known elements: radii, tangents, or cyclic quadrilateral.",
-        "2. Apply the correct theorem: e.g., Tangent ⊥ Radius; ∠at Centre = 2×∠at Circumference; Opposite Angles in a Cyclic Quadrilateral add up to 180°.",
-        "3. State reasons explicitly for each equal angle.",
-        "4. Combine with geometry reasoning to find unknowns."
+        "Deconstruct: Clearly identify 'Given' information and what to 'Prove'. Mark diagram.",
+        "Formulate Plan: Identify key shapes (triangles, circles) and needed L1 archetypes (angles, similarity, congruence, circle theorems).",
+        "Chain Logic: Create a logical path. (e.g., 'First, I'll prove these angles equal using parallel lines. Second, I'll use those angles to prove triangles are similar (AA). Third, I'll use similarity to set up a ratio.')",
+        "Execute & Justify: Write the proof step-by-step, stating the geometric reason for every single statement.",
+        "Conclude: State the final 'to prove' statement clearly."
       ],
       "pitfalls": [
-        { "type": "CRITICAL", "text": "Forgetting to write the geometric reason for each equal angle" },
-        { "type": "COMMON", "text": "Mixing up centre vs circumference angles" }
+        { "type": "Omission", "text": "Missing reasons for statements. Every step needs a justification." },
+        { "type": "Process Error", "text": "Making a logical leap or assuming something that needs to be proven." },
+        { "type": "Conceptual Error", "text": "Confusing congruence (≅) and similarity (~)." }
       ],
       "pro_tips": [
-        "Write theorem abbreviations beside diagram: (T⊥R), (∠C = 2∠A), (Opp ∠s = 180°)",
-        "Circle geometry marks are mostly for reasons—always write them!"
+        "Work backwards in your head: 'To prove X, I need Y. To prove Y, I need Z...'",
+        "Don't be afraid to add construction lines (e.g., a parallel line) if it helps.",
+        "Clearly state all theorems used (e.g., 'Angles in same segment', 'Alt. int. angles')."
       ]
     }
   },
@@ -804,7 +1065,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-STAT-01",
     "level": "L1",
     "name": "Interpreting Stem-and-Leaf Diagrams",
-    "topic": "Statistics", // <-- Fixed topic casing
+    "topic": "Statistics", 
     "badge": "SAT",
     "description": "Quickly and accurately extracting mode, median, and mean from stem-and-leaf diagrams.",
     "sop": {
@@ -830,7 +1091,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-STAT-02",
     "level": "L1",
     "name": "Interpreting Grouped Frequency Tables",
-    "topic": "Statistics", // <-- Fixed topic casing
+    "topic": "Statistics", 
     "badge": "SAT",
     "description": "Estimating the mean from a grouped frequency table.",
     "sop": {
@@ -856,7 +1117,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-PROB-01",
     "level": "L1",
     "name": "Solving Basic Probability Problems",
-    "topic": "Statistics", // <-- Fixed topic casing
+    "topic": "Statistics", 
     "badge": "SAT",
     "description": "Accurately calculating the probability of a single event.",
     "sop": {
@@ -880,119 +1141,13 @@ const ARCHETYPES_DATA = [
   },
 
   // ============================================
-  // LEVEL 1 ARCHETYPES - COORDINATE GEOMETRY
-  // ============================================
-  {
-    "id": "ARCH-L1-CG-01",
-    "level": "L1",
-    "name": "Finding the Equation of a Straight Line",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "SAT",
-    "description": "Finding the equation of a line in the form y = mx + c.",
-    "sop": {
-      "goal": "To find the equation connecting any two points",
-      "triggers": ["Find the equation of the line", "equation passing through"],
-      "steps": [
-        "1. Find the Gradient (m): m = (y₂ − y₁) ÷ (x₂ − x₁). Pro-Tip: Label points (x₁,y₁) and (x₂,y₂) before calculating.",
-        "2. Write the Partial Equation: y = (your m)x + c.",
-        "3. Find the y-intercept (c): Substitute coordinates of one known point (use simpler one) into y = mx + c and solve for c.",
-        "4. Write the Final Equation: Combine your m and c values."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Swapping x and y when substituting into y = mx + c" },
-        { "type": "COMMON", "text": "Computing m with (x₁,y₁) and (x₂,y₂) reversed by mistake" }
-      ],
-      "pro_tips": [
-        "Label points clearly (x₁,y₁), (x₂,y₂) before any calculation",
-        "After finding m, immediately write y = mx + c, then plug in the simplest point to get c"
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L1-CG-02",
-    "level": "L1",
-    "name": "Parallel & Perpendicular Lines",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "SAT",
-    "description": "Finding the equation of a new line based on its relationship to another line.",
-    "sop": {
-      "goal": "To find the equation of a new line based on its relationship to another line",
-      "triggers": ["parallel to", "perpendicular to"],
-      "steps": [
-        "1. Extract the Original Gradient (m₁): Rearrange the given line to y = mx + c first if needed. Gradient m₁ = ...",
-        "2. Determine the New Gradient (m₂): Parallel: m₂ = m₁. Perpendicular: m₂ = −1 ÷ m₁ (flip the fraction and change the sign).",
-        "3. Use SOP for Line Equation: With m₂ and a point on the new line, repeat steps to find the final equation."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "For perpendicular lines, forgetting to flip AND change sign" },
-        { "type": "COMMON", "text": "Not rearranging a general form (like ax + by = c) before reading m" }
-      ],
-      "pro_tips": [
-        "Box m₁ first, then write m₂ = m₁ (parallel) or m₂ = −1/m₁ (perpendicular)",
-        "Once m₂ is fixed, jump straight into the standard line equation flow to finish quickly"
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L1-CG-03",
-    "level": "L1",
-    "name": "Finding Length & Area (Coordinate Plane)",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "SAT",
-    "description": "Calculating the distance between points or the area of a polygon on a coordinate plane.",
-    "sop": {
-      "goal": "To calculate the distance between points or the area of a triangle",
-      "triggers": ["Find the length of", "Find the area of"],
-      "steps": [
-        "1. Length of a Line Segment: Distance = √[(x₂−x₁)² + (y₂−y₁)²].",
-        "2. Area of a Triangle (axis-aligned side): If one side is horizontal or vertical, use it as the base. Height is the perpendicular distance from the third vertex. Area = ½ × base × height.",
-        "3. Area of a General Triangle (Shoelace): List the vertices anti-clockwise and repeat the first at the end. Area = ½ × |(x₁y₂ + ...) − (y₁x₂ + ...)|."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Misordering coordinates in Shoelace → wrong magnitude/sign" },
-        { "type": "COMMON", "text": "Dropping negative signs in distance/area calculations" }
-      ],
-      "pro_tips": [
-        "For Shoelace, write points anti-clockwise and repeat the first at the bottom",
-        "If any side is axis-aligned, prefer ½ × base × height over Shoelace"
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L1-CG-04",
-    "level": "L1",
-    "name": "Coordinate Geometry (Gradient, Midpoint & Locus)",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "SAT",
-    "description": "Solving coordinate geometry problems involving gradient, midpoint, distance, and locus of points.",
-    "sop": {
-      "goal": "Use coordinate geometry formulas to find gradient, midpoint, and the equation of a locus.",
-      "triggers": ["midpoint", "gradient", "locus", "point equidistant from"],
-      "steps": [
-        "1. Gradient: m = (y₂ − y₁) ÷ (x₂ − x₁).",
-        "2. Midpoint: ((x₁ + x₂)/2, (y₁ + y₂)/2).",
-        "3. Distance: √[(x₂ − x₁)² + (y₂ − y₁)²].",
-        "4. Locus: Translate 'equidistant from …' into an equation using distance formula or perpendicular bisector concept."
-      ],
-      "pitfalls": [
-        { "type": "CRITICAL", "text": "Swapping x and y coordinates in formulas" },
-        { "type": "COMMON", "text": "Leaving midpoint coordinates as fractions un-simplified" }
-      ],
-      "pro_tips": [
-        "Label points A(x₁,y₁), B(x₂,y₂) before substituting",
-        "For 'equidistant' loci, start with 'PA = PB' and square both sides to remove roots"
-      ]
-    }
-  },
-
-  // ============================================
   // LEVEL 1 ARCHETYPES - MENSURATION
   // ============================================
   {
     "id": "ARCH-L1-MEN-01",
     "level": "L1",
     "name": "Master SOP for ALL Mensuration Problems",
-    "topic": "Mensuration", // <-- Fixed topic casing
+    "topic": "Mensuration", 
     "badge": "SAT",
     "description": "A master strategy to never lose marks due to formula or calculation errors in mensuration.",
     "sop": {
@@ -1019,7 +1174,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-MEN-02",
     "level": "L1",
     "name": "Similar Figures & Solids",
-    "topic": "Mensuration", // <-- Fixed topic casing
+    "topic": "Mensuration", 
     "badge": "SAT",
     "description": "Correctly using scaling laws for length, area, and volume for similar figures.",
     "sop": {
@@ -1045,7 +1200,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-MEN-03",
     "level": "L1",
     "name": "Composite Solids",
-    "topic": "Mensuration", // <-- Fixed topic casing
+    "topic": "Mensuration", 
     "badge": "SAT",
     "description": "Finding the Total Surface Area (TSA) or Total Volume of combined shapes.",
     "sop": {
@@ -1070,7 +1225,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-MEN-04",
     "level": "L1",
     "name": "Sector & Segment Problems",
-    "topic": "Mensuration", // <-- Fixed topic casing
+    "topic": "Mensuration", 
     "badge": "SAT",
     "description": "Accurately calculating properties of circle parts like sectors and segments.",
     "sop": {
@@ -1099,7 +1254,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-RATIO-01",
     "level": "L1",
     "name": "Map Scale Problems",
-    "topic": "Numbers", // <-- Fixed topic casing
+    "topic": "Numbers", 
     "badge": "SAT",
     "description": "Accurately converting between map distances and actual distances/areas.",
     "sop": {
@@ -1124,7 +1279,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-RATIO-02",
     "level": "L1",
     "name": "Percentage Change & Reverse Percentage",
-    "topic": "Numbers", // <-- Fixed topic casing
+    "topic": "Numbers", 
     "badge": "SAT",
     "description": "Calculating the new value after a percentage change, or recovering the original value.",
     "sop": {
@@ -1149,7 +1304,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L1-RATIO-03",
     "level": "L1",
     "name": "Simple & Compound Interest",
-    "topic": "Numbers", // <-- Fixed topic casing
+    "topic": "Numbers", 
     "badge": "SAT",
     "description": "Computing total amount and interest for simple and compound interest scenarios.",
     "sop": {
@@ -1173,17 +1328,17 @@ const ARCHETYPES_DATA = [
   },
 
   // ============================================
-  // LEVEL 2 ARCHETYPES (NON-ALGEBRA)
+  // LEVEL 2 ARCHETYPES (NON-ALGEBRA/GEO)
   // ============================================
   {
     "id": "ARCH-L2-TRIG-01",
     "level": "L2",
     "name": "2D/3D Trigonometry in Context",
-    "topic": "Trigonometry", // <-- Fixed topic casing
+    "topic": "Trigonometry", 
     "badge": "CORE",
     "grade": "G4",
     "description": "Multi-step problems requiring students to model a real-world scenario on a 2D plane, solve for 'bridge' values, and then use them in a vertical 2D plane to solve 3D elevation/depression problems.",
-    "constituent_l1_ids": ["ARCH-L1-TRIG-01", "ARCH-L1-TRIG-03", "ARCH-L1-TRIG-04", "ARCH-L1-GEO-04"],
+    "constituent_l1_ids": ["ARCH-L1-TRIG-01", "ARCH-L1-TRIG-03", "ARCH-L1-TRIG-04"],
     "sop": {
       "goal": "Solve a complex 3D problem by breaking it down into 2D triangle calculations.",
       "steps": [
@@ -1191,24 +1346,6 @@ const ARCHETYPES_DATA = [
         "2. Call SOP-L1-TRIG-RULES: Use Sine/Cosine Rule to solve the 'ground plane' triangle.",
         "3. Call SOP-L1-SOHCAHTOA: Use the result from step 2 as the 'bridge' to solve the 'vertical plane' right-angled triangle.",
         "4. (If needed) Call SOP-L1-SHORTEST-DIST: Use the Area Method if the question asks for 'greatest angle of elevation'."
-      ]
-    }
-  },
-  {
-    "id": "ARCH-L2-GEO-01",
-    "level": "L2",
-    "name": "Similarity & Congruency Application",
-    "topic": "Geometry", // <-- Fixed topic casing
-    "badge": "CORE",
-    "grade": "G4",
-    "description": "Problems where proving similarity or congruency is the first step. The results (e.g., proportional sides) are then used as tools to perform subsequent calculations for unknown lengths, area ratios, etc.",
-    "constituent_l1_ids": ["ARCH-L1-GEO-01", "ARCH-L1-GEO-02", "ARCH-L1-GEO-03"],
-    "sop": {
-      "goal": "Use the properties of similar or congruent triangles to solve for other unknown quantities.",
-      "steps": [
-        "1. Call SOP-L1-PROVE-SIMILAR: Use AA to prove the required triangles are similar. Write this out formally.",
-        "2. Call SOP-L1-RATIO-SETUP: Set up the correct ratio of corresponding sides or the ratio of areas (by squaring the length ratio).",
-        "3. Call SOP-L1-SOLVE-PROPORTION: Substitute known values and solve for the unknown length or area."
       ]
     }
   },
@@ -1220,11 +1357,11 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L3-SYN-01",
     "level": "L3",
     "name": "Multi-Representation Synthesis",
-    "topic": "Meta", // <-- Fixed topic casing
+    "topic": "Meta", 
     "badge": "SAT",
     "grade": "G4",
     "description": "Tasks where students must synthesize information from multiple representations – algebraic equations, geometric diagrams, and data tables – to arrive at a solution. The core skill is fluently translating between them.",
-    "source_l2_ids": ["ARCH-L2-ALG-02", "ARCH-L2-TRIG-01"], // <-- Fixed: PDF had L2-QUAD-01
+    "source_l2_ids": ["ARCH-L2-ALG-02", "ARCH-L2-TRIG-01"], 
     "sop": {
       "goal": "Integrate information from different mathematical formats to solve a complex problem.",
       "steps": [
@@ -1239,7 +1376,7 @@ const ARCHETYPES_DATA = [
     "id": "ARCH-L3-MOD-01",
     "level": "L3",
     "name": "Contextual Modelling & Justification",
-    "topic": "Meta", // <-- Fixed topic casing
+    "topic": "Meta", 
     "badge": "SAT",
     "grade": "G4",
     "description": "Represents the highest level of application, where the problem is open-ended and may not have a single 'correct' answer. The student must select appropriate models, state assumptions, perform calculations, and justify their final decision.",
