@@ -9,6 +9,14 @@ let allExpanded = false;
  */
 function initializeApp() {
     console.log('🚀 Initializing e-Math Archetype System...');
+    
+    // FIX: Add check for ARCHETYPES_DATA
+    if (typeof ARCHETYPES_DATA === 'undefined') {
+        console.error('ARCHETYPES_DATA not loaded!');
+        document.body.innerHTML = '<h1 style="color: red; padding: 20px;">Error: archetypes-l123-data.js not loaded.</h1>';
+        return;
+    }
+    
     console.log(`📊 Loaded ${ARCHETYPES_DATA.length} archetypes`);
     
     // Render all content
@@ -70,16 +78,20 @@ function renderG3AndG4Topics() {
         // Skip branch archetypes (only show parent archetypes)
         if (arch.parent_id) return acc;
         
-        if (!acc[arch.topic]) {
-            acc[arch.topic] = { g3: [], g4: [] };
+        // Ensure topic key exists
+        const topicKey = arch.topic || 'Uncategorized';
+        
+        if (!acc[topicKey]) {
+            acc[topicKey] = { g3: [], g4: [] };
         }
+        
         // G3 = Level 1 only
         if (arch.level === 'L1') {
-            acc[arch.topic].g3.push(arch);
+            acc[topicKey].g3.push(arch);
         } 
         // G4 = Level 2 and Level 3
         else if (arch.level === 'L2' || arch.level === 'L3') {
-            acc[arch.topic].g4.push(arch);
+            acc[topicKey].g4.push(arch);
         }
         return acc;
     }, {});
@@ -132,10 +144,10 @@ function renderTopicCard(topicKey, archetypes, gradeLevel) {
     // Determine badge types in this topic
     const badges = [...new Set(archetypes.map(a => a.badge))];
     const hasMixed = badges.length > 1;
-    const pillType = hasMixed ? 'mixed' : badges[0].toLowerCase();
-    const pillText = hasMixed ? 'MIXED' : badges[0];
+    const pillType = hasMixed ? 'mixed' : (badges[0] ? badges[0].toLowerCase() : 'core'); // Fallback for undefined badge
+    const pillText = hasMixed ? 'MIXED' : (badges[0] || 'CORE'); // Fallback for undefined badge
     
-    const archetypesHtml = archetypes.map(arch => {
+    const archetypesHtml = archetypes.sort((a,b) => a.id.localeCompare(b.id)).map(arch => { // Sort archetypes by ID
         let fullSopHtml = `<div class="sop-section">`;
         
         // ====== NEW: Show branches if available ======
@@ -221,7 +233,7 @@ function renderTopicCard(topicKey, archetypes, gradeLevel) {
                     `;
                 });
             }
-        } else {
+        } else if (!arch.has_branches) { // Only show 'No SOP' if it's not a parent container
             fullSopHtml += '<p>No detailed SOP available.</p>';
         }
         fullSopHtml += '</div>';
@@ -299,6 +311,19 @@ function expandBranchDetails(event, branchId) {
         existingModal.remove();
     }
     
+    // --- FIX: Add logic for Back Button ---
+    const parent = branch.parent_id ? ARCHETYPES_DATA.find(a => a.id === branch.parent_id) : null;
+    let backButtonHtml = '';
+    if (parent) {
+        backButtonHtml = `
+            <button onclick="event.stopPropagation(); expandBranchDetails(event, '${parent.id}')" 
+                    style="background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8em; margin-bottom: 16px;">
+                &larr; Back to ${parent.name}
+            </button>
+        `;
+    }
+    // --- END FIX ---
+
     // Create modal
     const modal = document.createElement('div');
     modal.className = 'branch-modal';
@@ -307,7 +332,7 @@ function expandBranchDetails(event, branchId) {
             <div class="branch-modal-header">
                 <div>
                     <h3>${branch.name}</h3>
-                    <p style="margin: 4px 0 0 0; color: #757575; font-size: 0.9em;">
+                    <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.9em;">
                         ${branch.has_branches ? '📂 Parent Archetype' : branch.parent_id ? '↳ Branch of ' + branch.parent_id : 'L1 Archetype'}
                     </p>
                 </div>
@@ -318,6 +343,7 @@ function expandBranchDetails(event, branchId) {
                 </button>
             </div>
             <div class="branch-modal-body">
+                ${backButtonHtml} <!-- FIX: Insert Back Button Here -->
                 ${renderBranchSopDetails(branch)}
             </div>
         </div>
@@ -438,7 +464,7 @@ function renderBranchSopDetails(branch) {
                 `;
             });
         }
-    } else {
+    } else if (!branch.has_branches) { // Only show if not a parent
         html += '<p style="color: var(--text-secondary);">No detailed SOP available for this archetype.</p>';
     }
     
