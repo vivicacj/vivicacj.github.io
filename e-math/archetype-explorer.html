@@ -396,93 +396,6 @@
         .tip-item { border-color: #48bb78; background: #f0fff4; }
         .pitfall-type { font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: #c53030; }
 
-        /* ==========================================
-           BRANCHES VISUALIZATION (in InfoPanel)
-           ========================================== */
-        .branches-overview {
-            margin: 20px 0;
-            padding: 16px;
-            background: #f0f5ff; /* Light blue background to fit panel */
-            border-radius: 8px;
-            border-left: 4px solid #667eea; /* Theme primary color */
-        }
-
-        .branches-overview h4 {
-            margin: 0 0 16px 0;
-            color: #667eea; /* Theme primary color */
-            font-size: 1em;
-            font-weight: 700;
-        }
-
-        .branches-tree {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .branch-tree-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            background: #f7fafc; /* Light background */
-            border-radius: 6px;
-            border: 1px solid #e2e8f0; /* Light border */
-            transition: all 0.2s ease;
-        }
-
-        .branch-tree-item:hover {
-            background: #e0e7ff;
-            border-color: #667eea;
-            transform: translateX(4px);
-        }
-
-        .branch-tree-item.clickable {
-            cursor: pointer;
-        }
-
-        .branch-tree-item.clickable:hover {
-            background: #c7d2fe;
-            border-color: #667eea;
-            transform: translateX(6px);
-        }
-
-        .branch-prefix {
-            color: #667eea; /* Theme primary color */
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            font-size: 1.1em;
-            min-width: 24px;
-        }
-
-        .branch-name {
-            flex: 1;
-            color: #2d3748; /* Dark text */
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-
-        .branch-expand-btn {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            color: #667eea; /* Theme primary color */
-            display: flex;
-            align-items: center;
-            transition: all 0.2s ease;
-        }
-
-        .branch-expand-btn:hover {
-            color: #4f46e5; /* Theme primary dark */
-            transform: translateX(2px);
-        }
-        
-        .icon-sm {
-            width: 16px;
-            height: 16px;
-        }
-
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -608,10 +521,13 @@
             const container = document.getElementById('stats-grid-container');
             if (!container || typeof ARCHETYPES_DATA === 'undefined') return;
 
+            // --- FIX: Filter for parent archetypes only ---
+            const parentArchetypes = ARCHETYPES_DATA.filter(a => !a.parent_id);
+
             const stats = {
-                topics: new Set(ARCHETYPES_DATA.map(a => a.topic)).size,
-                archetypes: ARCHETYPES_DATA.length,
-                levels: new Set(ARCHETYPES_DATA.map(a => a.level)).size
+                topics: new Set(parentArchetypes.map(a => a.topic)).size,
+                archetypes: parentArchetypes.length, // Count only parents
+                levels: new Set(parentArchetypes.map(a => a.level)).size // Count levels from parents
             };
 
             container.innerHTML = `
@@ -640,12 +556,15 @@
 
         function populateTopicFilter() {
             const topicSelect = document.getElementById('topicSelect');
-            const topics = [...new Set(ARCHETYPES_DATA.map(a => a.topic))];
+            // FIX: Filter topics from parent archetypes only
+            const topics = [...new Set(ARCHETYPES_DATA.filter(a => !a.parent_id).map(a => a.topic))];
             topics.sort();
             let optionsHtml = '<option value="all">All Topics</option>';
             topics.forEach(topic => {
-                const capitalized = topic.charAt(0).toUpperCase() + topic.slice(1);
-                optionsHtml += `<option value="${topic}">${capitalized}</option>`;
+                if (topic) { // Avoid undefined topics
+                    const capitalized = topic.charAt(0).toUpperCase() + topic.slice(1);
+                    optionsHtml += `<option value="${topic}">${capitalized}</option>`;
+                }
             });
             topicSelect.innerHTML = optionsHtml;
         }
@@ -751,8 +670,8 @@
             const results = ARCHETYPES_DATA.filter(arch => {
                 return arch.id.toLowerCase().includes(lowerQuery) ||
                        arch.name.toLowerCase().includes(lowerQuery) ||
-                       arch.topic.toLowerCase().includes(lowerQuery) ||
-                       arch.description.toLowerCase().includes(lowerQuery);
+                       (arch.topic && arch.topic.toLowerCase().includes(lowerQuery)) || // Added null check for topic
+                       (arch.description && arch.description.toLowerCase().includes(lowerQuery)); // Added null check for description
             }).slice(0, 8); // Limit to 8 results
             
             if (results.length === 0) {
@@ -765,11 +684,11 @@
                 <div class="search-result-item" onclick="selectSearchResult('${arch.id}')">
                     <div class="search-result-id">${arch.id}</div>
                     <div class="search-result-name">${arch.name}</div>
-                    <div class="search-result-desc">${arch.description.substring(0, 80)}${arch.description.length > 80 ? '...' : ''}</div>
+                    <div class="search-result-desc">${arch.description ? arch.description.substring(0, 80) : ''}${arch.description && arch.description.length > 80 ? '...' : ''}</div>
                     <div class="search-result-meta">
                         <span class="search-result-badge level-badge ${arch.level}">${arch.level}</span>
                         <span class="search-result-badge archetype-badge ${arch.badge}">${arch.badge}</span>
-                        <span class="search-result-badge" style="background: rgba(255,255,255,0.2);">${arch.topic}</span>
+                        <span class="search-result-badge" style="background: rgba(255,255,255,0.2);">${arch.topic || 'N/A'}</span>
                     </div>
                 </div>
             `).join('');
@@ -883,6 +802,9 @@
             let html = '';
             levels.forEach(level => {
                 const archetypes = ARCHETYPES_DATA.filter(a => {
+                    // --- FIX: Only show parent archetypes in the map ---
+                    if (a.parent_id) return false;
+                    
                     const levelMatch = a.level === level;
                     const topicMatch = currentFilters.topic === 'all' || a.topic === currentFilters.topic;
                     const gradeMatch = currentFilters.grade === 'all' || !a.grade || a.grade === currentFilters.grade;
@@ -890,8 +812,8 @@
                     const searchMatch = currentFilters.search === '' || 
                                       a.name.toLowerCase().includes(currentFilters.search) ||
                                       a.id.toLowerCase().includes(currentFilters.search) ||
-                                      a.topic.toLowerCase().includes(currentFilters.search) ||
-                                      a.description.toLowerCase().includes(currentFilters.search);
+                                      (a.topic && a.topic.toLowerCase().includes(currentFilters.search)) ||
+                                      (a.description && a.description.toLowerCase().includes(currentFilters.search));
 
                     return levelMatch && topicMatch && gradeMatch && categoryMatch && searchMatch;
                 });
@@ -920,10 +842,13 @@
         }
 
         function renderNode(arch) {
-            const connections = arch.constituent_l1_ids || arch.source_l2_ids || [];
+            // --- FIX: Get children from parent OR sub-branches ---
+            const connections = arch.constituent_l1_ids || arch.source_l2_ids || arch.branches || [];
             let connectionLabel = '';
             if (arch.level === 'L3' && arch.source_l2_ids) connectionLabel = '↓ Integrates L2 Skills:';
             else if (arch.level === 'L2' && arch.constituent_l1_ids) connectionLabel = '↓ Calls L1 Skills:';
+            // --- FIX: Add label for L1 parents that have branches ---
+            else if (arch.level === 'L1' && arch.has_branches) connectionLabel = '↓ Contains Methods:';
 
             return `
                 <div class="node" data-id="${arch.id}" onclick="showNodeInfo('${arch.id}')">
@@ -948,7 +873,12 @@
                                 </button>
                             </div>
                             <div class="connection-links">
-                                ${connections.map(id => `<span class="connection-link" data-connection-id="${id}" onclick="event.stopPropagation(); showNodeInfo('${id}')">${id.split('-').slice(2).join('-')}</span>`).join('')}
+                                ${connections.map(id => {
+                                    // --- FIX: Handle sub-branch IDs ---
+                                    const childArch = ARCHETYPES_DATA.find(a => a.id === id);
+                                    const displayName = childArch ? childArch.name : id.split('-').slice(2).join('-');
+                                    return `<span class="connection-link" data-connection-id="${id}" onclick="event.stopPropagation(); showNodeInfo('${id}')">${displayName}</span>`
+                                }).join('')}
                             </div>
                         ` : `
                             <div class="connection-label">
@@ -964,7 +894,8 @@
         function getChildren(parentId, archetypes) {
             const parent = archetypes.find(p => p.id === parentId);
             if (!parent) return [];
-            const children = parent.constituent_l1_ids || parent.source_l2_ids || [];
+            // --- FIX: Get children from all possible connection types ---
+            const children = parent.constituent_l1_ids || parent.source_l2_ids || parent.branches || [];
             let allChildren = [...children];
             children.forEach(c => allChildren.push(...getChildren(c, archetypes)));
             return [...new Set(allChildren)];
@@ -1008,8 +939,11 @@
 
                 const parentEl = document.querySelector(`.node[data-id="${currentId}"]`);
                 if(!parentEl) continue;
-
-                const directChildrenIds = ARCHETYPES_DATA.find(a => a.id === currentId)?.constituent_l1_ids || ARCHETYPES_DATA.find(a => a.id === currentId)?.source_l2_ids || [];
+                
+                // --- FIX: Get children from all possible connection types ---
+                const directChildrenIds = ARCHETYPES_DATA.find(a => a.id === currentId)?.constituent_l1_ids || 
+                                      ARCHETYPES_DATA.find(a => a.id === currentId)?.source_l2_ids ||
+                                      ARCHETYPES_DATA.find(a => a.id === currentId)?.branches || [];
 
                 directChildrenIds.forEach(childId => {
                     const childEl = document.querySelector(`.node[data-id="${childId}"]`);
@@ -1044,6 +978,20 @@
             if (!arch) return;
             selectedNodeId = id;
 
+            // --- FIX: Add logic for Back Button ---
+            const parent = arch.parent_id ? ARCHETYPES_DATA.find(a => a.id === arch.parent_id) : null;
+            let backButtonHtml = '';
+            if (parent) {
+                backButtonHtml = `
+                    <div style="margin-bottom: 16px; margin-top: -10px;">
+                        <button onclick="showNodeInfo('${parent.id}')" style="background: #e0e7ff; color: #4338ca; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                            &larr; Back to ${parent.name}
+                        </button>
+                    </div>
+                `;
+            }
+            // --- END FIX ---
+
             const panel = document.getElementById('infoPanel');
             const content = document.getElementById('infoPanelContent');
             
@@ -1055,6 +1003,7 @@
                     <h2>${arch.name}</h2>
                     <p>${arch.level} ${arch.grade ? `• ${arch.grade}` : ''} • ${arch.badge}</p>
                 </div>
+                ${backButtonHtml} <!-- FIX: Insert Back Button Here -->
                 <div class="panel-tabs">
                     <button class="panel-tab active" onclick="switchTab(event, 'sopTabContent')">SOP</button>
                     <button class="panel-tab" onclick="switchTab(event, 'drillsTabContent')">Drills</button>
@@ -1067,8 +1016,25 @@
         
         function renderSOPContent(arch) {
              const sop = arch.sop;
-             // MODIFIED: Check for branches as well
-             if (!sop && !arch.has_branches) return `<p>SOP details not available.</p>`;
+             
+             // --- FIX: Add logic for Sub-Branches ---
+             let branchesHtml = '';
+             if (arch.has_branches && arch.branches && arch.branches.length > 0) {
+                 branchesHtml = `
+                    <div class="section-title">📂 Sub-Branches (${arch.branches.length})</div>
+                    ${arch.branches.map(branchId => {
+                        const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                        if (!branch) return '';
+                        return `<div class="sop-step sop-step-interactive" onclick="showNodeInfo('${branch.id}')">
+                                    <strong>${branch.name}</strong>
+                                    <div style="font-size: 11px; color: #555; margin-top: 4px;">${branch.description || ''}</div>
+                                </div>`;
+                    }).join('')}
+                 `;
+             }
+             // --- END FIX ---
+             
+             if (!sop && branchesHtml === '') return `<p>SOP details not available.</p>`;
 
              const connections = arch.constituent_l1_ids || arch.source_l2_ids || [];
              const constituentArchetypes = connections.map(id => ARCHETYPES_DATA.find(a => a.id === id));
@@ -1080,72 +1046,36 @@
                  return stepParts.length > 1 ? stepParts[1].trim() : step;
              }
 
-             // MODIFIED: Start with empty HTML
-             let html = '';
+             let html = branchesHtml; // --- FIX: Add branches HTML first
              
-             // ====== NEW: Show branches if available ======
-             if (arch.has_branches && arch.branches && arch.branches.length > 0) {
-                 html += `
-                     <div class="branches-overview">
-                         <h4>📂 Sub-Branches (${arch.branches.length})</h4>
-                         <div class="branches-tree">
-                 `;
-            
-                 arch.branches.forEach((branchId, index) => {
-                     const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
-                     if (branch) {
-                         const isLast = index === arch.branches.length - 1;
-                         const prefix = isLast ? '└─' : '├─';
-                         html += `
-                             <div class="branch-tree-item clickable" onclick="event.stopPropagation(); showNodeInfo('${branchId}')">
-                                 <span class="branch-prefix">${prefix}</span>
-                                 <span class="branch-name">${branch.name}</span>
-                                 <button class="branch-expand-btn">
-                                     <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                         <path d="M9 18L15 12L9 6"/>
-                                     </svg>
-                                 </button>
-                             </div>
-                         `;
-                     }
-                 });
-                
-                 html += `
-                         </div>
-                     </div>
-                 `;
-             }
-             // ====== End new branches section ======
-
-             // MODIFIED: Check if SOP exists before rendering
-             if (sop) {
+             if (sop?.goal) {
                  html += `<div class="section-title">🎯 Goal</div><p>${sop.goal}</p>`;
-                 
-                 if(sop.triggers) {
-                     html += `<div class="section-title">⚡️ Triggers</div><p><em>${sop.triggers.join(', ')}</em></p>`;
-                 }
+             }
+             
+             if(sop?.triggers) {
+                 html += `<div class="section-title">⚡️ Triggers</div><p><em>${sop.triggers.join(', ')}</em></p>`;
+             }
 
-                 if (sop.steps) {
-                      html += `<div class="section-title">📝 Steps</div>` + sop.steps.map((step, i) => `<div class="sop-step"><strong>Step ${i+1}:</strong> ${getStepText(step)}</div>`).join('');
-                 }
+             if (sop?.steps) {
+                  html += `<div class="section-title">📝 Steps</div>` + sop.steps.map((step, i) => `<div class="sop-step"><strong>Step ${i+1}:</strong> ${getStepText(step)}</div>`).join('');
+             }
 
-                 if (sop.pitfalls) {
-                     html += `<div class="section-title">⚠️ Pitfalls</div>` + sop.pitfalls.map(p => `
-                         <div class="pitfall-item">
-                             <div class="pitfall-type">${p.type}</div>
-                             <p>${p.text}</p>
-                         </div>
-                     `).join('');
-                 }
+             if (sop?.pitfalls) {
+                 html += `<div class="section-title">⚠️ Pitfalls</div>` + sop.pitfalls.map(p => `
+                     <div class="pitfall-item">
+                         <div class="pitfall-type">${p.type}</div>
+                         <p>${p.text}</p>
+                     </div>
+                 `).join('');
+             }
 
-                 if (sop.pro_tips) {
-                     html += `<div class="section-title">💡 Pro Tips</div>` + sop.pro_tips.map(tip => `
-                         <div class="tip-item">
-                             <p>${tip}</p>
-                         </div>
-                     `).join('');
-                 }
-             } // End if(sop)
+             if (sop?.pro_tips) {
+                 html += `<div class="section-title">💡 Pro Tips</div>` + sop.pro_tips.map(tip => `
+                     <div class="tip-item">
+                         <p>${tip}</p>
+                     </div>
+                 `).join('');
+             }
              
              // Helper for links to avoid code duplication
              const renderSkillLink = (skill) => `<div class="sop-step sop-step-interactive" onclick="showNodeInfo('${skill.id}')">${skill.name} (${skill.level})</div>`;
@@ -1176,7 +1106,7 @@
                           <div class="drill-platform-icon">${drill.platform === 'google' ? '📁' : '📝'}</div>
                           <div class="drill-link-content">
                               <div class="drill-link-title">${drill.name}</div>
-                              <div class="drill-link-desc">${drill.description}</div>
+                              <div class="drill-link-desc">${drill.description || ''}</div>
                           </div>
                           <div class="external-link-icon">↗</div>
                       </a>
