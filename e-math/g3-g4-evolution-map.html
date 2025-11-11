@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>G3→G4 Evolution Map · Hierarchical View</title>
   
+  <!-- External Libraries -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  
+  <!-- Custom Fonts & Styles -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
     
@@ -33,6 +35,7 @@
       --bg-tertiary: #334155;
       --text-primary: #f1f5f9;
       --text-secondary: #cbd5e1;
+      --text-mono: #94a3b8; /* For Archetype IDs */
       --glass: rgba(255, 255, 255, 0.05);
       --glass-border: rgba(255, 255, 255, 0.1);
     }
@@ -72,7 +75,6 @@
         vertical-align: middle;
     }
     
-    /* SVG icons smaller than 1em */
     .icon-sm {
         width: 16px;
         height: 16px;
@@ -506,6 +508,24 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      flex-wrap: wrap; /* Allow wrapping for ID */
+    }
+    
+    .archetype-name {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    
+    .archetype-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-mono);
+      background: var(--bg-secondary);
+      padding: 0.1rem 0.5rem;
+      border-radius: 0.375rem;
+      border: 1px solid var(--glass-border);
+      margin-left: 0.25rem;
     }
 
     .level-badge {
@@ -521,6 +541,7 @@
     .archetype-expand-indicator {
       transition: transform 0.3s ease;
       color: var(--accent);
+      flex-shrink: 0; /* Prevent shrinking */
     }
 
     .archetype-sop-group.details-expanded .archetype-expand-indicator {
@@ -559,6 +580,16 @@
       padding: 1.5rem;
       margin-top: 1rem;
     }
+    
+    .sop-section .sop-goal {
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--glass);
+      border-radius: 0.5rem;
+      border-left: 3px solid var(--accent);
+    }
 
     .sop-section h4 {
       color: var(--accent);
@@ -570,7 +601,8 @@
     }
 
     .sop-section ul {
-      list-style: none;
+      list-style-type: decimal;
+      list-style-position: inside;
       padding: 0;
     }
 
@@ -726,6 +758,9 @@
     .archetype-list {
       list-style: none;
       padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0.5rem 1.5rem;
     }
 
     .archetype-list li {
@@ -739,6 +774,11 @@
 
     .archetype-list li:last-child {
       border-bottom: none;
+    }
+    
+    .archetype-list li .level-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.5rem;
     }
 
     .scroll-top {
@@ -877,16 +917,13 @@
     .branches-overview {
       margin-bottom: 24px;
       padding: 16px;
-      /* FIX: Use dark theme glass background */
       background: var(--glass);
       border-radius: 8px;
-      /* FIX: Use dark theme accent color for border */
       border-left: 4px solid var(--accent);
     }
 
     .branches-overview h4 {
       margin: 0 0 16px 0;
-      /* FIX: Use dark theme accent color */
       color: var(--accent);
       font-size: 1em;
       font-weight: 600;
@@ -903,16 +940,13 @@
       align-items: center;
       gap: 12px;
       padding: 10px 12px;
-      /* FIX: Use transparent background */
       background: transparent;
       border-radius: 6px;
-      /* FIX: Use dark theme glass border */
       border: 1px solid var(--glass-border);
       transition: all 0.2s ease;
     }
 
     .branch-tree-item:hover {
-      /* FIX: Use dark theme glass hover */
       background: var(--glass);
       border-color: var(--accent);
       transform: translateX(4px);
@@ -924,7 +958,6 @@
     }
 
     .branch-tree-item.clickable:hover {
-      /* FIX: Use dark theme secondary background */
       background: var(--bg-secondary);
       border-color: var(--accent);
       transform: translateX(6px);
@@ -935,9 +968,8 @@
     }
 
     .branch-prefix {
-      /* FIX: Use dark theme accent color */
       color: var(--accent);
-      font-family: 'Courier New', monospace;
+      font-family: 'JetBrains Mono', monospace;
       font-weight: bold;
       font-size: 1.1em;
       min-width: 24px;
@@ -945,7 +977,6 @@
 
     .branch-name {
       flex: 1;
-      /* FIX: Ensure text is from dark theme (already correct) */
       color: var(--text-primary);
       font-weight: 500;
       font-size: 0.95em;
@@ -956,7 +987,6 @@
       border: none;
       cursor: pointer;
       padding: 4px;
-      /* FIX: Use dark theme accent color */
       color: var(--accent);
       display: flex;
       align-items: center;
@@ -964,7 +994,6 @@
     }
 
     .branch-expand-btn:hover {
-      /* FIX: Use dark theme primary color */
       color: var(--primary);
       transform: translateX(2px);
     }
@@ -972,8 +1001,8 @@
     /* ==========================================
        BRANCH MODAL
        ========================================== */
-
-    .branch-modal {
+    
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
@@ -981,12 +1010,16 @@
       bottom: 0;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
-      display: flex;
+      display: none; /* Hidden by default */
       align-items: center;
       justify-content: center;
       z-index: 9999;
       padding: 20px;
       animation: fadeIn 0.2s ease;
+    }
+    
+    .modal-overlay.visible {
+        display: flex; /* Shown when 'visible' class is added */
     }
 
     @keyframes fadeIn {
@@ -997,9 +1030,17 @@
             opacity: 1;
         }
     }
+    
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
 
-    .branch-modal-content {
-      /* FIX: Use dark theme secondary background */
+    .modal-content {
       background: var(--bg-secondary);
       border-radius: 12px;
       max-width: 700px;
@@ -1008,7 +1049,17 @@
       overflow-y: auto;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       animation: slideUp 0.3s ease;
+      border: 1px solid var(--glass-border);
     }
+    
+    .modal-overlay.exiting .modal-content {
+      animation: slideDown 0.3s ease forwards;
+    }
+    
+    .modal-overlay.exiting {
+        animation: fadeOut 0.3s ease forwards;
+    }
+
 
     @keyframes slideUp {
         from {
@@ -1020,29 +1071,37 @@
             opacity: 1;
         }
     }
+    
+    @keyframes slideDown {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+    }
 
-    .branch-modal-header {
+    .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 20px 24px;
-      /* FIX: Use dark theme glass border */
       border-bottom: 2px solid var(--glass-border);
-      /* FIX: Use dark theme tertiary background */
       background: var(--bg-tertiary);
       position: sticky;
       top: 0;
       z-index: 10;
     }
 
-    .branch-modal-header h3 {
+    .modal-header h3 {
       margin: 0;
-      /* FIX: Use dark theme accent color */
       color: var(--accent);
       font-size: 1.4em;
     }
 
-    .branch-modal-close {
+    .modal-close {
       background: transparent;
       border: none;
       cursor: pointer;
@@ -1052,45 +1111,37 @@
       border-radius: 50%;
     }
 
-    .branch-modal-close:hover {
-      /* FIX: Use dark theme danger colors */
+    .modal-close:hover {
       background: rgba(239, 68, 68, 0.1);
       color: var(--danger);
     }
 
-    .branch-modal-body {
+    .modal-body {
       padding: 24px;
     }
 
-    .branch-modal .branches-overview {
+    .modal-body .branches-overview {
       margin-bottom: 24px;
       padding: 20px;
     }
 
-    .branch-modal .branches-tree {
+    .modal-body .branches-tree {
       gap: 10px;
     }
 
-    .branch-modal .branches-overview h4 {
-      /* FIX: Use dark theme accent color */
+    .modal-body .branches-overview h4 {
       color: var(--accent);
       margin-bottom: 8px;
     }
 
-    .branch-modal .branches-overview p {
+    .modal-body .branches-overview p {
       color: var(--text-secondary);
       font-size: 0.9em;
       line-height: 1.5;
     }
 
-    /* ==========================================
-       FIXED CATALOG & UTILITIES
-       ========================================== */
-    
-    /* This was the only new rule from the CATALOG block */
     .branch-count-badge {
       display: inline-block;
-      /* FIX: Use dark theme pill style */
       background: rgba(99, 102, 241, 0.2);
       color: var(--primary);
       padding: 2px 8px;
@@ -1100,9 +1151,8 @@
       margin-left: 8px;
     }
 
-    /* This was the only new rule from the UTILITIES block */
     .highlighted {
-        animation: highlight 1s ease;
+        animation: highlight 2s ease;
     }
 
     @keyframes highlight {
@@ -1110,15 +1160,10 @@
             background: transparent;
         }
         50% {
-            /* FIX: Use dark theme warning color */
             background: rgba(245, 158, 11, 0.2);
         }
     }
     
-    /* REMOVED redundant .search-result-hint, .btn, .catalog-card rules
-      as they are already defined correctly in the dark theme section above.
-    */
-
     /* ==========================================
        RESPONSIVE
        ========================================== */
@@ -1153,12 +1198,11 @@
         gap: 0.5rem;
       }
       
-      /* Rules kept from the pasted responsive block */
       .section-title {
           font-size: 1.5rem;
       }
 
-      .branch-modal-content {
+      .modal-content {
           max-width: 95vw;
           max-height: 90vh;
       }
@@ -1196,7 +1240,7 @@
           type="text" 
           class="finder-input" 
           id="archetypeInput" 
-          placeholder="Find Archetype by ID or Name (e.g., ARCH-L1-ALG-01 or Factorisation)"
+          placeholder="Find Archetype by ID or Name (e.g., ARCH-L1-ALG-01)"
           onkeypress="if(event.key==='Enter') findArchetype()"
         />
         <button class="finder-btn" onclick="findArchetype()">
@@ -1212,7 +1256,7 @@
 
     <!-- Control Panel -->
     <div class="control-panel">
-      <button class="btn btn-primary" onclick="toggleAllCards()">
+      <button class="btn btn-primary" id="expandAllBtn" onclick="toggleAllCards()">
         <svg class="icon" id="expand-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
@@ -1301,6 +1345,23 @@
       <path d="M12 19V5M5 12L12 5L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
+  
+  <!-- Branch Modal -->
+  <div class="modal-overlay" id="branchModal">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h3 id="branchModalTitle">Sub-Models</h3>
+              <button class="modal-close" onclick="closeBranchModal()">
+                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+              </button>
+          </div>
+          <div class="modal-body" id="branchModalBody">
+              <!-- Branch content will be populated by JavaScript -->
+          </div>
+      </div>
+  </div>
 
   <!-- Footer -->
   <footer>
@@ -1308,7 +1369,11 @@
     <p>© 2025 · Built with systematic learning design</p>
   </footer>
 
-  <!-- External JavaScript Files -->
+  <!-- 
+    CORE JAVASCRIPT FILES
+    1. The Archetype Database
+    2. The Application Logic
+  -->
   <script src="archetypes-l123-data.js"></script>
   <script src="evolution-map-app.js"></script>
 
