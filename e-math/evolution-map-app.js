@@ -177,18 +177,16 @@ function renderArchetype(archetype) {
     // Check for branches
     const hasBranches = archetype.branches && archetype.branches.length > 0;
 
-    // *** FIX: Correctly assign click action ***
-    // Parent archetypes (with branches) call showModalForArchetype('ID')
-    // Regular archetypes call toggleSop(this, 'ID')
-    const clickAction = hasBranches 
-        ? `showModalForArchetype('${archetype.id}')`
-        : `toggleSop(this, '${archetype.id}')`;
+    // *** MODIFICATION ***
+    // ALL items in the main list will now use toggleSop
+    const clickAction = `toggleSop(this, '${archetype.id}')`; 
         
     const branchIcon = hasBranches ? ICONS.branch : '';
     const branchCount = hasBranches ? `<span class="branch-count-badge">${archetype.branches.length} sub-models</span>` : '';
     
-    // Render SOP details
-    const sopHtml = renderSopDetails(archetype.sop, archetype.level);
+    // *** MODIFICATION ***
+    // Pass the *entire* archetype object to renderSopDetails
+    const sopHtml = renderSopDetails(archetype);
 
     return `
     <div class="archetype-sop-group" id="arch-${archetype.id}">
@@ -211,40 +209,83 @@ function renderArchetype(archetype) {
 }
 
 /**
- * Renders the hidden SOP details section
+ * [MODIFIED] Renders the hidden SOP details section
+ * Now accepts the full archetype object.
+ * Renders BOTH the SOP and the sub-branch list if they exist.
  */
-function renderSopDetails(sop, level) {
-    if (!sop || !sop.goal) {
-        // Parent containers (like ALG-04, GEO-04) might not have their own SOPs
-        if (level === 'L1') return `<div class="archetype-details"></div>`;
-        return '';
+function renderSopDetails(archetype) { // <-- Signature changed
+    const sop = archetype.sop;
+    const level = archetype.level;
+    
+    let sopDisplayHtml = '';
+    
+    // 1. Render the SOP, if it exists
+    if (sop && sop.goal) {
+        const steps = sop.steps.map(s => `<li>${s}</li>`).join('');
+        const pitfalls = sop.pitfalls.map(p => `
+            <div class="pitfall-item">
+              <span class="pitfall-badge">${p.type || 'Error'}</span>
+              <span>${p.text}</span>
+            </div>
+        `).join('');
+        const proTips = sop.pro_tips.map(t => `
+            <div class="pro-tip-item">
+              <span class="pro-tip-badge">Pro Tip</span>
+              <span>${t}</span>
+            </div>
+        `).join('');
+
+        sopDisplayHtml = `
+          <div class="sop-section">
+            <p class="sop-goal">${sop.goal}</p>
+            
+            <h4>Steps</h4>
+            <ul>${steps}</ul>
+            
+            ${pitfalls ? `<h4 style="margin-top: 1.5rem;">Pitfalls</h4>${pitfalls}` : ''}
+            ${proTips ? `<h4 style="margin-top: 1.5rem;">Pro Tips</h4>${proTips}` : ''}
+          </div>
+        `;
+    } else if (level === 'L1' && !archetype.has_branches) {
+        // Only show "No SOP" for simple L1s that truly have no SOP
+        sopDisplayHtml = `<div class="sop-section"><p class="sop-goal">No detailed SOP available.</p></div>`;
     }
 
-    const steps = sop.steps.map(s => `<li>${s}</li>`).join('');
-    const pitfalls = sop.pitfalls.map(p => `
-        <div class="pitfall-item">
-          <span class="pitfall-badge">${p.type || 'Error'}</span>
-          <span>${p.text}</span>
-        </div>
-    `).join('');
-    const proTips = sop.pro_tips.map(t => `
-        <div class="pro-tip-item">
-          <span class="pro-tip-badge">Pro Tip</span>
-          <span>${t}</span>
-        </div>
-    `).join('');
+    // 2. Render the Sub-Model list, if it exists
+    let branchDisplayHtml = '';
+    if (archetype.branches && archetype.branches.length > 0) {
+        const branchArchetypes = archetype.branches
+            .map(id => getArchetypeById(id))
+            .filter(Boolean);
+            
+        branchDisplayHtml = `
+          <h4 class="modal-sub-branch-title" style="margin-top: ${sopDisplayHtml ? '1.5rem' : '0'};">Sub-Models (${branchArchetypes.length})</h4>
+          <div class="branches-tree">
+            ${branchArchetypes.map(branch => `
+              <div class="branch-tree-item clickable" onclick="showModalForArchetype('${branch.id}')">
+                <span class="branch-prefix">↳</span>
+                <span class="branch-name">
+                    <span class="level-badge">${branch.level}</span>
+                    <span class="archetype-id">${branch.id}</span>
+                    ${branch.name}
+                </span>
+              </div>
+            `).join('')}
+          </div>
+        `;
+    }
 
+    // 3. Combine and wrap
+    // Only render the container if there is *something* to show
+    if (!sopDisplayHtml && !branchDisplayHtml) {
+         if (level === 'L1') return `<div class="archetype-details"></div>`; // Empty div for L1 parents w/o SOPs
+         return ''; // Nothing for L2/L3
+    }
+    
     return `
     <div class="archetype-details">
-      <div class="sop-section">
-        <p class="sop-goal">${sop.goal}</p>
-        
-        <h4>Steps</h4>
-        <ul>${steps}</ul>
-        
-        ${pitfalls ? `<h4 style="margin-top: 1.5rem;">Pitfalls</h4>${pitfalls}` : ''}
-        ${proTips ? `<h4 style="margin-top: 1.5rem;">Pro Tips</h4>${proTips}` : ''}
-      </div>
+      ${sopDisplayHtml}
+      ${branchDisplayHtml}
     </div>
     `;
 }
