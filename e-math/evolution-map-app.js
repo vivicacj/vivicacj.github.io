@@ -1,727 +1,644 @@
-// evolution-map-app.js
-// Main application logic for G3→G4 Evolution Map
-
-// Global state
-let allExpanded = false;
-
 /**
- * Initialize the application
+ * evolution-map-app.js
+ * * This file contains all the application logic for the
+ * G3-G4 Evolution Map. It reads from 'archetypes-l123-data.js'
+ * and dynamically builds the HTML content.
+ * * v2.1 - Fixed modal recursive navigation and back button.
  */
-function initializeApp() {
-    console.log('🚀 Initializing e-Math Archetype System...');
-    
-    // FIX: Add check for ARCHETYPES_DATA
+
+// ==========================================
+// GLOBAL STATE & CONSTANTS
+// ==========================================
+let allTopics = [];
+let l1Archetypes = [];
+let l2Archetypes = [];
+let l3Archetypes = [];
+let allArchetypes = [];
+let isAllExpanded = false;
+
+// Icon definitions
+const ICONS = {
+    Algebra: '🧮',
+    Geometry: '📐',
+    Trigonometry: '🧭',
+    Mensuration: '📏',
+    'Statistics & Probability': '📊',
+    Numbers: '🔢',
+    Meta: '🧠',
+    plus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    minus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    branch: `<svg class="icon-sm" style="color: var(--accent)" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 3V3C8.76142 3 11 5.23858 11 8V11M6 3V11M6 11H3M6 11H9M11 11V11C13.7614 11 16 13.2386 16 16V21M16 21H13M16 21H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    expand: `<svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    collapse: `<svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12H21M9 6H15M9 18H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    stat_l1: '📚',
+    stat_l2: '📈',
+    stat_l3: '🏆',
+    stat_topics: '🧩'
+};
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Check if data is loaded
     if (typeof ARCHETYPES_DATA === 'undefined') {
-        console.error('ARCHETYPES_DATA not loaded!');
-        document.body.innerHTML = '<h1 style="color: red; padding: 20px;">Error: archetypes-l123-data.js not loaded.</h1>';
+        console.error("CRITICAL ERROR: archetypes-l123-data.js not loaded.");
+        document.getElementById('g3-topics-container').innerHTML = 
+            '<p style="color: var(--danger);">Error: archetypes-l123-data.js not loaded. Please check file paths and console for syntax errors.</p>';
         return;
     }
+
+    // 2. Process data
+    try {
+        allArchetypes = ARCHETYPES_DATA;
+        allTopics = [...new Set(allArchetypes.map(a => a.topic))];
+        l1Archetypes = allArchetypes.filter(a => a.level === 'L1' && !a.parent_id);
+        l2Archetypes = allArchetypes.filter(a => a.level === 'L2' && !a.parent_id);
+        l3Archetypes = allArchetypes.filter(a => a.level === 'L3' && !a.parent_id);
+    } catch (e) {
+        console.error("Error processing Archetype data:", e);
+        return;
+    }
+
+    // 3. Populate sections
+    populateStats();
+    populateTopics('G3', 'g3-topics-container');
+    populateTopics('G4', 'g4-topics-container');
+    populateCatalog();
     
-    console.log(`📊 Loaded ${ARCHETYPES_DATA.length} archetypes`);
-    
-    // Render all content
-    renderStats();
-    renderG3AndG4Topics();
-    renderCatalog(document.getElementById('catalogContainer'));
-    
-    // Setup event listeners
+    // 4. Setup global listeners
     setupEventListeners();
-    
-    console.log('✅ Application initialized successfully');
+});
+
+// ==========================================
+// DATA PROCESSING
+// ==========================================
+function getArchetypesByGrade(grade) {
+    if (grade === 'G3') {
+        return l1Archetypes;
+    } else if (grade === 'G4') {
+        return [...l2Archetypes, ...l3Archetypes].sort((a,b) => a.level.localeCompare(b.level) || a.id.localeCompare(b.id));
+    }
+    return [];
 }
 
+function getGroupedByTopic(archetypes) {
+    return allTopics
+        .map(topic => ({
+            topic,
+            archetypes: archetypes.filter(a => a.topic === topic).sort((a,b) => a.id.localeCompare(b.id))
+        }))
+        .filter(g => g.archetypes.length > 0)
+        .sort((a, b) => a.topic.localeCompare(b.topic));
+}
+
+function getArchetypeById(id) {
+    return allArchetypes.find(a => a.id === id);
+}
+
+// ==========================================
+// HTML RENDERING FUNCTIONS
+// ==========================================
+
 /**
- * Render statistics cards
+ * Populates the hero statistics
  */
-function renderStats() {
+function populateStats() {
     const statsGrid = document.getElementById('statsGrid');
-    const levels = { 'L1': 0, 'L2': 0, 'L3': 0 };
-    const badges = { 'CORE': 0, 'SAT': 0 };
+    const stats = [
+        { id: 'l1', label: 'L1 Archetypes', value: l1Archetypes.length, icon: ICONS.stat_l1 },
+        { id: 'l2', label: 'L2 Archetypes', value: l2Archetypes.length, icon: ICONS.stat_l2 },
+        { id: 'l3', label: 'L3 Archetypes', value: l3Archetypes.length, icon: ICONS.stat_l3 },
+        { id: 'total', label: 'Total Topics', value: allTopics.length, icon: ICONS.stat_topics }
+    ];
     
-    ARCHETYPES_DATA.forEach(arch => {
-        // Only count parent archetypes (not individual branches)
-        if (!arch.parent_id) {
-            if (levels[arch.level] !== undefined) levels[arch.level]++;
-            if (badges[arch.badge]) badges[arch.badge]++;
-        }
-    });
-    
-    statsGrid.innerHTML = `
-        <div class="stat-card">
-            <div class="stat-icon">📚</div>
-            <div class="stat-value">${levels['L1'] + levels['L2'] + levels['L3']}</div>
-            <div class="stat-label">Total Archetypes</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🎯</div>
-            <div class="stat-value">${levels['L1']}</div>
-            <div class="stat-label">Level 1</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🔗</div>
-            <div class="stat-value">${levels['L2']}</div>
-            <div class="stat-label">Level 2</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">⚡</div>
-            <div class="stat-value">${levels['L3']}</div>
-            <div class="stat-label">Level 3</div>
-        </div>
-    `;
+    statsGrid.innerHTML = stats.map(stat => `
+      <div class="stat-card">
+        <span class="stat-icon">${stat.icon}</span>
+        <div class="stat-value">${stat.value}</div>
+        <div class="stat-label">${stat.label}</div>
+      </div>
+    `).join('');
 }
 
 /**
- * Render G3 and G4 topics separately
+ * Populates the G3 or G4 topic containers
  */
-function renderG3AndG4Topics() {
-    const topics = ARCHETYPES_DATA.reduce((acc, arch) => {
-        // Skip branch archetypes (only show parent archetypes)
-        if (arch.parent_id) return acc;
-        
-        // Ensure topic key exists
-        const topicKey = arch.topic || 'Uncategorized';
-        
-        if (!acc[topicKey]) {
-            acc[topicKey] = { g3: [], g4: [] };
-        }
-        
-        // G3 = Level 1 only
-        if (arch.level === 'L1') {
-            acc[topicKey].g3.push(arch);
-        } 
-        // G4 = Level 2 and Level 3
-        else if (arch.level === 'L2' || arch.level === 'L3') {
-            acc[topicKey].g4.push(arch);
-        }
-        return acc;
-    }, {});
-    
-    const g3Container = document.getElementById('g3-topics-container');
-    const g4Container = document.getElementById('g4-topics-container');
-    
-    let g3Html = '';
-    let g4Html = '';
-    
-    const sortedTopicKeys = Object.keys(topics).sort();
-    
-    for (const topicKey of sortedTopicKeys) {
-        const topicData = topics[topicKey];
-        if (topicData.g3.length > 0) {
-            g3Html += renderTopicCard(topicKey, topicData.g3, 'G3');
-        }
-        if (topicData.g4.length > 0) {
-            g4Html += renderTopicCard(topicKey, topicData.g4, 'G4');
-        }
-    }
-    
-    g3Container.innerHTML = g3Html;
-    g4Container.innerHTML = g4Html;
-}
+function populateTopics(grade, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-/**
- * Generate SOP chain summary
- */
-function sopChainSummary(arch) {
-    if (arch.level === 'L1') {
-        if (arch.has_branches) {
-            return `${arch.branches.length} methods available`;
-        }
-        return arch.sop?.steps ? `${arch.sop.steps.length} steps` : 'Basic procedure';
-    } else if (arch.level === 'L2' && arch.constituent_l1_ids) {
-        return `Calls: ${arch.constituent_l1_ids.join(', ')}`;
-    } else if (arch.level === 'L3' && arch.source_l2_ids) {
-        return `Synthesizes: ${arch.source_l2_ids.join(', ')}`;
-    }
-    return 'Multi-step process';
-}
+    const archetypes = getArchetypesByGrade(grade);
+    const groupedData = getGroupedByTopic(archetypes);
 
-/**
- * Render a single topic card
- */
-function renderTopicCard(topicKey, archetypes, gradeLevel) {
-    const topicName = topicKey.charAt(0).toUpperCase() + topicKey.slice(1);
-    
-    // Determine badge types in this topic
-    const badges = [...new Set(archetypes.map(a => a.badge))];
-    const hasMixed = badges.length > 1;
-    const pillType = hasMixed ? 'mixed' : (badges[0] ? badges[0].toLowerCase() : 'core'); // Fallback for undefined badge
-    const pillText = hasMixed ? 'MIXED' : (badges[0] || 'CORE'); // Fallback for undefined badge
-    
-    const archetypesHtml = archetypes.sort((a,b) => a.id.localeCompare(b.id)).map(arch => { // Sort archetypes by ID
-        let fullSopHtml = `<div class="sop-section">`;
-        
-        // ====== NEW: Show branches if available ======
-        if (arch.has_branches && arch.branches && arch.branches.length > 0) {
-            fullSopHtml += `
-                <div class="branches-overview">
-                    <h4>📂 Sub-Branches (${arch.branches.length})</h4>
-                    <div class="branches-tree">
-            `;
-            
-            arch.branches.forEach((branchId, index) => {
-                const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
-                if (branch) {
-                    const isLast = index === arch.branches.length - 1;
-                    const prefix = isLast ? '└─' : '├─';
-                    fullSopHtml += `
-                        <div class="branch-tree-item" data-branch-id="${branchId}">
-                            <span class="branch-prefix">${prefix}</span>
-                            <span class="branch-name">${branch.name}</span>
-                            <button class="branch-expand-btn" onclick="expandBranchDetails(event, '${branchId}')">
-                                <svg class="icon-sm" viewBox="0 0 24 24" fill="none">
-                                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </button>
-                        </div>
-                    `;
-                }
-            });
-            
-            fullSopHtml += `
-                    </div>
-                </div>
-            `;
-        }
-        // ====== End branches section ======
-        
-        if (arch.sop) {
-            // Goal
-            if (arch.sop.goal) {
-                fullSopHtml += `<h4>🎯 Goal</h4><p style="color: var(--text-secondary); line-height: 1.6;">${arch.sop.goal}</p>`;
-            }
-            
-            // Triggers
-            if (arch.sop.triggers && arch.sop.triggers.length > 0) {
-                fullSopHtml += `<h4>🔔 Triggers</h4><ul>`;
-                arch.sop.triggers.forEach(trigger => {
-                    fullSopHtml += `<li>When you see: "${trigger}"</li>`;
-                });
-                fullSopHtml += `</ul>`;
-            }
-            
-            // Steps
-            if (arch.sop.steps && arch.sop.steps.length > 0) {
-                fullSopHtml += `<h4>📋 Steps</h4><ul>`;
-                arch.sop.steps.forEach(step => {
-                    fullSopHtml += `<li>${step}</li>`;
-                });
-                fullSopHtml += `</ul>`;
-            }
-            
-            // Pitfalls
-            if (arch.sop.pitfalls && arch.sop.pitfalls.length > 0) {
-                fullSopHtml += `<h4>⚠️ Pitfalls</h4>`;
-                arch.sop.pitfalls.forEach(pitfall => {
-                    fullSopHtml += `
-                        <div class="pitfall-item">
-                            <span class="pitfall-badge">${pitfall.type}</span>
-                            <span>${pitfall.text}</span>
-                        </div>
-                    `;
-                });
-            }
-            
-            // Pro Tips
-            if (arch.sop.pro_tips && arch.sop.pro_tips.length > 0) {
-                fullSopHtml += `<h4>💡 Pro Tips</h4>`;
-                arch.sop.pro_tips.forEach(tip => {
-                    fullSopHtml += `
-                        <div class="pro-tip-item">
-                            <span class="pro-tip-badge">TIP</span>
-                            <span>${tip}</span>
-                        </div>
-                    `;
-                });
-            }
-        } else if (!arch.has_branches) { // Only show 'No SOP' if it's not a parent container
-            fullSopHtml += '<p>No detailed SOP available.</p>';
-        }
-        fullSopHtml += '</div>';
+    container.innerHTML = groupedData.map(group => {
+        const archetypeCount = group.archetypes.length;
+        // Determine pill
+        const levels = new Set(group.archetypes.map(a => a.level));
+        let pill = 'core';
+        if (levels.size > 1) pill = 'mixed';
+        else if (group.archetypes.every(a => a.badge === 'SAT')) pill = 'sat';
 
-        // ====== Add has-branches class if applicable ======
-        const hasBranchesClass = arch.has_branches ? 'has-branches' : '';
-        
         return `
-            <div class="archetype-sop-group ${hasBranchesClass}" 
-                 data-archetype-id="${arch.id}" 
-                 data-archetype-name="${arch.name.toLowerCase()}" 
-                 onclick="toggleArchetypeDetails(this)">
-                <div class="archetype-card level-${arch.level.charAt(1)}">
-                    <div class="archetype-title">
-                        <span class="level-badge">${arch.level}</span>
-                        ${arch.name}
-                        ${arch.has_branches ? '<span class="branch-indicator">📂</span>' : ''}
-                    </div>
-                    <span class="archetype-expand-indicator">
-                        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 6V18M6 12H18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </span>
-                </div>
-                <div class="sop-connector">
-                    <div class="sop-chain">${sopChainSummary(arch)}</div>
-                </div>
-                <div class="archetype-details">
-                    ${fullSopHtml}
-                </div>
+        <div class="topic-card" id="topic-card-${group.topic.toLowerCase().replace(/[^a-z0-9]/g, '-')}" data-topic="${group.topic}">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <div class="topic-title-group">
+              <span class="topic-icon">${ICONS[group.topic] || '🧩'}</span>
+              <div>
+                <h3 class="topic-title">${group.topic}</h3>
+                <p class="topic-subtitle">${archetypeCount} Archetype${archetypeCount > 1 ? 's' : ''}</p>
+              </div>
             </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <span class="pill ${pill}">${pill}</span>
+              <div class="expand-indicator">
+                ${ICONS.plus}
+              </div>
+            </div>
+          </div>
+          <div class="topic-content">
+            <div class="topic-body">
+              <div class="archetype-sop-container">
+                ${group.archetypes.map(archetype => renderArchetype(archetype)).join('')}
+              </div>
+            </div>
+          </div>
+        </div>
         `;
     }).join('');
+}
+
+/**
+ * Renders a single Archetype card
+ */
+function renderArchetype(archetype) {
+    const levelClass = `level-${archetype.level.toLowerCase().replace('l', '')}`;
+    
+    // Check for branches
+    const hasBranches = archetype.branches && archetype.branches.length > 0;
+
+    // *** FIX: Correctly assign click action ***
+    // Parent archetypes (with branches) call showModalForArchetype('ID')
+    // Regular archetypes call toggleSop(this, 'ID')
+    const clickAction = hasBranches 
+        ? `showModalForArchetype('${archetype.id}')`
+        : `toggleSop(this, '${archetype.id}')`;
+        
+    const branchIcon = hasBranches ? ICONS.branch : '';
+    const branchCount = hasBranches ? `<span class="branch-count-badge">${archetype.branches.length} sub-models</span>` : '';
+    
+    // Render SOP details
+    const sopHtml = renderSopDetails(archetype.sop, archetype.level);
 
     return `
-        <div class="topic-card" data-keywords="${topicKey} ${archetypes.map(a => `${a.name} ${a.description}`).join(' ')}" onclick="toggleCard(this, event)">
-            <div class="topic-header">
-                <div class="topic-title-group">
-                    <span class="topic-icon">🧩</span>
-                    <div>
-                        <div class="topic-title">${topicName}</div>
-                        <div class="topic-subtitle">${archetypes.length} Archetype${archetypes.length > 1 ? 's' : ''}</div>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span class="pill ${pillType}">${pillText}</span>
-                    <span class="expand-indicator"><svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                </div>
-            </div>
-            <div class="topic-content">
-                <div class="topic-body">
-                    <div class="archetype-sop-container">${archetypesHtml}</div>
-                </div>
-            </div>
+    <div class="archetype-sop-group" id="arch-${archetype.id}">
+      <div class="archetype-card ${levelClass}" onclick="${clickAction}">
+        <div class="archetype-title">
+          <span class="level-badge">${archetype.level}</span>
+          <span class="archetype-name">
+            ${archetype.name} ${branchIcon}
+          </span>
+          <span class="archetype-id">${archetype.id}</span>
+          ${branchCount}
         </div>
-    `;
-}
-
-
-/**
- * Expand branch details in a modal
- */
-function expandBranchDetails(event, branchId) {
-    event.stopPropagation();
-    
-    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
-    if (!branch) {
-        console.error('Branch not found:', branchId);
-        return;
-    }
-    
-    // Remove any existing modals first
-    const existingModal = document.querySelector('.branch-modal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-    
-    // --- FIX: Add logic for Back Button ---
-    const parent = branch.parent_id ? ARCHETYPES_DATA.find(a => a.id === branch.parent_id) : null;
-    let backButtonHtml = '';
-    if (parent) {
-        backButtonHtml = `
-            <button onclick="event.stopPropagation(); expandBranchDetails(event, '${parent.id}')" 
-                    style="background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-secondary); padding: 4px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8em; margin-bottom: 16px;">
-                &larr; Back to ${parent.name}
-            </button>
-        `;
-    }
-    // --- END FIX ---
-
-    // Create modal
-    const modal = document.createElement('div');
-    modal.className = 'branch-modal';
-    modal.innerHTML = `
-        <div class="branch-modal-content">
-            <div class="branch-modal-header">
-                <div>
-                    <h3>${branch.name}</h3>
-                    <p style="margin: 4px 0 0 0; color: var(--text-secondary); font-size: 0.9em;">
-                        ${branch.has_branches ? '📂 Parent Archetype' : branch.parent_id ? '↳ Branch of ' + branch.parent_id : 'L1 Archetype'}
-                    </p>
-                </div>
-                <button class="branch-modal-close" onclick="this.closest('.branch-modal').remove(); document.body.style.overflow = '';">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none">
-                        <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-            </div>
-            <div class="branch-modal-body">
-                ${backButtonHtml} <!-- FIX: Insert Back Button Here -->
-                ${renderBranchSopDetails(branch)}
-            </div>
+        <div class="archetype-expand-indicator">
+          ${ICONS.plus}
         </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Prevent body scroll when modal is open
-    document.body.style.overflow = 'hidden';
-    
-    // Close modal when clicking outside
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-            document.body.style.overflow = '';
-        }
-    });
-    
-    // Close on Escape key
-    const escapeHandler = (e) => {
-        if (e.key === 'Escape') {
-            modal.remove();
-            document.body.style.overflow = '';
-            document.removeEventListener('keydown', escapeHandler);
-        }
-    };
-    document.addEventListener('keydown', escapeHandler);
-}
-/**
- * Render detailed SOP for a branch (or parent with branches)
- */
-function renderBranchSopDetails(branch) {
-    let html = '<div class="sop-section">';
-    
-    // ====== NEW: If this is a parent with branches, show branches first ======
-    if (branch.has_branches && branch.branches && branch.branches.length > 0) {
-        html += `
-            <div class="branches-overview">
-                <h4>📂 Sub-Branches (${branch.branches.length})</h4>
-                <p style="margin-bottom: 16px;">
-                    This is a parent archetype with multiple solution methods. Click on any branch below to view its detailed SOP.
-                </p>
-                <div class="branches-tree">
-        `;
-        
-        branch.branches.forEach((branchId, index) => {
-            const childBranch = ARCHETYPES_DATA.find(a => a.id === branchId);
-            if (childBranch) {
-                const isLast = index === branch.branches.length - 1;
-                const prefix = isLast ? '└─' : '├─';
-                html += `
-                    <div class="branch-tree-item clickable" onclick="event.stopPropagation(); expandBranchDetails(event, '${branchId}')">
-                        <span class="branch-prefix">${prefix}</span>
-                        <span class="branch-name">${childBranch.name}</span>
-                        <button class="branch-expand-btn">
-                            <svg class="icon-sm" viewBox="0 0 24 24" fill="none">
-                                <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </button>
-                    </div>
-                `;
-            }
-        });
-        
-        html += `
-                </div>
-            </div>
-        `;
-    }
-    // ====== End branches section ======
-    
-    if (branch.sop) {
-        // Goal
-        if (branch.sop.goal) {
-            html += `<h4>🎯 Goal</h4><p style="color: var(--text-secondary); line-height: 1.6;">${branch.sop.goal}</p>`;
-        }
-        
-        // Triggers
-        if (branch.sop.triggers && branch.sop.triggers.length > 0) {
-            html += `<h4>🔔 Triggers</h4><ul>`;
-            branch.sop.triggers.forEach(trigger => {
-                html += `<li>When you see: "${trigger}"</li>`;
-            });
-            html += `</ul>`;
-        }
-        
-        // Steps
-        if (branch.sop.steps && branch.sop.steps.length > 0) {
-            html += `<h4>📋 Steps</h4><ul>`;
-            branch.sop.steps.forEach(step => {
-                html += `<li>${step}</li>`;
-            });
-            html += `</ul>`;
-        }
-        
-        // Pitfalls
-        if (branch.sop.pitfalls && branch.sop.pitfalls.length > 0) {
-            html += `<h4>⚠️ Pitfalls</h4>`;
-            branch.sop.pitfalls.forEach(pitfall => {
-                html += `
-                    <div class="pitfall-item">
-                        <span class="pitfall-badge">${pitfall.type}</span>
-                        <span>${pitfall.text}</span>
-                    </div>
-                `;
-            });
-        }
-        
-        // Pro Tips
-        if (branch.sop.pro_tips && branch.sop.pro_tips.length > 0) {
-            html += `<h4>💡 Pro Tips</h4>`;
-            branch.sop.pro_tips.forEach(tip => {
-                html += `
-                    <div class="pro-tip-item">
-                        <span class="pro-tip-badge">TIP</span>
-                        <span>${tip}</span>
-                    </div>
-                `;
-            });
-        }
-    } else if (!branch.has_branches) { // Only show if not a parent
-        html += '<p style="color: var(--text-secondary);">No detailed SOP available for this archetype.</p>';
-    }
-    
-    html += '</div>';
-    return html;
-}
-
-
-/**
- * Render catalog organized by levels
- */
-function renderCatalog(container) {
-    const levels = { 'L1': [], 'L2': [], 'L3': [] };
-    ARCHETYPES_DATA.forEach(arch => {
-        // Only show parent archetypes in catalog, not individual branches
-        if (levels[arch.level] && !arch.parent_id) {
-            levels[arch.level].push(arch);
-        }
-    });
-
-    container.innerHTML = `
-        <div class="catalog-card level-1 collapsible" onclick="toggleCatalogLevel(this)">
-            <div class="catalog-header">
-                <h3 class="catalog-title">Level 1 Archetypes (${levels['L1'].length})</h3>
-                <span class="catalog-expand-indicator">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-            </div>
-            <div class="catalog-content">
-                <ul class="archetype-list">
-                    ${levels['L1'].sort((a,b) => a.id.localeCompare(b.id)).map(a => {
-                        let item = `<li><span class="level-badge">L1</span> ${a.name} (${a.topic})`;
-                        if (a.has_branches) {
-                            item += ` <span class="branch-count-badge">📂 ${a.branches.length} branches</span>`;
-                        }
-                        item += `</li>`;
-                        return item;
-                    }).join('')}
-                </ul>
-            </div>
-        </div>
-        <div class="catalog-card level-2 collapsible" onclick="toggleCatalogLevel(this)">
-            <div class="catalog-header">
-                <h3 class="catalog-title">Level 2 Archetypes (${levels['L2'].length})</h3>
-                <span class="catalog-expand-indicator">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-            </div>
-            <div class="catalog-content">
-                <ul class="archetype-list">
-                    ${levels['L2'].sort((a,b) => a.id.localeCompare(b.id)).map(a => `<li><span class="level-badge">L2</span> ${a.name} (${a.topic})</li>`).join('')}
-                </ul>
-            </div>
-        </div>
-        <div class="catalog-card level-3 collapsible" onclick="toggleCatalogLevel(this)">
-            <div class="catalog-header">
-                <h3 class="catalog-title">Level 3 Archetypes (${levels['L3'].length})</h3>
-                <span class="catalog-expand-indicator">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M19 9L12 16L5 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </span>
-            </div>
-            <div class="catalog-content">
-                <ul class="archetype-list">
-                    ${levels['L3'].sort((a,b) => a.id.localeCompare(b.id)).map(a => `<li><span class="level-badge">L3</span> ${a.name} (${a.topic})</li>`).join('')}
-                </ul>
-            </div>
-        </div>
+      </div>
+      ${sopHtml}
+    </div>
     `;
 }
 
 /**
- * Setup event listeners
+ * Renders the hidden SOP details section
+ */
+function renderSopDetails(sop, level) {
+    if (!sop || !sop.goal) {
+        // Parent containers (like ALG-04, GEO-04) might not have their own SOPs
+        if (level === 'L1') return `<div class="archetype-details"></div>`;
+        return '';
+    }
+
+    const steps = sop.steps.map(s => `<li>${s}</li>`).join('');
+    const pitfalls = sop.pitfalls.map(p => `
+        <div class="pitfall-item">
+          <span class="pitfall-badge">${p.type || 'Error'}</span>
+          <span>${p.text}</span>
+        </div>
+    `).join('');
+    const proTips = sop.pro_tips.map(t => `
+        <div class="pro-tip-item">
+          <span class="pro-tip-badge">Pro Tip</span>
+          <span>${t}</span>
+        </div>
+    `).join('');
+
+    return `
+    <div class="archetype-details">
+      <div class="sop-section">
+        <p class="sop-goal">${sop.goal}</p>
+        
+        <h4>Steps</h4>
+        <ul>${steps}</ul>
+        
+        ${pitfalls ? `<h4 style="margin-top: 1.5rem;">Pitfalls</h4>${pitfalls}` : ''}
+        ${proTips ? `<h4 style="margin-top: 1.5rem;">Pro Tips</h4>${proTips}` : ''}
+      </div>
+    </div>
+    `;
+}
+
+/**
+ * Populates the complete catalog section
+ */
+function populateCatalog() {
+    const container = document.getElementById('catalogContainer');
+    if (!container) return;
+    
+    const levels = [
+        { level: 'L1', title: 'L1: Fundamental Skills', archetypes: l1Archetypes, class: 'level-1' },
+        { level: 'L2', title: 'L2: Integration', archetypes: l2Archetypes, class: 'level-2' },
+        { level: 'L3', title: 'L3: Synthesis', archetypes: l3Archetypes, class: 'level-3' },
+    ];
+
+    container.innerHTML = levels.map(levelGroup => {
+        const groupedByTopic = getGroupedByTopic(levelGroup.archetypes);
+        
+        return `
+        <div class="catalog-card collapsible ${levelGroup.class}" onclick="this.classList.toggle('expanded')">
+          <div class="catalog-header">
+            <h3 class="catalog-title">${levelGroup.title} (${levelGroup.archetypes.length})</h3>
+            <div class="catalog-expand-indicator">${ICONS.plus}</div>
+          </div>
+          <div class="catalog-content">
+            ${groupedByTopic.map(topicGroup => `
+              <h4 style="color: var(--text-primary); margin-top: 1.5rem; margin-bottom: 0.5rem; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 0.5rem;">
+                ${ICONS[topicGroup.topic] || '🧩'} ${topicGroup.topic}
+              </h4>
+              <ul class="archetype-list">
+                ${topicGroup.archetypes.map(a => `
+                  <li onclick="event.stopPropagation(); findArchetype('${a.id}');">
+                    <span class="level-badge">${a.level}</span>
+                    <span class="archetype-id">${a.id}</span>
+                    <span>${a.name}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            `).join('')}
+          </div>
+        </div>
+        `;
+    }).join('');
+}
+
+// ==========================================
+// INTERACTIVITY & EVENT HANDLERS
+// ==========================================
+
+/**
+ * Sets up global event listeners
  */
 function setupEventListeners() {
-    // Mouse move effect for cards
-    document.body.addEventListener('mousemove', (e) => {
-        const card = e.target.closest('.topic-card');
-        if (card) {
-            const rect = card.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            card.style.setProperty('--mouse-x', `${x}%`);
-            card.style.setProperty('--mouse-y', `${y}%`);
-        }
-    });
-
-    // Scroll to top button visibility
+    // Scroll-to-top button visibility
+    const scrollTopBtn = document.getElementById('scrollTop');
     window.addEventListener('scroll', () => {
-        const scrollTopBtn = document.getElementById('scrollTop');
-        if (window.pageYOffset > 300) { 
-            scrollTopBtn.classList.add('visible'); 
-        } else { 
-            scrollTopBtn.classList.remove('visible'); 
+        if (window.scrollY > 300) {
+            scrollTopBtn.classList.add('visible');
+        } else {
+            scrollTopBtn.classList.remove('visible');
         }
     });
 
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { 
-            // Clear archetype finder
-            document.getElementById('archetypeInput').value = '';
-            document.getElementById('searchResultHint').classList.remove('show');
-            document.getElementById('archetypeInput').blur();
+    // Topic card hover effect
+    document.querySelectorAll('.topic-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+        });
+    });
+    
+    // Close modal on overlay click
+    const modal = document.getElementById('branchModal');
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeBranchModal();
         }
     });
+
+    // Add CSS rules for new modal elements
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = `
+        .modal-back-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        .modal-back-btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary);
+        }
+        .modal-sub-branch-title {
+            color: var(--accent);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 1.5rem;
+        }
+    `;
+    document.head.appendChild(styleSheet);
 }
 
 /**
- * Toggle topic card expansion
+ * Toggles a topic card (expand/collapse)
  */
-function toggleCard(card, event) {
-    if (event.target.closest('.archetype-sop-group') || event.target.closest('.branch-tree-item')) {
-        return; 
-    }
+function toggleTopic(headerElement) {
+    const card = headerElement.closest('.topic-card');
+    const indicator = headerElement.querySelector('.expand-indicator');
     card.classList.toggle('expanded');
+    
+    if (card.classList.contains('expanded')) {
+        indicator.innerHTML = ICONS.minus;
+    } else {
+        indicator.innerHTML = ICONS.plus;
+    }
 }
 
 /**
- * Toggle archetype details expansion
+ * Toggles an archetype's SOP details
  */
-function toggleArchetypeDetails(group) {
-    group.classList.toggle('details-expanded');
+function toggleSop(cardElement, archetypeId) {
+    const group = cardElement.closest('.archetype-sop-group');
+    const indicator = cardElement.querySelector('.archetype-expand-indicator');
+    const isExpanded = group.classList.toggle('details-expanded');
+    
+    indicator.style.transform = isExpanded ? 'rotate(45deg)' : 'rotate(0deg)';
 }
 
 /**
- * Toggle all cards expansion
+ * Renders the SOP section for the modal
+ */
+function renderModalSopSection(sop) {
+    if (!sop || !sop.goal) return '';
+
+    const steps = sop.steps.map(s => `<li>${s}</li>`).join('');
+    const pitfalls = sop.pitfalls.map(p => `
+        <div class="pitfall-item">
+          <span class="pitfall-badge">${p.type || 'Error'}</span>
+          <span>${p.text}</span>
+        </div>
+    `).join('');
+    const proTips = sop.pro_tips.map(t => `
+        <div class="pro-tip-item">
+          <span class="pro-tip-badge">Pro Tip</span>
+          <span>${t}</span>
+        </div>
+    `).join('');
+
+    return `
+      <div class="sop-section" style="margin-top: 0;">
+        <p class="sop-goal">${sop.goal}</p>
+        
+        <h4>Steps</h4>
+        <ul>${steps}</ul>
+        
+        ${pitfalls ? `<h4 style="margin-top: 1.5rem;">Pitfalls</h4>${pitfalls}` : ''}
+        ${proTips ? `<h4 style="margin-top: 1.5rem;">Pro Tips</h4>${proTips}` : ''}
+      </div>
+    `;
+}
+
+/**
+ * [FIXED]
+ * Opens the modal and renders content for a specific Archetype ID
+ * This function now handles both parents and children recursively.
+ * It now uses addEventListener for more robust sub-item clicks.
+ */
+function showModalForArchetype(archetypeId) {
+    const archetype = getArchetypeById(archetypeId);
+    if (!archetype) return;
+
+    const modal = document.getElementById('branchModal');
+    const title = document.getElementById('branchModalTitle');
+    const body = document.getElementById('branchModalBody');
+    
+    // Set Modal Title
+    title.textContent = archetype.name;
+    
+    let bodyHtml = '';
+
+    // 1. Add "Back" button if it's a child (has a parent_id)
+    if (archetype.parent_id) {
+        const parent = getArchetypeById(archetype.parent_id);
+        if (parent) {
+            // *** FIX: Corrected HTML syntax for the button ***
+            bodyHtml += `<button class="modal-back-btn" data-archetype-id="${parent.id}">← Back to ${parent.name}</button>`;
+        }
+    }
+
+    // 2. Add description overview
+    bodyHtml += `
+      <div class="branches-overview">
+        <h4>${archetype.name} (<span class="archetype-id" style="font-size: 0.9em;">${archetype.id}</span>)</h4>
+        <p>${archetype.description}</p>
+      </div>
+    `;
+
+    // 3. Add SOP details for the *current* archetype
+    bodyHtml += renderModalSopSection(archetype.sop);
+
+    // 4. Add sub-branch list if they exist
+    if (archetype.branches && archetype.branches.length > 0) {
+        const branchArchetypes = archetype.branches
+            .map(id => getArchetypeById(id))
+            .filter(Boolean);
+            
+        bodyHtml += `<h4 class="modal-sub-branch-title">Sub-Models (${branchArchetypes.length})</h4>`;
+        bodyHtml += `<div class="branches-tree">`;
+        bodyHtml += branchArchetypes.map(branch => `
+          <!-- *** FIX: Removed inline onclick, will use event listener *** -->
+          <div class="branch-tree-item clickable" data-archetype-id="${branch.id}">
+            <span class="branch-prefix">↳</span>
+            <span class="branch-name">
+                <span class="level-badge">${branch.level}</span>
+                <span class="archetype-id">${branch.id}</span>
+                ${branch.name}
+            </span>
+          </div>
+        `).join('');
+        bodyHtml += `</div>`;
+    }
+
+    // Render to DOM
+    body.innerHTML = bodyHtml;
+    // Scroll modal body to top
+    body.scrollTop = 0; 
+    
+    // *** FIX: Bind events *after* rendering HTML ***
+    bindModalEvents(body);
+    
+    // Show modal
+    modal.classList.add('visible');
+    document.body.style.overflow = 'hidden'; // Prevent background scroll
+}
+
+/**
+ * [FIXED] Binds click events within the modal body
+ */
+function bindModalEvents(modalBody) {
+    // Bind clicks for sub-items
+    modalBody.querySelectorAll('.branch-tree-item.clickable').forEach(item => {
+        item.addEventListener('click', (e) => {
+            const archetypeId = e.currentTarget.dataset.archetypeId;
+            if (archetypeId) {
+                showModalForArchetype(archetypeId);
+            }
+        });
+    });
+
+    // Bind clicks for back button
+    // *** FIX: Corrected selector from '._modal-back-btn' to '.modal-back-btn' ***
+    const backButton = modalBody.querySelector('.modal-back-btn');
+    if (backButton) {
+        backButton.addEventListener('click', (e) => {
+            const archetypeId = e.currentTarget.dataset.archetypeId;
+            if (archetypeId) {
+                showModalForArchetype(archetypeId);
+            }
+        });
+    }
+}
+
+
+/**
+ * Closes the branch modal
+ */
+function closeBranchModal() {
+    const modal = document.getElementById('branchModal');
+    modal.classList.add('exiting');
+    document.body.style.overflow = ''; // Restore background scroll
+    
+    setTimeout(() => {
+        modal.classList.remove('visible', 'exiting');
+    }, 300); // Match animation duration
+}
+
+/**
+ * Expands or collapses all topic cards
  */
 function toggleAllCards() {
+    isAllExpanded = !isAllExpanded;
     const cards = document.querySelectorAll('.topic-card');
-    const expandIcon = document.getElementById('expand-icon-svg');
-    allExpanded = !allExpanded;
+    const btn = document.getElementById('expandAllBtn');
     
     cards.forEach(card => {
-        if (allExpanded) {
+        const indicator = card.querySelector('.topic-header .expand-indicator');
+        if (isAllExpanded) {
             card.classList.add('expanded');
+            indicator.innerHTML = ICONS.minus;
         } else {
             card.classList.remove('expanded');
+            indicator.innerHTML = ICONS.plus;
         }
     });
     
-    if (expandIcon) {
-        if (allExpanded) {
-            expandIcon.innerHTML = `<path d="M4 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />`;
-        } else {
-            expandIcon.innerHTML = `<path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
-        }
-    }
+    btn.innerHTML = isAllExpanded ? `${ICONS.collapse} Collapse All` : `${ICONS.expand} Expand All`;
 }
 
 /**
- * Scroll to a specific section
+ * Scrolls to a specific section
  */
-function scrollToSection(id) { 
+function scrollToSection(id) {
     const element = document.getElementById(id);
-    if(element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+    if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
 
 /**
- * Toggle legend visibility
+ * Toggles the legend visibility
  */
 function toggleLegend() {
     document.getElementById('legend').classList.toggle('visible');
 }
 
 /**
- * Find and highlight an archetype
+ * Finds an archetype by ID or name and highlights it
  */
-function findArchetype() {
-    const input = document.getElementById('archetypeInput').value.trim();
+function findArchetype(idToFind = null) {
+    const input = document.getElementById('archetypeInput');
     const hint = document.getElementById('searchResultHint');
+    const query = (idToFind || input.value).trim().toLowerCase();
     
-    if (!input) {
-        showHint('⚠️ Please enter an Archetype ID or name', 'error');
-        return;
-    }
-
+    if (!query) return;
+    
     // Clear previous highlights
-    document.querySelectorAll('.archetype-sop-group.highlighted').forEach(el => {
-        el.classList.remove('highlighted');
-    });
+    document.querySelectorAll('.highlighted').forEach(el => el.classList.remove('highlighted'));
+    
+    let foundArchetype = allArchetypes.find(a => 
+        a.id.toLowerCase() === query || 
+        a.name.toLowerCase().includes(query)
+    );
+    
+    if (foundArchetype) {
+        // If a branch was found, find its *main* list item (which is the parent)
+        let displayId = foundArchetype.parent_id ? foundArchetype.parent_id : foundArchetype.id;
+        const element = document.getElementById(`arch-${displayId}`);
+        
+        if (element) {
+            // 1. Scroll to the element
+            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 2. Expand its parent topic card
+            const topicCard = element.closest('.topic-card');
+            if (topicCard && !topicCard.classList.contains('expanded')) {
+                toggleTopic(topicCard.querySelector('.topic-header'));
+            }
+            
+            // 3. Highlight the element
+            element.classList.add('highlighted');
+            
+            // 4. Show success hint
+            showHint(`✅ Found: ${foundArchetype.name}`, 'success');
+            input.value = '';
+            
+            // 5. Open the modal and navigate to the specific item
+            // This will open the parent modal first, then navigate to the child if needed
+            setTimeout(() => {
+               showModalForArchetype(foundArchetype.id);
+            }, 700); // Wait for scroll to finish
 
-    // Search for matching Archetype using data attributes
-    const inputLower = input.toLowerCase();
-    const matchedElement = Array.from(document.querySelectorAll('.archetype-sop-group')).find(el => {
-        const id = el.getAttribute('data-archetype-id')?.toLowerCase();
-        const name = el.getAttribute('data-archetype-name')?.toLowerCase();
-        return id === inputLower || id?.includes(inputLower) || name?.includes(inputLower);
-    });
-
-    if (matchedElement) {
-        // Found a match
-        const topicCard = matchedElement.closest('.topic-card');
-        
-        // Expand Topic card if not already expanded
-        if (topicCard && !topicCard.classList.contains('expanded')) {
-            topicCard.classList.add('expanded');
+        } else {
+            showHint(`❌ Archetype found but not visible in current view.`, 'error');
         }
-        
-        // Expand Archetype details if not already expanded
-        if (!matchedElement.classList.contains('details-expanded')) {
-            matchedElement.classList.add('details-expanded');
-        }
-        
-        // Add highlight effect
-        matchedElement.classList.add('highlighted');
-        
-        // Scroll to the element
-        setTimeout(() => {
-            matchedElement.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
-        }, 300);
-        
-        // Show success message
-        const archetypeId = matchedElement.getAttribute('data-archetype-id');
-        const archetypeName = matchedElement.querySelector('.archetype-title')?.textContent.trim().replace(/^L\d+\s*/, '').replace('📂', '').trim() || 'Archetype';
-        
-        showHint(`✓ Found: ${archetypeId} - ${archetypeName}`, 'success');
-        
-        // Remove highlight after 3 seconds
-        setTimeout(() => {
-            matchedElement.classList.remove('highlighted');
-        }, 3000);
     } else {
-        // No match found
-        showHint(`✗ No Archetype found matching "${input}". Try ID like "ARCH-L1-ALG-04" or name like "Quadratic"`, 'error');
+        showHint(`❌ No archetype found for "${query}".`, 'error');
     }
 }
 
 /**
- * Show hint message
+ * Displays a temporary hint message
  */
-function showHint(message, type) {
+function showHint(message, type = 'success') {
     const hint = document.getElementById('searchResultHint');
     hint.textContent = message;
-    hint.className = `search-result-hint show ${type}`;
+    hint.className = `search-result-hint ${type} show`;
     
     setTimeout(() => {
         hint.classList.remove('show');
-    }, 4000);
+    }, 3000);
 }
-
-/**
- * Toggle catalog level expansion
- */
-function toggleCatalogLevel(card) {
-    card.classList.toggle('expanded');
-}
-
-// Initialize the application once the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initializeApp);
