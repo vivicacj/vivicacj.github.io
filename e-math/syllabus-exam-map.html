@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh"> <!-- Changed lang to zh for comments, but UI text remains as per original -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,42 +42,49 @@
         <!-- App content will be rendered here by JavaScript -->
     </div>
 
-    <!-- External Data Source -->
-    <script src="archetypes-l123-data.js"></script>
+    <!-- 移除了旧的 External Data Source -->
+    <!-- <script src="archetypes-l123-data.js"></script> -->
 
-    <script>
+    <!-- 将脚本类型更改为 "module" 以支持 import -->
+    <script type="module">
+        // --- 1. 数据导入 ---
+        // 通过 ES Module 导入数据
+        import { ARCHETYPES_DATA } from './archetypes-data.js';
+        import { SOPS_DATA } from './sops-data.js';
+        
         // --- DATA DEFINITIONS ---
-        // ARCHETYPES_DATA is loaded from external file: archetypes-l123-data.js
+        // ARCHETYPES_DATA 和 SOPS_DATA 现在已导入
         
         const syllabusTopics = [
             { id: 'ALG1', strand: 'Algebra', grade: 'G3', name: 'Algebraic Manipulation', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-ALG-01', 'ARCH-L1-ALG-04', 'ARCH-L1-ALG-05'] },
             { id: 'ALG2', strand: 'Algebra', grade: 'G3', name: 'Equations', type: 'strengthening', pre: ['ALG1'], relatedArchetypes: ['ARCH-L1-ALG-02', 'ARCH-L1-ALG-06'] },
-            { id: 'ALG3', strand: 'Algebra', grade: 'G3', name: 'Inequalities', type: 'extending', pre: ['ALG2'], relatedArchetypes: ['ARCH-L1-INEQ-01', 'ARCH-L1-INEQ-02', 'ARCH-L1-INEQ-03'] },
-            { id: 'ALG4', strand: 'Algebra', grade: 'G3', name: 'Functions & Quadratic Graphs', type: 'extending', pre: ['ALG1'], relatedArchetypes: ['ARCH-L1-QUAD-01','ARCH-L1-QUAD-02', 'ARCH-L1-QUAD-03'] },
-            { id: 'ALG5', strand: 'Algebra', grade: 'G4', name: 'Graphs of Functions', type: 'extending', pre: ['ALG4'], relatedArchetypes: ['ARCH-L2-QUAD-01'] },
+            { id: 'ALG3', strand: 'Algebra', grade: 'G3', name: 'Inequalities', type: 'extending', pre: ['ALG2'], relatedArchetypes: ['ARCH-L1-ALG-07', 'ARCH-L1-ALG-08'] }, // Updated to match new data
+            { id: 'ALG4', strand: 'Algebra', grade: 'G3', name: 'Functions & Quadratic Graphs', type: 'extending', pre: ['ALG1'], relatedArchetypes: ['ARCH-L1-ALG-04', 'ARCH-L1-ALG-04-EQN', 'ARCH-L1-ALG-04-GRAPH'] }, // Updated
+            { id: 'ALG5', strand: 'Algebra', grade: 'G4', name: 'Graphs of Functions', type: 'extending', pre: ['ALG4'], relatedArchetypes: ['ARCH-L2-ALG-02'] }, // Updated
             { id: 'ALG6', strand: 'Algebra', grade: 'G4', name: 'Modelling', type: 'integrative', pre: ['ALG2', 'ALG5'], relatedArchetypes: ['ARCH-L2-ALG-01', 'ARCH-L3-MOD-01'] },
-            { id: 'ALG7', strand: 'Algebra', grade: 'G4', name: 'Indices & Standard Form', type: 'strengthening', pre: ['ALG1'], relatedArchetypes: ['ARCH-L1-IND-01', 'ARCH-L1-IND-02', 'ARCH-L1-IND-03', 'ARCH-L1-IND-04'] },
+            { id: 'ALG7', strand: 'Algebra', grade: 'G4', name: 'Indices & Standard Form', type: 'strengthening', pre: ['ALG1'], relatedArchetypes: ['ARCH-L1-IND-01', 'ARCH-L1-IND-02', 'ARCH-L1-IND-03', 'ARCH-L1-IND-04', 'ARCH-L1-ALG-09'] }, // Updated
             { id: 'ALG8', strand: 'Algebra', grade: 'G4', name: 'Matrices', type: 'new', pre: [], relatedArchetypes: [] }, 
             { id: 'ALG9', strand: 'Algebra', grade: 'G4', name: 'Sequences', type: 'new', pre: ['ALG6'], relatedArchetypes: [] }, 
-            { id: 'GEO1', strand: 'Geometry', grade: 'G3', name: 'Plane Geometry', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-GEO-02'] },
+            { id: 'GEO1', strand: 'Geometry', grade: 'G3', name: 'Plane Geometry', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-GEO-CORE-01', 'ARCH-L1-GEO-09'] }, // Updated
             { id: 'GEO2', strand: 'Geometry', grade: 'G3', name: 'Mensuration', type: 'extending', pre: ['GEO1'], relatedArchetypes: ['ARCH-L1-MEN-01', 'ARCH-L1-MEN-03', 'ARCH-L1-MEN-04'] },
-            { id: 'GEO3', strand: 'Geometry', grade: 'G3', name: 'Similarity & Congruency', type: 'integrative', pre: ['GEO1'], relatedArchetypes: ['ARCH-L1-GEO-01', 'ARCH-L1-GEO-03', 'ARCH-L1-MEN-02'] },
+            { id: 'GEO3', strand: 'Geometry', grade: 'G3', name: 'Similarity & Congruency', type: 'integrative', pre: ['GEO1'], relatedArchetypes: ['ARCH-L1-GEO-05', 'ARCH-L1-GEO-06', 'ARCH-L1-GEO-07', 'ARCH-L1-MEN-02'] }, // Updated
             { id: 'GEO4', strand: 'Geometry', grade: 'G4', name: '3D Mensuration', type: 'extending', pre: ['GEO2'], relatedArchetypes: ['ARCH-L1-MEN-01', 'ARCH-L1-MEN-03'] },
             { id: 'GEO5', strand: 'Geometry', grade: 'G4', name: 'Bearings', type: 'new', pre: ['GEO1'], relatedArchetypes: ['ARCH-L1-TRIG-03'] },
             { id: 'GEO6', strand: 'Geometry', grade: 'G4', name: 'Loci & Construction', type: 'new', pre: ['GEO1'], relatedArchetypes: [] },
             { id: 'GEO7', strand: 'Geometry', grade: 'G4', name: 'Vectors', type: 'new', pre: ['GEO1'], relatedArchetypes: [] },
             { id: 'TRG1', strand: 'Trigonometry', grade: 'G3', name: 'Basic Trigonometry', type: 'new', pre: ['GEO1'], relatedArchetypes: ['ARCH-L1-TRIG-01', 'ARCH-L1-TRIG-04'] },
-            { id: 'TRG2', strand: 'Trigonometry', grade: 'G3', name: 'Coordinate Geometry', type: 'integrative', pre: ['ALG2', 'GEO1'], relatedArchetypes: ['ARCH-L1-CG-01', 'ARCH-L1-CG-02', 'ARCH-L1-CG-03'] },
+            { id: 'TRG2', strand: 'Trigonometry', grade: 'G3', name: 'Coordinate Geometry', type: 'integrative', pre: ['ALG2', 'GEO1'], relatedArchetypes: ['ARCH-L1-GEO-01', 'ARCH-L1-GEO-02', 'ARCH-L1-GEO-03', 'ARCH-L1-GEO-04'] }, // Updated
             { id: 'TRG3', strand: 'Trigonometry', grade: 'G4', name: '3D Trigonometry', type: 'extending', pre: ['TRG1', 'GEO4'], relatedArchetypes: ['ARCH-L2-TRIG-01'] },
             { id: 'TRG4', strand: 'Trigonometry', grade: 'G4', name: 'Applications with Bearings', type: 'integrative', pre: ['TRG1', 'GEO5'], relatedArchetypes: ['ARCH-L2-TRIG-01'] },
-            { id: 'STP1', strand: 'Statistics', grade: 'G3', name: 'Data Representation', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-STAT-01', 'ARCH-L1-STAT-02'] },
-            { id: 'STP2', strand: 'Statistics', grade: 'G3', name: 'Probability', type: 'extending', pre: ['STP1'], relatedArchetypes: ['ARCH-L1-PROB-01'] },
+            { id: 'STP1', strand: 'Statistics', grade: 'G3', name: 'Data Representation', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-STAT-01', 'ARCH-L1-STAT-02', 'ARCH-L1-STAT-03', 'ARCH-L1-STAT-04'] }, // Updated
+            { id: 'STP2', strand: 'Statistics', grade: 'G3', name: 'Probability', type: 'extending', pre: ['STP1'], relatedArchetypes: ['ARCH-L1-PROB-01', 'ARCH-L1-PROB-02', 'ARCH-L1-PROB-03'] }, // Updated
             { id: 'STP3', strand: 'Statistics', grade: 'G3', name: 'Ratio & Proportion', type: 'strengthening', pre: [], relatedArchetypes: ['ARCH-L1-RATIO-01'] },
             { id: 'STP4', strand: 'Statistics', grade: 'G3', name: 'Percentages', type: 'extending', pre: ['STP3'], relatedArchetypes: ['ARCH-L1-RATIO-02', 'ARCH-L1-RATIO-03'] },
-            { id: 'STP5', strand: 'Statistics', grade: 'G4', name: 'Interpretation & Reasoning', type: 'integrative', pre: ['STP1', 'STP2'], relatedArchetypes: [] }
+            { id: 'STP5', strand: 'Statistics', grade: 'G4', name: 'Interpretation & Reasoning', type: 'integrative', pre: ['STP1', 'STP2'], relatedArchetypes: ['ARCH-L3-SYN-01'] } // Updated
         ];
         
         const examTopics = [
+            // Exam topics remain unchanged
             { id: 'g3c1', num: '01', cat: 'core', grade: 'G3', name: 'Trigonometry', topics: ['TRG1'], wt: '20-25%', g3f: 7, g4f: 10, prog: 'Right → Any triangle', relatedArchetypes: [] },
             { id: 'g3c2', num: '02', cat: 'core', grade: 'G3', name: 'Quadratic Graphs', topics: ['ALG4'], wt: '15-20%', g3f: 8, g4f: 10, prog: 'Expands function types', relatedArchetypes: [] },
             { id: 'g3c3', num: '03', cat: 'core', grade: 'G3', name: 'Algebra', topics: ['ALG1', 'ALG2', 'ALG3'], wt: '15-18%', g3f: 9, g4f: 10, prog: 'Adds complexity', relatedArchetypes: [] },
@@ -99,6 +106,10 @@
         ];
         
         // --- APP LOGIC ---
+        // --- 2. 创建 SOP 查找表 ---
+        let sopMap; // 将在 initializeApp 中填充
+        let archetypeMap; // 将在 initializeApp 中填充
+
         const colors = { new: '#EF4444', extending: '#F59E0B', strengthening: '#EAB308', integrative: '#8B5CF6' };
         const labels = { new: '🆕 New', extending: '🧩 Extending', strengthening: '⚙️ Strengthening', integrative: '🏗️ Integrative' };
         const icons = {
@@ -345,6 +356,51 @@
             `;
         }
 
+        // --- 3. 新的辅助函数，用于渲染单个 SOP 的详情 ---
+        function renderSopDetailsHtml(sopId) {
+            const sop = sopMap.get(sopId);
+            if (!sop) {
+                return `<p class="text-red-400">Error: SOP with ID ${sopId} not found.</p>`;
+            }
+
+            const stepsHtml = (sop.steps && sop.steps.length > 0)
+                ? `<div>
+                        <strong class="text-purple-300">Steps:</strong>
+                        <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                            ${sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
+                        </ol>
+                    </div>`
+                : '';
+
+            const pitfallsHtml = (sop.pitfalls && sop.pitfalls.length > 0)
+                ? `<div>
+                        <strong class="text-red-400">Pitfalls:</strong>
+                        <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                            ${sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
+                        </ul>
+                    </div>`
+                : '';
+
+            const proTipsHtml = (sop.pro_tips && sop.pro_tips.length > 0)
+                ? `<div>
+                        <strong class="text-green-400">Pro Tips:</strong>
+                        <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
+                            ${sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>`
+                : '';
+            
+            return `
+                <div class="border-t border-slate-700 pt-3 mt-3 first:mt-0 first:pt-0 first:border-0">
+                    <p class="font-semibold"><strong class="text-purple-300">${sop.name || sop.id}:</strong> ${sop.description || sop.goal || 'No description.'}</p>
+                    ${stepsHtml}
+                    ${pitfallsHtml}
+                    ${proTipsHtml}
+                </div>
+            `;
+        }
+
+
         function renderMatrixView() {
             const coreTopics = examTopics.filter(t => t.cat === 'core' && t.grade === state.selectedGrade);
             const satelliteTopics = examTopics.filter(t => t.cat === 'satellite' && t.grade === state.selectedGrade);
@@ -399,8 +455,11 @@
                 const isMastered = state.masteredTopics.includes(topic.id);
                 
                 let relatedArchetypesHtml = '';
+                // 使用 typeof 检查 ARCHETYPES_DATA 是否已定义
                 if (topic.relatedArchetypes && topic.relatedArchetypes.length > 0 && typeof ARCHETYPES_DATA !== 'undefined') {
-                    const archetypes = topic.relatedArchetypes.map(id => ARCHETYPES_DATA.find(a => a.id === id)).filter(Boolean);
+                    // 使用 archetypeMap 查找
+                    const archetypes = topic.relatedArchetypes.map(id => archetypeMap.get(id)).filter(Boolean);
+                    
                     if (archetypes.length > 0) {
                         relatedArchetypesHtml = `
                         <div class="bg-slate-700/50 rounded-lg p-4 fade-in">
@@ -416,41 +475,26 @@
                                             <span class="text-slate-500 text-xs px-2 arrow">▶</span>
                                         </summary>
                                         <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
-                                            ${arch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${arch.sop.goal}</p>` : ''}
-                                            ${arch.sop?.steps ? `
-                                            <div>
-                                                <strong class="text-purple-300">Steps:</strong>
-                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
-                                                </ol>
-                                            </div>
-                                            ` : ''}
-                                            ${arch.sop?.pitfalls ? `
-                                            <div>
-                                                <strong class="text-red-400">Pitfalls:</strong>
-                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
-                                                </ul>
-                                            </div>
-                                            ` : ''}
-                                            ${arch.sop?.pro_tips ? `
-                                            <div>
-                                                <strong class="text-green-400">Pro Tips:</strong>
-                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
-                                                </ul>
-                                            </div>
-                                            ` : ''}
                                             
-                                            ${!arch.sop && !(arch.has_branches && arch.branches && arch.branches.length > 0) ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            <!-- ====== 4. 更新的 SOP 渲染逻辑 ====== -->
+                                            ${(arch.requiredSOPs && arch.requiredSOPs.length > 0)
+                                                ? arch.requiredSOPs.map(sopId => renderSopDetailsHtml(sopId)).join('')
+                                                : ''
+                                            }
                                             
-                                            <!-- ====== FIXED BRANCHES LOGIC ====== -->
-                                            ${(arch.has_branches && arch.branches && arch.branches.length > 0) ? `
+                                            <!-- 更新的 "No data" 消息 -->
+                                            ${(!arch.requiredSOPs || arch.requiredSOPs.length === 0) && (!arch.branches || arch.branches.length === 0)
+                                                ? `<p class="text-slate-400">No detailed SOP data or sub-branches available.</p>`
+                                                : ''
+                                            }
+                                            
+                                            <!-- ====== 4. 更新的 Sub-Branches 逻辑 ====== -->
+                                            ${(arch.branches && arch.branches.length > 0) ? `
                                             <div class="mt-3">
                                                 <strong class="text-purple-300">📂 Sub-Branches (${arch.branches.length}):</strong>
                                                 <div class="space-y-2 mt-2">
                                                 ${arch.branches.map(branchId => {
-                                                    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                                                    const branch = archetypeMap.get(branchId); // 从 map 查找
                                                     if (!branch) return '';
                                                     return `
                                                     <details class="bg-slate-800 rounded-lg overflow-hidden transition-all duration-300">
@@ -462,32 +506,15 @@
                                                             <span class="text-slate-500 text-xs px-2 arrow">▶</span>
                                                         </summary>
                                                         <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
-                                                            ${branch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${branch.sop.goal}</p>` : ''}
-                                                            ${branch.sop?.steps ? `
-                                                            <div>
-                                                                <strong class="text-purple-300">Steps:</strong>
-                                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
-                                                                </ol>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${branch.sop?.pitfalls ? `
-                                                            <div>
-                                                                <strong class="text-red-400">Pitfalls:</strong>
-                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
-                                                                </ul>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${branch.sop?.pro_tips ? `
-                                                            <div>
-                                                                <strong class="text-green-400">Pro Tips:</strong>
-                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
-                                                                </ul>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${!branch.sop ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>` : ''}
+                                                            <!-- 在子分支中也使用新的 SOP 渲染逻辑 -->
+                                                            ${(branch.requiredSOPs && branch.requiredSOPs.length > 0)
+                                                                ? branch.requiredSOPs.map(sopId => renderSopDetailsHtml(sopId)).join('')
+                                                                : ''
+                                                            }
+                                                            ${(!branch.requiredSOPs || branch.requiredSOPs.length === 0)
+                                                                ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>`
+                                                                : ''
+                                                            }
                                                         </div>
                                                     </details>
                                                     `;
@@ -536,8 +563,9 @@
             } else if (state.selectedExamTopic) {
                 const topic = state.selectedExamTopic;
                 let relatedArchetypesHtml = '';
+                // 同样，检查 ARCHETYPES_DATA
                 if (topic.relatedArchetypes && topic.relatedArchetypes.length > 0 && typeof ARCHETYPES_DATA !== 'undefined') {
-                    const archetypes = topic.relatedArchetypes.map(id => ARCHETYPES_DATA.find(a => a.id === id)).filter(Boolean);
+                    const archetypes = topic.relatedArchetypes.map(id => archetypeMap.get(id)).filter(Boolean);
                     if (archetypes.length > 0) {
                         relatedArchetypesHtml = `
                         <div class="bg-slate-700/50 rounded-lg p-4 fade-in">
@@ -553,41 +581,26 @@
                                             <span class="text-slate-500 text-xs px-2 arrow">▶</span>
                                         </summary>
                                         <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
-                                            ${arch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${arch.sop.goal}</p>` : ''}
-                                            ${arch.sop?.steps ? `
-                                            <div>
-                                                <strong class="text-purple-300">Steps:</strong>
-                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
-                                                </ol>
-                                            </div>
-                                            ` : ''}
-                                            ${arch.sop?.pitfalls ? `
-                                            <div>
-                                                <strong class="text-red-400">Pitfalls:</strong>
-                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
-                                                </ul>
-                                            </div>
-                                            ` : ''}
-                                            ${arch.sop?.pro_tips ? `
-                                            <div>
-                                                <strong class="text-green-400">Pro Tips:</strong>
-                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                    ${arch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
-                                                </ul>
-                                            </div>
-                                            ` : ''}
                                             
-                                            ${!arch.sop && !(arch.has_branches && arch.branches && arch.branches.length > 0) ? `<p class="text-slate-400">No detailed SOP data available.</p>` : ''}
+                                            <!-- ====== 4. 更新的 SOP 渲染逻辑 (Exam Topic) ====== -->
+                                            ${(arch.requiredSOPs && arch.requiredSOPs.length > 0)
+                                                ? arch.requiredSOPs.map(sopId => renderSopDetailsHtml(sopId)).join('')
+                                                : ''
+                                            }
                                             
-                                            <!-- ====== FIXED BRANCHES LOGIC ====== -->
-                                            ${(arch.has_branches && arch.branches && arch.branches.length > 0) ? `
+                                            <!-- 更新的 "No data" 消息 -->
+                                            ${(!arch.requiredSOPs || arch.requiredSOPs.length === 0) && (!arch.branches || arch.branches.length === 0)
+                                                ? `<p class="text-slate-400">No detailed SOP data or sub-branches available.</p>`
+                                                : ''
+                                            }
+                                            
+                                            <!-- ====== 4. 更新的 Sub-Branches 逻辑 (Exam Topic) ====== -->
+                                            ${(arch.branches && arch.branches.length > 0) ? `
                                             <div class="mt-3">
                                                 <strong class="text-purple-300">📂 Sub-Branches (${arch.branches.length}):</strong>
                                                 <div class="space-y-2 mt-2">
                                                 ${arch.branches.map(branchId => {
-                                                    const branch = ARCHETYPES_DATA.find(a => a.id === branchId);
+                                                    const branch = archetypeMap.get(branchId);
                                                     if (!branch) return '';
                                                     return `
                                                     <details class="bg-slate-800 rounded-lg overflow-hidden transition-all duration-300">
@@ -599,32 +612,15 @@
                                                             <span class="text-slate-500 text-xs px-2 arrow">▶</span>
                                                         </summary>
                                                         <div class="p-3 border-t border-slate-700 text-xs space-y-3 bg-slate-900/50">
-                                                            ${branch.sop?.goal ? `<p><strong class="text-purple-300">Goal:</strong> ${branch.sop.goal}</p>` : ''}
-                                                            ${branch.sop?.steps ? `
-                                                            <div>
-                                                                <strong class="text-purple-300">Steps:</strong>
-                                                                <ol class="list-decimal list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.steps.map(step => `<li>${step.replace(/^(\d+\.\s*)/, '')}</li>`).join('')}
-                                                                </ol>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${branch.sop?.pitfalls ? `
-                                                            <div>
-                                                                <strong class="text-red-400">Pitfalls:</strong>
-                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.pitfalls.map(p => `<li><strong>${p.type}:</strong> ${p.text}</li>`).join('')}
-                                                                </ul>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${branch.sop?.pro_tips ? `
-                                                            <div>
-                                                                <strong class="text-green-400">Pro Tips:</strong>
-                                                                <ul class="list-disc list-inside text-slate-300 pl-2 mt-1 space-y-1">
-                                                                    ${branch.sop.pro_tips.map(tip => `<li>${tip}</li>`).join('')}
-                                                                </ul>
-                                                            </div>
-                                                            ` : ''}
-                                                            ${!branch.sop ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>` : ''}
+                                                            <!-- 在子分支中也使用新的 SOP 渲染逻辑 -->
+                                                            ${(branch.requiredSOPs && branch.requiredSOPs.length > 0)
+                                                                ? branch.requiredSOPs.map(sopId => renderSopDetailsHtml(sopId)).join('')
+                                                                : ''
+                                                            }
+                                                            ${(!branch.requiredSOPs || branch.requiredSOPs.length === 0)
+                                                                ? `<p class="text-slate-400">No detailed SOP data available for this branch.</p>`
+                                                                : ''
+                                                            }
                                                         </div>
                                                     </details>
                                                     `;
@@ -822,10 +818,15 @@
                 return;
             }
             
-            if (typeof syllabusTopics === 'undefined' || typeof examTopics === 'undefined' || typeof ARCHETYPES_DATA === 'undefined') {
-                app.innerHTML = `<div class="text-center text-red-400 p-8"><strong>Error:</strong> Data variables (syllabusTopics, examTopics, or ARCHETYPES_DATA) are not defined. The application cannot start.</div>`;
+            // --- 更新了启动检查 ---
+            if (typeof syllabusTopics === 'undefined' || typeof examTopics === 'undefined' || typeof ARCHETYPES_DATA === 'undefined' || typeof SOPS_DATA === 'undefined') {
+                app.innerHTML = `<div class="text-center text-red-400 p-8"><strong>Error:</strong> Data variables (syllabusTopics, examTopics, ARCHETYPES_DATA, or SOPS_DATA) are not defined. The application cannot start.</div>`;
                 return;
             }
+
+            // --- 填充查找表 ---
+            sopMap = new Map(SOPS_DATA.map(sop => [sop.id, sop]));
+            archetypeMap = new Map(ARCHETYPES_DATA.map(arch => [arch.id, arch]));
 
             // Augment examTopics with related archetypes
             examTopics.forEach(examTopic => {
