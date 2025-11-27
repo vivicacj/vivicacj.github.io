@@ -1,6 +1,10 @@
-// C-version Project EMath archetype data
-// This file contains the METADATA for all 71 archetypes.
-// The detailed SOPs are in 'sops-data.js'.
+// =================================================================
+// ARCHETYPE DATABASE (archetypes-data.js)
+// =================================================================
+// This file contains the METADATA for all 71 archetypes,
+// parsed from "Archetype & SOPs清单.pdf" (pages 1-33).
+// It exports the data as an ES Module.
+// =================================================================
 
 export const ARCHETYPES_DATA = [
   // =========================
@@ -48,7 +52,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-03",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Algebra: Expansion",
     name: "ARCH-L1-ALG-03 · Forming Expressions",
     badge: "CORE",
     parent: null,
@@ -67,7 +71,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Quadratic Equations (overall)",
     name: "ARCH-L1-ALG-04 · Quadratic Equations",
     badge: "CORE",
     parent: null,
@@ -92,7 +96,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-CTS",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Graph: Quadratic Functions and Transformations",
     name: "ARCH-L1-ALG-04-CTS · Quadratics — Completing the Square",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -111,7 +115,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-DISC",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Equation: Quadratic Equations - Methods and Discriminant",
     name: "ARCH-L1-ALG-04-DISC · Discriminant Analysis",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -130,7 +134,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-EQN",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "Graph: Quadratic Functions and Transformations",
+    topic: "Equation: Quadratic Equations - Methods and Discriminant",
     name: "ARCH-L1-ALG-04-EQN · Finding Equation from Graph",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -149,7 +153,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-FACT",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Algebra: Factorisation (HCF/Grouping/ Identities)",
     name: "ARCH-L1-ALG-04-FACT · Quadratics — Factorisation",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -168,7 +172,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-FORM",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Equation: Quadratic Equations - Methods and Discriminant",
     name: "ARCH-L1-ALG-04-FORM · Formula Method",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -179,7 +183,7 @@ export const ARCHETYPES_DATA = [
       "SOP-QUAD-FORM-03",
       "SOP-QUAD-FORM-04"
     ],
-    supportSOPs: [],
+    supportSOPs: ["SOP-EQN-02"],
     microSkills: [
       "Identify a, b, c correctly from ax² + bx + c = 0.",
       "Substitute into the quadratic formula x = [-b ± √(b² - 4ac)] / (2a).",
@@ -192,7 +196,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-04-GRAPH",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "Graph: Curve Sketching Skills (Turning Points and Intercepts)",
+    topic: "Graph: Quadratic Functions and Transformations",
     name: "ARCH-L1-ALG-04-GRAPH · Graph Sketching (Quadratics)",
     badge: "CORE",
     parent: "ARCH-L1-ALG-04",
@@ -215,7 +219,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-05",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Simultaneous Equations (Substitution / Elimination)",
     name: "ARCH-L1-ALG-05 · Changing the Subject of a Formula",
     badge: "CORE",
     parent: null,
@@ -234,7 +238,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-06",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Single Inequalities (Linear/Quadratic)",
     name: "ARCH-L1-ALG-06 · Solving Simultaneous Equations",
     badge: "CORE",
     parent: null,
@@ -253,7 +257,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-07",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Equation: Inequalities - Linear, Quadratic and Number Line",
     name: "ARCH-L1-ALG-07 · Inequalities (Single/Compound)",
     badge: "CORE",
     parent: null,
@@ -271,7 +275,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-08",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Linear Equations (Forming & Solving)",
     name: "ARCH-L1-ALG-08 · Compound Inequalities",
     badge: "CORE",
     parent: null,
@@ -289,7 +293,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-09",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "Index: Standard Form / Scientific Notation",
+    topic: "Algebra: Forming Expressions (Word -> Algebra)",
     name: "ARCH-L1-ALG-09 · Standard Form / Scientific Notation",
     badge: "CORE",
     parent: null,
@@ -307,7 +311,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-ALG-10",
     level: "L1",
     domain: "D1 — Algebra & Number",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Algebra: Rationalising Expressions",
     name: "ARCH-L1-ALG-10 · Finding Max/Min Values in a Range",
     badge: "CORE",
     parent: null,
@@ -330,12 +334,12 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-01",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
-    name: "ARCH-L1-GEO-01 · Finding the Equation of a Straight Line",
+    topic: "Coordinate Geometry (Basics)",
+    name: "ARCH-L1-GEO-01 · Coordinate Geometry",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
+    requiredSOPs: ["SOP-GEO-COORD-01"],
     supportSOPs: [],
     microSkills: [
       "Calculate gradient from two points using (y₂ − y₁)/(x₂ − x₁).",
@@ -343,19 +347,19 @@ export const ARCHETYPES_DATA = [
       "Convert between slope-intercept and general form ax + by = c."
     ],
     description:
-      "Determine the equation of a straight line given two points, a point and gradient, or intercept information, expressing the result in y = mx + c or ax + by = c form."
+      "Apply coordinate geometry principles to find distances, midpoints, gradients, and equations of straight lines."
   },
   {
     id: "ARCH-L1-GEO-02",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets & Composite Solids",
     name: "ARCH-L1-GEO-02 · Parallel & Perpendicular Lines",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-02-CIRC-PAR"],
+    supportSOPs: ["SOP-GEO-02-POLY-PAR"],
     microSkills: [
       "Use equal gradients for parallel lines (m₁ = m₂).",
       "Use m₁ × m₂ = −1 for perpendicular lines.",
@@ -368,13 +372,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-03",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Parallel Line Angles",
     name: "ARCH-L1-GEO-03 · Finding Length & Area (Coordinate Plane)",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-02-POLY-INT"],
+    supportSOPs: ["SOP-GEO-02-POLY-TILE"],
     microSkills: [
       "Apply the distance formula between two points.",
       "Decompose complex shapes into rectangles/triangles on the grid.",
@@ -387,13 +391,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-04",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Coordinate Geometry（Basics）",
+    topic: "Coordinate Geometry (Basics)",
     name: "ARCH-L1-GEO-04 · Coordinate Geometry (Gradient, Midpoint & Locus)",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-02-POLY-INT"],
+    supportSOPs: ["SOP-GEO-02-POLY-PAR"],
     microSkills: [
       "Compute gradient and midpoint between two points.",
       "Write the equation of loci (fixed distance or fixed sum of distances).",
@@ -406,13 +410,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-05",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Triangles: Properties / Congruency",
     name: "ARCH-L1-GEO-05 · Proving Similarity (AA Criterion)",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-01-ASA", "SOP-GEO-01-SAS"],
+    supportSOPs: ["SOP-GEO-01-SSS"],
     microSkills: [
       "Identify two pairs of equal corresponding angles.",
       "Write similarity statements with correct vertex order.",
@@ -425,13 +429,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-06",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Circle Theorems (Central / Inscribed / Tangents)",
     name: "ARCH-L1-GEO-06 · Proving Congruency (SAS, SSS, ASA, RHS)",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-01-RHS", "SOP-GEO-01-ASA", "SOP-GEO-01-SAS"],
+    supportSOPs: ["SOP-GEO-01-SSS"],
     microSkills: [
       "Select the correct congruence test (SAS, SSS, ASA, RHS).",
       "Match sides and angles carefully between two triangles.",
@@ -444,13 +448,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-07",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Geometry: Similarity and Scale Factor",
+    topic: "Mensuration (3D SA/Volume)",
     name: "ARCH-L1-GEO-07 · Using Similarity to Find Unknown Lengths",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-MEN-02"],
+    supportSOPs: ["SOP-MEN-01"],
     microSkills: [
       "Establish triangle similarity before using side ratios.",
       "Set up proportion equations with matching corresponding sides.",
@@ -463,13 +467,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-08",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Trigonometry: Bearings",
     name: "ARCH-L1-GEO-08 · Shortest Distance (Geometry)",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-02-CIRC-PAR"],
     microSkills: [
       "Recognise that shortest distance from a point to a line is along the perpendicular.",
       "Construct or visualise perpendiculars in geometric diagrams.",
@@ -482,13 +486,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-09",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Circle Theorems（Central / Inscribed / Tangents）",
+    topic: "Mensuration (2D Area & Perimeter)",
     name: "ARCH-L1-GEO-09 · Circle Properties & Theorems",
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-VEC-05", "SOP-VEC-06"],
+    supportSOPs: ["SOP-VEC-03"],
     microSkills: [
       "Recall key circle theorems (angle at centre, angle in same segment, tangent-radius).",
       "Mark equal angles and right angles on diagrams carefully.",
@@ -520,7 +524,7 @@ export const ARCHETYPES_DATA = [
       "ARCH-L1-GEO-CORE-01-M11"
     ],
     requiredSOPs: [],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG", "SOP-GEO-03-CHORD-ANG", "SOP-GEO-03-DIAM-ANG", "SOP-GEO-03-TAN-ANG"],
     microSkills: [
       "Recognise parallel line configurations quickly.",
       "Map each exam diagram back to one of the 12 core angle models."
@@ -532,13 +536,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M00",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M00 · Eight-Angle Parallel Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CENT-ANG"],
+    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
     microSkills: [
       "Label all 8 angles formed by a transversal and two parallel lines.",
       "Identify corresponding, alternate, and co-interior angle pairs."
@@ -550,13 +554,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M01",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M01 · Parallel + Fold Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
     microSkills: [
       "Use linear pair angles on a straight line (sum 180°).",
       "Apply mirror symmetry to map angles across a fold line."
@@ -568,13 +572,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M02",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Angle: Polygons — Interior and Exterior",
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M02 · Complementary & Supplementary Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-DIAM-ANG"],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
     microSkills: [
       "Recognise 90° complementary and 180° supplementary angle pairs.",
       "Use perpendicular and straight-line relationships to find unknowns."
@@ -586,13 +590,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M03",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M03 · Opposite-Angle (Bird-Beak) Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-TAN-ANG"],
+    supportSOPs: ["SOP-GEO-03-TAN-LEN"],
     microSkills: [
       "Use vertically opposite angle theorem.",
       "Combine with alternate angles to transfer angle values across the diagram."
@@ -604,13 +608,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M04",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M04 · Pencil-Head Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-TAN-ANG"],
+    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
     microSkills: [
       "Use the fact that angles on a straight line sum to 180°.",
       "Apply to polygon interior angle reasoning."
@@ -622,13 +626,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M05",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M05 · Compound Pencil-Head Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
     microSkills: [
       "Add multiple 180° angle sums around a point or polygon.",
       "Use (n−2)×180° to find interior angle sums in polygons."
@@ -640,13 +644,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M06",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M06 · Bird-Beak + Extension Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-03-TAN-ANG"],
     microSkills: [
       "Track angles formed by extended lines and transversals.",
       "Combine opposite and alternate angle rules for complex diagrams."
@@ -658,13 +662,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M07",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M07 · Parallel + Angle Bisector Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: ["SOP-GEO-04-ANG-BIS"],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-TAN-LEN"],
+    supportSOPs: ["SOP-GEO-03-TAN-ANG"],
     microSkills: [
       "Use angle bisectors to create equal angles in parallel structures.",
       "Leverage angle equality to set up triangle similarity."
@@ -676,13 +680,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M08",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M08 · Hinge + Angle Bisector Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
     microSkills: [
       "Visualise triangles pivoting around a hinge point.",
       "Apply angle bisector rules during rotations or folds."
@@ -694,13 +698,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M09",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M09 · Double Hinge + Bisector Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
+    supportSOPs: ["SOP-GEO-03-DIAM-ANG"],
     microSkills: [
       "Track multiple hinges and bisectors in one diagram.",
       "Identify chains of equal and proportional angles."
@@ -712,13 +716,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M10",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M10 · Opposite + Bisector Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-GEO-03-TAN-LEN"],
+    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
     microSkills: [
       "Combine vertically opposite angle rules with bisectors.",
       "Use resulting equal angles to prove similarity and proportional sides."
@@ -730,13 +734,13 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-GEO-CORE-01-M11",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
     name: "ARCH-L1-GEO-CORE-01-M11 · Parallel + Reflection (Symmetric Fold) Model",
     badge: "CORE",
     parent: "ARCH-L1-GEO-CORE-01",
     branches: [],
     requiredSOPs: [],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-03-CENT-ANG", "SOP-GEO-03-CHORD-ANG"],
     microSkills: [
       "Identify lines of symmetry in parallel-line diagrams.",
       "Reflect points and angles across symmetry lines to deduce relationships."
@@ -853,8 +857,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-MEN-01"],
+    supportSOPs: ["SOP-MEN-04"],
     microSkills: [
       "Identify the 2D or 3D shape(s) involved before applying formulas.",
       "Write down the correct formula with labelled variables.",
@@ -872,8 +876,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-MEN-03"],
+    supportSOPs: ["SOP-MEN-01"],
     microSkills: [
       "Identify scale factor between similar figures or solids.",
       "Use scale factor k to relate lengths, areas, and volumes (k, k², k³).",
@@ -891,8 +895,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-MEN-03"],
+    supportSOPs: ["SOP-MEN-04"],
     microSkills: [
       "Split composite solids into standard shapes (prisms, cylinders, cones).",
       "Compute TSA or volume for each component separately.",
@@ -910,7 +914,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-MEN-04"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-MEN-01"],
     microSkills: [
       "Convert central angle to fraction of a full circle (θ/360).",
       "Calculate arc length and sector area using radius and angle.",
@@ -933,7 +937,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-PROB-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-QUAD-EQN-01"],
     microSkills: [
       "Count favourable outcomes and total outcomes correctly.",
       "Compute P(E) = favourable / total in simplest form.",
@@ -952,7 +956,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-PROB-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-PROB-01"],
     microSkills: [
       "List all possible outcomes using sample space or tree diagrams.",
       "Label branches with probabilities correctly (with or without replacement).",
@@ -994,7 +998,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-NUM-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-NUM-02"],
     microSkills: [
       "Interpret map scale in the form 1 : n or n cm represents k km.",
       "Convert between map distance and actual distance.",
@@ -1012,7 +1016,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-NUM-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-EQN-02"],
     microSkills: [
       "Compute new value after a percentage increase or decrease.",
       "Set up equations to recover original value from final value (reverse %).",
@@ -1031,7 +1035,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-NUM-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-QUAD-GRAPH-02"],
     microSkills: [
       "Use simple interest formula I = PRT/100.",
       "Use compound interest formula A = P(1 + r/100)^n.",
@@ -1048,7 +1052,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-SET-01",
     level: "L1",
     domain: "D3 — Statistics & Probability",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Data Representation (Basic)",
     name: "ARCH-L1-SET-01 · Set Notation & Operations",
     badge: "CORE",
     parent: null,
@@ -1067,7 +1071,7 @@ export const ARCHETYPES_DATA = [
     id: "ARCH-L1-SET-02",
     level: "L1",
     domain: "D3 — Statistics & Probability",
-    topic: "", // Empty topic, will be filtered out
+    topic: "Scatter Plot & Line of Best Fit",
     name: "ARCH-L1-SET-02 · Venn Diagrams",
     badge: "CORE",
     parent: "ARCH-L1-SET-01",
@@ -1095,8 +1099,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-STAT-01"],
+    supportSOPs: ["SOP-QUAD-EQN-01"],
     microSkills: [
       "Read raw data values correctly from a stem-and-leaf diagram.",
       "Identify median, mode, and range from the ordered display.",
@@ -1114,8 +1118,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: ["SOP-STAT-03"],
-    supportSOPs: ["SOP-STAT-04"],
+    requiredSOPs: ["SOP-STAT-02"],
+    supportSOPs: ["SOP-STAT-03"],
     microSkills: [
       "Compute midpoints of each class interval.",
       "Estimate the mean using Σ(f×midpoint) / Σf.",
@@ -1132,8 +1136,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-STAT-03"],
+    supportSOPs: ["SOP-QUAD-EQN-01"],
     microSkills: [
       "Plot ordered pairs accurately on a Cartesian plane.",
       "Visually draw a sensible line of best fit through the data cloud.",
@@ -1151,8 +1155,8 @@ export const ARCHETYPES_DATA = [
     badge: "CORE",
     parent: null,
     branches: [],
-    requiredSOPs: [],
-    supportSOPs: [],
+    requiredSOPs: ["SOP-STAT-04"],
+    supportSOPs: ["SOP-QUAD-GRAPH-01"],
     microSkills: [
       "Construct histograms with appropriate class boundaries and heights.",
       "Draw and interpret cumulative frequency curves to find medians and quartiles.",
@@ -1175,7 +1179,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-TRIG-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-TRIG-03"],
     microSkills: [
       "Convert between compass bearings and angles in standard position.",
       "Resolve triangles using sine and cosine rules where necessary.",
@@ -1213,7 +1217,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-TRIG-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-TRIG-01"],
     microSkills: [
       "Write bearings as three-digit angles measured clockwise from north.",
       "Draw bearing diagrams with correct orientation and labelling.",
@@ -1232,7 +1236,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-TRIG-04"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-TRIG-01"],
     microSkills: [
       "Identify angles of elevation and depression in context diagrams.",
       "Use SOH-CAH-TOA appropriately in right-angled triangles.",
@@ -1299,7 +1303,7 @@ export const ARCHETYPES_DATA = [
     parent: null,
     branches: [],
     requiredSOPs: ["SOP-L2-TRIG-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-TRIG-01", "SOP-TRIG-04"],
     microSkills: [
       "Decompose 3D problems into multiple linked 2D right or non-right triangles.",
       "Track bearings and elevation/depression angles across different planes.",
