@@ -186,6 +186,32 @@ export const SOPS_DATA = [
     ]
   },
   {
+    "id": "SOP-GEO-COORD-01",
+    "name": "SOP-GEO-COORD-01 Find Distance Between Points",
+    "description": "Calculate distance between two points using distance formula.",
+    "steps": [
+      "Identify coordinates of both points: (x₁, y₁) and (x₂, y₂)",
+      "Apply distance formula: d = √[(x₂-x₁)² + (y₂-y₁)²]",
+      "Simplify radicals if possible",
+      "Round answer if required"
+    ],
+    "pitfalls": [
+      { "type": "Calculation", "text": "Subtracting coordinates in wrong order (results in same answer due to squaring)" },
+      { "type": "Omission", "text": "Forgetting to take square root after summing squared differences" },
+      { "type": "Calculation", "text": "Arithmetic errors in squaring negative numbers" }
+    ],
+    "pro_tips": [
+      "Always write out the formula before substituting",
+      "Check if answer makes sense relative to a coordinate grid",
+      "For integer coordinates, check if distance is a Pythagorean triple"
+    ],
+    "microSkills": [
+      "Identify coordinates",
+      "Apply distance formula",
+      "Simplify radicals"
+    ]
+  },
+  {
     "id": "SOP-GEO-01-CIRC-TAN",
     "name": "SOP-GEO-01-CIRC-TAN Geometry - Circle Tangent Congruence",
     "description": "Use tangent-radius perpendicularity and equal tangents from the same external point to prove triangle congruence.",
