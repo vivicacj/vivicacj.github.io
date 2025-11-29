@@ -1,10 +1,8 @@
 // =================================================================
 // ARCHETYPE DATABASE (archetypes-data.js)
 // =================================================================
-// Final Detailed Version (v10.2).
-// - Restored FULL Micro-Skills.
-// - Added Pitfalls & Pro Tips for each Archetype.
-// - Restored FULL Descriptions.
+// Final Detailed Version (v10.3).
+// - STRICTLY ALIGNED with PDF Names.
 // =================================================================
 
 export const ARCHETYPES_DATA = [
@@ -41,8 +39,8 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-02 · Fractional Equations",
-    requiredSOPs: ["SOP-QUAD-FACT-01", "SOP-ALG-04"],
+    name: "ARCH-L1-ALG-02 · Solving Fractional Equations",
+    requiredSOPs: ["SOP-QUAD-FACT-01", "SOP-QUAD-FACT-02", "SOP-QUAD-FACT-03", "SOP-ALG-04"],
     supportSOPs: ["SOP-IND-03"],
     microSkills: [
       "MS-ALG-03 Simplify Rational Expressions",
@@ -65,7 +63,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-03 · Forming Expressions",
+    name: "ARCH-L1-ALG-03 · Forming Algebraic Expressions",
     requiredSOPs: ["SOP-ALG-04"],
     supportSOPs: [],
     microSkills: [
@@ -89,7 +87,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-04 · Quadratics (Parent)",
+    name: "ARCH-L1-ALG-04 · Quadratic Equations (Parent)",
     branches: [
       "ARCH-L1-ALG-04-FACT", 
       "ARCH-L1-ALG-04-FORM", 
@@ -162,7 +160,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "Completing Square",
+    name: "Completing the Square",
     requiredSOPs: ["SOP-QUAD-CTS-01", "SOP-QUAD-CTS-02", "SOP-QUAD-CTS-03"],
     supportSOPs: [],
     microSkills: [
@@ -186,7 +184,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "Graphing",
+    name: "Graph Sketching (Quadratics)",
     requiredSOPs: ["SOP-QUAD-GRAPH-01", "SOP-QUAD-GRAPH-02", "SOP-QUAD-GRAPH-03"],
     supportSOPs: [],
     microSkills: [
@@ -212,7 +210,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "Discriminant",
+    name: "Discriminant Analysis",
     requiredSOPs: ["SOP-QUAD-DISC-01", "SOP-QUAD-DISC-02"],
     supportSOPs: [],
     microSkills: [
@@ -237,7 +235,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "Find Eqn",
+    name: "Finding Equation from Graph",
     requiredSOPs: ["SOP-QUAD-EQN-01"],
     supportSOPs: [],
     microSkills: [
@@ -260,7 +258,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-05 · Subject of Formula",
+    name: "ARCH-L1-ALG-05 · Changing the Subject of a Formula",
     requiredSOPs: ["SOP-ALG-04"],
     supportSOPs: [],
     microSkills: [
@@ -283,9 +281,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-06 · Simultaneous Eqns",
+    name: "ARCH-L1-ALG-06 · Solving Simultaneous Equations",
     requiredSOPs: ["SOP-ALG-05"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-ALG-01"],
     microSkills: [
       "Apply Substitution Method",
       "Apply Elimination Method",
@@ -306,9 +304,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-07 · Inequalities",
+    name: "ARCH-L1-ALG-07 · Inequalities (Single/Compound)",
     requiredSOPs: ["SOP-ALG-07"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-ALG-04"],
     microSkills: [
       "Solve linear inequalities",
       "Reverse inequality sign when multiplying/dividing by negative",
@@ -329,9 +327,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-08 · Compound Inequalities",
+    name: "ARCH-L1-ALG-08 · Solving Compound Inequalities",
     requiredSOPs: ["SOP-ALG-07"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-ALG-04"],
     microSkills: [
       "Split compound inequality a < x < b into two parts",
       "Find intersection of solution sets"
@@ -351,7 +349,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-09 · Modelling Inequalities",
+    name: "ARCH-L1-ALG-09 · Modelling with Inequalities",
     requiredSOPs: ["SOP-ALG-07"],
     supportSOPs: [],
     microSkills: [
@@ -373,9 +371,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L1-ALG-10 · Max/Min (CTS)",
-    requiredSOPs: ["SOP-QUAD-CTS-02"],
-    supportSOPs: [],
+    name: "ARCH-L1-ALG-10 · Finding Max/Min Values in a Range",
+    requiredSOPs: ["SOP-QUAD-CTS-02", "SOP-QUAD-GRAPH-01", "SOP-QUAD-GRAPH-02"],
+    supportSOPs: ["SOP-QUAD-DISC-01"],
     microSkills: [
       "Complete square to find vertex",
       "Identify Max/Min value (q) from a(x+p)²+q",
@@ -396,7 +394,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Indices",
-    name: "ARCH-L1-IND-01 · Basic Laws",
+    name: "ARCH-L1-IND-01 · Basic Index Laws",
     requiredSOPs: ["SOP-IND-03"],
     supportSOPs: [],
     microSkills: [
@@ -420,9 +418,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Indices",
-    name: "ARCH-L1-IND-02 · Zero/Neg Indices",
+    name: "ARCH-L1-IND-02 · Zero & Negative Indices",
     requiredSOPs: ["SOP-IND-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-IND-11"],
     microSkills: [
       "Evaluate Zero Index (a^0 = 1)",
       "Convert Negative Indices to reciprocals (1/a^n)"
@@ -442,8 +440,8 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Indices",
-    name: "ARCH-L1-IND-03 · Simple Simp",
-    requiredSOPs: ["SOP-IND-03"],
+    name: "ARCH-L1-IND-03 · Simple Index Simplification",
+    requiredSOPs: ["SOP-IND-03", "SOP-IND-06"],
     supportSOPs: [],
     microSkills: [
       "Simplify single-step index expressions",
@@ -464,9 +462,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Indices",
-    name: "ARCH-L1-IND-04 · Multi-step Simp",
-    requiredSOPs: ["SOP-IND-08", "SOP-IND-10"],
-    supportSOPs: [],
+    name: "ARCH-L1-IND-04 · Multi-step Index Simplification",
+    requiredSOPs: ["SOP-IND-03", "SOP-IND-06", "SOP-IND-08"],
+    supportSOPs: ["SOP-IND-10", "SOP-IND-11"],
     microSkills: [
       "Decompose complex expressions into Number/x/y parts",
       "Apply laws sequentially (Bracket -> Multiply -> Divide)",
@@ -487,9 +485,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Indices",
-    name: "ARCH-L1-IND-05 · Single Power",
-    requiredSOPs: ["SOP-IND-11"],
-    supportSOPs: [],
+    name: "ARCH-L1-IND-05 · Expressing an Expression as a Single Power",
+    requiredSOPs: ["SOP-IND-03", "SOP-IND-11", "SOP-ALG-01"],
+    supportSOPs: ["SOP-IND-10"],
     microSkills: [
       "Perform Prime Factorisation",
       "Unify bases (e.g. 4 -> 2², 27 -> 3³)",
@@ -510,7 +508,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Number",
-    name: "ARCH-L1-RATIO-01 · Map Scale",
+    name: "ARCH-L1-RATIO-01 · Map Scale Problems",
     requiredSOPs: ["SOP-NUM-01"],
     supportSOPs: [],
     microSkills: [
@@ -533,7 +531,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Number",
-    name: "ARCH-L1-RATIO-02 · Percentage",
+    name: "ARCH-L1-RATIO-02 · Percentage Change & Reverse Percentage",
     requiredSOPs: ["SOP-NUM-02"],
     supportSOPs: [],
     microSkills: [
@@ -555,7 +553,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D1 — Number & Algebra",
     topic: "Number",
-    name: "ARCH-L1-RATIO-03 · Interest",
+    name: "ARCH-L1-RATIO-03 · Simple & Compound Interest",
     requiredSOPs: ["SOP-NUM-03"],
     supportSOPs: [],
     microSkills: [
@@ -582,9 +580,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-01 · Coordinate Geo",
-    requiredSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-03", "SOP-GEO-COORD-05"],
-    supportSOPs: ["SOP-GEO-COORD-02", "SOP-GEO-COORD-04"],
+    name: "ARCH-L1-GEO-01 · Coordinate Geometry",
+    requiredSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03", "SOP-GEO-COORD-04", "SOP-GEO-COORD-05", "SOP-GEO-COORD-06", "SOP-GEO-COORD-07", "SOP-GEO-COORD-08", "SOP-GEO-COORD-09", "SOP-GEO-COORD-10"],
+    supportSOPs: [],
     microSkills: [
       "MS-GEO-COORD-01 Plot Coordinates Accurately",
       "MS-GEO-COORD-02 Compute Distance",
@@ -608,9 +606,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-02 · Similarity",
-    requiredSOPs: ["SOP-GEO-SIM-01", "SOP-GEO-SIM-02", "SOP-GEO-SIM-04"],
-    supportSOPs: [],
+    name: "ARCH-L1-GEO-02 · Similar Triangles & Polygons",
+    requiredSOPs: ["SOP-GEO-SIM-01", "SOP-GEO-SIM-02", "SOP-GEO-SIM-03", "SOP-GEO-SIM-04"],
+    supportSOPs: ["SOP-ANG-M05", "SOP-ANG-M06", "SOP-ANG-M07"],
     microSkills: [
       "MS-GEO-SIM-01 Identify AA / SAS / SSS Similarity",
       "MS-GEO-SIM-02 Match Corresponding Vertices",
@@ -633,8 +631,8 @@ export const ARCHETYPES_DATA = [
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
     name: "ARCH-L1-GEO-03 · Circle Theorems",
-    requiredSOPs: ["SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-05"],
-    supportSOPs: ["SOP-GEO-CIRC-03", "SOP-GEO-CIRC-04"],
+    requiredSOPs: ["SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-03", "SOP-GEO-CIRC-04", "SOP-GEO-CIRC-05", "SOP-GEO-CIRC-06", "SOP-GEO-CIRC-07", "SOP-GEO-CIRC-08"],
+    supportSOPs: ["SOP-ANG-M00", "SOP-ANG-M01", "SOP-ANG-M02", "SOP-ANG-M03", "SOP-ANG-M04"],
     microSkills: [
       "MS-GEO-CIRC-01 Identify Diameter → Right Angle",
       "MS-GEO-CIRC-02 Identify Angle at Centre vs Circumference",
@@ -657,7 +655,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-04 · Angle Properties",
+    name: "ARCH-L1-GEO-04 · Angle Properties (Parallel Lines)",
     branches: [
       "CORE-01-M00", "CORE-01-M01", "CORE-01-M02", "CORE-01-M03", 
       "CORE-01-M04", "CORE-01-M05", "CORE-01-M06", "CORE-01-M07", 
@@ -682,27 +680,27 @@ export const ARCHETYPES_DATA = [
     description: "Master container for all parallel line angle relationships and polygon properties."
   },
   // Sub-models for GEO-04
-  { id: "CORE-01-M00", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Straight Line", requiredSOPs: ["SOP-ANG-M00"], description: "Angles on a straight line sum to 180°.", microSkills: ["Sum adjacent angles"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M01", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Corresponding", requiredSOPs: ["SOP-ANG-M01"], description: "Corresponding angles (F-pattern) are equal.", microSkills: ["Identify F-shape"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M02", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Alternate", requiredSOPs: ["SOP-ANG-M02"], description: "Alternate interior angles (Z-pattern) are equal.", microSkills: ["Identify Z-shape"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M03", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Co-Interior", requiredSOPs: ["SOP-ANG-M03"], description: "Co-interior angles (C-pattern) sum to 180°.", microSkills: ["Identify C-shape"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M04", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Vert Opposite", requiredSOPs: ["SOP-ANG-M04"], description: "Vertically opposite angles are equal.", microSkills: ["Identify X-intersection"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M05", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Triangle Sum", requiredSOPs: ["SOP-ANG-M05"], description: "Interior angles of a triangle sum to 180°.", microSkills: ["Sum angles to 180"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M06", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Ext Angle", requiredSOPs: ["SOP-ANG-M06"], description: "Exterior angle of a triangle equals sum of two opposite interior angles.", microSkills: ["Identify ext/int relationship"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M07", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Isosceles", requiredSOPs: ["SOP-ANG-M07"], description: "Base angles of an isosceles triangle are equal.", microSkills: ["Identify equal sides"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M08", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Equilateral", requiredSOPs: ["SOP-ANG-M08"], description: "All angles in an equilateral triangle are 60°.", microSkills: ["Identify 60 deg"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M09", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Poly Interior", requiredSOPs: ["SOP-ANG-M09"], description: "Sum of interior angles of an n-sided polygon is (n-2)×180°.", microSkills: ["Count sides n"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M10", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Reg Poly", requiredSOPs: ["SOP-ANG-M10"], description: "Calculate interior and exterior angles of regular polygons.", microSkills: ["Use 360/n"], pitfalls: [], proTips: [] },
-  { id: "CORE-01-M11", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Quad Sum", requiredSOPs: ["SOP-ANG-M11"], description: "Interior angles of a quadrilateral sum to 360°.", microSkills: ["Sum angles to 360"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M00", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Angles on a Straight Line", requiredSOPs: ["SOP-ANG-M00"], description: "Angles on a straight line sum to 180°.", microSkills: ["Sum adjacent angles"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M01", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Corresponding Angles (F-pattern)", requiredSOPs: ["SOP-ANG-M01"], description: "Corresponding angles (F-pattern) are equal.", microSkills: ["Identify F-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M02", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Alternate Interior Angles (Z-pattern)", requiredSOPs: ["SOP-ANG-M02"], description: "Alternate interior angles (Z-pattern) are equal.", microSkills: ["Identify Z-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M03", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Co-Interior Angles (C-pattern)", requiredSOPs: ["SOP-ANG-M03"], description: "Co-interior angles (C-pattern) sum to 180°.", microSkills: ["Identify C-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M04", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Vertically Opposite Angles (X-pattern)", requiredSOPs: ["SOP-ANG-M04"], description: "Vertically opposite angles are equal.", microSkills: ["Identify X-intersection"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M05", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Triangle Angle Sum", requiredSOPs: ["SOP-ANG-M05"], description: "Interior angles of a triangle sum to 180°.", microSkills: ["Sum angles to 180"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M06", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Exterior Angle of Triangle", requiredSOPs: ["SOP-ANG-M06"], description: "Exterior angle of a triangle equals sum of two opposite interior angles.", microSkills: ["Identify ext/int relationship"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M07", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Isosceles Triangle Properties", requiredSOPs: ["SOP-ANG-M07"], description: "Base angles of an isosceles triangle are equal.", microSkills: ["Identify equal sides"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M08", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Equilateral Triangle Properties", requiredSOPs: ["SOP-ANG-M08"], description: "All angles in an equilateral triangle are 60°.", microSkills: ["Identify 60 deg"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M09", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Polygon Interior Angle Sum", requiredSOPs: ["SOP-ANG-M09"], description: "Sum of interior angles of an n-sided polygon is (n-2)×180°.", microSkills: ["Count sides n"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M10", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Regular Polygon Angles", requiredSOPs: ["SOP-ANG-M10"], description: "Calculate interior and exterior angles of regular polygons.", microSkills: ["Use 360/n"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M11", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Quadrilateral Angle Sum", requiredSOPs: ["SOP-ANG-M11"], description: "Interior angles of a quadrilateral sum to 360°.", microSkills: ["Sum angles to 360"], pitfalls: [], proTips: [] },
 
   {
     id: "ARCH-L1-GEO-05",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-05 · Congruence",
+    name: "ARCH-L1-GEO-05 · Congruent Triangles",
     requiredSOPs: ["SOP-GEO-CONG-01", "SOP-GEO-CONG-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-ANG-M05", "SOP-ANG-M06", "SOP-ANG-M07"],
     microSkills: [
       "MS-GEO-CONG-01 Identify SSS / SAS / ASA / RHS Conditions",
       "MS-GEO-CONG-02 Match Corresponding Sides / Angles Accurately",
@@ -723,9 +721,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-06 · Pythagoras",
+    name: "ARCH-L1-GEO-06 · Pythagoras' Theorem",
     requiredSOPs: ["SOP-GEO-PYTH-01", "SOP-GEO-PYTH-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-COORD-01"],
     microSkills: [
       "MS-GEO-PYTH-01 Identify Hypotenuse Correctly",
       "MS-GEO-PYTH-02 Test if Triangle is Right-angled",
@@ -746,9 +744,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-07 · Construction",
+    name: "ARCH-L1-GEO-07 · Construction & Loci",
     requiredSOPs: ["SOP-GEO-CONS-01", "SOP-GEO-CONS-02", "SOP-GEO-CONS-03", "SOP-GEO-CONS-04"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-BEAR-03"],
     microSkills: [
       "MS-GEO-CONS-01 Use Compass with Fixed Radius Correctly",
       "MS-GEO-CONS-02 Draw Perpendicular from a Point to a Line",
@@ -770,9 +768,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Geometry",
-    name: "ARCH-L1-GEO-08 · Bearings",
+    name: "ARCH-L1-GEO-08 · Bearings & Scale Drawings",
     requiredSOPs: ["SOP-GEO-BEAR-01", "SOP-GEO-BEAR-02", "SOP-GEO-BEAR-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03"],
     microSkills: [
       "MS-GEO-BEAR-01 Mark North Line Correctly",
       "MS-GEO-BEAR-02 Read 3-Figure Bearings",
@@ -821,9 +819,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Mensuration",
-    name: "ARCH-L1-MEN-01 · Mensuration Strategy",
+    name: "ARCH-L1-MEN-01 · Master SOP for ALL Mensuration Problems",
     requiredSOPs: ["SOP-MEN-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-IND-03", "SOP-IND-06", "SOP-IND-07"],
     microSkills: [
       "MS-MEN-01 Convert 2D ↔ 3D measurements",
       "MS-MEN-02 Recognise standard solids",
@@ -845,9 +843,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Mensuration",
-    name: "ARCH-L1-MEN-02 · Similar Solids",
+    name: "ARCH-L1-MEN-02 · Similar Figures & Solids",
     requiredSOPs: ["SOP-MEN-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-SIM-01", "SOP-GEO-SIM-02", "SOP-GEO-SIM-03", "SOP-GEO-SIM-04"],
     microSkills: [
       "MS-MEN-07 Apply scale factor to area/volume",
       "Convert linear ratio k to Area (k²) and Volume (k³)"
@@ -869,7 +867,7 @@ export const ARCHETYPES_DATA = [
     topic: "Mensuration",
     name: "ARCH-L1-MEN-03 · Composite Solids",
     requiredSOPs: ["SOP-MEN-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-PYTH-01"],
     microSkills: [
       "MS-MEN-03 Identify composite solid components",
       "Calculate exposed surface area (TSA)",
@@ -890,9 +888,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Mensuration",
-    name: "ARCH-L1-MEN-04 · Sector/Segment",
-    requiredSOPs: ["SOP-MEN-04"],
-    supportSOPs: [],
+    name: "ARCH-L1-MEN-04 · Sector & Segment Problems",
+    requiredSOPs: ["SOP-MEN-04", "SOP-GEO-CIRC-08"],
+    supportSOPs: ["SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-03"],
     microSkills: [
       "MS-MEN-06 Identify sector vs segment",
       "Calculate Arc Length (θ/360 × 2πr)",
@@ -914,9 +912,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Trigonometry",
-    name: "ARCH-L1-TRIG-01 · 2D Trig",
+    name: "ARCH-L1-TRIG-01 · Solving 2D Bearing / Geometry Problems",
     requiredSOPs: ["SOP-TRIG-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-GEO-BEAR-01", "SOP-GEO-PYTH-01"],
     microSkills: [
       "MS-TRIG-03 Determine when to use Sine vs Cosine Rule",
       "MS-TRIG-04 Recognise non-right triangles",
@@ -937,9 +935,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Trigonometry",
-    name: "ARCH-L1-TRIG-02 · Shortest Dist",
-    requiredSOPs: ["SOP-TRIG-02"],
-    supportSOPs: [],
+    name: "ARCH-L1-TRIG-02 · Finding Shortest Distance via Area Method",
+    requiredSOPs: ["SOP-TRIG-01"],
+    supportSOPs: ["SOP-GEO-COORD-01"],
     microSkills: [
       "Calculate Area of Triangle (1/2 ab sinC)",
       "Equate Area to 1/2 × base × height",
@@ -960,9 +958,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Trigonometry",
-    name: "ARCH-L1-TRIG-03 · Bearings Trig",
-    requiredSOPs: ["SOP-TRIG-03"],
-    supportSOPs: [],
+    name: "ARCH-L1-TRIG-03 · Bearings (Trigonometric Application)",
+    requiredSOPs: ["SOP-TRIG-01", "SOP-TRIG-04"],
+    supportSOPs: ["SOP-GEO-BEAR-01", "SOP-GEO-BEAR-02", "SOP-GEO-BEAR-03"],
     microSkills: [
       "MS-TRIG-07 Trace bearing direction correctly",
       "Interpret bearings to find internal triangle angles"
@@ -982,9 +980,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D2 — Geometry & Measurement",
     topic: "Trigonometry",
-    name: "ARCH-L1-TRIG-04 · Elev/Depress",
+    name: "ARCH-L1-TRIG-04 · Elevation / Depression Problems",
     requiredSOPs: ["SOP-TRIG-04"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-TRIG-01"],
     microSkills: [
       "MS-TRIG-05 Extract elevation/depression from diagram",
       "MS-TRIG-01 Identify right angle for SOHCAHTOA"
@@ -1008,9 +1006,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Stats",
-    name: "ARCH-L1-STAT-01 · Stem-and-Leaf",
+    name: "ARCH-L1-STAT-01 · Interpreting Stem-and-Leaf Diagrams",
     requiredSOPs: ["SOP-STAT-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-STAT-06", "SOP-STAT-07"],
     microSkills: [
       "MS-STAT-01 Order raw data",
       "Read keys and extract values",
@@ -1031,9 +1029,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Stats",
-    name: "ARCH-L1-STAT-02 · Grouped Table",
+    name: "ARCH-L1-STAT-02 · Interpreting Grouped Frequency Tables",
     requiredSOPs: ["SOP-STAT-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-STAT-06", "SOP-STAT-07"],
     microSkills: [
       "MS-STAT-04 Read class intervals",
       "MS-STAT-05 Compute class midpoints",
@@ -1054,9 +1052,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Stats",
-    name: "ARCH-L1-STAT-03 · Adv Graphs",
+    name: "ARCH-L1-STAT-03 · Advanced Graphs (Histogram / CF / Boxplot)",
     requiredSOPs: ["SOP-STAT-03", "SOP-STAT-04", "SOP-STAT-05"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-STAT-01", "SOP-STAT-02", "SOP-STAT-07"],
     microSkills: [
       "MS-STAT-02 Compute 5-number summary",
       "MS-STAT-06 Compute frequency density",
@@ -1077,9 +1075,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Stats",
-    name: "ARCH-L1-STAT-04 · Interpretation",
+    name: "ARCH-L1-STAT-04 · Data Interpretation & Trend Analysis",
     requiredSOPs: ["SOP-STAT-06", "SOP-STAT-07"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-STAT-01", "SOP-STAT-02", "SOP-STAT-03", "SOP-STAT-05"],
     microSkills: [
       "MS-STAT-03 Identify skewness",
       "MS-STAT-08 Interpret boxplot comparisons",
@@ -1100,9 +1098,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Prob",
-    name: "ARCH-L1-PROB-01 · Basic Prob",
+    name: "ARCH-L1-PROB-01 · Solving Basic Probability Problems",
     requiredSOPs: ["SOP-PROB-01"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-SET-01", "SOP-SET-02"],
     microSkills: [
       "MS-PROB-01 Identify event space",
       "List favourable outcomes",
@@ -1123,9 +1121,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Prob",
-    name: "ARCH-L1-PROB-02 · Combined Events",
+    name: "ARCH-L1-PROB-02 · Combined Events (AND / OR Rules)",
     requiredSOPs: ["SOP-PROB-03"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-PROB-01", "SOP-SET-01", "SOP-SET-02", "SOP-SET-03", "SOP-SET-04"],
     microSkills: [
       "MS-PROB-02 Interpret AND/OR wording",
       "MS-PROB-03 Recognise mutually exclusive cases",
@@ -1146,9 +1144,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Prob",
-    name: "ARCH-L1-PROB-03 · Trees",
+    name: "ARCH-L1-PROB-03 · Tree Diagrams / Multi-step Probability",
     requiredSOPs: ["SOP-PROB-02"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-PROB-01", "SOP-PROB-03"],
     microSkills: [
       "MS-PROB-04 Identify independence vs dependence",
       "MS-PROB-05 Multiply probabilities on branches",
@@ -1169,7 +1167,7 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Sets",
-    name: "ARCH-L1-SET-01 · Set Notation",
+    name: "ARCH-L1-SET-01 · Set Notation & Operations",
     requiredSOPs: ["SOP-SET-01", "SOP-SET-02"],
     supportSOPs: [],
     microSkills: [
@@ -1192,9 +1190,9 @@ export const ARCHETYPES_DATA = [
     level: "L1",
     domain: "D3 — Statistics & Probability",
     topic: "Sets",
-    name: "ARCH-L1-SET-02 · Venn",
+    name: "ARCH-L1-SET-02 · Venn Diagrams",
     requiredSOPs: ["SOP-SET-03", "SOP-SET-04"],
-    supportSOPs: [],
+    supportSOPs: ["SOP-PROB-01"],
     microSkills: [
       "MS-SET-01 Identify ∩ intersection regions",
       "MS-SET-02 Identify ∪ union regions",
@@ -1219,7 +1217,7 @@ export const ARCHETYPES_DATA = [
     level: "L2",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L2-ALG-01 · Modelling",
+    name: "ARCH-L2-ALG-01 · Algebraic Modelling in Context",
     requiredSOPs: ["SOP-ALG-04", "SOP-ALG-01"],
     supportSOPs: [],
     microSkills: [
@@ -1241,8 +1239,8 @@ export const ARCHETYPES_DATA = [
     level: "L2",
     domain: "D1 — Number & Algebra",
     topic: "Algebra",
-    name: "ARCH-L2-ALG-02 · Graph Analysis",
-    requiredSOPs: ["SOP-QUAD-GRAPH-01", "SOP-QUAD-EQN-01"],
+    name: "ARCH-L2-ALG-02 · Graphical Analysis of Functions",
+    requiredSOPs: ["SOP-QUAD-CTS-02", "SOP-QUAD-GRAPH-01", "SOP-QUAD-GRAPH-02", "SOP-QUAD-GRAPH-03", "SOP-QUAD-EQN-01"],
     supportSOPs: [],
     microSkills: [
       "Analyze functions graphically",
@@ -1295,12 +1293,12 @@ export const ARCHETYPES_DATA = [
     level: "L2",
     domain: "D2 — Geometry & Measurement",
     topic: "Mensuration",
-    name: "ARCH-L2-MEN-01 · Multi-Step Mensuration",
+    name: "ARCH-L2-MEN-01 · Multi-Step Mensuration in Context",
     requiredSOPs: [
       "SOP-MEN-01", "SOP-MEN-02", "SOP-MEN-03", "SOP-MEN-04",
       "SOP-GEO-COORD-01", "SOP-GEO-PYTH-01", "SOP-TRIG-01", "SOP-TRIG-04", "SOP-GEO-SIM-03"
     ],
-    supportSOPs: ["SOP-IND-03", "SOP-NUM-03"],
+    supportSOPs: ["SOP-IND-03", "SOP-IND-06", "SOP-IND-07", "SOP-NUM-03"],
     microSkills: [
       "Solve complex mensuration problems",
       "Integrate trigonometry and geometry with volume/area",
@@ -1321,9 +1319,9 @@ export const ARCHETYPES_DATA = [
     level: "L2",
     domain: "D2 — Geometry & Measurement",
     topic: "Trigonometry",
-    name: "ARCH-L2-TRIG-01 · 2D/3D Trig",
-    requiredSOPs: ["SOP-TRIG-01", "SOP-TRIG-03"],
-    supportSOPs: [],
+    name: "ARCH-L2-TRIG-01 · 2D / 3D Trigonometry in Context",
+    requiredSOPs: ["SOP-TRIG-01", "SOP-TRIG-03", "SOP-TRIG-04", "SOP-TRIG-02"],
+    supportSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-PYTH-01", "SOP-GEO-BEAR-01"],
     microSkills: [
       "Decompose 3D problems into 2D planes",
       "MS-TRIG-06 Draw 3D reference triangle from 3D diagram",
@@ -1348,7 +1346,7 @@ export const ARCHETYPES_DATA = [
     level: "L3",
     domain: "⚠️ No Topic Mapping",
     topic: "Meta",
-    name: "ARCH-L3-SYN-01 · Synthesis",
+    name: "ARCH-L3-SYN-01 · Multi-Representation Synthesis",
     requiredSOPs: ["SOP-META-01"],
     supportSOPs: [],
     microSkills: [
@@ -1370,7 +1368,7 @@ export const ARCHETYPES_DATA = [
     level: "L3",
     domain: "⚠️ No Topic Mapping",
     topic: "Meta",
-    name: "ARCH-L3-MOD-01 · Modelling",
+    name: "ARCH-L3-MOD-01 · Contextual Modelling & Justification",
     requiredSOPs: ["SOP-META-02"],
     supportSOPs: [],
     microSkills: [
