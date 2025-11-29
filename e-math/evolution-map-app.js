@@ -1,10 +1,10 @@
 /**
  * evolution-map-app.js
- * v10.9 - Reordered Layout & Support SOPs
- * * UPDATES:
- * 1. Moved Micro-Skills section BELOW SOPs (Required & Support).
- * 2. Added rendering for Support SOPs.
- * 3. Maintained robust rendering fixes from v10.8.
+ * v10.10 - Added Automated Data Integrity Validator
+ * * NEW FEATURES:
+ * 1. validateDataIntegrity(): Runs on init to check for missing SOPs.
+ * 2. Displays a visible UI Alert if data is missing.
+ * 3. Logs detailed audit report to Console (F12).
  */
 
 import { ARCHETYPES_DATA } from './archetypes-data.js';
@@ -29,7 +29,90 @@ const ICONS = {
 };
 
 // ==========================================
-// STYLE INJECTION (Global Fallback)
+// DATA INTEGRITY VALIDATOR (NEW)
+// ==========================================
+function validateDataIntegrity() {
+    console.group("🛡️ Starting Data Integrity Audit...");
+    const issues = [];
+    const warnings = [];
+    
+    // 1. Map all available SOP IDs
+    const sopIdMap = new Set();
+    const duplicateSops = new Set();
+    
+    SOPS_DATA.forEach(sop => {
+        if (sopIdMap.has(sop.id)) {
+            duplicateSops.add(sop.id);
+            issues.push(`CRITICAL: Duplicate SOP ID definition found: ${sop.id}`);
+        }
+        sopIdMap.add(sop.id);
+    });
+
+    // 2. Check References in Archetypes
+    const usedSops = new Set();
+
+    ARCHETYPES_DATA.forEach(arch => {
+        // Check Required SOPs
+        const required = getList(arch, 'requiredSOPs');
+        required.forEach(sopId => {
+            usedSops.add(sopId);
+            if (!sopIdMap.has(sopId)) {
+                issues.push(`MISSING (Required): Archetype [${arch.id}] references missing SOP: "${sopId}"`);
+            }
+        });
+
+        // Check Support SOPs
+        const support = getList(arch, 'supportSOPs');
+        support.forEach(sopId => {
+            usedSops.add(sopId);
+            if (!sopIdMap.has(sopId)) {
+                issues.push(`MISSING (Support): Archetype [${arch.id}] references missing SOP: "${sopId}"`);
+            }
+        });
+    });
+
+    // 3. Check for Orphaned SOPs (Defined but never used)
+    sopIdMap.forEach(sopId => {
+        if (!usedSops.has(sopId)) {
+            warnings.push(`ORPHAN: SOP "${sopId}" is defined but never referenced by any Archetype.`);
+        }
+    });
+
+    console.groupEnd();
+
+    // 4. Report Results
+    if (issues.length > 0) {
+        console.error(`❌ Data Integrity Check FAILED with ${issues.length} errors.`);
+        console.table(issues);
+        showIntegrityErrorUI(issues);
+    } else {
+        console.log(`✅ Data Integrity Check PASSED. All references valid.`);
+        if (warnings.length > 0) {
+            console.warn(`⚠️ Found ${warnings.length} unused (orphan) SOPs:`, warnings);
+        }
+    }
+}
+
+function showIntegrityErrorUI(issues) {
+    const alertDiv = document.createElement('div');
+    alertDiv.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+        background: #7f1d1d; color: #fecaca; padding: 1rem;
+        border-bottom: 2px solid #ef4444; font-family: monospace;
+        max-height: 50vh; overflow-y: auto;
+    `;
+    alertDiv.innerHTML = `
+        <h3 style="font-weight:bold; font-size:1.2em; margin-bottom:0.5rem;">⚠️ Data Integrity Errors Detected</h3>
+        <ul style="list-style:disc; padding-left:1.5rem;">
+            ${issues.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+        <button onclick="this.parentElement.remove()" style="position:absolute; top:1rem; right:1rem; background:#991b1b; border:1px solid #f87171; color:white; padding:0.25rem 0.5rem; cursor:pointer;">Dismiss</button>
+    `;
+    document.body.prepend(alertDiv);
+}
+
+// ==========================================
+// STYLE INJECTION
 // ==========================================
 function injectRequiredStyles() {
     const styleId = 'evolution-map-dynamic-styles';
@@ -38,7 +121,6 @@ function injectRequiredStyles() {
     const style = document.createElement('style');
     style.id = styleId;
     style.innerHTML = `
-        /* Dynamic Styles for Pitfalls, Tips & Lists */
         .sop-section { 
             margin-top: 1rem; 
             padding: 1.5rem; 
@@ -77,11 +159,13 @@ function injectRequiredStyles() {
             border-radius: 4px;
             color: #86efac;
         }
-        .pitfall-badge { background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; height: fit-content; }
-        .pro-tip-badge { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; height: fit-content; }
+        .pitfall-badge, .pro-tip-badge { 
+            padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; height: fit-content; color: white;
+        }
+        .pitfall-badge { background: #ef4444; }
+        .pro-tip-badge { background: #10b981; }
     `;
     document.head.appendChild(style);
-    console.log("✅ CSS Styles Injected");
 }
 
 // ==========================================
@@ -99,15 +183,12 @@ function processData() {
         return;
     }
 
-    // Deep copy
     const allArchetypes = JSON.parse(JSON.stringify(ARCHETYPES_DATA)).map(a => ({...a, children: [] }));
-    
     archetypeMap.clear();
     allArchetypes.forEach(a => archetypeMap.set(a.id, a));
 
     let topLevelArchetypes = [];
 
-    // Build Parent-Child Relationships
     allArchetypes.forEach(a => {
         if (a.parent) {
             const parent = archetypeMap.get(a.parent);
@@ -121,10 +202,8 @@ function processData() {
         }
     });
 
-    // Sort children
     topLevelArchetypes.forEach(parent => parent.children.sort(naturalSort));
 
-    // Create Categories
     const cat1 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D1')).sort(naturalSort);
     const cat2 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D2')).sort(naturalSort);
     const cat3 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D3')).sort(naturalSort);
@@ -139,10 +218,8 @@ function processData() {
 }
 
 // ==========================================
-// RENDER FUNCTIONS (ROBUST & REORDERED)
+// RENDER FUNCTIONS
 // ==========================================
-
-// Helper: Aggressively try to find array data
 function getList(obj, ...keys) {
     if (!obj) return [];
     for (const key of keys) {
@@ -194,7 +271,6 @@ function renderArchetypeCard(archetype) {
     </div>`;
 }
 
-// [UPDATED] Reordered Content Rendering
 function renderInPlaceContent(archetype, hasChildren) {
     let html = `<div class="branches-overview"><p>${archetype.description || 'No description available.'}</p></div>`;
     
@@ -226,13 +302,10 @@ function renderInPlaceContent(archetype, hasChildren) {
 
 function renderArchetypeSpecifics(archetype) {
     let html = '';
-
-    // Expanded key checks for MicroSkills including PascalCase
     const microSkills = getList(archetype, 'microSkills', 'micro_skills', 'microskills', 'MicroSkills');
     const pitfalls = getList(archetype, 'pitfalls', 'Pitfalls');
     const tips = getList(archetype, 'proTips', 'pro_tips', 'ProTips');
 
-    // Render Micro-Skills with FORCED inline styles for visibility
     if (microSkills.length > 0) {
         html += `<h4 class="modal-sub-branch-title">Micro-Skills & Competencies</h4>`;
         html += `<div class="sop-section" style="border-left: 3px solid var(--accent); margin-bottom: 1rem;">
@@ -257,19 +330,14 @@ function renderArchetypeSpecifics(archetype) {
     return html;
 }
 
-// [UPDATED] Render BOTH Required and Support SOPs
 function renderSopDetails(archetype) {
     let html = '';
-    
-    // Required SOPs
     if (archetype.requiredSOPs?.length > 0) {
         html += `<h4 class="modal-sub-branch-title">Required SOPs</h4>`;
         archetype.requiredSOPs.forEach(sopId => {
             html += renderSingleSopCard(sopId);
         });
     }
-
-    // Support SOPs (Added)
     const supportSOPs = getList(archetype, 'supportSOPs', 'support_sops', 'SupportSOPs');
     if (supportSOPs.length > 0) {
         html += `<h4 class="modal-sub-branch-title">Support SOPs</h4>`;
@@ -277,11 +345,9 @@ function renderSopDetails(archetype) {
             html += renderSingleSopCard(sopId);
         });
     }
-    
     return html;
 }
 
-// [NEW] Helper for rendering a single SOP card
 function renderSingleSopCard(sopId) {
     const sop = getSopById(sopId);
     const pitfalls = getList(sop, 'pitfalls', 'Pitfalls');
@@ -298,19 +364,10 @@ function renderSingleSopCard(sopId) {
       </div>`;
 }
 
-// ==========================================
-// UNIVERSAL RENDER HELPERS
-// ==========================================
-
 function renderSafeListItems(list) {
     if (!list) return '';
     return list.map(item => {
-        let text = '';
-        if (typeof item === 'string') {
-            text = item;
-        } else if (typeof item === 'object' && item !== null) {
-            text = item.text || item.description || item.content || JSON.stringify(item);
-        }
+        let text = typeof item === 'string' ? item : (item.text || JSON.stringify(item));
         return `<li style="margin-bottom: 0.5rem; line-height: 1.5;">${text}</li>`;
     }).join('');
 }
@@ -322,7 +379,7 @@ function renderSafePitfalls(list) {
         if (typeof item === 'string') {
             text = item;
             type = 'Common Error';
-        } else if (typeof item === 'object' && item !== null) {
+        } else {
             text = item.text || JSON.stringify(item);
             type = item.type || 'Error';
         }
@@ -332,12 +389,7 @@ function renderSafePitfalls(list) {
 
 function renderSafeProTips(list) {
     return list.map(item => {
-        let text = '';
-        if (typeof item === 'string') {
-            text = item;
-        } else if (typeof item === 'object' && item !== null) {
-            text = item.text || JSON.stringify(item);
-        }
+        let text = typeof item === 'string' ? item : (item.text || JSON.stringify(item));
         return `<div class="pro-tip-item"><span class="pro-tip-badge">Pro Tip</span><span>${text}</span></div>`;
     }).join('');
 }
@@ -346,9 +398,10 @@ function renderSafeProTips(list) {
 // INITIALIZATION
 // ==========================================
 function init() {
-    console.log("🚀 App Initialized v10.9 (Layout Reordered)");
+    console.log("🚀 App Initialized v10.10 (Data Integrity Active)");
     injectRequiredStyles();
     processData();
+    validateDataIntegrity(); // Run the audit immediately
     
     const container = document.getElementById('evolution-map-container');
     if(!container) return;
