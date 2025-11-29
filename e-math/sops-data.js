@@ -1,8 +1,8 @@
 // =================================================================
 // SOP DATABASE (sops-data.js)
 // =================================================================
-// Final Detailed Version (Fully Restored from PDF).
-// Contains ALL SOPs with FULL pedagogical details (Pitfalls & Pro Tips).
+// Final Detailed Version.
+// Includes ALL SOPs referenced in Archetypes (Quadratics, Algebra, etc.)
 // =================================================================
 
 export const SOPS_DATA = [
@@ -108,7 +108,7 @@ export const SOPS_DATA = [
   },
 
   // ==========================================
-  // D1: QUADRATICS
+  // D1: QUADRATICS (The missing keys for ALG-02)
   // ==========================================
   {
     "id": "SOP-QUAD-FACT-01",
