@@ -1,1357 +1,1391 @@
 // =================================================================
 // ARCHETYPE DATABASE (archetypes-data.js)
 // =================================================================
-// This file contains the METADATA for all 71 archetypes,
-// parsed from "Archetype & SOPs清单.pdf" (pages 1-33).
-// It exports the data as an ES Module.
+// Final Detailed Version (v10.2).
+// - Restored FULL Micro-Skills.
+// - Added Pitfalls & Pro Tips for each Archetype.
+// - Restored FULL Descriptions.
 // =================================================================
 
 export const ARCHETYPES_DATA = [
-  // =========================
-  // L1 · Algebra & Number
-  // =========================
+  // ==========================================
+  // D1: ALGEBRA & NUMBER
+  // ==========================================
   {
     id: "ARCH-L1-ALG-01",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Algebra: Factorisation (HCF / Grouping / Identities)",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
     name: "ARCH-L1-ALG-01 · Factorisation",
-    badge: "CORE",
-    parent: null,
-    branches: [],
     requiredSOPs: ["SOP-ALG-01"],
     supportSOPs: [],
     microSkills: [
-      "Identify and factor out the highest common factor (HCF) from all terms.",
-      "Recognise and apply special identities like (a+b)², (a−b)² and a²−b².",
-      "Factorise four-term expressions by grouping like terms."
+      "MS-ALG-01 Expand Brackets (Distributive Law)",
+      "MS-ALG-07 Multiply Out Double Brackets",
+      "MS-ALG-09 Recognise Special Patterns (a²-b², (a±b)²)",
+      "MS-ALG-10 Cancel Common Factors",
+      "Identify Highest Common Factor (HCF) across terms"
     ],
-    description:
-      "Factor algebraic expressions using common factors, grouping, or special identities (difference of squares, perfect squares)."
+    pitfalls: [
+      "Missing common factors before attempting advanced methods",
+      "Incorrectly applying identities (sign errors)"
+    ],
+    proTips: [
+      "Always check for HCF first",
+      "Verify by expansion to catch errors early"
+    ],
+    description: "Factor algebraic expressions using common factors, grouping, or special identities (difference of squares, perfect squares)."
   },
   {
     id: "ARCH-L1-ALG-02",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Equation: Linear Equations",
-    name: "ARCH-L1-ALG-02 · Solving Fractional Equations",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-ALG-04"],
-    supportSOPs: [],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-02 · Fractional Equations",
+    requiredSOPs: ["SOP-QUAD-FACT-01", "SOP-ALG-04"],
+    supportSOPs: ["SOP-IND-03"],
     microSkills: [
-      "Identify the least common multiple (LCM) of all denominators.",
-      "Clear fractions by multiplying both sides of the equation by the LCM.",
-      "Simplify and solve the resulting linear equation."
+      "MS-ALG-03 Simplify Rational Expressions",
+      "MS-ALG-11 Clear Denominators",
+      "Solve resulting linear or quadratic equations",
+      "Check for validity of solutions (denominator ≠ 0)"
     ],
-    description:
-      "Solve equations containing algebraic fractions by clearing denominators, factorising, and applying formula manipulation techniques."
+    pitfalls: [
+      "Multiplying only one side by the denominator",
+      "Forgetting to check if solution makes denominator zero"
+    ],
+    proTips: [
+      "Cross-multiply only when you have single fraction on each side",
+      "Put brackets around numerators before multiplying"
+    ],
+    description: "Solve equations containing algebraic fractions by clearing denominators, factorising, and applying formula manipulation techniques."
   },
   {
     id: "ARCH-L1-ALG-03",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Algebra: Expansion",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
     name: "ARCH-L1-ALG-03 · Forming Expressions",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-EQN-01"],
+    requiredSOPs: ["SOP-ALG-04"],
     supportSOPs: [],
     microSkills: [
-      "Assign letters to unknown quantities and define them clearly.",
-      "Translate word phrases (more than, less than, of, total) into algebraic operations.",
-      "Form and simplify algebraic expressions before solving for unknowns."
+      "MS-ALG-06 Convert Words → Algebraic Terms",
+      "MS-ALG-12 Form Equations from Relationship Statements",
+      "Define variables clearly from context",
+      "Check dimensional consistency"
     ],
-    description:
-      "Translate word problems into algebraic expressions and equations, then manipulate to isolate target variables."
+    pitfalls: [
+      "Translating 'less than' in wrong order (e.g. '5 less than x' is x-5, not 5-x)",
+      "Forgetting to define units for variables"
+    ],
+    proTips: [
+      "Define variables explicitly (e.g., 'Let x be...')",
+      "Reread the question to ensure equation matches logic"
+    ],
+    description: "Translate word problems into algebraic expressions and equations, then manipulate to isolate target variables."
   },
   {
     id: "ARCH-L1-ALG-04",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Quadratic Equations (overall)",
-    name: "ARCH-L1-ALG-04 · Quadratic Equations",
-    badge: "CORE",
-    parent: null,
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-04 · Quadratics (Parent)",
     branches: [
-      "ARCH-L1-ALG-04-CTS",
-      "ARCH-L1-ALG-04-DISC",
-      "ARCH-L1-ALG-04-EQN",
-      "ARCH-L1-ALG-04-FACT",
-      "ARCH-L1-ALG-04-FORM",
-      "ARCH-L1-ALG-04-GRAPH"
+      "ARCH-L1-ALG-04-FACT", 
+      "ARCH-L1-ALG-04-FORM", 
+      "ARCH-L1-ALG-04-CTS", 
+      "ARCH-L1-ALG-04-GRAPH", 
+      "ARCH-L1-ALG-04-DISC", 
+      "ARCH-L1-ALG-04-EQN"
     ],
     requiredSOPs: [],
     supportSOPs: [],
-    microSkills: [
-      "Identify which quadratic method is appropriate: factorisation, completing the square, or formula.",
-      "Relate algebraic form ax²+bx+c to graph features (vertex, intercepts)."
-    ],
-    description:
-      "Parent container for quadratic methods and analysis. Sub-archetypes carry actual SOPs and drills."
+    microSkills: [],
+    pitfalls: [],
+    proTips: [],
+    description: "Parent container for all quadratic equation solving methods and analysis."
   },
-  {
-    id: "ARCH-L1-ALG-04-CTS",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Graph: Quadratic Functions and Transformations",
-    name: "ARCH-L1-ALG-04-CTS · Quadratics — Completing the Square",
-    badge: "CORE",
-    parent: "ARCH-L1-ALG-04",
-    branches: [],
-    requiredSOPs: ["SOP-QUAD-CTS-01", "SOP-QUAD-CTS-02", "SOP-QUAD-CTS-03"],
-    supportSOPs: [],
-    microSkills: [
-      "Rewrite ax²+bx+c into a(x² + (b/a)x) + c form before completing the square.",
-      "Take half of the x-coefficient and square it to create a perfect square.",
-      "Express the quadratic in vertex form a(x + p)² + q and read off the vertex."
-    ],
-    description:
-      "Transform quadratic expressions into vertex form a(x + p)² + q by completing the square, enabling easy identification of vertex and solving equations."
-  },
-  {
-    id: "ARCH-L1-ALG-04-DISC",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Equation: Quadratic Equations - Methods and Discriminant",
-    name: "ARCH-L1-ALG-04-DISC · Discriminant Analysis",
-    badge: "CORE",
-    parent: "ARCH-L1-ALG-04",
-    branches: [],
-    requiredSOPs: ["SOP-QUAD-DISC-01", "SOP-QUAD-DISC-02"],
-    supportSOPs: [],
-    microSkills: [
-      "Compute the discriminant Δ = b² − 4ac for a quadratic equation ax² + bx + c = 0.",
-      "Classify roots using Δ > 0, Δ = 0, and Δ < 0.",
-      "Relate discriminant value to the number of x-intercepts on the graph."
-    ],
-    description:
-      "Use the discriminant Δ = b² - 4ac to predict the nature of roots (two distinct, one repeated, or no real roots) and relate it to the parabola's x-axis intersections."
-  },
-  {
-    id: "ARCH-L1-ALG-04-EQN",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Equation: Quadratic Equations - Methods and Discriminant",
-    name: "ARCH-L1-ALG-04-EQN · Finding Equation from Graph",
-    badge: "CORE",
-    parent: "ARCH-L1-ALG-04",
-    branches: [],
-    requiredSOPs: ["SOP-QUAD-EQN-01"],
-    supportSOPs: [],
-    microSkills: [
-      "Identify the vertex (h, k) from the graph.",
-      "Write a provisional equation y = a(x − h)² + k.",
-      "Use a known point on the graph to solve for the coefficient a."
-    ],
-    description:
-      "Determine the quadratic equation from a given graph by identifying the vertex and using an additional point to find the coefficient 'a'."
-  },
+  // ALG-04 Sub-models
   {
     id: "ARCH-L1-ALG-04-FACT",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Algebra: Factorisation (HCF/Grouping/ Identities)",
-    name: "ARCH-L1-ALG-04-FACT · Quadratics — Factorisation",
-    badge: "CORE",
     parent: "ARCH-L1-ALG-04",
-    branches: [],
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Factorisation Method",
     requiredSOPs: ["SOP-QUAD-FACT-01", "SOP-QUAD-FACT-02", "SOP-QUAD-FACT-03"],
     supportSOPs: [],
     microSkills: [
-      "Check if the quadratic is factorisable over integers.",
-      "Split the middle term or use cross method to factor ax²+bx+c.",
-      "Apply the zero-product property to solve (px + q)(rx + s) = 0."
+      "Test factorisability (is Discriminant a perfect square?)",
+      "Apply Zero Product Property (AB=0 implies A=0 or B=0)",
+      "Factorise quadratic trinomals into (px+q)(rx+s)"
     ],
-    description:
-      "Solve quadratic equations by factorising into (px + q)(rx + s) = 0 and applying the zero-product property to find roots."
+    pitfalls: [
+      "Forgetting to set equation to zero before factoring",
+      "Sign errors in constant term factors"
+    ],
+    proTips: [
+      "If coefficient of x² is 1, just look for numbers summing to b and multiplying to c",
+      "Check solutions in original equation"
+    ],
+    description: "Solve quadratic equations by factorising into (px+q)(rx+s)=0."
   },
   {
     id: "ARCH-L1-ALG-04-FORM",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Equation: Quadratic Equations - Methods and Discriminant",
-    name: "ARCH-L1-ALG-04-FORM · Formula Method",
-    badge: "CORE",
     parent: "ARCH-L1-ALG-04",
-    branches: [],
-    requiredSOPs: [
-      "SOP-QUAD-FORM-01",
-      "SOP-QUAD-FORM-02",
-      "SOP-QUAD-FORM-03",
-      "SOP-QUAD-FORM-04"
-    ],
-    supportSOPs: ["SOP-EQN-02"],
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Formula Method",
+    requiredSOPs: ["SOP-QUAD-FORM-01", "SOP-QUAD-FORM-02", "SOP-QUAD-FORM-03", "SOP-QUAD-FORM-04"],
+    supportSOPs: [],
     microSkills: [
-      "Identify a, b, c correctly from ax² + bx + c = 0.",
-      "Substitute into the quadratic formula x = [-b ± √(b² - 4ac)] / (2a).",
-      "Simplify surds and fractions in the final answers."
+      "Identify coefficients a, b, c correctly (mind the signs)",
+      "Calculate Discriminant (b²-4ac) accurately",
+      "Apply quadratic formula x = [-b ± √Δ] / 2a",
+      "Round answers to specified significant figures"
     ],
-    description:
-      "Solve quadratic equations using the quadratic formula x = [-b ± √(b² - 4ac)] / 2a, suitable for all quadratics regardless of factorisability."
+    pitfalls: [
+      "Incorrectly identifying 'b' sign",
+      "Forgetting the +/- symbol",
+      "Rounding too early"
+    ],
+    proTips: [
+      "Write out a=, b=, c= explicitly",
+      "Calculate b²-4ac separately first"
+    ],
+    description: "Solve quadratic equations using the quadratic formula, suitable for all quadratics regardless of factorisability."
+  },
+  {
+    id: "ARCH-L1-ALG-04-CTS",
+    parent: "ARCH-L1-ALG-04",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Completing Square",
+    requiredSOPs: ["SOP-QUAD-CTS-01", "SOP-QUAD-CTS-02", "SOP-QUAD-CTS-03"],
+    supportSOPs: [],
+    microSkills: [
+      "Transform ax²+bx+c to a(x+p)²+q form",
+      "Factor out leading coefficient 'a' first",
+      "Identify vertex coordinates (-p, q) from form"
+    ],
+    pitfalls: [
+      "Forgetting to divide coefficient of x by 2",
+      "Sign error when moving constant term outside bracket"
+    ],
+    proTips: [
+      "(x+a)² expands to x² + 2ax + a²",
+      "Vertex is at x = -p, not p"
+    ],
+    description: "Transform quadratic expressions into vertex form a(x+p)²+q by completing the square."
   },
   {
     id: "ARCH-L1-ALG-04-GRAPH",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Graph: Quadratic Functions and Transformations",
-    name: "ARCH-L1-ALG-04-GRAPH · Graph Sketching (Quadratics)",
-    badge: "CORE",
     parent: "ARCH-L1-ALG-04",
-    branches: [],
-    requiredSOPs: [
-      "SOP-QUAD-GRAPH-01",
-      "SOP-QUAD-GRAPH-02",
-      "SOP-QUAD-GRAPH-03"
-    ],
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Graphing",
+    requiredSOPs: ["SOP-QUAD-GRAPH-01", "SOP-QUAD-GRAPH-02", "SOP-QUAD-GRAPH-03"],
     supportSOPs: [],
     microSkills: [
-      "Find the vertex using completing the square or x = −b/(2a).",
-      "Compute x- and y-intercepts to anchor key points.",
-      "Sketch a smooth parabola with correct orientation and symmetry."
+      "Find y-intercept (set x=0)",
+      "Find x-intercepts (solve equation)",
+      "Calculate vertex/turning point",
+      "Identify axis of symmetry x = -b/2a",
+      "Determine orientation (U-shape vs n-shape)"
     ],
-    description:
-      "Sketch accurate parabolas by identifying vertex, intercepts, axis of symmetry, and establishing the parabola's orientation and width from the coefficient 'a'."
+    pitfalls: [
+      "Confusing x and y intercepts",
+      "Drawing a V shape instead of a smooth U curve"
+    ],
+    proTips: [
+      "Axis of symmetry is halfway between x-intercepts",
+      "Label all key points clearly"
+    ],
+    description: "Sketch accurate parabolas by identifying vertex, intercepts, axis of symmetry, and orientation."
+  },
+  {
+    id: "ARCH-L1-ALG-04-DISC",
+    parent: "ARCH-L1-ALG-04",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Discriminant",
+    requiredSOPs: ["SOP-QUAD-DISC-01", "SOP-QUAD-DISC-02"],
+    supportSOPs: [],
+    microSkills: [
+      "Calculate discriminant Δ = b² - 4ac",
+      "Δ > 0: Two distinct real roots",
+      "Δ = 0: One repeated real root (tangent to x-axis)",
+      "Δ < 0: No real roots (no x-intercepts)"
+    ],
+    pitfalls: [
+      "Calculating b²-4ac incorrectly with negative numbers",
+      "Confusing 'no real roots' with 'no solution'"
+    ],
+    proTips: [
+      "Phrase 'tangent to x-axis' means Δ = 0",
+      "Phrase 'always positive' means a > 0 and Δ < 0"
+    ],
+    description: "Use the discriminant Δ = b² - 4ac to predict the nature of roots and relate it to graph intersections."
+  },
+  {
+    id: "ARCH-L1-ALG-04-EQN",
+    parent: "ARCH-L1-ALG-04",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "Find Eqn",
+    requiredSOPs: ["SOP-QUAD-EQN-01"],
+    supportSOPs: [],
+    microSkills: [
+      "Use vertex form y = a(x-h)² + k",
+      "Substitute a point to find 'a'",
+      "Expand to general form if required"
+    ],
+    pitfalls: [
+      "Assuming a=1 without checking",
+      "Using the vertex as the second point to find 'a'"
+    ],
+    proTips: [
+      "Substitute (0, y-intercept) to find 'a' easily",
+      "Check signs of h and k carefully"
+    ],
+    description: "Determine the quadratic equation from a given graph by identifying the vertex and an additional point."
   },
   {
     id: "ARCH-L1-ALG-05",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Simultaneous Equations (Substitution / Elimination)",
-    name: "ARCH-L1-ALG-05 · Changing the Subject of a Formula",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-05 · Subject of Formula",
     requiredSOPs: ["SOP-ALG-04"],
     supportSOPs: [],
     microSkills: [
-      "Identify the target variable to make the subject.",
-      "Apply inverse operations systematically to isolate the variable.",
-      "Handle fractions and roots carefully when rearranging formulas."
+      "MS-ALG-08 Rearrange Simple Expressions",
+      "Factorise to isolate variable appearing multiple times",
+      "Apply inverse operations (square/root) correctly"
     ],
-    description:
-      "Rearrange formulas to isolate a specified variable, applying inverse operations systematically while maintaining equality."
+    pitfalls: [
+      "Not applying operation to entire side",
+      "Square rooting without considering +/-"
+    ],
+    proTips: [
+      "Collect all terms with target variable on one side first",
+      "Factorise if target appears in multiple terms"
+    ],
+    description: "Rearrange formulas to isolate a specified variable, applying inverse operations systematically."
   },
   {
     id: "ARCH-L1-ALG-06",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Single Inequalities (Linear/Quadratic)",
-    name: "ARCH-L1-ALG-06 · Solving Simultaneous Equations",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-EQN-01"],
-    supportSOPs: ["SOP-ALG-01"],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-06 · Simultaneous Eqns",
+    requiredSOPs: ["SOP-ALG-05"],
+    supportSOPs: [],
     microSkills: [
-      "Choose between elimination or substitution based on coefficients.",
-      "Align coefficients to eliminate one variable.",
-      "Back-substitute to find the second variable and check both equations."
+      "Apply Substitution Method",
+      "Apply Elimination Method",
+      "Interpret intersection of two lines graphically"
     ],
-    description:
-      "Solve systems of two linear equations using elimination or substitution methods to find both unknowns."
+    pitfalls: [
+      "Sign errors when subtracting equations",
+      "Forgetting to find the second variable"
+    ],
+    proTips: [
+      "Label equations (1) and (2)",
+      "Substitute back into the simpler equation"
+    ],
+    description: "Solve systems of two linear equations using elimination or substitution methods."
   },
   {
     id: "ARCH-L1-ALG-07",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Equation: Inequalities - Linear, Quadratic and Number Line",
-    name: "ARCH-L1-ALG-07 · Inequalities (Single/Compound)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-ALG-06"],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-07 · Inequalities",
+    requiredSOPs: ["SOP-ALG-07"],
     supportSOPs: [],
     microSkills: [
-      "Solve linear inequalities as you would equations, but flip the sign when multiplying or dividing by a negative.",
-      "Represent solution sets on number lines.",
-      "Combine inequality solutions into interval notation."
+      "Solve linear inequalities",
+      "Reverse inequality sign when multiplying/dividing by negative",
+      "Represent solution on number line"
     ],
-    description: "Solve linear/quadratic single and compound inequalities."
+    pitfalls: [
+      "Forgetting to flip sign when dividing by negative",
+      "Confusing open circle (<) and closed circle (<=)"
+    ],
+    proTips: [
+      "Treat like an equation but watch the sign",
+      "Test a value in your solution range"
+    ],
+    description: "Solve linear inequalities using inverse operations and represent solutions on a number line."
   },
   {
     id: "ARCH-L1-ALG-08",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Linear Equations (Forming & Solving)",
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
     name: "ARCH-L1-ALG-08 · Compound Inequalities",
-    badge: "CORE",
-    parent: null,
-    branches: [],
     requiredSOPs: ["SOP-ALG-07"],
     supportSOPs: [],
     microSkills: [
-      "Interpret chained inequalities like a < x < b.",
-      "Apply operations to all three sides of a chained inequality.",
-      "Express final answers in interval form and on a number line."
+      "Split compound inequality a < x < b into two parts",
+      "Find intersection of solution sets"
     ],
-    description: "Three-part chained inequalities."
+    pitfalls: [
+      "Not satisfying both conditions simultaneously",
+      "Combining non-overlapping regions incorrectly"
+    ],
+    proTips: [
+      "Solve left and right parts separately",
+      "Draw two number lines to find overlap"
+    ],
+    description: "Solve compound inequalities (e.g., a < x < b) by splitting and combining solutions."
   },
   {
     id: "ARCH-L1-ALG-09",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Algebra: Forming Expressions (Word -> Algebra)",
-    name: "ARCH-L1-ALG-09 · Standard Form / Scientific Notation",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-09 · Modelling Inequalities",
     requiredSOPs: ["SOP-ALG-07"],
     supportSOPs: [],
     microSkills: [
-      "Rewrite numbers so that 1 ≤ A < 10 in A × 10^n form.",
-      "Move decimal points and adjust the power of 10 accordingly.",
-      "Apply index laws when multiplying or dividing numbers in standard form."
+      "Form inequalities from real-world constraints (at least, at most)",
+      "Find maximum/minimum integer solutions"
     ],
-    description: "Index laws in standard form conversions."
+    pitfalls: [
+      "Using < instead of <=",
+      "Forgetting integer constraints (e.g. people can't be decimal)"
+    ],
+    proTips: [
+      "'At least' means >=",
+      "'At most' means <="
+    ],
+    description: "Form inequalities from real-world context, solve them, and interpret the solution set."
   },
   {
     id: "ARCH-L1-ALG-10",
     level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Algebra: Rationalising Expressions",
-    name: "ARCH-L1-ALG-10 · Finding Max/Min Values in a Range",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-QUAD-CTS-01", "SOP-QUAD-CTS-02", "SOP-QUAD-CTS-03"],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L1-ALG-10 · Max/Min (CTS)",
+    requiredSOPs: ["SOP-QUAD-CTS-02"],
     supportSOPs: [],
     microSkills: [
-      "Express the quadratic in completed-square form to locate the vertex.",
-      "Determine whether the vertex corresponds to a maximum or minimum.",
-      "Compare vertex value with endpoints when restricted to a given domain."
+      "Complete square to find vertex",
+      "Identify Max/Min value (q) from a(x+p)²+q",
+      "Identify x-value where max/min occurs (-p)"
     ],
-    description:
-      "Determine maximum or minimum values of quadratic functions over a specified domain by completing the square to find the vertex and evaluating at endpoints if the vertex is outside the given range."
+    pitfalls: [
+      "Identify x-coordinate as p instead of -p",
+      "Not checking if it's max or min based on 'a'"
+    ],
+    proTips: [
+      "Max value is q when a < 0",
+      "Min value is q when a > 0"
+    ],
+    description: "Determine maximum or minimum values of quadratic functions by completing the square."
+  },
+  {
+    id: "ARCH-L1-IND-01",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Indices",
+    name: "ARCH-L1-IND-01 · Basic Laws",
+    requiredSOPs: ["SOP-IND-03"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-ALG-04 Apply Index Laws (Basic)",
+      "Multiplication Law: Add exponents",
+      "Division Law: Subtract exponents",
+      "Power Law: Multiply exponents"
+    ],
+    pitfalls: [
+      "Adding bases instead of exponents",
+      "Multiplying exponents during multiplication instead of adding"
+    ],
+    proTips: [
+      "Same base is required for most laws",
+      "Write x as x^1"
+    ],
+    description: "Apply the fundamental rules of indices to simplify expressions involving positive integer powers."
+  },
+  {
+    id: "ARCH-L1-IND-02",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Indices",
+    name: "ARCH-L1-IND-02 · Zero/Neg Indices",
+    requiredSOPs: ["SOP-IND-03"],
+    supportSOPs: [],
+    microSkills: [
+      "Evaluate Zero Index (a^0 = 1)",
+      "Convert Negative Indices to reciprocals (1/a^n)"
+    ],
+    pitfalls: [
+      "Thinking x^0 = 0",
+      "Thinking negative index makes the number negative"
+    ],
+    proTips: [
+      "Negative index means 'flip the fraction'",
+      "Anything to power 0 is 1"
+    ],
+    description: "Simplify expressions involving zero and negative indices and rewrite them as positive-index forms."
+  },
+  {
+    id: "ARCH-L1-IND-03",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Indices",
+    name: "ARCH-L1-IND-03 · Simple Simp",
+    requiredSOPs: ["SOP-IND-03"],
+    supportSOPs: [],
+    microSkills: [
+      "Simplify single-step index expressions",
+      "Expand brackets with indices"
+    ],
+    pitfalls: [
+      "Forgetting to apply power to coefficient",
+      "Sign errors with negative bases"
+    ],
+    proTips: [
+      "(2x)³ is 8x³, not 2x³",
+      "Expand step-by-step"
+    ],
+    description: "Simplify expressions involving one layer of bracket powers or basic index manipulation."
+  },
+  {
+    id: "ARCH-L1-IND-04",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Indices",
+    name: "ARCH-L1-IND-04 · Multi-step Simp",
+    requiredSOPs: ["SOP-IND-08", "SOP-IND-10"],
+    supportSOPs: [],
+    microSkills: [
+      "Decompose complex expressions into Number/x/y parts",
+      "Apply laws sequentially (Bracket -> Multiply -> Divide)",
+      "Handle fractional indices (Roots)"
+    ],
+    pitfalls: [
+      "Mixing up order of operations",
+      "Applying root to only part of the term"
+    ],
+    proTips: [
+      "Deal with coefficients separately from variables",
+      "Simplify numerator and denominator independently first"
+    ],
+    description: "Simplify complex multi-layer index expressions involving nested powers and multiple operations."
+  },
+  {
+    id: "ARCH-L1-IND-05",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Indices",
+    name: "ARCH-L1-IND-05 · Single Power",
+    requiredSOPs: ["SOP-IND-11"],
+    supportSOPs: [],
+    microSkills: [
+      "Perform Prime Factorisation",
+      "Unify bases (e.g. 4 -> 2², 27 -> 3³)",
+      "Express final result as a single power of base"
+    ],
+    pitfalls: [
+      "Incorrect prime factorisation",
+      "Not converting all terms to same base"
+    ],
+    proTips: [
+      "Look for the smallest base number",
+      "Remember 1 can be base^0"
+    ],
+    description: "Convert numerical or algebraic expressions into a single power by unifying bases."
+  },
+  {
+    id: "ARCH-L1-RATIO-01",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Number",
+    name: "ARCH-L1-RATIO-01 · Map Scale",
+    requiredSOPs: ["SOP-NUM-01"],
+    supportSOPs: [],
+    microSkills: [
+      "Convert Linear Scale (1:n)",
+      "Convert Area Scale (1:n²)",
+      "Handle unit conversions (cm ↔ km)"
+    ],
+    pitfalls: [
+      "Using linear scale for area problems",
+      "Forgetting to square the scale factor"
+    ],
+    proTips: [
+      "Write linear scale 1:n and area scale 1:n² side by side",
+      "Convert units at the end"
+    ],
+    description: "Accurately convert between map distances and actual distances/areas using scale factors."
+  },
+  {
+    id: "ARCH-L1-RATIO-02",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Number",
+    name: "ARCH-L1-RATIO-02 · Percentage",
+    requiredSOPs: ["SOP-NUM-02"],
+    supportSOPs: [],
+    microSkills: [
+      "Calculate Percentage Change",
+      "Calculate Reverse Percentage (finding original)"
+    ],
+    pitfalls: [
+      "Dividing by new value instead of original",
+      "Multiplying by (1-r) instead of dividing for reverse"
+    ],
+    proTips: [
+      "Original = 100%",
+      "Reverse means 'Work Backwards' -> Division"
+    ],
+    description: "Calculate the new value after change, or recover the original value from a final amount."
+  },
+  {
+    id: "ARCH-L1-RATIO-03",
+    level: "L1",
+    domain: "D1 — Number & Algebra",
+    topic: "Number",
+    name: "ARCH-L1-RATIO-03 · Interest",
+    requiredSOPs: ["SOP-NUM-03"],
+    supportSOPs: [],
+    microSkills: [
+      "Calculate Simple Interest",
+      "Calculate Compound Interest",
+      "Differentiate between Total Amount and Interest Component"
+    ],
+    pitfalls: [
+      "Using simple interest formula for compound",
+      "Confusing 'amount' with 'interest'"
+    ],
+    proTips: [
+      "Compound interest: A = P(1+r)^n",
+      "Interest = Amount - Principal"
+    ],
+    description: "Compute total amount and interest for simple and compound interest scenarios."
   },
 
-  // =========================
-  // L1 · Geometry & Measurement
-  // =========================
+  // ==========================================
+  // D2: GEOMETRY & MEASUREMENT
+  // ==========================================
   {
     id: "ARCH-L1-GEO-01",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Coordinate Geometry (Basics)",
-    name: "ARCH-L1-GEO-01 · Coordinate Geometry",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-COORD-01"],
-    supportSOPs: [],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-01 · Coordinate Geo",
+    requiredSOPs: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-03", "SOP-GEO-COORD-05"],
+    supportSOPs: ["SOP-GEO-COORD-02", "SOP-GEO-COORD-04"],
     microSkills: [
-      "Calculate gradient from two points using (y₂ − y₁)/(x₂ − x₁).",
-      "Use y = mx + c or point-slope form to form line equations.",
-      "Convert between slope-intercept and general form ax + by = c."
+      "MS-GEO-COORD-01 Plot Coordinates Accurately",
+      "MS-GEO-COORD-02 Compute Distance",
+      "MS-GEO-COORD-03 Compute Gradient (rise/run)",
+      "MS-GEO-COORD-04 Recognise Parallel / Perpendicular Slopes",
+      "MS-GEO-COORD-05 Check Collinearity",
+      "MS-GEO-COORD-06 Interpret Midpoint"
     ],
-    description:
-      "Apply coordinate geometry principles to find distances, midpoints, gradients, and equations of straight lines."
+    pitfalls: [
+      "Mixing x and y in gradient formula",
+      "Forgetting negative reciprocal for perpendicular lines"
+    ],
+    proTips: [
+      "Gradient m = (y2-y1)/(x2-x1)",
+      "Parallel lines have same m"
+    ],
+    description: "Apply coordinate geometry principles to find distances, midpoints, gradients, and equations of straight lines."
   },
   {
     id: "ARCH-L1-GEO-02",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets & Composite Solids",
-    name: "ARCH-L1-GEO-02 · Parallel & Perpendicular Lines",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-02-CIRC-PAR"],
-    supportSOPs: ["SOP-GEO-02-POLY-PAR"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-02 · Similarity",
+    requiredSOPs: ["SOP-GEO-SIM-01", "SOP-GEO-SIM-02", "SOP-GEO-SIM-04"],
+    supportSOPs: [],
     microSkills: [
-      "Use equal gradients for parallel lines (m₁ = m₂).",
-      "Use m₁ × m₂ = −1 for perpendicular lines.",
-      "Form equations of lines through a given point with required gradient."
+      "MS-GEO-SIM-01 Identify AA / SAS / SSS Similarity",
+      "MS-GEO-SIM-02 Match Corresponding Vertices",
+      "MS-GEO-SIM-03 Write Proportion in Correct Order",
+      "MS-GEO-SIM-05 Convert Scale Factor into Length / Area Ratio"
     ],
-    description:
-      "Find equations of lines parallel or perpendicular to a given line through a specified point, using m1 = m2 and m1 × m2 = -1."
+    pitfalls: [
+      "Matching non-corresponding sides",
+      "Forgetting to square k for area ratio"
+    ],
+    proTips: [
+      "Label vertices to match correspondence",
+      "Length ratio k -> Area ratio k² -> Volume ratio k³"
+    ],
+    description: "Identify similar triangles and polygons using similarity criteria and apply proportional reasoning."
   },
   {
     id: "ARCH-L1-GEO-03",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Parallel Line Angles",
-    name: "ARCH-L1-GEO-03 · Finding Length & Area (Coordinate Plane)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-02-POLY-INT"],
-    supportSOPs: ["SOP-GEO-02-POLY-TILE"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-03 · Circle Theorems",
+    requiredSOPs: ["SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-05"],
+    supportSOPs: ["SOP-GEO-CIRC-03", "SOP-GEO-CIRC-04"],
     microSkills: [
-      "Apply the distance formula between two points.",
-      "Decompose complex shapes into rectangles/triangles on the grid.",
-      "Use the coordinate geometry method (Shoelace or area decomposition)."
+      "MS-GEO-CIRC-01 Identify Diameter → Right Angle",
+      "MS-GEO-CIRC-02 Identify Angle at Centre vs Circumference",
+      "MS-GEO-CIRC-03 Detect Angles in Same Segment",
+      "MS-GEO-CIRC-04 Identify Cyclic Quadrilateral",
+      "MS-GEO-CIRC-06 Locate Tangent Point & 90°"
     ],
-    description:
-      "Calculate lengths using the distance formula and determine areas of polygons using the coordinate geometry method (Shoelace formula or decomposition)."
+    pitfalls: [
+      "Assuming center is used when not stated",
+      "Identifying cyclic quad when vertices are not on circle"
+    ],
+    proTips: [
+      "Look for 'butterfly' (same segment)",
+      "Radius to tangent is always 90 degrees"
+    ],
+    description: "Apply circle theorems to find unknown angles and prove geometric properties involving circles."
   },
   {
     id: "ARCH-L1-GEO-04",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Coordinate Geometry (Basics)",
-    name: "ARCH-L1-GEO-04 · Coordinate Geometry (Gradient, Midpoint & Locus)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-02-POLY-INT"],
-    supportSOPs: ["SOP-GEO-02-POLY-PAR"],
-    microSkills: [
-      "Compute gradient and midpoint between two points.",
-      "Write the equation of loci (fixed distance or fixed sum of distances).",
-      "Interpret geometric constraints in coordinate terms."
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-04 · Angle Properties",
+    branches: [
+      "CORE-01-M00", "CORE-01-M01", "CORE-01-M02", "CORE-01-M03", 
+      "CORE-01-M04", "CORE-01-M05", "CORE-01-M06", "CORE-01-M07", 
+      "CORE-01-M08", "CORE-01-M09", "CORE-01-M10", "CORE-01-M11"
     ],
-    description:
-      "Apply coordinate geometry fundamentals: calculate gradients, find midpoints, and derive equations of loci satisfying given conditions."
+    requiredSOPs: [],
+    supportSOPs: [],
+    microSkills: [
+      "MS-GEO-ANG-01 Identify Corresponding Angles (F-pattern)",
+      "MS-GEO-ANG-02 Identify Alternate Interior Angles (Z-pattern)",
+      "MS-GEO-ANG-03 Identify Co-interior Angles (C-pattern)",
+      "MS-GEO-ANG-09 Compute Polygon Interior Angle"
+    ],
+    pitfalls: [
+      "Confusing Alternate (equal) and Co-interior (sum 180) angles",
+      "Assuming lines parallel without indicators"
+    ],
+    proTips: [
+      "Look for Z, F, C shapes",
+      "Extend lines to see patterns clearly"
+    ],
+    description: "Master container for all parallel line angle relationships and polygon properties."
   },
+  // Sub-models for GEO-04
+  { id: "CORE-01-M00", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Straight Line", requiredSOPs: ["SOP-ANG-M00"], description: "Angles on a straight line sum to 180°.", microSkills: ["Sum adjacent angles"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M01", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Corresponding", requiredSOPs: ["SOP-ANG-M01"], description: "Corresponding angles (F-pattern) are equal.", microSkills: ["Identify F-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M02", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Alternate", requiredSOPs: ["SOP-ANG-M02"], description: "Alternate interior angles (Z-pattern) are equal.", microSkills: ["Identify Z-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M03", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Co-Interior", requiredSOPs: ["SOP-ANG-M03"], description: "Co-interior angles (C-pattern) sum to 180°.", microSkills: ["Identify C-shape"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M04", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Vert Opposite", requiredSOPs: ["SOP-ANG-M04"], description: "Vertically opposite angles are equal.", microSkills: ["Identify X-intersection"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M05", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Triangle Sum", requiredSOPs: ["SOP-ANG-M05"], description: "Interior angles of a triangle sum to 180°.", microSkills: ["Sum angles to 180"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M06", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Ext Angle", requiredSOPs: ["SOP-ANG-M06"], description: "Exterior angle of a triangle equals sum of two opposite interior angles.", microSkills: ["Identify ext/int relationship"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M07", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Isosceles", requiredSOPs: ["SOP-ANG-M07"], description: "Base angles of an isosceles triangle are equal.", microSkills: ["Identify equal sides"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M08", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Equilateral", requiredSOPs: ["SOP-ANG-M08"], description: "All angles in an equilateral triangle are 60°.", microSkills: ["Identify 60 deg"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M09", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Poly Interior", requiredSOPs: ["SOP-ANG-M09"], description: "Sum of interior angles of an n-sided polygon is (n-2)×180°.", microSkills: ["Count sides n"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M10", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Reg Poly", requiredSOPs: ["SOP-ANG-M10"], description: "Calculate interior and exterior angles of regular polygons.", microSkills: ["Use 360/n"], pitfalls: [], proTips: [] },
+  { id: "CORE-01-M11", parent: "ARCH-L1-GEO-04", level: "L1", domain: "D2 — Geometry & Measurement", topic: "Geometry", name: "Quad Sum", requiredSOPs: ["SOP-ANG-M11"], description: "Interior angles of a quadrilateral sum to 360°.", microSkills: ["Sum angles to 360"], pitfalls: [], proTips: [] },
+
   {
     id: "ARCH-L1-GEO-05",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Triangles: Properties / Congruency",
-    name: "ARCH-L1-GEO-05 · Proving Similarity (AA Criterion)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-01-ASA", "SOP-GEO-01-SAS"],
-    supportSOPs: ["SOP-GEO-01-SSS"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-05 · Congruence",
+    requiredSOPs: ["SOP-GEO-CONG-01", "SOP-GEO-CONG-02"],
+    supportSOPs: [],
     microSkills: [
-      "Identify two pairs of equal corresponding angles.",
-      "Write similarity statements with correct vertex order.",
-      "Use similarity to link corresponding side ratios."
+      "MS-GEO-CONG-01 Identify SSS / SAS / ASA / RHS Conditions",
+      "MS-GEO-CONG-02 Match Corresponding Sides / Angles Accurately",
+      "MS-GEO-CONG-03 Identify Equal Length Indicators on Diagrams"
     ],
-    description:
-      "Prove triangles are similar using the Angle–Angle (AA) criterion by identifying two pairs of equal corresponding angles and stating the similarity with correct vertex order."
+    pitfalls: [
+      "Using AAA (only proves similarity)",
+      "Using SSA (not a valid test)"
+    ],
+    proTips: [
+      "RHS requires Right angle, Hypotenuse and one Side",
+      "Order of letters matters in statement"
+    ],
+    description: "Identify congruent triangles using SSS, SAS, ASA, or RHS criteria and apply congruence to prove properties."
   },
   {
     id: "ARCH-L1-GEO-06",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Circle Theorems (Central / Inscribed / Tangents)",
-    name: "ARCH-L1-GEO-06 · Proving Congruency (SAS, SSS, ASA, RHS)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-01-RHS", "SOP-GEO-01-ASA", "SOP-GEO-01-SAS"],
-    supportSOPs: ["SOP-GEO-01-SSS"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-06 · Pythagoras",
+    requiredSOPs: ["SOP-GEO-PYTH-01", "SOP-GEO-PYTH-02"],
+    supportSOPs: [],
     microSkills: [
-      "Select the correct congruence test (SAS, SSS, ASA, RHS).",
-      "Match sides and angles carefully between two triangles.",
-      "State the congruence with correct notation and justification."
+      "MS-GEO-PYTH-01 Identify Hypotenuse Correctly",
+      "MS-GEO-PYTH-02 Test if Triangle is Right-angled",
+      "MS-GEO-PYTH-03 Recognise Pythagorean Triples"
     ],
-    description:
-      "Prove triangles are congruent by verifying SAS, SSS, ASA, or RHS conditions and state the congruence with proper notation and reasons."
+    pitfalls: [
+      "Not identifying hypotenuse (longest side) correctly",
+      "Forgetting to square root final answer"
+    ],
+    proTips: [
+      "c is always opposite 90 degree angle",
+      "Common triples: 3-4-5, 5-12-13"
+    ],
+    description: "Apply Pythagoras' theorem to find unknown sides in right-angled triangles and verify right angles."
   },
   {
     id: "ARCH-L1-GEO-07",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration (3D SA/Volume)",
-    name: "ARCH-L1-GEO-07 · Using Similarity to Find Unknown Lengths",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-MEN-02"],
-    supportSOPs: ["SOP-MEN-01"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-07 · Construction",
+    requiredSOPs: ["SOP-GEO-CONS-01", "SOP-GEO-CONS-02", "SOP-GEO-CONS-03", "SOP-GEO-CONS-04"],
+    supportSOPs: [],
     microSkills: [
-      "Establish triangle similarity before using side ratios.",
-      "Set up proportion equations with matching corresponding sides.",
-      "Solve for unknown side lengths and interpret in context."
+      "MS-GEO-CONS-01 Use Compass with Fixed Radius Correctly",
+      "MS-GEO-CONS-02 Draw Perpendicular from a Point to a Line",
+      "MS-GEO-CONS-03 Bisect a Given Angle Precisely",
+      "MS-GEO-CONS-05 Trace Locus of Points at Fixed Distance"
     ],
-    description:
-      "Calculate unknown side lengths by establishing proportional relationships between corresponding sides of similar triangles and solving."
+    pitfalls: [
+      "Changing compass width during arc construction",
+      "Not showing construction lines"
+    ],
+    proTips: [
+      "Keep pencil sharp",
+      "Leave all construction lines visible"
+    ],
+    description: "Use compass and straightedge to construct perpendicular lines, angle bisectors, and loci."
   },
   {
     id: "ARCH-L1-GEO-08",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Trigonometry: Bearings",
-    name: "ARCH-L1-GEO-08 · Shortest Distance (Geometry)",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-02-CIRC-PAR"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-08 · Bearings",
+    requiredSOPs: ["SOP-GEO-BEAR-01", "SOP-GEO-BEAR-02", "SOP-GEO-BEAR-03"],
+    supportSOPs: [],
     microSkills: [
-      "Recognise that shortest distance from a point to a line is along the perpendicular.",
-      "Construct or visualise perpendiculars in geometric diagrams.",
-      "Compute distances using Pythagoras or trigonometry as needed."
+      "MS-GEO-BEAR-01 Mark North Line Correctly",
+      "MS-GEO-BEAR-02 Read 3-Figure Bearings",
+      "MS-GEO-BEAR-03 Convert Bearing ↔ Back Bearing",
+      "MS-GEO-BEAR-05 Apply Scale to drawings"
     ],
-    description:
-      "Find the shortest distance from a point to a line by determining the perpendicular from the point to the line and computing the distance."
+    pitfalls: [
+      "Measuring anti-clockwise",
+      "Not using 3 digits (e.g. 45 instead of 045)"
+    ],
+    proTips: [
+      "Always draw North lines at every point",
+      "Back bearing is +/- 180 degrees"
+    ],
+    description: "Read and interpret 3-figure bearings, calculate back bearings, and use scale drawings."
   },
   {
     id: "ARCH-L1-GEO-09",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration (2D Area & Perimeter)",
-    name: "ARCH-L1-GEO-09 · Circle Properties & Theorems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-VEC-05", "SOP-VEC-06"],
-    supportSOPs: ["SOP-VEC-03"],
-    microSkills: [
-      "Recall key circle theorems (angle at centre, angle in same segment, tangent-radius).",
-      "Mark equal angles and right angles on diagrams carefully.",
-      "Chain multiple theorems together to solve angle problems."
-    ],
-    description:
-      "Apply circle theorems including angles in the same segment, angle at centre vs circumference, tangent perpendicular to radius, and alternate segment theorem."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Parallel Line Angles",
-    name: "ARCH-L1-GEO-CORE-01 · Parallel Line Angle Model",
-    badge: "CORE",
-    parent: null,
-    branches: [
-      "ARCH-L1-GEO-CORE-01-M00",
-      "ARCH-L1-GEO-CORE-01-M01",
-      "ARCH-L1-GEO-CORE-01-M02",
-      "ARCH-L1-GEO-CORE-01-M03",
-      "ARCH-L1-GEO-CORE-01-M04",
-      "ARCH-L1-GEO-CORE-01-M05",
-      "ARCH-L1-GEO-CORE-01-M06",
-      "ARCH-L1-GEO-CORE-01-M07",
-      "ARCH-L1-GEO-CORE-01-M08",
-      "ARCH-L1-GEO-CORE-01-M09",
-      "ARCH-L1-GEO-CORE-01-M10",
-      "ARCH-L1-GEO-CORE-01-M11"
-    ],
-    requiredSOPs: [],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG", "SOP-GEO-03-CHORD-ANG", "SOP-GEO-03-DIAM-ANG", "SOP-GEO-03-TAN-ANG"],
-    microSkills: [
-      "Recognise parallel line configurations quickly.",
-      "Map each exam diagram back to one of the 12 core angle models."
-    ],
-    description:
-      "Foundation archetype for angle relationships from a transversal intersecting two parallel lines. Container for 12 sub-models; SOPs are carried by sub-models."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M00",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M00 · Eight-Angle Parallel Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CENT-ANG"],
-    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    microSkills: [
-      "Label all 8 angles formed by a transversal and two parallel lines.",
-      "Identify corresponding, alternate, and co-interior angle pairs."
-    ],
-    description:
-      "The foundational model showing 8 angles formed when a transversal cuts two parallel lines. Identify corresponding (equal), alternate (equal), and co-interior (supplementary) angles."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M01",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M01 · Parallel + Fold Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
-    microSkills: [
-      "Use linear pair angles on a straight line (sum 180°).",
-      "Apply mirror symmetry to map angles across a fold line."
-    ],
-    description:
-      "Linear-pair angles (sum 180°) combined with mirror symmetry; useful for folding and reflection problems."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M02",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M02 · Complementary & Supplementary Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-DIAM-ANG"],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
-    microSkills: [
-      "Recognise 90° complementary and 180° supplementary angle pairs.",
-      "Use perpendicular and straight-line relationships to find unknowns."
-    ],
-    description:
-      "90° complementary and 180° supplementary relationships used in perpendicular and straight-line settings."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M03",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M03 · Opposite-Angle (Bird-Beak) Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-TAN-ANG"],
-    supportSOPs: ["SOP-GEO-03-TAN-LEN"],
-    microSkills: [
-      "Use vertically opposite angle theorem.",
-      "Combine with alternate angles to transfer angle values across the diagram."
-    ],
-    description:
-      "Angle transfer via vertically opposite angles and alternate angle theorems; the “bird-beak” visual aids recognition."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M04",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M04 · Pencil-Head Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-TAN-ANG"],
-    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    microSkills: [
-      "Use the fact that angles on a straight line sum to 180°.",
-      "Apply to polygon interior angle reasoning."
-    ],
-    description:
-      "Sum of angles on a straight line equals 180°; basis for polygon interior angle rules."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M05",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M05 · Compound Pencil-Head Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
-    microSkills: [
-      "Add multiple 180° angle sums around a point or polygon.",
-      "Use (n−2)×180° to find interior angle sums in polygons."
-    ],
-    description:
-      "Chained angle rotations and polygon structures; compute interior angle sums using (n−2)×180°."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M06",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M06 · Bird-Beak + Extension Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-03-TAN-ANG"],
-    microSkills: [
-      "Track angles formed by extended lines and transversals.",
-      "Combine opposite and alternate angle rules for complex diagrams."
-    ],
-    description:
-      "Mix exterior and interior angles around intersection points with extensions for complex angle-chasing."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M07",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M07 · Parallel + Angle Bisector Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-TAN-LEN"],
-    supportSOPs: ["SOP-GEO-03-TAN-ANG"],
-    microSkills: [
-      "Use angle bisectors to create equal angles in parallel structures.",
-      "Leverage angle equality to set up triangle similarity."
-    ],
-    description:
-      "Add bisectors to parallel structures to create equal or proportional angle pairs; useful in similarity proofs."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M08",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M08 · Hinge + Angle Bisector Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG"],
-    microSkills: [
-      "Visualise triangles pivoting around a hinge point.",
-      "Apply angle bisector rules during rotations or folds."
-    ],
-    description:
-      "Rotational hinge combined with bisector for triangle transformations (folding and rotation)."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M09",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M09 · Double Hinge + Bisector Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    supportSOPs: ["SOP-GEO-03-DIAM-ANG"],
-    microSkills: [
-      "Track multiple hinges and bisectors in one diagram.",
-      "Identify chains of equal and proportional angles."
-    ],
-    description:
-      "Nested hinges producing multiple equal/proportional angles; supports multi-step deductions."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M10",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M10 · Opposite + Bisector Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: ["SOP-GEO-03-TAN-LEN"],
-    supportSOPs: ["SOP-GEO-03-CHORD-ANG"],
-    microSkills: [
-      "Combine vertically opposite angle rules with bisectors.",
-      "Use resulting equal angles to prove similarity and proportional sides."
-    ],
-    description:
-      "Combine vertically opposite angles with bisector rules to derive similar triangles and proportional segments."
-  },
-  {
-    id: "ARCH-L1-GEO-CORE-01-M11",
-    level: "L1",
-    domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets, Composite Solids, and Real-world Problems",
-    name: "ARCH-L1-GEO-CORE-01-M11 · Parallel + Reflection (Symmetric Fold) Model",
-    badge: "CORE",
-    parent: "ARCH-L1-GEO-CORE-01",
-    branches: [],
-    requiredSOPs: [],
-    supportSOPs: ["SOP-GEO-03-CENT-ANG", "SOP-GEO-03-CHORD-ANG"],
-    microSkills: [
-      "Identify lines of symmetry in parallel-line diagrams.",
-      "Reflect points and angles across symmetry lines to deduce relationships."
-    ],
-    description:
-      "Parallel reflection and double-fold symmetry for 2D geometry mirror and isometric contexts."
-  },
-
-  // =========================
-  // L1 · Indices
-  // =========================
-  {
-    id: "ARCH-L1-IND-01",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Index: Basic Index Laws",
-    name: "ARCH-L1-IND-01 · Basic Index Laws",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-IND-03"],
+    topic: "Geometry",
+    name: "ARCH-L1-GEO-09 · Geometric Transformations",
+    requiredSOPs: ["SOP-GEO-TRANS-01", "SOP-GEO-TRANS-02", "SOP-GEO-TRANS-03", "SOP-GEO-TRANS-04", "SOP-GEO-TRANS-05"],
     supportSOPs: [],
     microSkills: [
-      "Apply product law a^m × a^n = a^(m+n).",
-      "Apply quotient law a^m ÷ a^n = a^(m−n).",
-      "Apply power law (a^m)^n = a^(mn)."
+      "Identify Mirror Line / Center of Rotation",
+      "Perform Reflection across axes/lines",
+      "Perform Rotation (Direction & Angle)",
+      "Perform Translation (Vector)",
+      "Perform Enlargement (Scale Factor & Center)"
     ],
-    description: "Apply product, quotient, and power laws of indices."
-  },
-  {
-    id: "ARCH-L1-IND-02",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Index: Zero and Negative Indices",
-    name: "ARCH-L1-IND-02 · Zero & Negative Indices",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-IND-03"],
-    supportSOPs: [],
-    microSkills: [
-      "Use a⁰ = 1 for any non-zero base a.",
-      "Rewrite negative indices as reciprocals: a^−n = 1/a^n.",
-      "Simplify expressions mixing positive and negative indices."
+    pitfalls: [
+      "Confusing x and y in translation vector",
+      "Rotating in wrong direction (CW vs ACW)"
     ],
-    description: "Handle zero and negative indices correctly."
-  },
-  {
-    id: "ARCH-L1-IND-03",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Index simplification (single-step)",
-    name: "ARCH-L1-IND-03 · Simple Index Simplification",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-IND-03"],
-    supportSOPs: [],
-    microSkills: [
-      "Perform one-step index operations using a single law.",
-      "Cancel common factors in numerator and denominator.",
-      "Keep answers in index form where appropriate."
+    proTips: [
+      "Use tracing paper for rotation",
+      "Check distance from center for enlargement"
     ],
-    description: "Single-step index simplification."
+    description: "Apply geometric transformations (reflection, rotation, translation, enlargement) to shapes on coordinate planes."
   },
-  {
-    id: "ARCH-L1-IND-04",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Index simplification (multi-step expressions)",
-    name: "ARCH-L1-IND-04 · Multi-step Index Simplification",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-IND-03"],
-    supportSOPs: ["SOP-ALG-01"],
-    microSkills: [
-      "Break complex index expressions into a sequence of simple operations.",
-      "Handle fractional and negative indices systematically.",
-      "Combine like bases and simplify nested radicals into index form."
-    ],
-    description:
-      "Handle multi-layered index expressions involving reciprocal powers, fractional indices, nested radicals, and multi-step simplification. This archetype trains students to decompose complex expressions into atomic index operations and apply index laws in a correct sequence."
-  },
-  {
-    id: "ARCH-L1-IND-05",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Index Laws: Express as a Single Power",
-    name: "ARCH-L1-IND-05 · Expressing an Expression as a Single Power",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-IND-11"],
-    supportSOPs: ["SOP-ALG-01"],
-    microSkills: [
-      "Rewrite composite numbers into prime power factors.",
-      "Unify bases before combining powers into a single index.",
-      "Express the entire expression as one power a^k."
-    ],
-    description:
-      "Convert numerical or algebraic expressions into a single power by unifying bases, extracting common factors, and applying index identities. Students learn how to reverse-expand composite numbers, identify hidden powers, and rewrite entire expressions into a unified exponential form."
-  },
-
-  // =========================
-  // L1 · Mensuration
-  // =========================
+  
+  // --- D2: Mensuration/Trig ---
   {
     id: "ARCH-L1-MEN-01",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: 2D Area and Perimeter",
-    name: "ARCH-L1-MEN-01 · Master SOP for ALL Mensuration Problems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Mensuration",
+    name: "ARCH-L1-MEN-01 · Mensuration Strategy",
     requiredSOPs: ["SOP-MEN-01"],
-    supportSOPs: ["SOP-MEN-04"],
+    supportSOPs: [],
     microSkills: [
-      "Identify the 2D or 3D shape(s) involved before applying formulas.",
-      "Write down the correct formula with labelled variables.",
-      "Substitute values with units and check reasonableness of the final answer."
+      "MS-MEN-01 Convert 2D ↔ 3D measurements",
+      "MS-MEN-02 Recognise standard solids",
+      "MS-MEN-05 Use π-related formulae correctly",
+      "MS-MEN-08 Extract given dimensions from diagrams"
     ],
-    description:
-      "Master strategy to avoid formula/calculation errors in mensuration."
+    pitfalls: [
+      "Using diameter instead of radius",
+      "Mixing up units (cm vs m)"
+    ],
+    proTips: [
+      "Write formula before substituting",
+      "Check units at start"
+    ],
+    description: "Master strategy to avoid formula or calculation errors in mensuration problems."
   },
   {
     id: "ARCH-L1-MEN-02",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: Nets & Composite Solids",
-    name: "ARCH-L1-MEN-02 · Similar Figures & Solids",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-MEN-03"],
-    supportSOPs: ["SOP-MEN-01"],
+    topic: "Mensuration",
+    name: "ARCH-L1-MEN-02 · Similar Solids",
+    requiredSOPs: ["SOP-MEN-02"],
+    supportSOPs: [],
     microSkills: [
-      "Identify scale factor between similar figures or solids.",
-      "Use scale factor k to relate lengths, areas, and volumes (k, k², k³).",
-      "Match corresponding dimensions carefully before applying ratios."
+      "MS-MEN-07 Apply scale factor to area/volume",
+      "Convert linear ratio k to Area (k²) and Volume (k³)"
     ],
-    description:
-      "Use scaling laws for length, area, and volume of similar figures/solids."
+    pitfalls: [
+      "Forgetting to square/cube k",
+      "Applying volume ratio to area"
+    ],
+    proTips: [
+      "Linear ratio k = L1/L2",
+      "Area ratio = k^2, Volume ratio = k^3"
+    ],
+    description: "Use scaling laws for length, area, and volume of similar figures and solids."
   },
   {
     id: "ARCH-L1-MEN-03",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration (3D SA/Volume)",
+    topic: "Mensuration",
     name: "ARCH-L1-MEN-03 · Composite Solids",
-    badge: "CORE",
-    parent: null,
-    branches: [],
     requiredSOPs: ["SOP-MEN-03"],
-    supportSOPs: ["SOP-MEN-04"],
+    supportSOPs: [],
     microSkills: [
-      "Split composite solids into standard shapes (prisms, cylinders, cones).",
-      "Compute TSA or volume for each component separately.",
-      "Add or subtract component measures according to the physical model."
+      "MS-MEN-03 Identify composite solid components",
+      "Calculate exposed surface area (TSA)",
+      "Sum volumes of components"
     ],
-    description: "Find TSA or total volume of combined shapes."
+    pitfalls: [
+      "Double counting hidden faces in TSA",
+      "Subtracting volume instead of adding"
+    ],
+    proTips: [
+      "Break down into simple solids",
+      "Visualize exposed faces only"
+    ],
+    description: "Finding the Total Surface Area (TSA) or Total Volume of combined shapes."
   },
   {
     id: "ARCH-L1-MEN-04",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Mensuration: 2D Area and Perimeter",
-    name: "ARCH-L1-MEN-04 · Sector & Segment Problems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Mensuration",
+    name: "ARCH-L1-MEN-04 · Sector/Segment",
     requiredSOPs: ["SOP-MEN-04"],
-    supportSOPs: ["SOP-MEN-01"],
-    microSkills: [
-      "Convert central angle to fraction of a full circle (θ/360).",
-      "Calculate arc length and sector area using radius and angle.",
-      "Find segment area by subtracting triangle area from sector area."
-    ],
-    description:
-      "Calculate arc length, sector area, and segment area (sector − triangle)."
-  },
-
-  // =========================
-  // L1 · Probability
-  // =========================
-  {
-    id: "ARCH-L1-PROB-01",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Probability: Basic Rules and Complement",
-    name: "ARCH-L1-PROB-01 · Solving Basic Probability Problems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-PROB-01"],
-    supportSOPs: ["SOP-QUAD-EQN-01"],
-    microSkills: [
-      "Count favourable outcomes and total outcomes correctly.",
-      "Compute P(E) = favourable / total in simplest form.",
-      "Use complement rule P(not E) = 1 − P(E)."
-    ],
-    description:
-      "Single-event probability: P(E)=favourable/total. Interpret probabilities between 0 and 1 in context."
-  },
-  {
-    id: "ARCH-L1-PROB-02",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Probability: Combined (AND/OR) & Tree",
-    name: "ARCH-L1-PROB-02 · Tree Diagrams & Sample Space",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-PROB-02"],
-    supportSOPs: ["SOP-PROB-01"],
-    microSkills: [
-      "List all possible outcomes using sample space or tree diagrams.",
-      "Label branches with probabilities correctly (with or without replacement).",
-      "Multiply along branches and add across paths as required."
-    ],
-    description:
-      "List outcomes via tree/sample-space diagrams; compute probabilities with/without replacement."
-  },
-  {
-    id: "ARCH-L1-PROB-03",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Probability: Combined Events (AND/OR) and Tree Diagrams",
-    name: "ARCH-L1-PROB-03 · Combined Events",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-PROB-03"],
-    supportSOPs: ["SOP-PROB-04"],
-    microSkills: [
-      "Use P(A and B) for combined events, with multiplication where appropriate.",
-      "Use P(A or B) = P(A) + P(B) − P(A and B) when needed.",
-      "Distinguish between mutually exclusive and independent events."
-    ],
-    description:
-      "AND/OR rules; mutually exclusive vs independent events; conditional probability notions."
-  },
-
-  // =========================
-  // L1 · Ratio / Percentage / Interest
-  // =========================
-  {
-    id: "ARCH-L1-RATIO-01",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Proportion: Ratio, Rate, Direct and Inverse",
-    name: "ARCH-L1-RATIO-01 · Map Scale Problems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-NUM-01"],
-    supportSOPs: ["SOP-NUM-02"],
-    microSkills: [
-      "Interpret map scale in the form 1 : n or n cm represents k km.",
-      "Convert between map distance and actual distance.",
-      "Handle area scale as square of length scale when required."
-    ],
-    description: "Convert between map and actual distances/areas accurately."
-  },
-  {
-    id: "ARCH-L1-RATIO-02",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Percentage: Increase, Decrease, GST, Discount",
-    name: "ARCH-L1-RATIO-02 · Percentage Change & Reverse Percentage",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-NUM-02"],
-    supportSOPs: ["SOP-EQN-02"],
-    microSkills: [
-      "Compute new value after a percentage increase or decrease.",
-      "Set up equations to recover original value from final value (reverse %).",
-      "Interpret percentage change in word problems correctly."
-    ],
-    description:
-      "Calculate new value after change and recover original value (reverse)."
-  },
-  {
-    id: "ARCH-L1-RATIO-03",
-    level: "L1",
-    domain: "D1 — Algebra & Number",
-    topic: "Percentage: Simple Interest, Percentage: Compound Interest",
-    name: "ARCH-L1-RATIO-03 · Simple & Compound Interest",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-NUM-03"],
-    supportSOPs: ["SOP-QUAD-GRAPH-02"],
-    microSkills: [
-      "Use simple interest formula I = PRT/100.",
-      "Use compound interest formula A = P(1 + r/100)^n.",
-      "Distinguish between interest earned and total amount accumulated."
-    ],
-    description:
-      "Compute total amount and interest for simple/compound interest."
-  },
-
-  // =========================
-  // L1 · Sets
-  // =========================
-  {
-    id: "ARCH-L1-SET-01",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Data Representation (Basic)",
-    name: "ARCH-L1-SET-01 · Set Notation & Operations",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-SET-01", "SOP-SET-02"],
     supportSOPs: [],
     microSkills: [
-      "Interpret basic symbols like ∈, ∉, ⊂, ∪, ∩, A′.",
-      "Translate between word descriptions and set notation.",
-      "Perform union, intersection, and complement on finite sets."
+      "MS-MEN-06 Identify sector vs segment",
+      "Calculate Arc Length (θ/360 × 2πr)",
+      "Calculate Sector Area (θ/360 × πr²)"
     ],
-    description:
-      "Master basic set language and operations (union, intersection, complement). Students should correctly interpret symbolic set statements and translate between word descriptions and symbolic form."
-  },
-  {
-    id: "ARCH-L1-SET-02",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Scatter Plot & Line of Best Fit",
-    name: "ARCH-L1-SET-02 · Venn Diagrams",
-    badge: "CORE",
-    parent: "ARCH-L1-SET-01",
-    branches: [],
-    requiredSOPs: ["SOP-SET-03", "SOP-SET-04"],
-    supportSOPs: [],
-    microSkills: [
-      "Shade and label regions of two-set and three-set Venn diagrams.",
-      "Convert set notation into correctly shaded diagrams and vice versa.",
-      "Use given frequencies to fill Venn regions systematically."
+    pitfalls: [
+      "Confusing Arc Length and Sector Area formulas",
+      "Using degrees in radian formula"
     ],
-    description:
-      "Understand and apply Venn diagrams to represent sets, subsets, and set operations. Convert between set notation and Venn diagrams, and solve two‐set and three‐set diagram questions."
-  },
-
-  // =========================
-  // L1 · Statistics
-  // =========================
-  {
-    id: "ARCH-L1-STAT-01",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Data: Mean, Median, Mode and Frequency Tables",
-    name: "ARCH-L1-STAT-01 · Interpreting Stem-and-Leaf Diagrams",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-STAT-01"],
-    supportSOPs: ["SOP-QUAD-EQN-01"],
-    microSkills: [
-      "Read raw data values correctly from a stem-and-leaf diagram.",
-      "Identify median, mode, and range from the ordered display.",
-      "Comment on data spread and clustering qualitatively."
+    proTips: [
+      "Segment Area = Sector - Triangle",
+      "Check if angle is in degrees or radians"
     ],
-    description:
-      "Extract mode, median, and mean from stem-and-leaf diagrams."
+    description: "Accurately calculating properties of circle parts like sectors and segments."
   },
-  {
-    id: "ARCH-L1-STAT-02",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Advanced Graphs（Histogram / CF / Boxplot）",
-    name: "ARCH-L1-STAT-02 · Interpreting Grouped Frequency Tables",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-STAT-02"],
-    supportSOPs: ["SOP-STAT-03"],
-    microSkills: [
-      "Compute midpoints of each class interval.",
-      "Estimate the mean using Σ(f×midpoint) / Σf.",
-      "Interpret grouped data cautiously (values within class are approximations)."
-    ],
-    description: "Estimate the mean from a grouped frequency table."
-  },
-  {
-    id: "ARCH-L1-STAT-03",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Data: Scatter Plot and Line of Best Fit",
-    name: "ARCH-L1-STAT-03 · Scatter Plot & Best-Fit Line",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-STAT-03"],
-    supportSOPs: ["SOP-QUAD-EQN-01"],
-    microSkills: [
-      "Plot ordered pairs accurately on a Cartesian plane.",
-      "Visually draw a sensible line of best fit through the data cloud.",
-      "Describe correlation (positive, negative, none) and use the line to make estimates."
-    ],
-    description:
-      "Draw and interpret scatter plots and a valid line of best fit."
-  },
-  {
-    id: "ARCH-L1-STAT-04",
-    level: "L1",
-    domain: "D3 — Statistics & Probability",
-    topic: "Advanced Graphs（Histogram / CF / Boxplot）",
-    name: "ARCH-L1-STAT-04 · Advanced Statistical Graphs",
-    badge: "CORE",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-STAT-04"],
-    supportSOPs: ["SOP-QUAD-GRAPH-01"],
-    microSkills: [
-      "Construct histograms with appropriate class boundaries and heights.",
-      "Draw and interpret cumulative frequency curves to find medians and quartiles.",
-      "Sketch boxplots and compare distributions using centre and spread."
-    ],
-    description:
-      "Construct and interpret histograms, cumulative frequency curves and boxplots."
-  },
-
-  // =========================
-  // L1 · Trigonometry
-  // =========================
+  
   {
     id: "ARCH-L1-TRIG-01",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Trig: Bearings — Applications",
-    name: "ARCH-L1-TRIG-01 · Solving 2D Bearing / Geometry Problems",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Trigonometry",
+    name: "ARCH-L1-TRIG-01 · 2D Trig",
     requiredSOPs: ["SOP-TRIG-01"],
-    supportSOPs: ["SOP-TRIG-03"],
+    supportSOPs: [],
     microSkills: [
-      "Convert between compass bearings and angles in standard position.",
-      "Resolve triangles using sine and cosine rules where necessary.",
-      "Draw accurate diagrams before applying trigonometric formulas."
+      "MS-TRIG-03 Determine when to use Sine vs Cosine Rule",
+      "MS-TRIG-04 Recognise non-right triangles",
+      "MS-TRIG-02 Identify sides: opposite / adjacent / hypotenuse"
     ],
-    description:
-      "Application of Sine/Cosine rules in 2D real-world contexts."
+    pitfalls: [
+      "Using SOHCAHTOA on non-right triangles",
+      "Calculator in wrong mode (Deg/Rad)"
+    ],
+    proTips: [
+      "SAS or SSS -> Cosine Rule",
+      "Pairs of angles/sides -> Sine Rule"
+    ],
+    description: "Application of Sine/Cosine rules in 2D real-world contexts to find unknown lengths or angles."
   },
   {
     id: "ARCH-L1-TRIG-02",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Trigonometry Applications（Height–Distance）",
-    name: "ARCH-L1-TRIG-02 · Finding Shortest Distance via Area Method",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Trigonometry",
+    name: "ARCH-L1-TRIG-02 · Shortest Dist",
     requiredSOPs: ["SOP-TRIG-02"],
     supportSOPs: [],
     microSkills: [
-      "Express triangle area in two ways (½ab sin C and ½×base×height).",
-      "Equate the two expressions to solve for perpendicular height.",
-      "Interpret the height as shortest distance between point and line."
+      "Calculate Area of Triangle (1/2 ab sinC)",
+      "Equate Area to 1/2 × base × height",
+      "Solve for perpendicular height"
     ],
-    description:
-      "Finding the perpendicular distance from a point to a line using area."
+    pitfalls: [
+      "Using wrong base for area calculation",
+      "Assuming shortest distance is along a side"
+    ],
+    proTips: [
+      "Shortest distance is always perpendicular height",
+      "Use Area = 1/2 * base * height"
+    ],
+    description: "Finding the perpendicular distance from a point to a line using the area method."
   },
   {
     id: "ARCH-L1-TRIG-03",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Trigonometry: Bearings",
-    name: "ARCH-L1-TRIG-03 · Bearings",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Trigonometry",
+    name: "ARCH-L1-TRIG-03 · Bearings Trig",
     requiredSOPs: ["SOP-TRIG-03"],
-    supportSOPs: ["SOP-TRIG-01"],
+    supportSOPs: [],
     microSkills: [
-      "Write bearings as three-digit angles measured clockwise from north.",
-      "Draw bearing diagrams with correct orientation and labelling.",
-      "Use basic trigonometry in right triangles formed by bearing lines."
+      "MS-TRIG-07 Trace bearing direction correctly",
+      "Interpret bearings to find internal triangle angles"
     ],
-    description:
-      "Interpreting and using bearings to find angles within geometric problems."
+    pitfalls: [
+      "Misinterpreting 'bearing of A from B'",
+      "Not extending North lines"
+    ],
+    proTips: [
+      "Draw sketch with all North lines",
+      "Use alternate angles (Z-rule) for North lines"
+    ],
+    description: "Interpreting and using bearings to find angles within geometric problems."
   },
   {
     id: "ARCH-L1-TRIG-04",
     level: "L1",
     domain: "D2 — Geometry & Measurement",
-    topic: "Trigonometry Applications（Height–Distance）",
-    name: "ARCH-L1-TRIG-04 · Elevation / Depression",
-    badge: "CORE",
-    parent: null,
-    branches: [],
+    topic: "Trigonometry",
+    name: "ARCH-L1-TRIG-04 · Elev/Depress",
     requiredSOPs: ["SOP-TRIG-04"],
-    supportSOPs: ["SOP-TRIG-01"],
+    supportSOPs: [],
     microSkills: [
-      "Identify angles of elevation and depression in context diagrams.",
-      "Use SOH-CAH-TOA appropriately in right-angled triangles.",
-      "Relate horizontal and vertical distances to real-world quantities."
+      "MS-TRIG-05 Extract elevation/depression from diagram",
+      "MS-TRIG-01 Identify right angle for SOHCAHTOA"
     ],
-    description:
-      "Solving problems involving angles of elevation and depression using SOH-CAH-TOA."
+    pitfalls: [
+      "Measuring angle from vertical instead of horizontal",
+      "Swapping adjacent and opposite sides"
+    ],
+    proTips: [
+      "Angle of depression = Angle of elevation (alternate angles)",
+      "Always form a right-angled triangle"
+    ],
+    description: "Solving problems involving angles of elevation and depression, typically using SOH-CAH-TOA."
   },
 
-  // =========================
-  // L2 · Archetypes
-  // =========================
+  // ==========================================
+  // D3: STATISTICS & PROBABILITY
+  // ==========================================
+  {
+    id: "ARCH-L1-STAT-01",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Stats",
+    name: "ARCH-L1-STAT-01 · Stem-and-Leaf",
+    requiredSOPs: ["SOP-STAT-01"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-STAT-01 Order raw data",
+      "Read keys and extract values",
+      "Find median/mode from stem-and-leaf"
+    ],
+    pitfalls: [
+      "Forgetting the key",
+      "Miscounting data points"
+    ],
+    proTips: [
+      "Align leaves vertically",
+      "Count total n to verify"
+    ],
+    description: "Interpret stem-and-leaf diagrams by reading keys, extracting data, and finding summary statistics."
+  },
+  {
+    id: "ARCH-L1-STAT-02",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Stats",
+    name: "ARCH-L1-STAT-02 · Grouped Table",
+    requiredSOPs: ["SOP-STAT-02"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-STAT-04 Read class intervals",
+      "MS-STAT-05 Compute class midpoints",
+      "Estimate mean using Σfx / Σf"
+    ],
+    pitfalls: [
+      "Using class width instead of midpoint",
+      "Summing frequencies incorrectly"
+    ],
+    proTips: [
+      "Midpoint = (Lower + Upper) / 2",
+      "Check if mean looks reasonable"
+    ],
+    description: "Interpret grouped frequency tables and estimate numerical measures using class midpoints."
+  },
+  {
+    id: "ARCH-L1-STAT-03",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Stats",
+    name: "ARCH-L1-STAT-03 · Adv Graphs",
+    requiredSOPs: ["SOP-STAT-03", "SOP-STAT-04", "SOP-STAT-05"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-STAT-02 Compute 5-number summary",
+      "MS-STAT-06 Compute frequency density",
+      "MS-STAT-07 Extract quartiles from CF graph"
+    ],
+    pitfalls: [
+      "Plotting CF at midpoint instead of upper bound",
+      "Confusing Frequency Density with Frequency"
+    ],
+    proTips: [
+      "CF graph shape is S-curve (Ogive)",
+      "Boxplot whiskers go to min/max"
+    ],
+    description: "Interpret and construct higher-order data graphs including histograms, cumulative frequency curves, and boxplots."
+  },
+  {
+    id: "ARCH-L1-STAT-04",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Stats",
+    name: "ARCH-L1-STAT-04 · Interpretation",
+    requiredSOPs: ["SOP-STAT-06", "SOP-STAT-07"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-STAT-03 Identify skewness",
+      "MS-STAT-08 Interpret boxplot comparisons",
+      "Compare Centre (Median) and Spread (IQR)"
+    ],
+    pitfalls: [
+      "Comparing total instead of average",
+      "Stating 'data is higher' without specifying metric"
+    ],
+    proTips: [
+      "Use Median for center comparison",
+      "Use IQR for consistency comparison"
+    ],
+    description: "Analyse data represented in graphs and tables, identify trends, and compare distributions."
+  },
+  {
+    id: "ARCH-L1-PROB-01",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Prob",
+    name: "ARCH-L1-PROB-01 · Basic Prob",
+    requiredSOPs: ["SOP-PROB-01"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-PROB-01 Identify event space",
+      "List favourable outcomes",
+      "Calculate P(Event) = Favourable/Total"
+    ],
+    pitfalls: [
+      "Forgetting to simplify fraction",
+      "Probabilities > 1"
+    ],
+    proTips: [
+      "Sum of probabilities = 1",
+      "Use systematic listing"
+    ],
+    description: "Accurately calculating the probability of a single event using favourable over total outcomes."
+  },
+  {
+    id: "ARCH-L1-PROB-02",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Prob",
+    name: "ARCH-L1-PROB-02 · Combined Events",
+    requiredSOPs: ["SOP-PROB-03"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-PROB-02 Interpret AND/OR wording",
+      "MS-PROB-03 Recognise mutually exclusive cases",
+      "Apply Union/Intersection formulas"
+    ],
+    pitfalls: [
+      "Adding probabilities for non-exclusive events",
+      "Confusing AND (multiply) with OR (add)"
+    ],
+    proTips: [
+      "AND means intersection",
+      "OR means union"
+    ],
+    description: "Compute probabilities of combined events using AND/OR rules, including mutually exclusive cases."
+  },
+  {
+    id: "ARCH-L1-PROB-03",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Prob",
+    name: "ARCH-L1-PROB-03 · Trees",
+    requiredSOPs: ["SOP-PROB-02"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-PROB-04 Identify independence vs dependence",
+      "MS-PROB-05 Multiply probabilities on branches",
+      "MS-PROB-06 Draw tree structure cleanly"
+    ],
+    pitfalls: [
+      "Not adjusting probabilities for non-replacement",
+      "Missing branches"
+    ],
+    proTips: [
+      "Multiply along branches",
+      "Add vertical outcomes"
+    ],
+    description: "Solve multi-step probability problems using systematically constructed tree diagrams."
+  },
+  {
+    id: "ARCH-L1-SET-01",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Sets",
+    name: "ARCH-L1-SET-01 · Set Notation",
+    requiredSOPs: ["SOP-SET-01", "SOP-SET-02"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-SET-04 Translate words ↔ set notation",
+      "MS-SET-05 Use complement correctly (A')",
+      "Perform Intersection/Union operations"
+    ],
+    pitfalls: [
+      "Confusing element symbol with subset symbol",
+      "Forgetting empty set"
+    ],
+    proTips: [
+      "List elements explicitly",
+      "A' means everything NOT in A"
+    ],
+    description: "Master basic set language and operations (union, intersection, complement) and notation."
+  },
+  {
+    id: "ARCH-L1-SET-02",
+    level: "L1",
+    domain: "D3 — Statistics & Probability",
+    topic: "Sets",
+    name: "ARCH-L1-SET-02 · Venn",
+    requiredSOPs: ["SOP-SET-03", "SOP-SET-04"],
+    supportSOPs: [],
+    microSkills: [
+      "MS-SET-01 Identify ∩ intersection regions",
+      "MS-SET-02 Identify ∪ union regions",
+      "MS-SET-03 Shade required Venn areas"
+    ],
+    pitfalls: [
+      "Forgetting numbers outside circles",
+      "Double counting intersection"
+    ],
+    proTips: [
+      "Fill intersection first",
+      "Region sum matches Total"
+    ],
+    description: "Understand and apply Venn diagrams to represent sets, subsets, and solve logical problems."
+  },
+
+  // ==========================================
+  // L2: INTEGRATED ARCHETYPES
+  // ==========================================
   {
     id: "ARCH-L2-ALG-01",
     level: "L2",
-    domain: "D1 — Algebra & Number",
-    topic: "Financial Maths: Real-world Applications",
-    name: "ARCH-L2-ALG-01 · Algebraic Modelling in Context",
-    badge: "L2",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-ALG-01", "SOP-ALG-04"],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L2-ALG-01 · Modelling",
+    requiredSOPs: ["SOP-ALG-04", "SOP-ALG-01"],
     supportSOPs: [],
     microSkills: [
-      "Translate contextual descriptions into algebraic equations or inequalities.",
-      "Manipulate formulas to isolate required quantities.",
-      "Interpret algebraic solutions back in the real-world setting."
+      "Model real-world scenarios algebraically",
+      "Formulate equations from textual description"
     ],
-    description:
-      "Apply algebraic techniques to solve complex real-world problems involving forming equations, manipulating formulas, and factorising to extract meaningful quantities from given relationships."
+    pitfalls: [
+      "Incorrect assumptions",
+      "Dimensional mismatch"
+    ],
+    proTips: [
+      "Define variables first",
+      "Check limiting cases"
+    ],
+    description: "Apply algebraic techniques to solve complex real-world problems involving forming equations and formulas."
   },
   {
     id: "ARCH-L2-ALG-02",
     level: "L2",
-    domain: "D1 — Algebra & Number",
-    topic: "Graphical Analysis of Functions",
-    name: "ARCH-L2-ALG-02 · Graphical Analysis of Functions",
-    badge: "L2",
-    parent: null,
-    branches: [],
-    requiredSOPs: [
-      "SOP-QUAD-EQN-01",
-      "SOP-QUAD-CTS-02",
-      "SOP-QUAD-GRAPH-01",
-      "SOP-QUAD-GRAPH-02",
-      "SOP-QUAD-GRAPH-03"
-    ],
-    supportSOPs: ["SOP-EQN-02"],
+    domain: "D1 — Number & Algebra",
+    topic: "Algebra",
+    name: "ARCH-L2-ALG-02 · Graph Analysis",
+    requiredSOPs: ["SOP-QUAD-GRAPH-01", "SOP-QUAD-EQN-01"],
+    supportSOPs: [],
     microSkills: [
-      "Switch between algebraic, table, and graphical representations of a quadratic.",
-      "Use vertex form and intercepts to interpret key graph features.",
-      "Determine equations from graphs and solve graph-based inequalities."
+      "Analyze functions graphically",
+      "Relate equations to graphs",
+      "Interpret features (intercepts, turning points)"
     ],
-    description:
-      "Analyse quadratic functions graphically by completing the square to find vertex form, sketching parabolas accurately, and determining equations from given graphs—integrating multiple techniques for comprehensive graph analysis."
+    pitfalls: [
+      "Misinterpreting gradient at a point",
+      "Confusing local min/max with global"
+    ],
+    proTips: [
+      "Sketch graph to visualize",
+      "Use derivatives for gradients if known"
+    ],
+    description: "Analyse quadratic functions graphically by completing the square, sketching, and determining equations."
+  },
+  {
+    id: "ARCH-L2-GEO-01",
+    level: "L2",
+    domain: "D2 — Geometry & Measurement",
+    topic: "Geometry",
+    name: "ARCH-L2-GEO-01 · Multi-Step Geometric Proofs",
+    requiredSOPs: [
+      "SOP-ANG-M00", "SOP-ANG-M01", "SOP-ANG-M02", "SOP-ANG-M03", "SOP-ANG-M04", 
+      "SOP-ANG-M05", "SOP-ANG-M06", "SOP-ANG-M07", "SOP-ANG-M08", "SOP-ANG-M09", 
+      "SOP-ANG-M10", "SOP-ANG-M11",
+      "SOP-GEO-SIM-01", "SOP-GEO-SIM-02", "SOP-GEO-SIM-03", "SOP-GEO-SIM-04",
+      "SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-03", "SOP-GEO-CIRC-04",
+      "SOP-GEO-CIRC-05", "SOP-GEO-CIRC-06", "SOP-GEO-CIRC-07", "SOP-GEO-CIRC-08",
+      "SOP-GEO-CONG-01", "SOP-GEO-CONG-02"
+    ],
+    supportSOPs: ["SOP-GEO-PYTH-01", "SOP-GEO-PYTH-02", "SOP-GEO-COORD-01", "SOP-GEO-COORD-02"],
+    microSkills: [
+      "Construct geometric proofs",
+      "Chain multiple reasoning steps (Angle + Circle + Congruence)",
+      "Justify steps with correct geometric reasons"
+    ],
+    pitfalls: [
+      "Circular reasoning",
+      "Assuming properties not given (e.g. parallel)"
+    ],
+    proTips: [
+      "State reasons for every step",
+      "Work backwards from what needs to be proved"
+    ],
+    description: "Construct formal geometric proofs requiring multiple steps and integration of angle properties, similarity, congruence, and circle theorems."
+  },
+  {
+    id: "ARCH-L2-MEN-01",
+    level: "L2",
+    domain: "D2 — Geometry & Measurement",
+    topic: "Mensuration",
+    name: "ARCH-L2-MEN-01 · Multi-Step Mensuration",
+    requiredSOPs: [
+      "SOP-MEN-01", "SOP-MEN-02", "SOP-MEN-03", "SOP-MEN-04",
+      "SOP-GEO-COORD-01", "SOP-GEO-PYTH-01", "SOP-TRIG-01", "SOP-TRIG-04", "SOP-GEO-SIM-03"
+    ],
+    supportSOPs: ["SOP-IND-03", "SOP-NUM-03"],
+    microSkills: [
+      "Solve complex mensuration problems",
+      "Integrate trigonometry and geometry with volume/area",
+      "Decompose complex real-world objects into standard solids"
+    ],
+    pitfalls: [
+      "Unit inconsistency",
+      "Forgetting component volumes"
+    ],
+    proTips: [
+      "Draw diagram with dimensions",
+      "Calculate parts separately then combine"
+    ],
+    description: "Solve multi-step mensuration problems involving combined solids, composite figures, similar solids, and trigonometric reasoning."
   },
   {
     id: "ARCH-L2-TRIG-01",
     level: "L2",
     domain: "D2 — Geometry & Measurement",
-    topic: "3D Trigonometry",
-    name: "ARCH-L2-TRIG-01 · 2D / 3D Trigonometry in Context",
-    badge: "L2",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-L2-TRIG-01"],
-    supportSOPs: ["SOP-TRIG-01", "SOP-TRIG-04"],
-    microSkills: [
-      "Decompose 3D problems into multiple linked 2D right or non-right triangles.",
-      "Track bearings and elevation/depression angles across different planes.",
-      "Use sine, cosine, and tangent consistently in multi-step setups."
-    ],
-    description:
-      "Multi-step 3D problems decomposed into 2D triangles with bearings and elevation/depression."
-  },
-
-  // =========================
-  // L3 · Meta-Archetypes
-  // =========================
-  {
-    id: "ARCH-L3-MOD-01",
-    level: "L3",
-    domain: "⚠️ No Topic Mapping",
-    topic: "", // Empty topic, will be filtered out
-    name: "ARCH-L3-MOD-01 · Contextual Modelling & Justification",
-    badge: "L3",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-META-01", "SOP-META-02"],
+    topic: "Trigonometry",
+    name: "ARCH-L2-TRIG-01 · 2D/3D Trig",
+    requiredSOPs: ["SOP-TRIG-01", "SOP-TRIG-03"],
     supportSOPs: [],
     microSkills: [
-      "Identify assumptions and constraints in open-ended problems.",
-      "Choose an appropriate mathematical model and justify the choice.",
-      "Discuss limitations of the model and implications of results."
+      "Decompose 3D problems into 2D planes",
+      "MS-TRIG-06 Draw 3D reference triangle from 3D diagram",
+      "Identify common side linking horizontal and vertical planes"
     ],
-    description:
-      "Model open-ended problems and justify conclusions with calculations."
+    pitfalls: [
+      "Identifying wrong angle in 3D space",
+      "Using 2D rules on 3D diagram directly"
+    ],
+    proTips: [
+      "Draw 2D sections of the 3D object",
+      "Look for right-angled triangles"
+    ],
+    description: "Multi-step problems requiring students to model a real-world scenario on a 2D plane and solve 3D elevation/depression problems."
   },
+
+  // ==========================================
+  // L3: META SKILLS
+  // ==========================================
   {
     id: "ARCH-L3-SYN-01",
     level: "L3",
     domain: "⚠️ No Topic Mapping",
-    topic: "", // Empty topic, will be filtered out
-    name: "ARCH-L3-SYN-01 · Multi-Representation Synthesis",
-    badge: "L3",
-    parent: null,
-    branches: [],
-    requiredSOPs: ["SOP-META-01", "SOP-META-02"],
+    topic: "Meta",
+    name: "ARCH-L3-SYN-01 · Synthesis",
+    requiredSOPs: ["SOP-META-01"],
     supportSOPs: [],
     microSkills: [
-      "Combine algebraic, geometric, and statistical representations in one solution.",
-      "Switch flexibly between different forms (equations, graphs, diagrams, tables).",
-      "Explain reasoning clearly in words while referencing multiple representations."
+      "Synthesize multiple representations (Graph + Table + Text)",
+      "Translate between algebraic and geometric forms"
     ],
-    description:
-      "Synthesize algebraic, geometric, and data representations to solve problems."
+    pitfalls: [
+      "Getting lost in details",
+      "Inconsistent interpretation across forms"
+    ],
+    proTips: [
+      "Create a unified model/diagram",
+      "Check consistency of answers"
+    ],
+    description: "Tasks where students must synthesize information from algebraic equations, geometric diagrams, and data tables to arrive at a solution."
+  },
+  {
+    id: "ARCH-L3-MOD-01",
+    level: "L3",
+    domain: "⚠️ No Topic Mapping",
+    topic: "Meta",
+    name: "ARCH-L3-MOD-01 · Modelling",
+    requiredSOPs: ["SOP-META-02"],
+    supportSOPs: [],
+    microSkills: [
+      "Model open-ended problems",
+      "State assumptions clearly",
+      "Justify conclusions based on calculations"
+    ],
+    pitfalls: [
+      "Overcomplicating the model",
+      "Not stating assumptions"
+    ],
+    proTips: [
+      "Start with simple assumptions",
+      "Validate model with known data"
+    ],
+    description: "Develop a mathematical model for an open-ended problem, perform calculations, and justify the final decision."
   }
 ];
