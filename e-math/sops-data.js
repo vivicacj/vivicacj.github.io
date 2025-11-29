@@ -1,8 +1,8 @@
 // =================================================================
 // SOP DATABASE (sops-data.js)
 // =================================================================
-// Final Detailed Version.
-// Includes ALL SOPs referenced in Archetypes (Quadratics, Algebra, etc.)
+// Final Detailed Version (Fixed Syntax Error).
+// Contains ALL SOPs including the new Construction ones.
 // =================================================================
 
 export const SOPS_DATA = [
@@ -108,7 +108,7 @@ export const SOPS_DATA = [
   },
 
   // ==========================================
-  // D1: QUADRATICS (The missing keys for ALG-02)
+  // D1: QUADRATICS
   // ==========================================
   {
     "id": "SOP-QUAD-FACT-01",
@@ -1379,6 +1379,50 @@ export const SOPS_DATA = [
       "Always verify each plotted point satisfies the condition.",
       "Use symmetry whenever possible.",
       "Label locus clearly in diagrams."
+    ]
+  },
+  {
+    "id": "SOP-GEO-CONS-05",
+    "name": "SOP-GEO-CONS-05 · Construct Parallel Lines",
+    "description": "Construct a line parallel to a given line through a selected point using compass and straightedge.",
+    "steps": [
+      "Identify the point through which the parallel line must pass.",
+      "Select an angle on the given line to replicate (corresponding or alternate angle).",
+      "Using compass arcs, copy the reference angle to the new point.",
+      "Recreate the equal angle at the new point.",
+      "Draw the ray/line through the new point that forms the copied angle."
+    ],
+    "pitfalls": [
+      { "type": "Error", "text": "Forgetting to keep compass width fixed -> angle mismatch." },
+      { "type": "Error", "text": "Copying the wrong angle (non-corresponding) -> line not parallel." },
+      { "type": "Error", "text": "Arc too small -> inaccurate intersection." }
+    ],
+    "pro_tips": [
+      "Make larger arcs for accuracy; clearly label equal angles.",
+      "If the point lies on the original line, draw a transversal first before copying angle.",
+      "Check parallelism visually by extending both lines."
+    ]
+  },
+  {
+    "id": "SOP-GEO-CONS-06",
+    "name": "SOP-GEO-CONS-06 · Construct Triangles (SSS / SAS / ASA)",
+    "description": "Construct a triangle using SSS, SAS, or ASA specifications with classical compass-and-straightedge constructions.",
+    "steps": [
+      "SSS: Draw base side. Draw arcs from endpoints with remaining lengths. Mark intersection. Join.",
+      "SAS: Draw included side. Construct angles/rays at endpoints. Measure second side on ray. Join.",
+      "ASA: Draw side between angles. Construct given angles at endpoints. Locate intersection of rays."
+    ],
+    "pitfalls": [
+      { "type": "Error", "text": "Incorrect angle copying (especially included vs. non-included)." },
+      { "type": "Error", "text": "Arcs drawn too small -> scale inaccuracies." },
+      { "type": "Error", "text": "Misinterpreting the given sequence (e.g., confusing ASA with AAS)." },
+      { "type": "Error", "text": "Inconsistent compass width when transferring arcs." }
+    ],
+    "pro_tips": [
+      "Sketch the triangle lightly first to predict the correct orientation.",
+      "Use larger arcs and label key construction marks clearly.",
+      "Verify lengths/angles at the end using ruler and protractor.",
+      "For SSS, ensure both circles intersect at a single feasible point."
     ]
   },
   {
