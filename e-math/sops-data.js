@@ -479,7 +479,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-IND-08",
-    "name": "SOP-IND-08 · Multi-layer Simplification Order",
+    "name": "SOP-IND-08 · Multi-layer Index Simplification Order",
     "description": "Execute index simplification in hierarchical order.",
     "steps": [
       "Expand bracket powers.",
@@ -663,7 +663,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-GEO-COORD-04",
-    "name": "SOP-GEO-COORD-04 · Parallel & Perpendicular Lines",
+    "name": "SOP-GEO-COORD-04 · Parallel/Perpendicular Lines",
     "description": "Identify or construct parallel and perpendicular lines.",
     "steps": [
       "Calculate gradient m₁ of first line.",
@@ -1161,7 +1161,7 @@ export const SOPS_DATA = [
     "steps": [
       "Identify the three interior angles of triangle.",
       "Write equation: ∠A + ∠B + ∠C = 180°.",
-      "Substitute known angle values.",
+      "Substitute known values.",
       "Solve for unknown angle."
     ],
     "pitfalls": [
@@ -1255,7 +1255,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-ANG-M10",
-    "name": "SOP-ANG-M10 · Regular Polygon Angles",
+    "name": "SOP-ANG-M10 · Regular Polygon Angle Calculation",
     "description": "Calculate interior and exterior angles of regular polygon.",
     "steps": [
       "Identify number of sides n.",
@@ -1877,7 +1877,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-STAT-04",
-    "name": "SOP-STAT-04 · Cumulative Frequency Curves",
+    "name": "SOP-STAT-04 · Construct & Interpret Cumulative Frequency Curves (Ogives)",
     "description": "Plot cumulative frequency (CF) against upper class boundaries.",
     "steps": [
       "Compute cumulative frequency for each class.",
@@ -1983,7 +1983,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-PROB-02",
-    "name": "SOP-PROB-02 · Construct & Read Tree Diagrams",
+    "name": "SOP-PROB-02 · Construct & Read Probability Tree Diagrams",
     "description": "Build probability tree diagrams for multi-step events.",
     "steps": [
       "Identify first event and draw branches with probabilities.",
@@ -2005,7 +2005,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-PROB-03",
-    "name": "SOP-PROB-03 · Combined Events (AND/OR)",
+    "name": "SOP-PROB-03 · Combined Events (AND / OR Rules)",
     "description": "Apply AND/OR rules to compute probabilities.",
     "steps": [
       "Identify events A and B.",
@@ -2068,7 +2068,7 @@ export const SOPS_DATA = [
   },
   {
     "id": "SOP-SET-03",
-    "name": "SOP-SET-03 · Draw & Interpret Venn Diagrams",
+    "name": "SOP-SET-03 · Draw and Interpret Venn Diagrams",
     "description": "Construct and interpret Venn diagrams.",
     "steps": [
       "Draw correct Venn structure: single set, two-set, or three-set.",
