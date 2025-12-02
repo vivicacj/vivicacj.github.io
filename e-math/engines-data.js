@@ -1,863 +1,887 @@
-// =================================================================
-// ENGINES DATABASE (engines-data.js)
-// =================================================================
-// STRICT SCHEMA FROM PDF:
-// 1. Engines (5 fields): engine_id, engine_name, layer, description, sops
-// 2. SOPs (8 fields): id, name, trigger, rule, chain, exam_usage, pitfalls, micro_skills
-// 3. Power Combinations (10 fields): pc_id, title, trigger, rule, tools, chain, exam_usage, pitfalls, micro_skills, sop_links
-// =================================================================
+/**
+ * evolution-map-app.js
+ * v35.0 - UI SPACING & LAYOUT FIX
+ * * TARGETED FIXES:
+ * 1. ENGINE HEADER: Forced separation between Engine ID and Engine Name (Block layout).
+ * 2. TAG SPACING: Added explicit whitespace and margins to SOP/Tool tags to prevent jamming (e.g., "SOP-A SOP-B").
+ * 3. SCOPE: Applies visual fixes to Module B (Engines) specifically Coordinate & Mixed domains.
+ */
 
-export const ENGINES_DATA = {
-    angle: {
-        title: "Angle Geometry",
-        // 9 Engines
-        engines: [
-            {
-                engine_id: "ANG-ENG-01",
-                engine_name: "F-Angle Engine (Corresponding)",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activates when parallel lines form the F-shape, triggering corresponding-angle rules.",
-                sops: ["SOP-ANG-M01", "SOP-ANG-M00", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "ANG-ENG-02",
-                engine_name: "Z-Angle Engine (Alternate Interior)",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activates when parallel lines form the Z-shape, enabling alternate-interior angle matching.",
-                sops: ["SOP-ANG-M02", "SOP-ANG-M00", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "ANG-ENG-03",
-                engine_name: "C-Angle Engine (Co-Interior)",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activates when parallel lines form the C-shape, revealing same-side interior supplementary angles.",
-                sops: ["SOP-ANG-M03", "SOP-ANG-M00", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "ANG-ENG-04",
-                engine_name: "Vertical Opposite Angle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Triggered when two lines cross, producing equal vertically opposite angles.",
-                sops: ["SOP-ANG-M04"]
-            },
-            {
-                engine_id: "ANG-ENG-05",
-                engine_name: "Triangle Angle Sum Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Used when triangles appear; guarantees the sum of interior angles is 180 degrees.",
-                sops: ["SOP-ANG-M05", "SOP-ANG-M06"]
-            },
-            {
-                engine_id: "ANG-ENG-06",
-                engine_name: "Exterior Angle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activated when triangles show exterior angles, allowing calculation through angle-sum relationships.",
-                sops: ["SOP-ANG-M06", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "ANG-ENG-07",
-                engine_name: "Isosceles Triangle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Recognizes equal sides or base angles to apply isosceles triangle relationships.",
-                sops: ["SOP-ANG-M07", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "ANG-ENG-08",
-                engine_name: "Polygon Angle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Used when polygons appear, enabling calculation of interior and exterior angles.",
-                sops: ["SOP-ANG-M09", "SOP-ANG-M10", "SOP-ANG-M11"]
-            },
-            {
-                engine_id: "ANG-ENG-09",
-                engine_name: "Quadrilateral Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Triggered when quadrilaterals appear, using sum of angles to solve missing angles.",
-                sops: ["SOP-ANG-M11"]
-            }
-        ],
-        // 12 SOPs
-        sops: [
-            {
-                id: "SOP-ANG-M00",
-                name: "Straight Line Angle Sum",
-                trigger: "Straight line or linear pair appears.",
-                rule: "Angles on a straight line sum to 180°.",
-                chain: "Identify → Mark → Substitute → Solve",
-                exam_usage: "Common for hidden straight-line decompositions.",
-                pitfalls: "Forgetting vertical splits are still 180°.",
-                micro_skills: "Recognize straight-line boundaries; partition composite angles."
-            },
-            {
-                id: "SOP-ANG-M01",
-                name: "Corresponding Angles",
-                trigger: "Parallel lines with F-shape.",
-                rule: "Corresponding angles are equal.",
-                chain: "Detect parallel → Identify F-shape → Equate angles",
-                exam_usage: "Used in most parallel-lines problems.",
-                pitfalls: "Misidentifying non-corresponding positions.",
-                micro_skills: "F-shape spotting; arrow-marker recognition."
-            },
-            {
-                id: "SOP-ANG-M02",
-                name: "Alternate Interior Angles",
-                trigger: "Parallel lines with Z-shape.",
-                rule: "Alternate interior angles are equal.",
-                chain: "Find Z-pattern → Use angle equality → Substitute",
-                exam_usage: "Critical for transversals.",
-                pitfalls: "Confusing with co-interior angles.",
-                micro_skills: "Z-pattern recognition."
-            },
-            {
-                id: "SOP-ANG-M03",
-                name: "Co-Interior Angles",
-                trigger: "Parallel lines with C-shape.",
-                rule: "Co-interior angles sum to 180°.",
-                chain: "Identify C-shape → Apply 180° sum → Solve",
-                exam_usage: "Standard for supplementary angle setups.",
-                pitfalls: "Incorrectly equating instead of summing.",
-                micro_skills: "Spot same-side interior regions."
-            },
-            {
-                id: "SOP-ANG-M04",
-                name: "Vertically Opposite Angles",
-                trigger: "Two lines intersect.",
-                rule: "Vertically opposite angles are equal.",
-                chain: "Locate intersection → Match opposite pairs",
-                exam_usage: "Used to open hidden equal angles.",
-                pitfalls: "Confusing adjacent with opposite.",
-                micro_skills: "Cross-center shape recognition."
-            },
-            {
-                id: "SOP-ANG-M05",
-                name: "Triangle Angle Sum",
-                trigger: "Triangle appears.",
-                rule: "Three interior angles sum to 180°.",
-                chain: "Identify triangle → Mark known angles → Solve unknown",
-                exam_usage: "Most common triangle rule.",
-                pitfalls: "Using wrong given angles.",
-                micro_skills: "Triangle subdivision."
-            },
-            {
-                id: "SOP-ANG-M06",
-                name: "Exterior Angle Theorem",
-                trigger: "Exterior angle at triangle vertex.",
-                rule: "Exterior = sum of opposite interior angles.",
-                chain: "Mark exterior angle → Identify remote angles → Equate",
-                exam_usage: "Used in combination with parallel-line triggers.",
-                pitfalls: "Matching adjacent instead of remote angles.",
-                micro_skills: "Extend side properly."
-            },
-            {
-                id: "SOP-ANG-M07",
-                name: "Isosceles Triangle Angles",
-                trigger: "Two equal sides or two equal base angles.",
-                rule: "Base angles in an isosceles triangle are equal.",
-                chain: "Mark equal edges → Equate corresponding angles → Solve",
-                exam_usage: "Used in similarity/congruency spotting.",
-                pitfalls: "Applying to scalene triangles.",
-                micro_skills: "Equal-side recognition."
-            },
-            {
-                id: "SOP-ANG-M08",
-                name: "Equilateral Triangle Angles",
-                trigger: "Three equal sides marked.",
-                rule: "All angles are 60°.",
-                chain: "Identify equilateral → Sub 60° → Solve",
-                exam_usage: "Forms basis for tessellation problems.",
-                pitfalls: "Assuming equal without markings.",
-                micro_skills: "Equal-edge recognition."
-            },
-            {
-                id: "SOP-ANG-M09",
-                name: "Interior Angles of Polygon",
-                trigger: "Polygon with n sides.",
-                rule: "(n-2) × 180",
-                chain: "Count sides → Apply formula → Solve interior angles",
-                exam_usage: "Common with regular polygons.",
-                pitfalls: "Miscounting sides.",
-                micro_skills: "Polygon decomposition."
-            },
-            {
-                id: "SOP-ANG-M10",
-                name: "Regular Polygon Exterior Angles",
-                trigger: "Regular polygon appears.",
-                rule: "Exterior angle = 360°/n.",
-                chain: "Identify 'regular' → Use formula → Find interior/exterior",
-                exam_usage: "Frequently tested in angle-sum tasks.",
-                pitfalls: "Using 180° instead of 360°.",
-                micro_skills: "Regularity recognition."
-            },
-            {
-                id: "SOP-ANG-M11",
-                name: "Quadrilateral Angle Sum",
-                trigger: "Four-sided figure.",
-                rule: "Sum of interior angles = 360°.",
-                chain: "Identify quad → Mark known → Solve",
-                exam_usage: "Used in composite shapes.",
-                pitfalls: "Ignoring additional constraints.",
-                micro_skills: "Quad partitioning."
-            }
-        ],
-        // 6 Power Combinations
-        combinations: [
-            {
-                pc_id: "PC-ANG-01",
-                title: "F-Pattern → Angle Equality Route",
-                trigger: "Parallel lines produce F-shape.",
-                rule: "Corresponding angles are equal.",
-                tools: ["SOP-ANG-M01", "SOP-ANG-M00"],
-                chain: "Detect F → Mark equal angles → Use triangle/straight-line rules → Solve",
-                exam_usage: "Essential in locates involving transversals.",
-                pitfalls: "Incorrect F-shape identification.",
-                micro_skills: "Marker reading; transversal spotting.",
-                sop_links: ["SOP-ANG-M01", "SOP-ANG-M00", "SOP-ANG-M05"]
-            },
-            {
-                pc_id: "PC-ANG-02",
-                title: "Z-Pattern → Alternate Interior Engine",
-                trigger: "Parallel lines form Z-shape.",
-                rule: "Alternate interior angles are equal.",
-                tools: ["SOP-ANG-M02"],
-                chain: "Spot Z → Equate angles → Substitute into sum equations",
-                exam_usage: "Used in triangle-embedded parallel lines.",
-                pitfalls: "Mistaking Z for C-shape.",
-                micro_skills: "Z-geometry recognition.",
-                sop_links: ["SOP-ANG-M02", "SOP-ANG-M05"]
-            },
-            {
-                pc_id: "PC-ANG-03",
-                title: "C-Pattern → Supplementary Engine",
-                trigger: "Parallel lines form C-shape.",
-                rule: "Co-interior angles sum to 180°.",
-                tools: ["SOP-ANG-M03", "SOP-ANG-M00"],
-                chain: "Detect C → Apply 180° → Solve for unknowns",
-                exam_usage: "Very common in multi-step angle chase.",
-                pitfalls: "Equating instead of summing.",
-                micro_skills: "Same-side interior scanning.",
-                sop_links: ["SOP-ANG-M03", "SOP-ANG-M00"]
-            },
-            {
-                pc_id: "PC-ANG-04",
-                title: "Triangle Interior-Exterior Mix",
-                trigger: "Triangle with exterior angle.",
-                rule: "Exterior = sum of opposite interior angles.",
-                tools: ["SOP-ANG-M06", "SOP-ANG-M05"],
-                chain: "Identify exterior → Link remote interior → Solve",
-                exam_usage: "Common in polygon-triangle composites.",
-                pitfalls: "Confusing adjacent interior with remote interior.",
-                micro_skills: "Remote-angle identification.",
-                sop_links: ["SOP-ANG-M06", "SOP-ANG-M05"]
-            },
-            {
-                pc_id: "PC-ANG-05",
-                title: "Isosceles Trigger → Equal-Angle Engine",
-                trigger: "Two equal sides or angle marks.",
-                rule: "Base angles are equal.",
-                tools: ["SOP-ANG-M07", "SOP-ANG-M05"],
-                chain: "Mark equal → Use triangle sum → Solve",
-                exam_usage: "Used in similarity and congruency routes.",
-                pitfalls: "Missing equal-side markings.",
-                micro_skills: "Base-angle identification.",
-                sop_links: ["SOP-ANG-M07", "SOP-ANG-M05"]
-            },
-            {
-                pc_id: "PC-ANG-06",
-                title: "Polygon Decomposition Strategy",
-                trigger: "Polygon (regular or irregular).",
-                rule: "Interior or exterior angle formulas apply.",
-                tools: ["SOP-ANG-M09", "SOP-ANG-M10", "SOP-ANG-M11"],
-                chain: "Count sides → Apply model → Decompose → Solve",
-                exam_usage: "Used in polygon + triangle hybrid problems.",
-                pitfalls: "Using wrong n.",
-                micro_skills: "Polygon decomposition & side counting.",
-                sop_links: ["SOP-ANG-M09", "SOP-ANG-M10", "SOP-ANG-M11"]
-            }
-        ]
-    },
-    circle: {
-        title: "Circle Geometry",
-        // 7 Engines
-        engines: [
-            {
-                engine_id: "CIRC-ENG-01",
-                engine_name: "Semicircle Right Angle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activates when a diameter connects to a point on the circle, forming a right angle.",
-                sops: ["SOP-GEO-CIRC-01", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "CIRC-ENG-02",
-                engine_name: "Centre-Circumference Angle Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Used when both centre and circumference angles intercept the same arc, applying the 2x rule.",
-                sops: ["SOP-GEO-CIRC-02", "SOP-ANG-M05"]
-            },
-            {
-                engine_id: "CIRC-ENG-03",
-                engine_name: "Same Segment Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Triggered when two angles stand on the same arc, producing equal angles.",
-                sops: ["SOP-GEO-CIRC-03"]
-            },
-            {
-                engine_id: "CIRC-ENG-04",
-                engine_name: "Cyclic Quadrilateral Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Activated when four points lie on a circle, enabling opposite interior angles to sum to 180°.",
-                sops: ["SOP-GEO-CIRC-04", "SOP-ANG-M11"]
-            },
-            {
-                engine_id: "CIRC-ENG-05",
-                engine_name: "Tangent-Radius Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Triggered when a tangent touches a circle, applying perpendicular radius relationships.",
-                sops: ["SOP-GEO-CIRC-05", "SOP-ANG-M04"]
-            },
-            {
-                engine_id: "CIRC-ENG-06",
-                engine_name: "Alternate Segment Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Matches tangent-chord angles with opposite interior angles in the circle.",
-                sops: ["SOP-GEO-CIRC-06"]
-            },
-            {
-                engine_id: "CIRC-ENG-07",
-                engine_name: "Chord Properties Engine",
-                layer: "Visual Trigger (Layer 1)",
-                description: "Recognizes perpendicular-bisector or equal-chord relationships to solve for angles or distances.",
-                sops: ["SOP-GEO-CIRC-07", "SOP-GEO-PYTH-01"]
-            }
-        ],
-        // 8 SOPs
-        sops: [
-            {
-                id: "SOP-GEO-CIRC-01",
-                name: "Angle in Semicircle",
-                trigger: "Diameter with point on circumference.",
-                rule: "Angle in semicircle is 90°.",
-                chain: "Detect diameter → Mark right angle → Use triangle tools",
-                exam_usage: "Used for Pythagoras or trigonometry setups.",
-                pitfalls: "Misidentifying non-diameter chords.",
-                micro_skills: "Diameter recognition; right-angle marking."
-            },
-            {
-                id: "SOP-GEO-CIRC-02",
-                name: "Centre vs Circumference Angle",
-                trigger: "Both centre and circumference angles intercept same arc.",
-                rule: "Centre angle = 2x circumference angle.",
-                chain: "Identify shared arc → Apply 2x rule → Link to triangle relations",
-                exam_usage: "Common in arc-based angle networks.",
-                pitfalls: "Using 1/2 instead of 2x incorrectly.",
-                micro_skills: "Arc matching; chord tracing."
-            },
-            {
-                id: "SOP-GEO-CIRC-03",
-                name: "Angles in Same Segment",
-                trigger: "Angles stand on same arc.",
-                rule: "Angles in same segment are equal.",
-                chain: "Locate common arc → Equate angles → Substitute",
-                exam_usage: "Essential for multi-angle equality traces.",
-                pitfalls: "Choosing mismatching arcs.",
-                micro_skills: "Arc endpoint alignment."
-            },
-            {
-                id: "SOP-GEO-CIRC-04",
-                name: "Cyclic Quadrilateral",
-                trigger: "Four points lie on a circle.",
-                rule: "Opposite interior angles sum to 180°.",
-                chain: "Identify concyclic points → Apply 180° → Solve",
-                exam_usage: "Frequently combined with parallel angles.",
-                pitfalls: "Using adjacent instead of opposite angles.",
-                micro_skills: "Concyclic point recognition."
-            },
-            {
-                id: "SOP-GEO-CIRC-05",
-                name: "Tangent Properties",
-                trigger: "Tangent touches radius.",
-                rule: "Tangent ⊥ radius.",
-                chain: "Spot tangent → Mark right angle → Apply triangle/Pythagoras",
-                exam_usage: "Used in tangent-radius geometry and coordinate problems.",
-                pitfalls: "Mistaking secant for tangent.",
-                micro_skills: "Right-angle tagging."
-            },
-            {
-                id: "SOP-GEO-CIRC-06",
-                name: "Alternate Segment Theorem",
-                trigger: "Tangent + chord configuration.",
-                rule: "Tangent-chord angle equals opposite interior angle.",
-                chain: "Spot tangent → Identify chord → Match interior angle",
-                exam_usage: "Major theorem in O-Level proofs.",
-                pitfalls: "Mixing interior angle with external angle.",
-                micro_skills: "Chord-tangent identification."
-            },
-            {
-                id: "SOP-GEO-CIRC-07",
-                name: "Chord Properties",
-                trigger: "Equal chords or perpendicular-bisector relation.",
-                rule: "Equal chords subtend equal arcs/angles; perpendicular bisector passes through centre.",
-                chain: "Check equal chords → Compare arcs/angles → Solve with triangles",
-                exam_usage: "Common in radius/center location problems.",
-                pitfalls: "Confusing bisector with midpoints.",
-                micro_skills: "Chord equality detection."
-            },
-            {
-                id: "SOP-GEO-CIRC-08",
-                name: "Arc & Sector Calculations",
-                trigger: "Arc length, sector area, or angle in radians/degrees.",
-                rule: "Arc = θ/360 × 2πr; Area = θ/360 × πr².",
-                chain: "Identify angle → Convert units → Apply formulas",
-                exam_usage: "Medium/high difficulty problems involving scaling.",
-                pitfalls: "Wrong angle (using arc angle instead of centre angle).",
-                micro_skills: "Angle-position interpretation."
-            }
-        ],
-        // 7 Power Combinations
-        combinations: [
-            {
-                pc_id: "PC-CIRC-01",
-                title: "Diameter → Right-Angle Triangle Engine",
-                trigger: "Diameter + point on circumference.",
-                rule: "Angle = 90°.",
-                tools: ["SOP-GEO-CIRC-01", "SOP-ANG-M05"],
-                chain: "Detect diameter → Mark 90° → Use Pyth/Trig → Solve",
-                exam_usage: "Common in coordinate + circle hybrids.",
-                pitfalls: "Chord mistaken for diameter.",
-                micro_skills: "Diameter scanning.",
-                sop_links: ["SOP-GEO-CIRC-01", "SOP-GEO-PYTH-01", "SOP-ANG-M05"]
-            },
-            {
-                pc_id: "PC-CIRC-02",
-                title: "2x Centre-Circumference Engine",
-                trigger: "Two angles intercept same arc.",
-                rule: "Centre angle = 2 x circumference angle.",
-                tools: ["SOP-GEO-CIRC-02"],
-                chain: "Identify arc → Mark ratio → Solve via triangles",
-                exam_usage: "Vital when circles appear with polygons.",
-                pitfalls: "Arc confusion; wrong angle.",
-                micro_skills: "Arc matching.",
-                sop_links: ["SOP-GEO-CIRC-02"]
-            },
-            {
-                pc_id: "PC-CIRC-03",
-                title: "Same Segment → Equal Angle Engine",
-                trigger: "Angles stand on same arc.",
-                rule: "Angles in same segment are equal.",
-                tools: ["SOP-GEO-CIRC-03"],
-                chain: "Find arc → Equate → Substitute",
-                exam_usage: "Used in many exam angle webs.",
-                pitfalls: "Wrong arc selection.",
-                micro_skills: "Arc tracing.",
-                sop_links: ["SOP-GEO-CIRC-03"]
-            },
-            {
-                pc_id: "PC-CIRC-04",
-                title: "Cyclic Quadrilateral → 180° Engine",
-                trigger: "4 points concyclic.",
-                rule: "Opposite angles sum to 180°.",
-                tools: ["SOP-GEO-CIRC-04"],
-                chain: "Verify concyclic → Apply 180° rule → Solve",
-                exam_usage: "High-frequency proof pattern.",
-                pitfalls: "Using adjacent instead of opposite angle.",
-                micro_skills: "Concyclic detection.",
-                sop_links: ["SOP-GEO-CIRC-04"]
-            },
-            {
-                pc_id: "PC-CIRC-05",
-                title: "Tangent-Radius → Right-Angle Engine",
-                trigger: "Tangent touches circle.",
-                rule: "Tangent ⊥ radius.",
-                tools: ["SOP-GEO-CIRC-05", "SOP-GEO-PYTH-01"],
-                chain: "Spot tangent → Mark 90° → Use Pythagoras",
-                exam_usage: "Used in distance/coordinate geometry.",
-                pitfalls: "Mistaking secant for tangent.",
-                micro_skills: "Right-angle tagging.",
-                sop_links: ["SOP-GEO-CIRC-05", "SOP-GEO-PYTH-01"]
-            },
-            {
-                pc_id: "PC-CIRC-06",
-                title: "Alternate Segment → Equal Angle Engine",
-                trigger: "Tangent + chord pattern.",
-                rule: "tan-chord angle = opposite interior angle.",
-                tools: ["SOP-GEO-CIRC-06"],
-                chain: "Locate tangent → Match arc → Transfer angle",
-                exam_usage: "Top-3 most tested circle theorems.",
-                pitfalls: "Choosing wrong interior angle.",
-                micro_skills: "Chord-tangent matching.",
-                sop_links: ["SOP-GEO-CIRC-06"]
-            },
-            {
-                pc_id: "PC-CIRC-07",
-                title: "Chord → Centre / Angle Engine",
-                trigger: "Equal chords or perpendicular bisector.",
-                rule: "Equal chords subtend equal arcs/angles.",
-                tools: ["SOP-GEO-CIRC-07"],
-                chain: "Check chord marks → Compare angles → Solve",
-                exam_usage: "Used in locating centre/radius.",
-                pitfalls: "Mistaking midpoints.",
-                micro_skills: "Chord inspection.",
-                sop_links: ["SOP-GEO-CIRC-07"]
-            }
-        ]
-    },
-    coordinate: {
-        title: "Coordinate Geometry",
-        // 9 Engines
-        engines: [
-            {
-                engine_id: "COORD-ENG-01",
-                engine_name: "Distance Formula Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Computes distance between two points or supports geometric arguments requiring length comparison.",
-                sops: ["SOP-GEO-COORD-01", "SOP-GEO-PYTH-01"]
-            },
-            {
-                engine_id: "COORD-ENG-02",
-                engine_name: "Midpoint Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Finds midpoint of a line segment and supports geometry constructions and loci arguments.",
-                sops: ["SOP-GEO-COORD-02"]
-            },
-            {
-                engine_id: "COORD-ENG-03",
-                engine_name: "Gradient Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Computes gradient and compares slopes for horizontal, vertical, parallel, or perpendicular lines.",
-                sops: ["SOP-GEO-COORD-03"]
-            },
-            {
-                engine_id: "COORD-ENG-04",
-                engine_name: "Parallel / Perpendicular Line Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Uses gradient to identify or construct parallel and perpendicular lines through coordinate reasoning.",
-                sops: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-04"]
-            },
-            {
-                engine_id: "COORD-ENG-05",
-                engine_name: "Equation of Line Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Generates linear equation from point-gradient or two-point form for use in intersection problems.",
-                sops: ["SOP-GEO-COORD-05", "SOP-GEO-COORD-03"]
-            },
-            {
-                engine_id: "COORD-ENG-06",
-                engine_name: "Graphing Linear Equations Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Supports plotting and interpreting linear graphs from equations or coordinate data.",
-                sops: ["SOP-GEO-COORD-06"]
-            },
-            {
-                engine_id: "COORD-ENG-07",
-                engine_name: "Line Intersection Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Solves simultaneous equations or graph-line intersection problems using algebra or substitution.",
-                sops: ["SOP-GEO-COORD-07", "SOP-ALG-05"]
-            },
-            {
-                engine_id: "COORD-ENG-08",
-                engine_name: "Triangle Area Engine (Coordinate)",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Computes triangle area using coordinate geometry or determinant/shoelace formula.",
-                sops: ["SOP-GEO-COORD-08"]
-            },
-            {
-                engine_id: "COORD-ENG-09",
-                engine_name: "Section Formula Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Finds ratio-based division point on a line segment using internal or external section formulas.",
-                sops: ["SOP-GEO-COORD-09", "SOP-GEO-COORD-10"]
-            }
-        ],
-        sops: [], // Coordinate SOPs defined globally
-        // 9 Power Combinations
-        combinations: [
-            {
-                pc_id: "PC-COORD-01",
-                title: "Parallel → Equation → Intersection",
-                trigger: "Two lines with equal gradient appear.",
-                rule: "Use slope equality to confirm parallelism, then form equations.",
-                tools: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05", "SOP-GEO-COORD-07"],
-                chain: "Check gradient → Write line eqn → Solve intersection or distance",
-                exam_usage: "Common in coordinate locus and linear-graph problems.",
-                pitfalls: "Using wrong form of equation.",
-                micro_skills: "Slope scanning; equation assembly.",
-                sop_links: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05", "SOP-GEO-COORD-07"]
-            },
-            {
-                pc_id: "PC-COORD-02",
-                title: "Perpendicular → Gradient Product → Line Equation",
-                trigger: "Right angle or perpendicular symbol in coordinate system.",
-                rule: "m1 * m2 = -1.",
-                tools: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05"],
-                chain: "Identify slopes → Compute perpendicular slope → Build line eqn",
-                exam_usage: "Used in geometry proofs on coordinate plane.",
-                pitfalls: "Confusing negative reciprocal.",
-                micro_skills: "Gradient inversion.",
-                sop_links: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05"]
-            },
-            {
-                pc_id: "PC-COORD-03",
-                title: "Distance → Midpoint → Gradient",
-                trigger: "Line segment with need to analyze position.",
-                rule: "Use the three coordinate primitives for structural analysis.",
-                tools: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03"],
-                chain: "Compute distance → Find midpoint → Check slope",
-                exam_usage: "Used in classification of triangles and quadrilaterals.",
-                pitfalls: "Mixing x and y components.",
-                micro_skills: "Vector subtraction.",
-                sop_links: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03"]
-            },
-            {
-                pc_id: "PC-COORD-04",
-                title: "Two Points → Gradient → Line Equation",
-                trigger: "Given coordinates of two points.",
-                rule: "Compute gradient then substitute into y=mx+c.",
-                tools: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05"],
-                chain: "Calculate slope → Form equation → Simplify",
-                exam_usage: "Standard linear graph procedure.",
-                pitfalls: "Wrong substitution of points.",
-                micro_skills: "m = Ay / Ax recognition.",
-                sop_links: ["SOP-GEO-COORD-03", "SOP-GEO-COORD-05"]
-            },
-            {
-                pc_id: "PC-COORD-05",
-                title: "Line Equation → Intersection",
-                trigger: "Two lines given in algebraic form.",
-                rule: "Solve simultaneous equations.",
-                tools: ["SOP-GEO-COORD-07", "SOP-ALG-05"],
-                chain: "Align equations → Substitution/elimination → Solve point",
-                exam_usage: "Used in function and graph interpretation problems.",
-                pitfalls: "Incorrect elimination.",
-                micro_skills: "Equation alignment.",
-                sop_links: ["SOP-GEO-COORD-07", "SOP-ALG-05"]
-            },
-            {
-                pc_id: "PC-COORD-06",
-                title: "Triangle Coordinates → Area",
-                trigger: "Triangle defined by 3 coordinate vertices.",
-                rule: "Use coordinate area formula or determinant.",
-                tools: ["SOP-GEO-COORD-08"],
-                chain: "Extract coordinates → Apply determinant → Simplify",
-                exam_usage: "Medium-difficulty exam question.",
-                pitfalls: "Wrong order of vertices.",
-                micro_skills: "Shoelace pattern recognition.",
-                sop_links: ["SOP-GEO-COORD-08"]
-            },
-            {
-                pc_id: "PC-COORD-07",
-                title: "Midpoint + Ratio → Section Formula",
-                trigger: "Need to divide segment internally or externally.",
-                rule: "Use section formula to compute division point.",
-                tools: ["SOP-GEO-COORD-02", "SOP-GEO-COORD-09", "SOP-GEO-COORD-10"],
-                chain: "Identify ratio → Apply section formula → Verify position",
-                exam_usage: "Often part of locus/gradient tasks.",
-                pitfalls: "Mixing internal vs external division.",
-                micro_skills: "Ratio normalization.",
-                sop_links: ["SOP-GEO-COORD-02", "SOP-GEO-COORD-09", "SOP-GEO-COORD-10"]
-            },
-            {
-                pc_id: "PC-COORD-08",
-                title: "Coordinate Geometry → Shape Classification",
-                trigger: "Quadrilateral/triangle classification problem.",
-                rule: "Use slope, distance, midpoint tests.",
-                tools: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03"],
-                chain: "Check lengths → Check slopes → Check midpoints",
-                exam_usage: "Used to justify parallelogram/rectangle/square.",
-                pitfalls: "Using only one test (e.g., slope only).",
-                micro_skills: "Parallel/perpendicular verification.",
-                sop_links: ["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03"]
-            },
-            {
-                pc_id: "PC-COORD-09",
-                title: "Graph → Interpretation → Solve Unknowns",
-                trigger: "Graph contains intercepts, gradient, or intersections.",
-                rule: "Extract features directly from plotted graph.",
-                tools: ["SOP-GEO-COORD-06", "SOP-GEO-COORD-07"],
-                chain: "Read gradient → Read intercepts → Solve intersection",
-                exam_usage: "Common in functions and linear model questions.",
-                pitfalls: "Misreading negative slopes.",
-                micro_skills: "Intercept scanning.",
-                sop_links: ["SOP-GEO-COORD-06", "SOP-GEO-COORD-07"]
-            }
-        ]
-    },
-    mixed: {
-        title: "Mixed / Trig / Mensuration",
-        // 7 Engines
-        engines: [
-            {
-                engine_id: "MIX-ENG-01",
-                engine_name: "SOHCAHTOA Height-Distance Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Applies right-triangle trigonometry to height, distance, and angle problems.",
-                sops: ["SOP-TRIG-01", "SOP-GEO-PYTH-01"]
-            },
-            {
-                engine_id: "MIX-ENG-02",
-                engine_name: "Sine Rule Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Solves non-right triangles using Sine Rule relations across opposite sides and angles.",
-                sops: ["SOP-TRIG-02"]
-            },
-            {
-                engine_id: "MIX-ENG-03",
-                engine_name: "Cosine Rule Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Solves triangles using Cosine Rule for missing sides or angles.",
-                sops: ["SOP-TRIG-03"]
-            },
-            {
-                engine_id: "MIX-ENG-04",
-                engine_name: "Elevation / Depression Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Recognizes upward/downward viewing angles and sets up right triangle relations.",
-                sops: ["SOP-TRIG-04", "SOP-TRIG-01"]
-            },
-            {
-                engine_id: "MIX-ENG-05",
-                engine_name: "Sector & Segment Mensuration Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Applies arc length and sector/segment area formulas for circle mensuration.",
-                sops: ["SOP-GEO-CIRC-08", "SOP-MEN-04"]
-            },
-            {
-                engine_id: "MIX-ENG-06",
-                engine_name: "Composite Solids Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Breaks down composite 3D solids into primitive solids to compute volume and surface area.",
-                sops: ["SOP-MEN-03"]
-            },
-            {
-                engine_id: "MIX-ENG-07",
-                engine_name: "2D/3D Trigonometry Context Engine",
-                layer: "Calculation Tool (Layer 2)",
-                description: "Handles complex trigonometric reasoning in 2D/3D settings including bearings and height-distance.",
-                sops: ["SOP-L2-TRIG-01", "SOP-TRIG-01", "SOP-TRIG-03", "SOP-GEO-BEAR-01"]
-            }
-        ],
-        sops: [], // Mixed/Trig SOPs defined globally
-        // 10 Power Combinations
-        combinations: [
-            {
-                pc_id: "PC-MIX-01",
-                title: "Right Triangle → SOHCAHTOA Engine",
-                trigger: "Presence of right angle or implied right triangle.",
-                rule: "Use SOHCAHTOA to find missing sides/angles.",
-                tools: ["SOP-TRIG-01", "SOP-GEO-PYTH-01"],
-                chain: "Mark 90° → Identify ratios → Solve",
-                exam_usage: "Dominant in height-distance and mensuration hybrids.",
-                pitfalls: "Incorrect opposite/adjacent identification.",
-                micro_skills: "Angle-side tagging.",
-                sop_links: ["SOP-TRIG-01", "SOP-GEO-PYTH-01"]
-            },
-            {
-                pc_id: "PC-MIX-02",
-                title: "Ambiguous Triangle → Sine Rule Engine",
-                trigger: "Two angles + one side or two sides + non-included angle.",
-                rule: "Apply Sine Rule: a/sinA = b/sinB.",
-                tools: ["SOP-TRIG-02"],
-                chain: "Identify ASA / AAS / SSA → Apply ratio",
-                exam_usage: "Frequent in bearings + non-right triangle questions.",
-                pitfalls: "Missing ambiguous case (SSA).",
-                micro_skills: "Opposite-pair scanning.",
-                sop_links: ["SOP-TRIG-02"]
-            },
-            {
-                pc_id: "PC-MIX-03",
-                title: "Enclosed Triangle → Cosine Rule Engine",
-                trigger: "Three sides given or included angle given.",
-                rule: "Apply Cosine Rule: c² = a² + b² - 2ab cosC.",
-                tools: ["SOP-TRIG-03"],
-                chain: "Identify SSS / SAS → Apply cosine formula",
-                exam_usage: "Common in toughest mensuration + trig combos.",
-                pitfalls: "Applying wrong included angle.",
-                micro_skills: "Included-angle detection.",
-                sop_links: ["SOP-TRIG-03"]
-            },
-            {
-                pc_id: "PC-MIX-04",
-                title: "Elevation / Depression → Right Triangle Setup",
-                trigger: "Person looking up/down.",
-                rule: "Convert elevation/depression into internal triangle angle.",
-                tools: ["SOP-TRIG-04", "SOP-TRIG-01"],
-                chain: "Determine reference line → Mark angle → Solve",
-                exam_usage: "Height-distance problems with multi-step geometry.",
-                pitfalls: "Wrong reference (horizontal vs slanted).",
-                micro_skills: "Diagram angle placement.",
-                sop_links: ["SOP-TRIG-04", "SOP-TRIG-01"]
-            },
-            {
-                pc_id: "PC-MIX-05",
-                title: "Sector Angle → Arc/Area Engine",
-                trigger: "Arc length, area, or angle in degrees/radians.",
-                rule: "Sector formulas: L = θ/360·2πr; A = θ/360·πr².",
-                tools: ["SOP-GEO-CIRC-08"],
-                chain: "Identify centre angle → Compute arc/sector → Solve",
-                exam_usage: "Pure mensuration and mixed circle problems.",
-                pitfalls: "Using wrong angle measure.",
-                micro_skills: "Angle-type identification.",
-                sop_links: ["SOP-GEO-CIRC-08"]
-            },
-            {
-                pc_id: "PC-MIX-06",
-                title: "Composite Solids → Decompose → Compute",
-                trigger: "Solid composed of multiple primitive shapes.",
-                rule: "Split into cylinder/cone/cuboid/sphere and compute separately.",
-                tools: ["SOP-MEN-03"],
-                chain: "Identify primitive solids → Compute parts → Sum",
-                exam_usage: "High-level Paper 2 mensuration problems.",
-                pitfalls: "Forgetting surface area sharing.",
-                micro_skills: "Solid decomposition.",
-                sop_links: ["SOP-MEN-03"]
-            },
-            {
-                pc_id: "PC-MIX-07",
-                title: "Triangle Height → Area Method",
-                trigger: "Triangle with height not directly given.",
-                rule: "Use ½ab sin C for area or to extract height.",
-                tools: ["SOP-TRIG-01", "SOP-TRIG-02"],
-                chain: "Identify two sides + angle → Compute area → Derive height",
-                exam_usage: "Mensuration + trig hybrids.",
-                pitfalls: "Using wrong included angle.",
-                micro_skills: "Height extraction.",
-                sop_links: ["SOP-TRIG-01", "SOP-TRIG-02"]
-            },
-            {
-                pc_id: "PC-MIX-08",
-                title: "Bearings → Triangle Construction → Solve",
-                trigger: "3-figure bearings given.",
-                rule: "Convert bearings into interior triangle angles.",
-                tools: ["SOP-GEO-BEAR-01", "SOP-TRIG-01"],
-                chain: "Convert bearings → Build triangle → Apply trig",
-                exam_usage: "Common in Paper 2 bearings problems.",
-                pitfalls: "Misreading clockwise convention.",
-                micro_skills: "Compass interpretation.",
-                sop_links: ["SOP-GEO-BEAR-01", "SOP-TRIG-01"]
-            },
-            {
-                pc_id: "PC-MIX-09",
-                title: "3D Triangle → Plane Projection → Solve",
-                trigger: "Slanted heights or distances in 3D geometry.",
-                rule: "Project onto horizontal/vertical plane for solvable triangles.",
-                tools: ["SOP-L2-TRIG-01"],
-                chain: "Identify plane → Draw projection → Apply trig",
-                exam_usage: "Top difficulty in 3D trigonometry.",
-                pitfalls: "Wrong projection plane.",
-                micro_skills: "Plane recognition.",
-                sop_links: ["SOP-L2-TRIG-01"]
-            },
-            {
-                pc_id: "PC-MIX-10",
-                title: "Mensuration + Coordinate Hybrid Engine",
-                trigger: "2D shapes defined with coordinates requiring area/perimeter.",
-                rule: "Use coordinate area + mensuration formulas together.",
-                tools: ["SOP-GEO-COORD-08", "SOP-MEN-01"],
-                chain: "Compute coordinate area → Add curved/linear segments → Solve",
-                exam_usage: "Mixed topic exam final questions.",
-                pitfalls: "Separating curved vs straight segments incorrectly.",
-                micro_skills: "Shape decomposition.",
-                sop_links: ["SOP-GEO-COORD-08", "SOP-MEN-01"]
-            }
-        ]
+import { ARCHETYPES_DATA } from './archetypes-data.js';
+import { SOPS_DATA } from './sops-data.js';
+import { ENGINES_DATA } from './engines-data.js';
+
+// ==========================================
+// 1. GLOBAL HELPERS
+// ==========================================
+function getList(obj, ...keys) {
+    if (!obj) return [];
+    for (const key of keys) {
+        if (obj[key] && Array.isArray(obj[key]) && obj[key].length > 0) return obj[key];
     }
+    return [];
+}
+
+function renderRichTextItem(item) {
+    if (!item) return '';
+    if (typeof item === 'string') return item;
+    if (typeof item === 'object') return item.text || JSON.stringify(item);
+    return String(item);
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+// ==========================================
+// 2. CONFIG & ICONS
+// ==========================================
+const ICONS = {
+    'D1': '🔢', 'D2': '📐', 'D3': '📊', 'L2L3': '🧩', 'Topic': '📑',
+    plus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none;"><path d="M12 5V19M5 12H19"/></svg>`,
+    minus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none;"><path d="M5 12H19"/></svg>`,
+    branch: `<svg class="icon-sm" style="color: var(--accent)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v18M6 11h13"/></svg>`,
+    eye: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+    tool: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+    brain: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>`,
+    chevronDown: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="pointer-events:none;"><polyline points="6 9 12 15 18 9"/></svg>`,
+    Topic: '📑'
 };
+
+const GEO_LOGIC_MAP = {
+    layer1: { title: "Layer 1 (Eye): Visual Triggers 👁️", desc: "Scan -> Match: Identify visual features, instantly recall theorems", color: "#06b6d4", items: new Set(["SOP-ANG-M00", "SOP-ANG-M01", "SOP-ANG-M02", "SOP-ANG-M03", "SOP-ANG-M04", "SOP-ANG-M05", "SOP-ANG-M06", "SOP-ANG-M07", "SOP-ANG-M08", "SOP-ANG-M09", "SOP-ANG-M10", "SOP-ANG-M11", "SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-03", "SOP-GEO-CIRC-04", "SOP-GEO-CIRC-05", "SOP-GEO-CIRC-06", "SOP-GEO-CIRC-07", "SOP-GEO-CONG-01"]) },
+    layer2: { title: "Layer 2 (Hand): Calculation Tools 🛠️", desc: "Execute: Establish relationships, solve using formulas", color: "#f59e0b", items: new Set(["SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03", "SOP-GEO-COORD-04", "SOP-GEO-COORD-05", "SOP-GEO-COORD-06", "SOP-GEO-COORD-07", "SOP-GEO-COORD-08", "SOP-GEO-COORD-09", "SOP-GEO-COORD-10", "SOP-TRIG-01", "SOP-TRIG-02", "SOP-TRIG-03", "SOP-TRIG-04", "SOP-L2-TRIG-01", "SOP-MEN-01", "SOP-MEN-02", "SOP-MEN-03", "SOP-MEN-04", "SOP-GEO-SIM-02", "SOP-GEO-SIM-03", "SOP-GEO-SIM-04", "SOP-GEO-CIRC-08", "SOP-GEO-PYTH-01", "SOP-GEO-PYTH-02", "SOP-GEO-CONS-01", "SOP-GEO-CONS-02", "SOP-GEO-CONS-03", "SOP-GEO-CONS-04", "SOP-GEO-CONS-05", "SOP-GEO-CONS-06", "SOP-GEO-BEAR-01", "SOP-GEO-BEAR-02", "SOP-GEO-BEAR-03", "SOP-GEO-TRANS-01", "SOP-GEO-TRANS-02", "SOP-GEO-TRANS-03", "SOP-GEO-TRANS-04", "SOP-GEO-TRANS-05"]) },
+    layer3: { title: "Layer 3 (Brain): Reasoning & Proof 🗣️", desc: "Format & Logic: Write rigorous proof steps", color: "#8b5cf6", items: new Set(["SOP-GEO-SIM-01", "SOP-GEO-CONG-02"]) }
+};
+
+const DOMAIN_TITLES = {
+    'angle': 'ANGLE ENGINES',
+    'circle': 'CIRCLE ENGINES',
+    'coordinate': 'COORDINATE ENGINES',
+    'mixed': 'MIXED / MENSURATION / TRIG / OTHERS'
+};
+
+let allCategories = [];
+let archetypeMap = new Map();
+let engineSopMap = new Map(); 
+let genericSopMap = new Map();
+
+// ==========================================
+// 3. DATA PROCESSING
+// ==========================================
+function processData() {
+    // 1. Index Generic SOPs
+    genericSopMap.clear();
+    if(SOPS_DATA && Array.isArray(SOPS_DATA)) {
+        SOPS_DATA.forEach(sop => { if (sop && sop.id) genericSopMap.set(sop.id, sop); });
+    }
+
+    // 2. Index Engine SOPs
+    engineSopMap.clear();
+    if (ENGINES_DATA) {
+        Object.values(ENGINES_DATA).forEach(domain => {
+            if (domain?.sops && Array.isArray(domain.sops)) {
+                domain.sops.forEach(sop => { if (sop && sop.id) engineSopMap.set(sop.id, sop); });
+            }
+        });
+    }
+
+    // 3. Process Archetypes
+    if (!ARCHETYPES_DATA) return;
+    const allArchetypes = JSON.parse(JSON.stringify(ARCHETYPES_DATA)).map(a => ({...a, children: [] }));
+    archetypeMap.clear();
+    allArchetypes.forEach(a => { if(a.id) archetypeMap.set(a.id, a); });
+
+    let topLevelArchetypes = [];
+    allArchetypes.forEach(a => {
+        if (a.parent) {
+            const parent = archetypeMap.get(a.parent);
+            if (parent) parent.children.push(a); else topLevelArchetypes.push(a);
+        } else {
+            topLevelArchetypes.push(a);
+        }
+    });
+    
+    allCategories = [
+        { id: 'l1-d1', title: 'I. L1 - Number & Algebra', icon: ICONS['D1'], archetypes: topLevelArchetypes.filter(a => a.domain.includes('D1')) },
+        { id: 'l1-d2', title: 'II. L1 - Geometry & Measurement', icon: ICONS['D2'], archetypes: topLevelArchetypes.filter(a => a.domain.includes('D2')) },
+        { id: 'l1-d3', title: 'III. L1 - Statistics & Probability', icon: ICONS['D3'], archetypes: topLevelArchetypes.filter(a => a.domain.includes('D3')) },
+        { id: 'l2-l3', title: 'IV. L2 & L3 - Integrated Models', icon: ICONS['L2L3'], archetypes: topLevelArchetypes.filter(a => a.level === 'L2' || a.level === 'L3') }
+    ];
+}
+
+// === HYBRID DATA ACCESSOR ===
+function getMixedSopData(id) {
+    if (!id) return null;
+    const cleanId = id.trim();
+    const engineData = engineSopMap.get(cleanId);
+    const genericData = genericSopMap.get(cleanId);
+    
+    let result = {
+        id: cleanId,
+        name: genericData?.name || engineData?.name || cleanId,
+        description: genericData?.description || engineData?.description || "-",
+    };
+
+    result.trigger = engineData?.trigger || genericData?.description || "-";
+    result.rule = engineData?.rule || (genericData?.steps ? "See Procedure" : "-");
+    
+    if (engineData?.chain) {
+        result.chain = engineData.chain;
+    } else if (genericData?.steps && genericData.steps.length > 0) {
+        result.chain = genericData.steps.join(" → ");
+    } else {
+        result.chain = "-";
+    }
+
+    result.exam_usage = engineData?.exam_usage || "-";
+    result.micro_skills = engineData?.micro_skills || "-";
+    
+    result.steps = genericData?.steps || [];
+    result.pitfalls_summary = engineData?.pitfalls || null;
+    result.pitfalls_list = genericData?.pitfalls || []; 
+    result.pro_tips = genericData?.pro_tips || genericData?.proTips || [];
+
+    return result;
+}
+
+// ==========================================
+// 5. STYLE INJECTION
+// ==========================================
+function injectStyles() {
+    const styleId = 'geo-framework-styles';
+    if (document.getElementById(styleId)) return;
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.innerHTML = `
+        /* --- UTILS --- */
+        .sop-section { margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+        .hidden { display: none !important; }
+        .text-accent { color: var(--accent); }
+        
+        /* --- LIST STYLES --- */
+        .sop-steps-list { list-style: decimal inside; color: #cbd5e1; font-size: 0.9em; padding-left: 0.5rem; }
+        .sop-steps-list li { margin-bottom: 0.5rem; line-height: 1.5; }
+        
+        /* --- BADGES & ALERTS --- */
+        .pitfall-item { background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 0.75rem; margin-bottom: 0.5rem; display: flex; gap: 0.75rem; border-radius: 4px; color: #fca5a5; font-size: 0.85em; align-items: flex-start; }
+        .pro-tip-item { background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.5rem; display: flex; gap: 0.75rem; border-radius: 4px; color: #86efac; font-size: 0.85em; align-items: flex-start; }
+        .pitfall-badge { background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+        .pro-tip-badge { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; flex-shrink: 0; }
+
+        /* --- MODULE A: LOGIC FRAMEWORK --- */
+        .geo-framework-section { padding: 4rem 2rem; max-width: 1600px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4rem; }
+        .geo-header-row { display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 2rem; }
+        .geo-framework-title { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        .geo-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+        .geo-layer-card { background: rgba(255,255,255,0.03); border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: all 0.3s ease; }
+        .geo-layer-card.expanded { border-color: var(--layer-color); background: rgba(255,255,255,0.05); }
+        .geo-layer-header { padding: 1.5rem 2rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; }
+        .geo-layer-title-group { display: flex; align-items: center; gap: 1.5rem; }
+        .geo-layer-icon { font-size: 2rem; color: var(--layer-color); }
+        .geo-layer-title { font-size: 1.25rem; font-weight: 700; color: #fff; }
+        .geo-layer-desc { font-size: 0.95rem; opacity: 0.7; color: #cbd5e1; }
+        .geo-count-badge { background: rgba(0,0,0,0.3); color: var(--layer-color); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--layer-color); }
+        .geo-layer-body { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; opacity: 0; }
+        .geo-layer-card.expanded .geo-layer-body { max-height: 8000px; opacity: 1; padding: 0 2rem 2rem 2rem; }
+        .geo-sop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .mini-sop { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 0.75rem; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+        .mini-sop:hover { border-color: rgba(255,255,255,0.2); }
+        .mini-sop.active { border-color: var(--layer-color); background: rgba(255,255,255,0.05); }
+        .mini-sop-detail { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; font-size: 0.9rem; color: #94a3b8; padding-top: 0.5rem; }
+        .mini-sop.active .mini-sop-detail { max-height: 800px; }
+        .layer-visual { --layer-color: #06b6d4; } .layer-calc { --layer-color: #f59e0b; } .layer-proof { --layer-color: #8b5cf6; }
+
+        /* --- MODULE B: ENGINES --- */
+        .engines-section { padding: 0 2rem 6rem 2rem; max-width: 1600px; margin: 0 auto; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4rem; }
+        .domain-block { margin-bottom: 2rem; background: rgba(255,255,255,0.02); border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; transition: all 0.3s ease; }
+        .domain-block.expanded { background: rgba(255,255,255,0.01); border-color: var(--accent); }
+        .domain-header { display: flex; align-items: center; justify-content: space-between; padding: 2rem; cursor: pointer; background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, transparent 100%); }
+        .domain-header:hover { background: rgba(255,255,255,0.04); }
+        .domain-title-group { display: flex; align-items: center; gap: 1.5rem; }
+        .domain-title { font-size: 1.75rem; font-weight: 800; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
+        .domain-pill { padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; border: 1px solid currentColor; color: var(--accent); }
+        .domain-content { max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+        .domain-block.expanded .domain-content { max-height: 12000px; opacity: 1; padding: 0 2rem 2rem 2rem; }
+        
+        .grid-section-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 3rem 0 1.5rem 0; display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .grid-section-title::before { content: ''; width: 24px; height: 4px; background: currentColor; border-radius: 2px; }
+        
+        .engines-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        
+        /* Engine Card Updates for spacing */
+        .engine-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8)); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1.5rem; position: relative; transition: all 0.3s ease; display: flex; flex-direction: column; }
+        .engine-card:hover { border-color: var(--accent); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); transform: translateY(-2px); }
+        .engine-card.expanded { grid-column: span 1; background: rgba(30, 41, 59, 1); border-color: var(--accent); z-index: 10; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        
+        .engine-header { margin-bottom: 1rem; display: flex; flex-direction: column; }
+        /* Fix: Block display and margin for separation */
+        .engine-id-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: rgba(255,255,255,0.05); padding: 3px 8px; border-radius: 6px; color: var(--accent); border: 1px solid rgba(255,255,255,0.1); display: inline-block; margin-bottom: 0.5rem; width: fit-content; }
+        .engine-name { font-size: 1.25rem; font-weight: 800; color: #f1f5f9; margin-bottom: 0.5rem; line-height: 1.3; display: block; }
+        
+        .engine-desc { font-size: 0.95rem; color: #cbd5e1; line-height: 1.6; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1rem; }
+        
+        .engine-sops-preview { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        /* Fix: Margin for spacing backup */
+        .sop-pill { font-size: 0.75rem; padding: 4px 10px; border-radius: 6px; background: rgba(99, 102, 241, 0.1); color: var(--primary); border: 1px solid rgba(99, 102, 241, 0.2); font-family: monospace; font-weight: 600; margin-right: 4px; margin-bottom: 4px; }
+        
+        .toggle-sops-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 0.75rem; border-radius: 0.5rem; cursor: pointer; width: 100%; text-align: center; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .toggle-sops-btn:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: var(--accent); }
+        .toggle-sops-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        
+        .nested-sops-container { display: none; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.15); animation: slideDown 0.3s ease-out; }
+        .nested-sops-container.visible { display: block; }
+        
+        .embedded-sop-card { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-left: 3px solid var(--primary); border-radius: 0.5rem; margin-bottom: 1rem; padding: 1rem; }
+        .embedded-sop-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; }
+        .embedded-sop-id { font-family: monospace; color: var(--primary); font-size: 0.8rem; font-weight: 700; }
+        .embedded-sop-name { color: #fff; font-weight: 600; font-size: 0.9rem; }
+        
+        .sop-fields-grid { display: grid; gap: 0.75rem; }
+        .sop-field { display: flex; flex-direction: column; gap: 0.25rem; }
+        .sop-field-label { font-size: 0.7rem; text-transform: uppercase; color: #64748b; font-weight: 700; }
+        .sop-field-val { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; }
+        .sop-field-val.code { font-family: monospace; color: #fca5a5; }
+        
+        .pc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem; }
+        .pc-card { background: linear-gradient(135deg, rgba(244, 63, 94, 0.05), rgba(15, 23, 42, 0.05)); border: 1px solid rgba(244, 63, 94, 0.2); border-radius: 1rem; padding: 1.5rem; position: relative; display: flex; flex-direction: column; gap: 1rem; }
+        .pc-card::before { content: 'TACTIC'; position: absolute; top: 1rem; right: 1rem; font-size: 0.65rem; background: rgba(244, 63, 94, 0.1); color: #f43f5e; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(244, 63, 94, 0.2); font-weight: 700; }
+        .pc-id { font-family: monospace; font-size: 0.75rem; color: #64748b; display: block; margin-bottom: 0.25rem; }
+        .pc-title { font-size: 1.2rem; font-weight: 700; color: #fff; margin: 0; line-height: 1.3; padding-right: 80px; }
+        .pc-section-box { background: rgba(0,0,0,0.2); border-radius: 0.5rem; padding: 0.75rem; border: 1px solid rgba(255,255,255,0.05); }
+        .pc-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 0.4rem; display: block; }
+        .pc-val { font-size: 0.9rem; color: #e2e8f0; line-height: 1.5; }
+        .pc-chain { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; color: #fca5a5; font-family: monospace; font-size: 0.85rem; }
+        .chain-arrow { color: #64748b; }
+        .pc-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; }
+        .pc-detail-col { display: flex; flex-direction: column; gap: 0.75rem; }
+        .pc-field strong { display: block; color: #64748b; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 0.25rem; }
+        .pc-field span { color: #cbd5e1; }
+        .pc-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        /* Fix: Margin for spacing backup */
+        .pc-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); font-family: monospace; margin-right: 4px; margin-bottom: 4px; }
+        .pc-tag.tool { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+        .pc-tag.link { background: rgba(6, 182, 212, 0.1); color: #06b6d4; border-color: rgba(6, 182, 212, 0.2); }
+        
+        .expand-indicator { color: var(--accent); transition: transform 0.3s ease; }
+        .domain-block.expanded .expand-indicator { transform: rotate(180deg); }
+
+        /* Archetype Card Styles */
+        .archetype-card-wrapper { }
+        .archetype-card { background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        .archetype-card:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04)); border-color: var(--primary); transform: translateX(5px); }
+        .archetype-card.level-1 { border-left: 4px solid #10b981; }
+        .archetype-card.level-2 { border-left: 4px solid #f59e0b; }
+        .archetype-card.level-3 { border-left: 4px solid #ef4444; }
+        .archetype-title { font-size: 1.125rem; font-weight: 600; color: #f1f5f9; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .archetype-name { display: flex; align-items: center; gap: 0.75rem; }
+        .archetype-id { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #94a3b8; background: #1e293b; padding: 0.1rem 0.5rem; border-radius: 0.375rem; border: 1px solid rgba(255,255,255,0.1); margin-left: 0.25rem; }
+        .level-badge { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 0.25rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .archetype-expand-indicator { transition: transform 0.3s ease; color: var(--accent); flex-shrink: 0; }
+        .archetype-details-container { padding: 1rem 1rem 1rem 2.5rem; display: none; background: #1e293b; border-top: 1px solid rgba(255,255,255,0.1); margin-top: -1rem; padding-top: 2rem; border-radius: 0 0 1rem 1rem; }
+        .archetype-card.is-parent.expanded + .archetype-details-container, .archetype-card.is-standalone.expanded + .archetype-details-container { display: block; }
+        .archetype-card.is-parent.expanded, .archetype-card.is-standalone.expanded { border-radius: 1rem 1rem 0 0; }
+        .archetype-child-list-container { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
+        .archetype-child-card { background: rgba(255, 255, 255, 0.02); border-left-width: 2px; margin-top: 0; }
+        .branches-overview { margin-bottom: 24px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 4px solid var(--accent); }
+    `;
+    document.head.appendChild(style);
+}
+
+// ==========================================
+// 6. RENDERERS: FIGURE 1 (ARCHETYPES)
+// ==========================================
+function renderArchetypeCard(archetype) { 
+    const level = archetype.level || 'L?';
+    const levelClass = `level-${level.toLowerCase().replace('l', '')}`;
+    const hasChildren = archetype.children && archetype.children.length > 0;
+    return `<div class="archetype-card-wrapper"><div class="archetype-card ${levelClass} ${hasChildren?'is-parent':'is-standalone'}" id="arch-${archetype.id}" data-name="${(archetype.name||'').toLowerCase()}" data-id="${(archetype.id||'').toLowerCase()}"><div class="archetype-title"><span class="level-badge">${level}</span><span class="archetype-name">${archetype.name} ${hasChildren?ICONS.branch:''}</span><span class="archetype-id">${archetype.id}</span>${hasChildren?`<span class="branch-count-badge">${archetype.children.length} sub-models</span>`:''}</div><div class="archetype-expand-indicator">${ICONS.plus}</div></div><div class="archetype-details-container" style="display:none;">${renderInPlaceContent(archetype, hasChildren)}</div></div>`;
+}
+
+function renderInPlaceContent(archetype, hasChildren) {
+    let html = `<div class="branches-overview"><p>${archetype.description || 'No description available.'}</p></div>`;
+    
+    // 1. Linked SOPs (Required & Support)
+    html += renderSopDetails(archetype);
+
+    // 2. Specifics (MicroSkills, Pitfalls)
+    html += renderArchetypeSpecifics(archetype);
+    
+    // 3. Children (Sub-models)
+    if (hasChildren) {
+        html += `<h4 class="modal-sub-branch-title">Sub-Models</h4>`;
+        html += `<div class="archetype-child-list-container">`;
+        html += archetype.children.map(child => `
+            <div class="archetype-child-card archetype-card level-${child.level.toLowerCase().replace('l','')}"
+                 onclick="showModalForArchetype('${child.id}'); event.stopPropagation();">
+                <div class="archetype-title">
+                    <span class="branch-prefix">${ICONS.Topic}</span>
+                    <span class="level-badge">${child.level}</span>
+                    <span class="archetype-name">${child.name}</span>
+                    <span class="archetype-id">${child.id}</span>
+                </div>
+            </div>
+        `).join('');
+        html += `</div>`;
+    }
+    return html;
+}
+
+function renderSopDetails(archetype) {
+    let html = '';
+    const required = getList(archetype, 'requiredSOPs');
+    if (required.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Required SOPs</h4>`;
+        required.forEach(sopId => html += renderSingleSopCard(sopId));
+    }
+    const support = getList(archetype, 'supportSOPs');
+    if (support.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Support SOPs</h4>`;
+        support.forEach(sopId => html += renderSingleSopCard(sopId));
+    }
+    return html;
+}
+
+function renderSingleSopCard(sopId) {
+    // Reuse the hybrid data accessor to get Pro Tips/Pitfalls even for Archetypes
+    const sop = getMixedSopData(sopId); 
+    
+    // Render Steps
+    let content = `<ul class="sop-steps-list">
+        ${sop.steps && sop.steps.length > 0 ? sop.steps.map(s => `<li>${s}</li>`).join('') : '<li>Refer to Engine Module for specific chain.</li>'}
+    </ul>`;
+
+    // Add Pitfalls (Rich Array) - FIXED [object Object] by extracting text
+    if (sop.pitfalls_list && sop.pitfalls_list.length > 0) {
+        content += `<div style="margin-top:1rem;">${sop.pitfalls_list.map(p => {
+            const text = renderRichTextItem(p);
+            const type = typeof p === 'object' && p.type ? p.type : 'Error';
+            return `<div class="pitfall-item"><span class="pitfall-badge">${type}</span><span>${text}</span></div>`;
+        }).join('')}</div>`;
+    }
+
+    // Add Pro Tips
+    if (sop.pro_tips && sop.pro_tips.length > 0) {
+        content += `<div style="margin-top:0.5rem;">${sop.pro_tips.map(t => {
+            const text = renderRichTextItem(t);
+            return `<div class="pro-tip-item"><span class="pro-tip-badge">Pro Tip</span><span>${text}</span></div>`;
+        }).join('')}</div>`;
+    }
+
+    return `
+      <div class="sop-section">
+        <p class="sop-goal"><strong>${sop.name}</strong><br>${sop.description || ''}</p>
+        ${content}
+      </div>`;
+}
+
+function renderArchetypeSpecifics(archetype) {
+    let html = '';
+    const microSkills = getList(archetype, 'microSkills');
+    const pitfalls = getList(archetype, 'pitfalls');
+    const tips = getList(archetype, 'proTips');
+
+    if (microSkills.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Micro-Skills & Competencies</h4>`;
+        html += `<div class="sop-section" style="border-left: 3px solid var(--accent); margin-bottom: 1rem;">
+            <ul style="list-style: disc; padding-left: 1.5rem; color: #e2e8f0; margin: 0;">
+                ${microSkills.map(m => `<li style="margin-bottom:0.5rem;">${renderRichTextItem(m)}</li>`).join('')}
+            </ul>
+        </div>`;
+    }
+    if (pitfalls.length > 0) {
+        html += `<div style="margin-top: 1rem;">
+            ${pitfalls.map(p => {
+                const text = renderRichTextItem(p);
+                return `<div class="pitfall-item"><span class="pitfall-badge">Error</span><span>${text}</span></div>`;
+            }).join('')}
+        </div>`;
+    }
+    if (tips.length > 0) {
+        html += `<div style="margin-top: 0.5rem;">
+            ${tips.map(t => {
+                const text = renderRichTextItem(t);
+                return `<div class="pro-tip-item"><span class="pro-tip-badge">Tip</span><span>${text}</span></div>`;
+            }).join('')}
+        </div>`;
+    }
+    return html;
+}
+
+// ==========================================
+// 7. RENDERER: MODULE A - GEO LOGIC FRAMEWORK (UPDATED: FULL DATA)
+// ==========================================
+function getSopsForLayer(layerType) {
+    const layerConfig = GEO_LOGIC_MAP[layerType];
+    if (!layerConfig) return [];
+    // KEY FIX: Use getMixedSopData to ensure we get ALL fields including sops-data.js richness
+    return Array.from(layerConfig.items).map(id => getMixedSopData(id)).filter(s => s && s.id);
+}
+
+function renderMiniSopCard(sop) {
+    // sop is the HYBRID OBJECT now (Context + Content)
+    // This ensures Module A cards look identical in richness to Module B embedded cards
+
+    let pitfallsContent = "-";
+    if(sop.pitfalls_summary && sop.pitfalls_summary !== "-") {
+        pitfallsContent = `<div style="margin-bottom:0.5rem; color:#fca5a5;">${sop.pitfalls_summary}</div>`;
+    }
+    if(sop.pitfalls_list && sop.pitfalls_list.length > 0) {
+        if(pitfallsContent === "-") pitfallsContent = "";
+        pitfallsContent += sop.pitfalls_list.map(p => {
+            const text = renderRichTextItem(p);
+            const type = typeof p === 'object' && p.type ? p.type : 'Error';
+            return `<div class="pitfall-item" style="font-size:0.8rem; padding:0.5rem;"><span class="pitfall-badge" style="font-size:0.6rem;">${type}</span><span>${text}</span></div>`;
+        }).join('');
+    }
+
+    let proTipsContent = "-";
+    if(sop.pro_tips && sop.pro_tips.length > 0) {
+        proTipsContent = sop.pro_tips.map(t => {
+            const text = renderRichTextItem(t);
+            return `<div class="pro-tip-item" style="font-size:0.8rem; padding:0.5rem;"><span class="pro-tip-badge" style="font-size:0.6rem;">Tip</span><span>${text}</span></div>`;
+        }).join('');
+    }
+
+    let procedureContent = "-";
+    if(sop.steps && sop.steps.length > 0) {
+        procedureContent = `<ul class="sop-steps-list">${sop.steps.map(s => `<li>${s}</li>`).join('')}</ul>`;
+    }
+
+    return `
+    <div class="mini-sop" onclick="this.classList.toggle('active')">
+        <div class="mini-sop-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+            <div>
+                <div style="font-family:monospace; color:var(--primary); font-size:0.75rem; font-weight:700; margin-bottom:0.25rem;">${sop.id}</div>
+                <div style="font-weight:700; font-size:0.95rem; color:#fff; line-height:1.3;">${sop.name.split('·')[1] || sop.name}</div>
+            </div>
+            <div class="mini-sop-arrow" style="font-size:0.8rem; opacity:0.7;">▼</div>
+        </div>
+        
+        <div class="mini-sop-detail">
+            <div style="font-size:0.85rem; color:#cbd5e1; margin-bottom:1rem; font-style:italic; padding-bottom:0.5rem; border-bottom:1px solid rgba(255,255,255,0.1);">${sop.description}</div>
+
+            <!-- 8-FIELD GRID (FIGURE 2 STYLE APPLIED TO MODULE A) -->
+            <div class="sop-fields-grid">
+                <div class="sop-field"><span class="sop-field-label">Trigger</span><span class="sop-field-val" style="color:var(--accent);">${sop.trigger}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Rule</span><span class="sop-field-val">${sop.rule}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Chain</span><span class="sop-field-val code">${sop.chain}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Procedure</span><span class="sop-field-val">${procedureContent}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Exam Usage</span><span class="sop-field-val">${sop.exam_usage}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Pitfalls</span><span class="sop-field-val">${pitfallsContent}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Pro Tips</span><span class="sop-field-val">${proTipsContent}</span></div>
+                <div class="sop-field"><span class="sop-field-label">Micro-Skills</span><span class="sop-field-val">${sop.micro_skills}</span></div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+function renderGeoFrameworkSection() {
+    const visualSops = getSopsForLayer('layer1');
+    const calcSops = getSopsForLayer('layer2');
+    const proofSops = getSopsForLayer('layer3');
+
+    return `
+    <section class="geo-framework-section">
+        <div class="geo-header-row">
+            <h2 class="geo-framework-title">Module A: Geometry SOP Logic Framework</h2>
+        </div>
+        
+        <div class="geo-stack">
+            <!-- Layer 1 -->
+            <div class="geo-layer-card layer-visual" id="geo-layer-1">
+                <div class="geo-layer-header">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.eye}</div>
+                        <div>
+                            <div class="geo-layer-title">Layer 1: Visual Triggers</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer1.desc}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <span class="geo-count-badge">${visualSops.length} SOPs</span>
+                        <div>${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">${visualSops.map(renderMiniSopCard).join('')}</div>
+                </div>
+            </div>
+
+            <!-- Layer 2 -->
+            <div class="geo-layer-card layer-calc" id="geo-layer-2">
+                <div class="geo-layer-header">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.tool}</div>
+                        <div>
+                            <div class="geo-layer-title">Layer 2: Calculation Tools</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer2.desc}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <span class="geo-count-badge">${calcSops.length} SOPs</span>
+                        <div>${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">${calcSops.map(renderMiniSopCard).join('')}</div>
+                </div>
+            </div>
+
+            <!-- Layer 3 -->
+            <div class="geo-layer-card layer-proof" id="geo-layer-3">
+                <div class="geo-layer-header">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.brain}</div>
+                        <div>
+                            <div class="geo-layer-title">Layer 3: Reasoning & Proof</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer3.desc}</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <span class="geo-count-badge">${proofSops.length} SOPs</span>
+                        <div>${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">${proofSops.map(renderMiniSopCard).join('')}</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    `;
+}
+
+// ==========================================
+// 8. RENDERER: MODULE B - COGNITIVE ENGINES
+// ==========================================
+
+function renderEmbeddedSop(sopId) {
+    const sop = getMixedSopData(sopId);
+    
+    let pitfallsContent = "";
+    if(sop.pitfalls_summary && sop.pitfalls_summary !== "-") {
+        pitfallsContent += `<div style="margin-bottom:0.5rem; color:#fca5a5;">${sop.pitfalls_summary}</div>`;
+    }
+    if(sop.pitfalls_list && sop.pitfalls_list.length > 0) {
+        pitfallsContent += sop.pitfalls_list.map(p => {
+            const text = renderRichTextItem(p);
+            const type = typeof p === 'object' && p.type ? p.type : 'Error';
+            return `<div class="pitfall-item" style="font-size:0.8rem; padding:0.5rem;"><span class="pitfall-badge" style="font-size:0.6rem;">${type}</span><span>${text}</span></div>`;
+        }).join('');
+    }
+    if (!pitfallsContent) pitfallsContent = "-";
+
+    let proTipsContent = "-";
+    if(sop.pro_tips && sop.pro_tips.length > 0) {
+        proTipsContent = sop.pro_tips.map(t => {
+            const text = renderRichTextItem(t);
+            return `<div class="pro-tip-item" style="font-size:0.8rem; padding:0.5rem;"><span class="pro-tip-badge" style="font-size:0.6rem;">Tip</span><span>${text}</span></div>`;
+        }).join('');
+    }
+
+    let procedureContent = "-";
+    if(sop.steps && sop.steps.length > 0) {
+        procedureContent = `<ul class="sop-steps-list">${sop.steps.map(s => `<li>${s}</li>`).join('')}</ul>`;
+    }
+
+    return `
+    <div class="embedded-sop-card">
+        <div class="embedded-sop-header">
+            <span class="embedded-sop-id">${sop.id}</span>
+            <span class="embedded-sop-name">${sop.name}</span>
+        </div>
+        <div class="sop-fields-grid">
+            <div class="sop-field"><span class="sop-field-label">Trigger</span><span class="sop-field-val" style="color:var(--accent);">${sop.trigger}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Rule</span><span class="sop-field-val">${sop.rule}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Chain</span><span class="sop-field-val code">${sop.chain}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Procedure (Detailed Steps)</span><span class="sop-field-val">${procedureContent}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Exam Usage</span><span class="sop-field-val">${sop.exam_usage}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Pitfalls</span><span class="sop-field-val">${pitfallsContent}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Pro Tips</span><span class="sop-field-val">${proTipsContent}</span></div>
+            <div class="sop-field"><span class="sop-field-label">Micro-Skills</span><span class="sop-field-val">${sop.micro_skills}</span></div>
+        </div>
+    </div>`;
+}
+
+function renderEngineCard(engine, isRichDomain) {
+    const sopsList = engine.sops || [];
+    const hasSops = sopsList.length > 0;
+    const showEmbeddedSops = isRichDomain && hasSops; 
+
+    return `
+    <div class="engine-card">
+        <div class="engine-header">
+            <span class="engine-id-badge">${engine.engine_id}</span>
+            <div class="engine-name">${engine.engine_name}</div>
+            <span class="engine-layer-tag">${engine.layer || 'Cognitive Layer'}</span>
+            <div class="engine-desc">${engine.description}</div>
+            
+            ${hasSops ? `
+                <div class="engine-sops-preview">
+                    ${sopsList.map(s => `<span class="sop-pill">${s}</span>`).join('')}
+                </div>
+            ` : ''}
+        </div>
+        
+        ${showEmbeddedSops ? `
+            <div class="engine-action-area" style="margin-top:auto;">
+                <button class="toggle-sops-btn">
+                    View SOP Specifications (${sopsList.length}) ${ICONS.chevronDown}
+                </button>
+                <div class="nested-sops-container">
+                    ${sopsList.map(sid => renderEmbeddedSop(sid)).join('')}
+                </div>
+            </div>
+        ` : ''}
+    </div>`;
+}
+
+function renderPowerComboCard(pc) {
+    return `
+    <div class="pc-card">
+        <div>
+            <span class="pc-id">${pc.pc_id}</span>
+            <div class="pc-title">${pc.title}</div>
+        </div>
+        <div class="pc-section-box">
+            <span class="pc-label">Trigger</span>
+            <div class="pc-val" style="color:var(--accent); font-weight:600;">${pc.trigger || '-'}</div>
+        </div>
+        <div class="pc-section-box" style="background:rgba(255,255,255,0.02);">
+            <span class="pc-label">Rule / Theorem</span>
+            <div class="pc-val">${pc.rule || '-'}</div>
+        </div>
+        <div class="pc-section-box">
+            <span class="pc-label">Tactical Chain</span>
+            <div class="pc-chain">
+                ${pc.chain ? pc.chain.split('→').map(step => `<span>${step.trim()}</span>`).join('<span class="chain-arrow">→</span>') : '-'}
+            </div>
+        </div>
+        <div class="pc-details-grid">
+            <div class="pc-detail-col">
+                <div class="pc-field"><strong>Exam Usage</strong><span>${pc.exam_usage || '-'}</span></div>
+                <div class="pc-field"><strong>Pitfalls</strong><span style="color:#fca5a5;">${pc.pitfalls || '-'}</span></div>
+            </div>
+            <div class="pc-detail-col">
+                <div class="pc-field"><strong>Micro-Skills</strong><span>${pc.micro_skills || '-'}</span></div>
+                <div class="pc-field">
+                    <strong>Tools</strong>
+                    <div class="pc-tags">${pc.tools ? pc.tools.map(t => `<span class="pc-tag tool">${t}</span>`).join('') : '-'}</div>
+                </div>
+                <div class="pc-field">
+                    <strong>Links</strong>
+                    <div class="pc-tags">${pc.sop_links ? pc.sop_links.map(s => `<span class="pc-tag link">${s}</span>`).join('') : '-'}</div>
+                </div>
+            </div>
+        </div>
+    </div>`;
+}
+
+function renderDomainSection(key, domainData) {
+    const isRichDomain = (key === 'angle' || key === 'circle');
+    const colors = { angle: '#06b6d4', circle: '#8b5cf6', coordinate: '#10b981', mixed: '#f59e0b' };
+    const accent = colors[key] || '#fff';
+    const displayTitle = DOMAIN_TITLES[key] || domainData.title;
+
+    return `
+    <div class="domain-block" style="--accent: ${accent}">
+        <div class="domain-header" onclick="toggleDomainSection(this)">
+            <div class="domain-title-group">
+                <h3 class="domain-title" style="color: ${accent}">${displayTitle}</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <span class="domain-pill" style="color: ${accent}">${domainData.engines.length} Engines</span>
+                    <span class="domain-pill" style="color: ${accent}">${domainData.combinations.length} Combos</span>
+                </div>
+            </div>
+            <div class="expand-indicator">${ICONS.plus}</div>
+        </div>
+        
+        <div class="domain-content">
+            <div class="grid-section-title">ENGINE BLOCK (${domainData.engines.length})</div>
+            <div class="engines-grid">${domainData.engines.map(e => renderEngineCard(e, isRichDomain)).join('')}</div>
+            
+            <div class="grid-section-title">POWER COMBINATIONS (${domainData.combinations.length})</div>
+            <div class="pc-grid">${domainData.combinations.map(renderPowerComboCard).join('')}</div>
+        </div>
+    </div>`;
+}
+
+function renderEngineDashboard() {
+    let html = `
+    <section class="engines-section">
+        <div class="geo-header-row" style="margin-bottom: 4rem;">
+            <h2 class="geo-framework-title">Module B: Cognitive Engines & Exam Patterns</h2>
+        </div>
+    `;
+    ['angle', 'circle', 'coordinate', 'mixed'].forEach(key => {
+        if(ENGINES_DATA[key]) html += renderDomainSection(key, ENGINES_DATA[key]);
+    });
+    html += `</section>`;
+    return html;
+}
+
+// ==========================================
+// 9. INIT & INIT EVENTS
+// ==========================================
+function init() {
+    console.log("🚀 Evolution Map v35.0 - Final Spacing Fix");
+    injectStyles();
+    processData();
+    
+    // 1. Render Archetypes
+    const container = document.getElementById('evolution-map-container');
+    if(container) {
+        container.innerHTML = allCategories.map(cat => `
+            <div class="category-card" data-id="${cat.id}">
+                <div class="category-header">
+                    <div class="category-title-group">
+                        <span class="category-icon">${cat.icon}</span>
+                        <div><h2 class="category-title">${cat.title}</h2><p class="category-subtitle">${cat.archetypes.length} Archetypes</p></div>
+                    </div>
+                    <div class="expand-indicator">${ICONS.plus}</div>
+                </div>
+                <div class="category-content"><div class="category-body">${cat.archetypes.map(renderArchetypeCard).join('')}</div></div>
+            </div>
+        `).join('');
+    }
+
+    // 2. Render Module A (Geo Logic Framework)
+    const geoDiv = document.createElement('div');
+    geoDiv.innerHTML = renderGeoFrameworkSection();
+
+    // 3. Render Module B (Engines)
+    const engineDiv = document.createElement('div');
+    engineDiv.innerHTML = renderEngineDashboard();
+    
+    // Append to DOM Safely
+    const footer = document.querySelector('footer');
+    if(footer) {
+        document.body.insertBefore(geoDiv, footer);
+        document.body.insertBefore(engineDiv, footer);
+    } else {
+        document.body.appendChild(geoDiv);
+        document.body.appendChild(engineDiv);
+    }
+    
+    bindEvents();
+}
+
+// Global Helpers
+function bindEvents() {
+    const body = document.body;
+
+    // Helper to toggle icon
+    const toggleIcon = (el, isExpanded) => {
+        const indicator = el.querySelector('.expand-indicator, .archetype-expand-indicator, .mini-sop-arrow');
+        if(indicator) indicator.innerHTML = isExpanded ? ICONS.minus : ICONS.plus;
+    };
+
+    body.addEventListener('click', (e) => {
+        const target = e.target;
+
+        // 1. CATEGORY TOGGLE
+        const catHeader = target.closest('.category-header');
+        if (catHeader) {
+            const card = catHeader.closest('.category-card');
+            card.classList.toggle('expanded');
+            toggleIcon(catHeader, card.classList.contains('expanded'));
+            return;
+        }
+
+        // 2. ARCHETYPE TOGGLE
+        const archCard = target.closest('.archetype-card');
+        if (archCard && !archCard.classList.contains('archetype-child-card')) {
+            const wrapper = archCard.closest('.archetype-card-wrapper');
+            if (wrapper) {
+                archCard.classList.toggle('expanded');
+                const details = wrapper.querySelector('.archetype-details-container');
+                if (details) details.style.display = archCard.classList.contains('expanded') ? 'block' : 'none';
+                
+                toggleIcon(archCard, archCard.classList.contains('expanded'));
+            }
+            return;
+        }
+
+        // 3. GEO LAYER TOGGLE (Module A)
+        const geoHeader = target.closest('.geo-layer-header');
+        if (geoHeader) {
+            const card = geoHeader.closest('.geo-layer-card');
+            card.classList.toggle('expanded');
+            const expandDiv = geoHeader.querySelector('.expand-indicator') || geoHeader.querySelector('.geo-count-badge + div');
+             if(expandDiv) expandDiv.innerHTML = card.classList.contains('expanded') ? ICONS.minus : ICONS.plus;
+            return;
+        }
+    
+        // 4. MINI SOP TOGGLE (Module A Cards)
+        const miniSop = target.closest('.mini-sop');
+        if (miniSop && !target.closest('.mini-sop-detail')) {
+             miniSop.classList.toggle('active');
+             return;
+        }
+
+        // 5. DOMAIN SECTION TOGGLE (Module B)
+        const domainHeader = target.closest('.domain-header');
+        if (domainHeader) {
+            const block = domainHeader.closest('.domain-block');
+            block.classList.toggle('expanded');
+            toggleIcon(domainHeader, block.classList.contains('expanded'));
+            return;
+        }
+
+        // 6. ENGINE SOPs TOGGLE
+        const sopBtn = target.closest('.toggle-sops-btn');
+        if (sopBtn) {
+            sopBtn.classList.toggle('active');
+            const container = sopBtn.nextElementSibling;
+            if (container) container.classList.toggle('visible');
+            sopBtn.closest('.engine-card').classList.toggle('expanded');
+            return;
+        }
+    });
+    
+    // Search
+    const input = document.getElementById('filter-search');
+    if (input) {
+        input.addEventListener('input', debounce((e) => {
+            const val = e.target.value.toLowerCase().replace(/\s+/g, '');
+            document.querySelectorAll('.engine-card, .pc-card, .mini-sop, .archetype-card').forEach(card => {
+                const text = card.innerText.toLowerCase().replace(/\s+/g, '');
+                const isVisible = text.includes(val);
+                
+                if (card.classList.contains('archetype-card')) {
+                     const wrapper = card.closest('.archetype-card-wrapper');
+                     if(wrapper) wrapper.style.display = isVisible ? 'block' : 'none';
+                } else {
+                     card.style.display = isVisible ? (card.classList.contains('engine-card') ? 'flex' : 'block') : 'none';
+                }
+            });
+        }, 300));
+    }
+    
+    // Global Expand/Collapse Buttons
+    const expandAllBtn = document.getElementById('expandAllBtn');
+    if(expandAllBtn) {
+        expandAllBtn.onclick = () => {
+            document.querySelectorAll('.category-card').forEach(c => c.classList.add('expanded'));
+        };
+    }
+    const collapseAllBtn = document.getElementById('collapseAllBtn');
+    if(collapseAllBtn) {
+        collapseAllBtn.onclick = () => {
+             document.querySelectorAll('.category-card').forEach(c => c.classList.remove('expanded'));
+        };
+    }
+}
+
+// Ensure init runs
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
