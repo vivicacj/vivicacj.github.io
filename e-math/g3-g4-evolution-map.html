@@ -1,902 +1,676 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>G3→G4 Evolution Map · Category View</title>
-  
-  <!-- External Libraries -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Custom Fonts & Styles -->
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-    
-    :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --secondary: #8b5cf6;
-      --accent: #06b6d4;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-tertiary: #334155;
-      --text-primary: #f1f5f9;
-      --text-secondary: #cbd5e1;
-      --text-mono: #94a3b8; /* For Archetype IDs */
-      --glass: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-    }
-
-    body {
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* Animated gradient background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
-      animation: gradientShift 15s ease infinite;
-      z-index: -1;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
-    }
-
-    .icon {
-        width: 1em;
-        height: 1em;
-        display: inline-block;
-        vertical-align: middle;
-    }
-    
-    .icon-sm {
-        width: 16px;
-        height: 16px;
-    }
-
-    .glass {
-      background: var(--glass);
-      backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--glass-border);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
-
-    /* ==========================================
-       MAIN LAYOUT & COMPONENTS (DARK THEME)
-       ========================================== */
-
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      padding: 1rem 2rem;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--glass-border);
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shimmer 3s ease-in-out infinite;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    @keyframes shimmer {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.3); }
-    }
-
-    .hero {
-      padding: 4rem 2rem;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-title {
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: fadeInUp 0.8s ease-out;
-    }
-
-    .hero-subtitle {
-      font-size: 1.25rem;
-      color: var(--text-secondary);
-      max-width: 800px;
-      margin: 0 auto 2rem;
-      animation: fadeInUp 1s ease-out;
-    }
-
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .control-panel {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 3rem;
-      animation: fadeInUp 1.4s ease-out;
-    }
-
-    .btn {
-      padding: 0.875rem 1.75rem;
-      border-radius: 1rem;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn:hover::before {
-      width: 300px;
-      height: 300px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-    }
-    
-    .btn-primary:hover {
-        background: var(--primary-dark);
-        transform: translateY(-2px);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--glass-border);
-      color: var(--text-primary);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-    }
-
-    /* ==========================================
-       [REVISED] FILTER PANEL (Search Only)
-       ========================================== */
-    .filter-panel {
-      max-width: 1000px;
-      margin: 0 auto 3rem;
-      padding: 1rem;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      border-radius: 1.5rem;
-      animation: fadeInUp 1.6s ease-out;
-    }
-
-    .filter-search-group {
-      flex: 1;
-      min-width: 300px;
-      display: flex;
-      gap: 0.75rem;
-      background: var(--bg-primary);
-      border: 2px solid var(--glass-border);
-      border-radius: 1rem;
-      padding: 0.5rem;
-      transition: all 0.3s ease;
-    }
-    
-    .filter-search-group:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-    }
-
-    .filter-search-input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      padding: 0.5rem 0.75rem;
-      color: var(--text-primary);
-      font-size: 1rem;
-    }
-
-    .filter-search-input::placeholder {
-      color: var(--text-secondary);
-    }
-
-    /* ==========================================
-       MAIN CONTENT (NEW CATEGORY, TOPIC, ARCHETYPE)
-       ========================================== */
-    
-    .section {
-      padding: 3rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    /* [NEW] Category Card Style */
-    .category-card {
-      background: linear-gradient(135deg, var(--glass), rgba(255, 255, 255, 0.02));
-      border: 1px solid var(--glass-border);
-      border-radius: 1.5rem;
-      margin-bottom: 2rem;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .category-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2rem 2.5rem;
-      cursor: pointer;
-      user-select: none;
-      background: var(--glass);
-    }
-    
-    .category-title-group {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .category-icon {
-      font-size: 2.5rem;
-    }
-
-    .category-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .category-subtitle {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
-    }
-    
-    .category-card.expanded {
-      border-color: var(--primary);
-      box-shadow: 0 12px 40px rgba(99, 102, 241, 0.25);
-    }
-    
-    .category-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    .category-card.expanded .category-content {
-      max-height: 20000px; /* Large value */
-    }
-
-    .category-body {
-      padding: 2rem 2.5rem;
-    }
-
-    .topic-card {
-      background: transparent;
-      border: 1px solid var(--glass-border);
-      border-radius: 1.5rem;
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-    }
-
-    .topic-card:hover {
-      border-color: var(--accent);
-    }
-
-    .topic-card.expanded {
-      border-color: var(--accent);
-    }
-
-    .topic-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem 2rem;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .topic-title-group {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .topic-icon {
-      font-size: 1.5rem;
-      color: var(--accent);
-    }
-
-    .topic-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-
-    .topic-subtitle {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
-    }
-
-    .pill {
-      padding: 0.4rem 1rem;
-      border-radius: 2rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .pill.core { background: rgba(99, 102, 241, 0.2); color: var(--primary); }
-    .pill.sat { background: rgba(139, 92, 246, 0.2); color: var(--secondary); }
-    .pill.mixed { background: rgba(6, 182, 212, 0.2); color: var(--accent); }
-    .pill.level-1 { background: rgba(16, 185, 129, 0.2); color: var(--success); }
-    .pill.level-2 { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
-    .pill.level-3 { background: rgba(239, 68, 68, 0.2); color: var(--danger); }
-
-    .expand-indicator {
-      transition: transform 0.3s ease;
-      color: var(--accent);
-    }
-    
-    .category-card.expanded .expand-indicator,
-    .topic-card.expanded .expand-indicator {
-      transform: rotate(180deg);
-    }
-
-    .topic-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .topic-card.expanded .topic-content {
-      max-height: 10000px;
-    }
-
-    .topic-body {
-      padding: 0 2rem 2rem;
-    }
-    
-    .archetype-card-wrapper {
-      /* This wrapper is used for filtering */
-    }
-
-    .archetype-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 1rem; /* Space between archetypes */
-    }
-    
-    .topic-body .archetype-card-wrapper:first-child .archetype-card {
-        margin-top: 0;
-    }
-
-    .archetype-card:hover {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04));
-      border-color: var(--primary);
-      transform: translateX(5px);
-    }
-
-    .archetype-card.level-1 { border-left: 4px solid var(--success); }
-    .archetype-card.level-2 { border-left: 4px solid var(--warning); }
-    .archetype-card.level-3 { border-left: 4px solid var(--danger); }
-
-    .archetype-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap; /* Allow wrapping for ID */
-    }
-    
-    .archetype-name {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    
-    .archetype-id {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--text-mono);
-      background: var(--bg-secondary);
-      padding: 0.1rem 0.5rem;
-      border-radius: 0.375rem;
-      border: 1px solid var(--glass-border);
-      margin-left: 0.25rem;
-    }
-
-    .level-badge {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: white;
-      padding: 0.25rem 0.75rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    .archetype-expand-indicator {
-      transition: transform 0.3s ease;
-      color: var(--accent);
-      flex-shrink: 0; /* Prevent shrinking */
-    }
-    
-    /* In-place expand styles */
-    .archetype-details-container {
-        padding: 1rem 1rem 1rem 2.5rem; /* Indent details */
-        display: none; /* Hidden by default */
-        background: var(--bg-secondary);
-        border-top: 1px solid var(--glass-border);
-        margin-top: -1rem; /* Pull up to meet the parent card */
-        padding-top: 2rem; /* Give space from parent card */
-        border-radius: 0 0 1rem 1rem; /* Match parent's bottom corners */
-    }
-    .archetype-card.is-parent.expanded + .archetype-details-container,
-    .archetype-card.is-standalone.expanded + .archetype-details-container {
-        display: block; /* Show when parent OR standalone is expanded */
-    }
-    .archetype-card.is-parent.expanded,
-    .archetype-card.is-standalone.expanded {
-         border-radius: 1rem 1rem 0 0; /* Un-round the bottom corners when expanded */
-    }
-    .archetype-child-list-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-top: 1rem; /* Space between parent SOPs and child list */
-    }
-    .archetype-child-card {
-        background: rgba(255, 255, 255, 0.02);
-        border-left-width: 2px;
-        margin-top: 0; /* Child cards are in a list, no top margin */
-    }
-    .archetype-child-card:hover {
-        background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .sop-section {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      margin-top: 1rem;
-    }
-    
-    .sop-section .sop-goal {
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-bottom: 1.5rem;
-      padding: 1rem;
-      background: var(--glass);
-      border-radius: 0.5rem;
-      border-left: 3px solid var(--accent);
-    }
-
-    .sop-section h4 {
-      color: var(--accent);
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .sop-section ul {
-      list-style-type: decimal;
-      list-style-position: inside;
-      padding: 0;
-    }
-
-    .sop-section li {
-      padding: 0.75rem 0;
-      border-bottom: 1px solid var(--glass-border);
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .sop-section li:last-child {
-      border-bottom: none;
-    }
-
-    .pitfall-item, .pro-tip-item {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .pitfall-item {
-      background: rgba(239, 68, 68, 0.1);
-      border-left: 3px solid var(--danger);
-    }
-
-    .pro-tip-item {
-      background: rgba(16, 185, 129, 0.1);
-      border-left: 3px solid var(--success);
-    }
-
-    .pitfall-badge, .pro-tip-badge {
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.375rem;
-      font-size: 0.65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .pitfall-badge { background: var(--danger); color: white; }
-    .pro-tip-badge { background: var(--success); color: white; }
-
-    .legend {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      max-width: 300px;
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-
-    .legend.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: all;
-    }
-
-    .legend h3 {
-      color: var(--accent);
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-      font-size: 0.875rem;
-    }
-
-    .legend-color {
-      width: 30px;
-      height: 4px;
-      border-radius: 2px;
-    }
-
-    .scroll-top {
-      position: fixed;
-      bottom: 2rem;
-      left: 2rem;
-      width: 50px;
-      height: 50px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-      z-index: 100;
-    }
-
-    .scroll-top.visible {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .scroll-top:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5);
-    }
-    
-    footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-secondary);
-      border-top: 1px solid var(--glass-border);
-      margin-top: 4rem;
-    }
-
-    footer p {
-      margin: 0.5rem 0;
-    }
-
-    /* =================================================
-       MODAL STYLES
-       ================================================= */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-      animation: fadeIn 0.2s ease;
-    }
-    .modal-overlay.visible { display: flex; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-    .modal-content {
-      background: var(--bg-secondary);
-      border-radius: 12px;
-      max-width: 700px;
-      width: 100%;
-      max-height: 85vh;
-      overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      animation: slideUp 0.3s ease;
-      border: 1px solid var(--glass-border);
-    }
-    .modal-overlay.exiting .modal-content { animation: slideDown 0.3s ease forwards; }
-    .modal-overlay.exiting { animation: fadeOut 0.3s ease forwards; }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    @keyframes slideDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(30px); opacity: 0; } }
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px;
-      border-bottom: 2px solid var(--glass-border);
-      background: var(--bg-tertiary);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    .modal-header h3 { margin: 0; color: var(--accent); font-size: 1.4em; }
-    .modal-close { background: transparent; border: none; cursor: pointer; padding: 8px; color: var(--text-secondary); transition: all 0.2s ease; border-radius: 50%; }
-    .modal-close:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
-    .modal-body { padding: 24px; }
-    
-    /* MODAL-SPECIFIC BRANCH STYLES */
-    .modal-back-btn {
-        background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-secondary);
-        padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem;
-        margin-bottom: 1.5rem; transition: all 0.2s ease;
-    }
-    .modal-back-btn:hover { background: var(--bg-tertiary); border-color: var(--primary); }
-    .modal-sub-branch-title {
-        color: var(--accent); font-size: 1rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 1px; border-top: 1px solid var(--glass-border); padding-top: 1.5rem;
-    }
-    .branches-overview { margin-bottom: 24px; padding: 16px; background: var(--glass); border-radius: 8px; border-left: 4px solid var(--accent); }
-    .branches-overview h4 { margin: 0 0 16px 0; color: var(--accent); font-size: 1em; font-weight: 600; }
-    .branches-tree { display: flex; flex-direction: column; gap: 8px; }
-    .branch-tree-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: transparent; border-radius: 6px; border: 1px solid var(--glass-border); transition: all 0.2s ease; }
-    .branch-tree-item:hover { background: var(--glass); border-color: var(--accent); transform: translateX(4px); box-shadow: none; }
-    .branch-tree-item.clickable { cursor: pointer; }
-    .branch-tree-item.clickable:hover { background: var(--bg-secondary); border-color: var(--accent); transform: translateX(6px); }
-    .branch-tree-item.clickable:active { transform: translateX(6px) scale(0.98); }
-    .branch-prefix { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-weight: bold; font-size: 1.1em; min-width: 24px; }
-    .branch-name { flex: 1; color: var(--text-primary); font-weight: 500; font-size: 0.95em; }
-    .branch-count-badge { display: inline-block; background: rgba(99, 102, 241, 0.2); color: var(--primary); padding: 2px 8px; border-radius: 12px; font-size: 0.75em; font-weight: 600; margin-left: 8px; }
-    .highlighted { animation: highlight 2s ease; }
-    @keyframes highlight { 0%, 100% { background: transparent; } 50% { background: rgba(245, 158, 11, 0.2); } }
-
-    /* ==========================================
-       RESPONSIVE
-       ========================================== */
-    @media (max-width: 768px) {
-      .hero-title { font-size: 2rem; }
-      .control-panel { flex-direction: column; }
-      .btn { width: 100%; justify-content: center; }
-      
-      .filter-panel { padding: 1rem; }
-      .filter-search-group { min-width: 0; }
-      
-      .category-header { padding: 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .category-title { font-size: 1.5rem; }
-      .category-body { padding: 1.5rem; }
-
-      .topic-header { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1rem 1.5rem; }
-      .topic-body { padding: 0 1.5rem 1.5rem; }
-      .topic-title { font-size: 1.1rem; }
-      
-      .archetype-card { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-      .modal-content { max-width: 95vw; max-height: 90vh; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="logo">
-      <svg class="icon" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span>e-Math Archetype System</span>
-    </div>
-  </nav>
-
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1 class="hero-title">G3→G4 Evolution Map</h1>
-    <p class="hero-subtitle">Hierarchical Archetype Framework (L1 → L2 → L3)</p>
-    
-    <!-- [REVISED] Filter Panel (Search Only) -->
-    <div class="filter-panel">
-      <div class="filter-search-group">
-        <span style="padding: 0.75rem 0 0.75rem 1rem; color: var(--text-mono);">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 20px; height: 20px;">
-            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </span>
-        <input 
-          type="text" 
-          class="filter-search-input" 
-          id="filter-search" 
-          placeholder="Search ID, Name, or Topic (e.g., ALG-01, Quad, Factorisation)"
-        />
-      </div>
-    </div>
-
-    <!-- Control Panel -->
-    <div class="control-panel">
-      <button class="btn btn-primary" id="expandAllBtn" onclick="toggleAllCards(true)">
-        <svg class="icon" id="expand-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 14H21M3 10H21M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Expand All
-      </button>
-      <button class="btn btn-primary" style="background: var(--bg-tertiary);" id="collapseAllBtn" onclick="toggleAllCards(false)">
-         <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12H21M9 6H15M9 18H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Collapse All
-      </button>
-      <button class="btn btn-outline" onclick="toggleLegend()">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
-          <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        Legend
-      </button>
-    </div>
-  </section>
-
-  <!-- [NEW] Main Evolution Map Container -->
-  <section class="section" id="evolution-map-container" style="padding-top: 0;">
-    <!-- Category Cards will be populated by JavaScript -->
-    <div style="text-align: center; padding: 4rem; color: var(--text-secondary);">
-      <p>Loading data...</p>
-    </div>
-  </section>
-  
-  <!-- Legend -->
-  <div class="legend" id="legend">
-    <h3>Level Guide</h3>
-    <div class="legend-item">
-      <div class="legend-color" style="background: var(--success);"></div>
-      <span>L1: Fundamental Skills</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color" style="background: var(--warning);"></div>
-      <span>L2: Integration</span>
-    </div>
-    <div class="legend-item">
-      <div class="legend-color" style="background: var(--danger);"></div>
-      <span>L3: Synthesis</span>
-    </div>
-  </div>
-
-  <!-- Scroll to Top Button -->
-  <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 19V5M5 12L12 5L19 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  </div>
-  
-  <!-- Branch Modal -->
-  <div class="modal-overlay" id="branchModal">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h3 id="branchModalTitle">Sub-Models</h3>
-              <button class="modal-close" onclick="closeBranchModal()">
-                  <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-              </button>
+/**
+ * evolution-map-app.js
+ * v11.6 - RESTORED DATA & INTEGRATED LOGIC
+ * * CRITICAL FIXES:
+ * 1. Separated Main Map data from Geo Framework data to prevent data loss.
+ * 2. Restored full rendering for non-Geo archetypes (Algebra, Stats, etc.).
+ * 3. Kept all v11.5 features (English UI, Stacked Layout, Wizard, Consistent Styling).
+ */
+
+import { ARCHETYPES_DATA } from './archetypes-data.js';
+import { SOPS_DATA } from './sops-data.js';
+
+// ==========================================
+// GEOMETRY LOGIC FRAMEWORK DATA (MASTER LIST)
+// ==========================================
+const GEO_LOGIC_MAP = {
+    layer1: {
+        title: "Layer 1 (Eye): Visual Triggers 👁️",
+        desc: "Scan -> Match: Identify visual features, instantly recall theorems",
+        color: "#06b6d4", // Cyan
+        items: new Set([
+            "SOP-ANG-M00", "SOP-ANG-M01", "SOP-ANG-M02", "SOP-ANG-M03", 
+            "SOP-ANG-M04", "SOP-ANG-M05", "SOP-ANG-M06", "SOP-ANG-M07", 
+            "SOP-ANG-M08", "SOP-ANG-M09", "SOP-ANG-M10", "SOP-ANG-M11",
+            "SOP-GEO-CIRC-01", "SOP-GEO-CIRC-02", "SOP-GEO-CIRC-03", 
+            "SOP-GEO-CIRC-04", "SOP-GEO-CIRC-05", "SOP-GEO-CIRC-06",
+            "SOP-GEO-CIRC-07",
+            "SOP-GEO-CONG-01"
+        ])
+    },
+    layer2: {
+        title: "Layer 2 (Hand): Calculation Tools 🛠️",
+        desc: "Execute: Establish relationships, solve using formulas",
+        color: "#f59e0b", // Amber
+        items: new Set([
+            "SOP-GEO-COORD-01", "SOP-GEO-COORD-02", "SOP-GEO-COORD-03", 
+            "SOP-GEO-COORD-04", "SOP-GEO-COORD-05", "SOP-GEO-COORD-06",
+            "SOP-GEO-COORD-07", "SOP-GEO-COORD-08", "SOP-GEO-COORD-09", "SOP-GEO-COORD-10",
+            "SOP-TRIG-01", "SOP-TRIG-02", "SOP-TRIG-03", "SOP-TRIG-04", "SOP-L2-TRIG-01",
+            "SOP-MEN-01", "SOP-MEN-02", "SOP-MEN-03", "SOP-MEN-04",
+            "SOP-GEO-SIM-02", "SOP-GEO-SIM-03", "SOP-GEO-SIM-04",
+            "SOP-GEO-CIRC-08",
+            "SOP-GEO-PYTH-01", "SOP-GEO-PYTH-02",
+            "SOP-GEO-CONS-01", "SOP-GEO-CONS-02", "SOP-GEO-CONS-03", 
+            "SOP-GEO-CONS-04", "SOP-GEO-CONS-05", "SOP-GEO-CONS-06",
+            "SOP-GEO-BEAR-01", "SOP-GEO-BEAR-02", "SOP-GEO-BEAR-03",
+            "SOP-GEO-TRANS-01", "SOP-GEO-TRANS-02", "SOP-GEO-TRANS-03", 
+            "SOP-GEO-TRANS-04", "SOP-GEO-TRANS-05"
+        ])
+    },
+    layer3: {
+        title: "Layer 3 (Brain): Reasoning & Proof 🗣️",
+        desc: "Format & Logic: Write rigorous proof steps",
+        color: "#8b5cf6", // Purple
+        items: new Set([
+            "SOP-GEO-SIM-01", 
+            "SOP-GEO-CONG-02"
+        ])
+    }
+};
+
+// ==========================================
+// GLOBAL STATE
+// ==========================================
+let allCategories = [];
+let archetypeMap = new Map();
+let allSOPs = []; // Contains ALL SOPs (Algebra, Stats, Geo, etc.)
+
+const ICONS = {
+    'D1': '🔢', 
+    'D2': '📐', 
+    'D3': '📊', 
+    'L2L3': '🧩',
+    'Topic': '📑',
+    plus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5V19M5 12H19"/></svg>`,
+    minus: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12H19"/></svg>`,
+    branch: `<svg class="icon-sm" style="color: var(--accent)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v18M6 11h13"/></svg>`,
+    eye: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+    tool: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+    brain: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>`,
+    chevronDown: `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>`,
+    info: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`,
+    help: `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+};
+
+// ==========================================
+// STYLE INJECTION
+// ==========================================
+function injectStyles() {
+    const styleId = 'geo-framework-styles';
+    if (document.getElementById(styleId)) return;
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.innerHTML = `
+        /* Universal Styles */
+        .sop-section { margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; }
+        .modal-sub-branch-title { color: var(--accent, #06b6d4); font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; text-transform: uppercase; font-size: 0.9em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        
+        .pitfall-item { background: rgba(239, 68, 68, 0.15); border-left: 3px solid #ef4444; padding: 0.75rem; margin-bottom: 0.5rem; display: flex; gap: 0.75rem; border-radius: 4px; color: #fca5a5; }
+        .pro-tip-item { background: rgba(16, 185, 129, 0.15); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.5rem; display: flex; gap: 0.75rem; border-radius: 4px; color: #86efac; }
+        .pitfall-badge { background: #ef4444; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; height: fit-content; }
+        .pro-tip-badge { background: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; white-space: nowrap; height: fit-content; }
+
+        /* Geo Logic Framework Layout */
+        .geo-framework-section { padding: 4rem 2rem; max-width: 1600px; margin: 0 auto; position: relative; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 4rem; }
+        .geo-header-row { display: flex; justify-content: center; align-items: center; position: relative; margin-bottom: 2rem; }
+        .geo-framework-title { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #fff 0%, var(--accent) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+        
+        .geo-stuck-btn { position: absolute; right: 0; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 2rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); transition: all 0.3s ease; z-index: 10; }
+        .geo-stuck-btn:hover { transform: translateY(-52%) scale(1.05); box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6); }
+        
+        .geo-instruction-banner { background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 1rem; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; cursor: pointer; transition: all 0.3s ease; }
+        .geo-instruction-banner:hover { background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.5); }
+        .geo-banner-icon { color: var(--primary); font-size: 1.5rem; flex-shrink: 0; }
+        .geo-banner-content { flex: 1; }
+        .geo-banner-title { color: var(--primary); font-weight: 700; margin-bottom: 0.25rem; display: block; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; }
+        .geo-banner-text { color: #e2e8f0; font-size: 1rem; line-height: 1.5; }
+        .geo-banner-text strong { color: white; }
+
+        /* Stacked Layout */
+        .geo-stack { display: flex; flex-direction: column; gap: 1.5rem; }
+        
+        .geo-layer-card { background: rgba(255,255,255,0.03); border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .geo-layer-card.expanded { border-color: var(--layer-color, rgba(255,255,255,0.2)); background: rgba(255,255,255,0.05); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+        
+        .geo-layer-header { padding: 1.5rem 2rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, transparent 100%); min-height: 88px; }
+        
+        .geo-layer-title-group { display: flex; align-items: center; gap: 1.5rem; }
+        .geo-layer-icon { font-size: 2rem; color: var(--layer-color); width: 40px; text-align: center; }
+        .geo-layer-info { display: flex; flex-direction: column; gap: 0.25rem; }
+        .geo-layer-title { font-size: 1.25rem; font-weight: 700; color: #fff; }
+        .geo-layer-desc { font-size: 0.95rem; opacity: 0.7; font-style: italic; color: var(--text-secondary); }
+        .geo-layer-meta { display: flex; align-items: center; gap: 1.5rem; }
+        
+        .geo-count-badge { background: rgba(0,0,0,0.3); color: var(--layer-color); padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 600; border: 1px solid var(--layer-color); min-width: 80px; text-align: center; }
+        
+        .geo-layer-body { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; }
+        .geo-layer-card.expanded .geo-layer-body { max-height: 8000px; opacity: 1; padding: 0 2rem 2rem 2rem; }
+        
+        .geo-sop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        
+        .layer-visual { --layer-color: #06b6d4; }
+        .layer-calc { --layer-color: #f59e0b; }
+        .layer-proof { --layer-color: #8b5cf6; }
+        
+        /* Mini SOP Card */
+        .mini-sop { background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); border-radius: 0.75rem; overflow: hidden; transition: all 0.2s; cursor: pointer; display: flex; flex-direction: column; height: 100%; }
+        .mini-sop:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); }
+        .mini-sop.active { border-color: var(--layer-color); background: rgba(255,255,255,0.05); }
+        .mini-sop-header { padding: 1rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); flex-shrink: 0; }
+        .mini-sop-id { font-size: 0.7em; font-family: monospace; opacity: 0.6; display: block; margin-bottom: 4px; }
+        .mini-sop-name { font-weight: 600; font-size: 0.95em; color: #e2e8f0; }
+        .mini-sop-arrow { transition: transform 0.3s; opacity: 0.5; }
+        .mini-sop.active .mini-sop-arrow { transform: rotate(180deg); opacity: 1; color: var(--layer-color); }
+        .mini-sop-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; background: rgba(0,0,0,0.3); flex: 1; }
+        .mini-sop.active .mini-sop-detail { max-height: 2000px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .detail-pad { padding: 1.5rem; }
+        .detail-desc { font-size: 0.9em; color: #94a3b8; margin-bottom: 1rem; font-style: italic; }
+        .detail-label { font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; color: #64748b; margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 700; }
+        .detail-steps { list-style: decimal inside; color: #cbd5e1; font-size: 0.9em; padding-left: 0.5rem; }
+        .detail-steps li { margin-bottom: 0.5rem; line-height: 1.5; }
+        .detail-pitfall { background: rgba(239, 68, 68, 0.1); border-left: 3px solid #ef4444; padding: 0.75rem; margin-top: 0.5rem; font-size: 0.9em; color: #fca5a5; border-radius: 4px; }
+        .detail-tip { background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-top: 0.5rem; font-size: 0.9em; color: #86efac; border-radius: 4px; }
+        .detail-badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 0.7em; font-weight: bold; margin-right: 6px; }
+        .bg-red { background: #ef4444; color: white; }
+        .bg-green { background: #10b981; color: white; }
+
+        /* Wizard Modal */
+        .geo-wizard-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 10000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .geo-wizard-overlay.active { display: flex; opacity: 1; }
+        .geo-wizard-modal { background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 1.5rem; padding: 2rem; max-width: 500px; width: 90%; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .geo-wizard-overlay.active .geo-wizard-modal { transform: scale(1); }
+        .geo-wizard-title { font-size: 1.5rem; font-weight: 800; color: white; margin-bottom: 2rem; }
+        .geo-wizard-options { display: flex; flex-direction: column; gap: 1rem; }
+        .geo-wizard-option { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 1rem; border-radius: 1rem; color: #e2e8f0; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: space-between; }
+        .geo-wizard-option:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); border-color: var(--accent); color: white; }
+        .geo-wizard-close { margin-top: 1.5rem; background: transparent; border: none; color: #94a3b8; cursor: pointer; text-decoration: underline; }
+
+        /* Highlight Animation */
+        @keyframes pulse-highlight {
+            0% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.7); border-color: var(--accent); }
+            70% { box-shadow: 0 0 0 20px rgba(6, 182, 212, 0); border-color: var(--accent); }
+            100% { box-shadow: 0 0 0 0 rgba(6, 182, 212, 0); }
+        }
+        .highlight-pulse { animation: pulse-highlight 2s infinite; }
+
+        @media(max-width: 768px) {
+            .geo-header-row { flex-direction: column; gap: 1rem; }
+            .geo-stuck-btn { position: static; transform: none; width: 100%; justify-content: center; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// ==========================================
+// DATA PROCESSING (STANDARD)
+// ==========================================
+function naturalSort(a, b) {
+    return a.id.localeCompare(b.id, undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function processData() {
+    // 1. RESTORE MAIN MAP DATA
+    allSOPs = SOPS_DATA || [];
+    if (!ARCHETYPES_DATA) {
+        console.error("Missing Archetypes Data");
+        return;
+    }
+
+    const allArchetypes = JSON.parse(JSON.stringify(ARCHETYPES_DATA)).map(a => ({...a, children: [] }));
+    archetypeMap.clear();
+    allArchetypes.forEach(a => archetypeMap.set(a.id, a));
+
+    let topLevelArchetypes = [];
+    allArchetypes.forEach(a => {
+        if (a.parent) {
+            const parent = archetypeMap.get(a.parent);
+            if (parent) parent.children.push(a); else topLevelArchetypes.push(a);
+        } else {
+            topLevelArchetypes.push(a);
+        }
+    });
+    topLevelArchetypes.forEach(parent => parent.children.sort(naturalSort));
+
+    const cat1 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D1')).sort(naturalSort);
+    const cat2 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D2')).sort(naturalSort);
+    const cat3 = topLevelArchetypes.filter(a => a.level === 'L1' && a.domain.includes('D3')).sort(naturalSort);
+    const cat4 = topLevelArchetypes.filter(a => a.level === 'L2' || a.level === 'L3').sort((a,b) => a.level.localeCompare(b.level) || naturalSort(a,b));
+
+    allCategories = [
+        { id: 'l1-d1', title: 'I. L1 - Number & Algebra', icon: ICONS['D1'], archetypes: cat1 },
+        { id: 'l1-d2', title: 'II. L1 - Geometry & Measurement', icon: ICONS['D2'], archetypes: cat2 },
+        { id: 'l1-d3', title: 'III. L1 - Statistics & Probability', icon: ICONS['D3'], archetypes: cat3 },
+        { id: 'l2-l3', title: 'IV. L2 & L3 - Integrated Models', icon: ICONS['L2L3'], archetypes: cat4 }
+    ];
+}
+
+// ==========================================
+// RENDER FUNCTIONS (MAIN MAP)
+// ==========================================
+function getList(obj, ...keys) {
+    if (!obj) return [];
+    for (const key of keys) {
+        if (obj[key] && Array.isArray(obj[key]) && obj[key].length > 0) return obj[key];
+    }
+    return [];
+}
+
+function getSopById(id) {
+    return allSOPs.find(s => s.id === id) || { 
+        id: id, name: id, description: "Details missing.", steps: [] 
+    };
+}
+
+function renderArchetypeCard(archetype) {
+    const level = archetype.level || 'L?';
+    const levelClass = `level-${level.toLowerCase().replace('l', '')}`;
+    const hasChildren = archetype.children && archetype.children.length > 0;
+    const branchIcon = hasChildren ? ICONS.branch : '';
+    const childCount = hasChildren ? `<span class="branch-count-badge">${archetype.children.length} sub-models</span>` : '';
+
+    return `
+    <div class="archetype-card-wrapper">
+        <div class="archetype-card ${levelClass} ${hasChildren ? 'is-parent' : 'is-standalone'}" 
+             id="arch-${archetype.id}" 
+             onclick="toggleArchetype(this)"
+             data-name="${(archetype.name||'').toLowerCase()}"
+             data-id="${(archetype.id||'').toLowerCase()}"
+        >
+          <div class="archetype-title">
+            <span class="level-badge">${level}</span>
+            <span class="archetype-name">
+              ${archetype.name} ${branchIcon}
+            </span>
+            <span class="archetype-id">${archetype.id}</span>
+            ${childCount}
           </div>
-          <div class="modal-body" id="branchModalBody">
-              <!-- Branch content will be populated by JavaScript -->
-          </div>
-      </div>
-  </div>
+          <div class="archetype-expand-indicator">${ICONS.plus}</div>
+        </div>
+        <div class="archetype-details-container" style="display: none;">
+            ${renderInPlaceContent(archetype, hasChildren)}
+        </div>
+    </div>`;
+}
 
-  <!-- Footer -->
-  <footer>
-    <p><strong>e-Math Archetype System</strong></p>
-    <p>© 2025 · Built with systematic learning design</p>
-  </footer>
+function renderInPlaceContent(archetype, hasChildren) {
+    let html = `<div class="branches-overview"><p>${archetype.description || 'No description available.'}</p></div>`;
+    
+    // 1. Render SOPs (Required & Support)
+    html += renderSopDetails(archetype);
 
-  <!-- 
-    CORE JAVASCRIPT FILES
-  -->
-  <script type="module" src="evolution-map-app.js"></script>
+    // 2. Render Archetype Specifics
+    html += renderArchetypeSpecifics(archetype);
+    
+    // 3. Render Children
+    if (hasChildren) {
+        html += `<h4 class="modal-sub-branch-title">Sub-Models</h4>`;
+        html += `<div class="archetype-child-list-container">`;
+        html += archetype.children.map(child => `
+            <div class="archetype-child-card archetype-card level-${child.level.toLowerCase().replace('l','')}"
+                 onclick="showModalForArchetype('${child.id}'); event.stopPropagation();">
+                <div class="archetype-title">
+                    <span class="branch-prefix">${ICONS.Topic}</span>
+                    <span class="level-badge">${child.level}</span>
+                    <span class="archetype-name">${child.name}</span>
+                    <span class="archetype-id">${child.id}</span>
+                </div>
+            </div>
+        `).join('');
+        html += `</div>`;
+    }
+    return html;
+}
 
-</body>
-</html>
+function renderSopDetails(archetype) {
+    let html = '';
+    const required = getList(archetype, 'requiredSOPs');
+    if (required.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Required SOPs</h4>`;
+        required.forEach(sopId => html += renderSingleSopCard(sopId));
+    }
+    const support = getList(archetype, 'supportSOPs', 'support_sops');
+    if (support.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Support SOPs</h4>`;
+        support.forEach(sopId => html += renderSingleSopCard(sopId));
+    }
+    return html;
+}
+
+function renderArchetypeSpecifics(archetype) {
+    let html = '';
+    const microSkills = getList(archetype, 'microSkills', 'micro_skills', 'microskills', 'MicroSkills');
+    const pitfalls = getList(archetype, 'pitfalls', 'Pitfalls');
+    const tips = getList(archetype, 'proTips', 'pro_tips', 'ProTips');
+
+    if (microSkills.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Micro-Skills & Competencies</h4>`;
+        html += `<div class="sop-section" style="border-left: 3px solid var(--accent); margin-bottom: 1rem;">
+            <ul style="list-style: disc; padding-left: 1.5rem; color: #e2e8f0; margin: 0;">${renderSafeListItems(microSkills)}</ul>
+        </div>`;
+    }
+    if (pitfalls.length > 0) html += `<div style="margin-top: 1rem;">${renderSafePitfalls(pitfalls)}</div>`;
+    if (tips.length > 0) html += `<div style="margin-top: 0.5rem;">${renderSafeProTips(tips)}</div>`;
+    return html;
+}
+
+function renderSingleSopCard(sopId) {
+    const sop = getSopById(sopId);
+    const pitfalls = getList(sop, 'pitfalls', 'Pitfalls');
+    const tips = getList(sop, 'proTips', 'pro_tips', 'ProTips', 'pro_Tips');
+
+    return `
+      <div class="sop-section">
+        <p class="sop-goal"><strong>${sop.name}</strong><br>${sop.description || ''}</p>
+        <ul style="list-style: disc; padding-left: 1.5rem; color: #e2e8f0; margin-bottom: 1rem;">
+            ${renderSafeListItems(sop.steps)}
+        </ul>
+        ${pitfalls.length > 0 ? `<div style="margin-top:1rem;">${renderSafePitfalls(pitfalls)}</div>` : ''}
+        ${tips.length > 0 ? `<div style="margin-top:0.5rem;">${renderSafeProTips(tips)}</div>` : ''}
+      </div>`;
+}
+
+// ==========================================
+// GEOMETRY LOGIC FRAMEWORK (ISOLATED)
+// ==========================================
+
+function getSopsForLayer(layerType) {
+    const layerConfig = GEO_LOGIC_MAP[layerType];
+    if (!layerConfig) return [];
+    // Use main SOP data but filter by strict ID set
+    return allSOPs.filter(sop => layerConfig.items.has(sop.id));
+}
+
+function renderMiniSopCard(sop) {
+    const steps = sop.steps || [];
+    const pitfalls = sop.pitfalls || [];
+    const tips = sop.pro_tips || sop.proTips || [];
+
+    return `
+    <div class="mini-sop" onclick="this.classList.toggle('active')">
+        <div class="mini-sop-header">
+            <div>
+                <span class="mini-sop-id">${sop.id}</span>
+                <div class="mini-sop-name">${sop.name.split('·')[1] || sop.name}</div>
+            </div>
+            <div class="mini-sop-arrow">${ICONS.chevronDown}</div>
+        </div>
+        <div class="mini-sop-detail">
+            <div class="detail-pad">
+                <div class="detail-desc">${sop.description}</div>
+                ${steps.length > 0 ? `<div class="detail-label">Procedure</div><ol class="detail-steps">${steps.map(s => `<li>${s}</li>`).join('')}</ol>` : ''}
+                ${pitfalls.length > 0 ? `<div class="detail-label">Pitfalls</div>${renderSafePitfalls(pitfalls)}` : ''}
+                ${tips.length > 0 ? `<div class="detail-label">Pro Tips</div>${renderSafeProTips(tips)}` : ''}
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+function renderGeoFrameworkSection() {
+    const visualSops = getSopsForLayer('layer1');
+    const calcSops = getSopsForLayer('layer2');
+    const proofSops = getSopsForLayer('layer3');
+
+    return `
+    <section class="geo-framework-section">
+        <div class="geo-header-row">
+            <h2 class="geo-framework-title">Geometry SOP Logic Framework</h2>
+            <button class="geo-stuck-btn" onclick="openGeoWizard()">
+                ${ICONS.help} 🤔 I'm Stuck
+            </button>
+        </div>
+
+        <div class="geo-instruction-banner" onclick="this.classList.toggle('collapsed')">
+            <div class="geo-banner-icon">${ICONS.info}</div>
+            <div class="geo-banner-content">
+                <span class="geo-banner-title">Strategy Guide: 3-Step Process</span>
+                <div class="geo-banner-text">
+                    Geometry Problem Solving Trinity: 1. <strong>Visual (Eye)</strong> Scan features -> 2. <strong>Tool (Hand)</strong> Select tools -> 3. <strong>Proof (Brain)</strong> Write logic.
+                </div>
+            </div>
+        </div>
+        
+        <div class="geo-stack">
+            <!-- Layer 1 -->
+            <div class="geo-layer-card layer-visual" id="geo-layer-1">
+                <div class="geo-layer-header" onclick="toggleGeoLayer(this)">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.eye}</div>
+                        <div class="geo-layer-info">
+                            <div class="geo-layer-title">Layer 1: Visual Triggers</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer1.desc}</div>
+                        </div>
+                    </div>
+                    <div class="geo-layer-meta">
+                        <span class="geo-count-badge">${visualSops.length} SOPs</span>
+                        <div class="expand-indicator">${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">
+                        ${visualSops.map(renderMiniSopCard).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 2 -->
+            <div class="geo-layer-card layer-calc" id="geo-layer-2">
+                <div class="geo-layer-header" onclick="toggleGeoLayer(this)">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.tool}</div>
+                        <div class="geo-layer-info">
+                            <div class="geo-layer-title">Layer 2: Calculation Tools</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer2.desc}</div>
+                        </div>
+                    </div>
+                    <div class="geo-layer-meta">
+                        <span class="geo-count-badge">${calcSops.length} SOPs</span>
+                        <div class="expand-indicator">${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">
+                        ${calcSops.map(renderMiniSopCard).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Layer 3 -->
+            <div class="geo-layer-card layer-proof" id="geo-layer-3">
+                <div class="geo-layer-header" onclick="toggleGeoLayer(this)">
+                    <div class="geo-layer-title-group">
+                        <div class="geo-layer-icon">${ICONS.brain}</div>
+                        <div class="geo-layer-info">
+                            <div class="geo-layer-title">Layer 3: Reasoning & Proof</div>
+                            <div class="geo-layer-desc">${GEO_LOGIC_MAP.layer3.desc}</div>
+                        </div>
+                    </div>
+                    <div class="geo-layer-meta">
+                        <span class="geo-count-badge">${proofSops.length} SOPs</span>
+                        <div class="expand-indicator">${ICONS.plus}</div>
+                    </div>
+                </div>
+                <div class="geo-layer-body">
+                    <div class="geo-sop-grid">
+                        ${proofSops.map(renderMiniSopCard).join('')}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Wizard Modal -->
+    <div class="geo-wizard-overlay" id="geoWizardOverlay">
+        <div class="geo-wizard-modal">
+            <h3 class="geo-wizard-title">🤔 What is your problem?</h3>
+            <div class="geo-wizard-options">
+                <div class="geo-wizard-option" onclick="geoWizardAction('geo-layer-1')">
+                    <span>Can't read the diagram</span>
+                    <span>👁️ Layer 1</span>
+                </div>
+                <div class="geo-wizard-option" onclick="geoWizardAction('geo-layer-2')">
+                    <span>Don't know the formula</span>
+                    <span>🛠️ Layer 2</span>
+                </div>
+                <div class="geo-wizard-option" onclick="geoWizardAction('geo-layer-3')">
+                    <span>Don't know how to write proof</span>
+                    <span>🗣️ Layer 3</span>
+                </div>
+            </div>
+            <button class="geo-wizard-close" onclick="closeGeoWizard()">Cancel</button>
+        </div>
+    </div>
+    `;
+}
+
+// ==========================================
+// UNIVERSAL HELPERS
+// ==========================================
+function renderSafeListItems(list) {
+    if (!list) return '';
+    return list.map(item => {
+        let text = typeof item === 'string' ? item : (item.text || JSON.stringify(item));
+        return `<li style="margin-bottom: 0.5rem; line-height: 1.5;">${text}</li>`;
+    }).join('');
+}
+
+function renderSafePitfalls(list) {
+    return list.map(item => {
+        let type = 'Error';
+        let text = '';
+        if (typeof item === 'string') {
+            text = item;
+            type = 'Common Error';
+        } else if (typeof item === 'object' && item !== null) {
+            text = item.text || JSON.stringify(item);
+            type = item.type || 'Error';
+        }
+        return `<div class="pitfall-item"><span class="pitfall-badge">${type}</span><span>${text}</span></div>`;
+    }).join('');
+}
+
+function renderSafeProTips(list) {
+    return list.map(item => {
+        let text = '';
+        if (typeof item === 'string') {
+            text = item;
+        } else if (typeof item === 'object' && item !== null) {
+            text = item.text || JSON.stringify(item);
+        }
+        return `<div class="pro-tip-item"><span class="pro-tip-badge">Pro Tip</span><span>${text}</span></div>`;
+    }).join('');
+}
+
+// ==========================================
+// INITIALIZATION
+// ==========================================
+function init() {
+    console.log("🚀 App Initialized v11.6 (Data Restored + Geo Logic)");
+    injectStyles();
+    processData();
+    
+    const container = document.getElementById('evolution-map-container');
+    if(container) {
+        container.innerHTML = allCategories.map(cat => `
+            <div class="category-card" data-id="${cat.id}">
+                <div class="category-header" onclick="toggleCategory(this)">
+                    <div class="category-title-group">
+                        <span class="category-icon">${cat.icon}</span>
+                        <div>
+                            <h2 class="category-title">${cat.title}</h2>
+                            <p class="category-subtitle">${cat.archetypes.length} Archetypes</p>
+                        </div>
+                    </div>
+                    <div class="expand-indicator">${ICONS.plus}</div>
+                </div>
+                <div class="category-content">
+                    <div class="category-body">
+                        ${cat.archetypes.map(renderArchetypeCard).join('')}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // Append Geo Framework
+    const mainBody = document.body;
+    const geoSection = document.createElement('div');
+    geoSection.innerHTML = renderGeoFrameworkSection();
+    const footer = document.querySelector('footer');
+    if(footer) {
+        mainBody.insertBefore(geoSection, footer);
+    } else {
+        mainBody.appendChild(geoSection);
+    }
+
+    setupSearch();
+}
+
+// Helper functions
+window.toggleCategory = (el) => {
+    const card = el.closest('.category-card');
+    card.classList.toggle('expanded');
+    el.querySelector('.expand-indicator').innerHTML = card.classList.contains('expanded') ? ICONS.minus : ICONS.plus;
+};
+window.toggleGeoLayer = (el) => {
+    const card = el.closest('.geo-layer-card');
+    card.classList.toggle('expanded');
+    el.querySelector('.expand-indicator').innerHTML = card.classList.contains('expanded') ? ICONS.minus : ICONS.plus;
+};
+window.toggleArchetype = (el) => {
+    const card = el.closest('.archetype-card');
+    const container = card.nextElementSibling;
+    card.classList.toggle('expanded');
+    if(container) {
+        container.style.display = card.classList.contains('expanded') ? 'block' : 'none';
+    }
+    el.querySelector('.archetype-expand-indicator').innerHTML = card.classList.contains('expanded') ? ICONS.minus : ICONS.plus;
+};
+window.toggleAllCards = (expand) => {
+    document.querySelectorAll('.category-card').forEach(c => {
+        if(expand) c.classList.add('expanded'); else c.classList.remove('expanded');
+    });
+};
+
+// Wizard
+window.openGeoWizard = () => document.getElementById('geoWizardOverlay').classList.add('active');
+window.closeGeoWizard = () => document.getElementById('geoWizardOverlay').classList.remove('active');
+window.geoWizardAction = (layerId) => {
+    closeGeoWizard();
+    const layer = document.getElementById(layerId);
+    if(layer) {
+        layer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if(!layer.classList.contains('expanded')) {
+            const header = layer.querySelector('.geo-layer-header');
+            if(header) toggleGeoLayer(header);
+        }
+        layer.classList.add('highlight-pulse');
+        setTimeout(() => layer.classList.remove('highlight-pulse'), 3000);
+    }
+};
+
+// Modal
+window.showModalForArchetype = (id) => {
+    const arch = archetypeMap.get(id);
+    if(!arch) return;
+    const modal = document.getElementById('branchModal');
+    document.getElementById('branchModalTitle').textContent = arch.name;
+    document.getElementById('branchModalBody').innerHTML = renderInPlaceContent(arch, false); 
+    modal.classList.add('visible');
+};
+window.closeBranchModal = () => document.getElementById('branchModal').classList.remove('visible');
+
+function setupSearch() {
+    const input = document.getElementById('filter-search');
+    if(!input) return;
+    input.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase().replace(/\s+/g, '');
+        document.querySelectorAll('.category-card').forEach(cat => {
+            let hasMatch = false;
+            cat.querySelectorAll('.archetype-card-wrapper').forEach(wrapper => {
+                const card = wrapper.querySelector('.archetype-card');
+                const match = card.dataset.id.includes(val) || card.dataset.name.replace(/\s+/g,'').includes(val);
+                wrapper.style.display = match ? 'block' : 'none';
+                if(match) hasMatch = true;
+            });
+            cat.style.display = hasMatch ? 'block' : 'none';
+        });
+        document.querySelectorAll('.mini-sop').forEach(card => {
+            const text = card.innerText.toLowerCase().replace(/\s+/g,'');
+            card.style.display = text.includes(val) ? 'flex' : 'none';
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', init);
