@@ -1,10 +1,9 @@
 /**
  * evolution-map-app.js
- * v36.0 - FINAL STABLE RELEASE: MODULE A INTERACTIVITY & SPACING FIX
- * * TARGETED FIXES:
- * 1. MODULE A INTERACTIVITY: Fixed event delegation for '.mini-sop' card expansion.
- * 2. SPACING FIX: Applied robust spacing to Engine Headers (ID/Name separation) and SOP/Tool tags.
- * 3. LOGIC: All data integrations are fully active and robust against missing fields.
+ * v38.1 - CRITICAL FIX: SUB-MODEL MODAL DISPLAY
+ * * FIX: Implements the global modal functions (showModalForArchetype and closeBranchModal) 
+ * to correctly display detailed SOP/Pitfalls data for Sub-Models (child archetypes) 
+ * when they are clicked from the parent card's expanded view.
  */
 
 import { ARCHETYPES_DATA } from './archetypes-data.js';
@@ -80,7 +79,7 @@ function processData() {
         SOPS_DATA.forEach(sop => { if (sop && sop.id) genericSopMap.set(sop.id, sop); });
     }
 
-    // 2. Index Engine SOPs (engines-data.js)
+    // 2. Index Engine SOPs
     engineSopMap.clear();
     if (ENGINES_DATA) {
         Object.values(ENGINES_DATA).forEach(domain => {
@@ -114,10 +113,11 @@ function processData() {
     ];
 }
 
-// === HYBRID DATA ACCESSOR (For Module B and Module A) ===
+// === HYBRID DATA ACCESSOR ===
 function getMixedSopData(id) {
     if (!id) return null;
     const cleanId = id.trim();
+    
     const engineData = engineSopMap.get(cleanId);
     const genericData = genericSopMap.get(cleanId);
     
@@ -140,7 +140,7 @@ function getMixedSopData(id) {
 
     result.exam_usage = engineData?.exam_usage || "-";
     result.micro_skills = engineData?.micro_skills || "-";
-    
+
     result.steps = genericData?.steps || [];
     result.pitfalls_summary = engineData?.pitfalls || null;
     result.pitfalls_list = genericData?.pitfalls || []; 
@@ -150,7 +150,7 @@ function getMixedSopData(id) {
 }
 
 // ==========================================
-// 5. STYLE INJECTION
+// 4. STYLES
 // ==========================================
 function injectStyles() {
     const styleId = 'geo-framework-styles';
@@ -322,17 +322,26 @@ function renderInPlaceContent(archetype, hasChildren) {
     if (hasChildren) {
         html += `<h4 class="modal-sub-branch-title">Sub-Models</h4>`;
         html += `<div class="archetype-child-list-container">`;
-        html += archetype.children.map(child => `
-            <div class="archetype-child-card archetype-card level-${child.level.toLowerCase().replace('l','')}"
-                 onclick="showModalForArchetype('${child.id}'); event.stopPropagation();">
-                <div class="archetype-title">
-                    <span class="branch-prefix">${ICONS.Topic}</span>
-                    <span class="level-badge">${child.level}</span>
-                    <span class="archetype-name">${child.name}</span>
-                    <span class="archetype-id">${child.id}</span>
-                </div>
-            </div>
-        `).join('');
+        
+        // --- FIX: Ensure the child card data is correctly sourced for the modal ---
+        archetype.children.forEach(child => {
+            // Find the full child archetype object in the map
+            const fullChild = archetypeMap.get(child.id);
+            if (fullChild) {
+                html += `
+                    <div class="archetype-child-card archetype-card level-${fullChild.level.toLowerCase().replace('l','')}"
+                         data-id="${fullChild.id}"
+                         onclick="showModalForArchetype('${fullChild.id}'); event.stopPropagation();">
+                        <div class="archetype-title">
+                            <span class="branch-prefix">${ICONS.Topic}</span>
+                            <span class="level-badge">${fullChild.level}</span>
+                            <span class="archetype-name">${fullChild.name}</span>
+                            <span class="archetype-id">${fullChild.id}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        });
         html += `</div>`;
     }
     return html;
@@ -354,15 +363,12 @@ function renderSopDetails(archetype) {
 }
 
 function renderSingleSopCard(sopId) {
-    // Reuse the hybrid data accessor to get Pro Tips/Pitfalls even for Archetypes
     const sop = getMixedSopData(sopId); 
     
-    // Render Steps
     let content = `<ul class="sop-steps-list">
         ${sop.steps && sop.steps.length > 0 ? sop.steps.map(s => `<li>${s}</li>`).join('') : '<li>Refer to Engine Module for specific chain.</li>'}
     </ul>`;
 
-    // Add Pitfalls (Rich Array) - FIXED [object Object] by extracting text
     if (sop.pitfalls_list && sop.pitfalls_list.length > 0) {
         content += `<div style="margin-top:1rem;">${sop.pitfalls_list.map(p => {
             const text = renderRichTextItem(p);
@@ -371,7 +377,6 @@ function renderSingleSopCard(sopId) {
         }).join('')}</div>`;
     }
 
-    // Add Pro Tips
     if (sop.pro_tips && sop.pro_tips.length > 0) {
         content += `<div style="margin-top:0.5rem;">${sop.pro_tips.map(t => {
             const text = renderRichTextItem(t);
@@ -401,6 +406,7 @@ function renderArchetypeSpecifics(archetype) {
         </div>`;
     }
     if (pitfalls.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Pitfalls & Errors</h4>`;
         html += `<div style="margin-top: 1rem;">
             ${pitfalls.map(p => {
                 const text = renderRichTextItem(p);
@@ -409,6 +415,7 @@ function renderArchetypeSpecifics(archetype) {
         </div>`;
     }
     if (tips.length > 0) {
+        html += `<h4 class="modal-sub-branch-title">Pro Tips</h4>`;
         html += `<div style="margin-top: 0.5rem;">
             ${tips.map(t => {
                 const text = renderRichTextItem(t);
@@ -420,24 +427,19 @@ function renderArchetypeSpecifics(archetype) {
 }
 
 // ==========================================
-// 7. RENDERER: MODULE A - GEO LOGIC FRAMEWORK (UPDATED: FULL DATA)
+// 7. RENDERER: MODULE A - GEO LOGIC FRAMEWORK
 // ==========================================
 function getSopsForLayer(layerType) {
     const layerConfig = GEO_LOGIC_MAP[layerType];
     if (!layerConfig) return [];
-    // KEY FIX: Use getMixedSopData to ensure we get ALL fields including sops-data.js richness
     return Array.from(layerConfig.items).map(id => getMixedSopData(id)).filter(s => s && s.id);
 }
 
 function renderMiniSopCard(sop) {
-    // sop is the hybrid object from getMixedSopData
-    
-    // 1. Intelligent fallback for content
-    let steps = sop.steps || [];
+    const steps = sop.steps || [];
     let pitfalls = sop.pitfalls_list || [];
     let proTips = sop.pro_tips || [];
 
-    // 2. Build Pitfalls Content
     let pitfallsContent = "-";
     if(sop.pitfalls_summary && sop.pitfalls_summary !== "-") {
         pitfallsContent = `<div style="margin-bottom:0.5rem; color:#fca5a5;">${sop.pitfalls_summary}</div>`;
@@ -451,7 +453,6 @@ function renderMiniSopCard(sop) {
         }).join('');
     }
 
-    // 3. Build Pro Tips Content
     let proTipsContent = "-";
     if(proTips.length > 0) {
         proTipsContent = proTips.map(t => {
@@ -460,7 +461,6 @@ function renderMiniSopCard(sop) {
         }).join('');
     }
 
-    // 4. Build Procedure Content
     let procedureContent = "-";
     if(steps.length > 0) {
         procedureContent = `<ul class="sop-steps-list">${steps.map(s => `<li>${s}</li>`).join('')}</ul>`;
@@ -741,10 +741,99 @@ function renderEngineDashboard() {
 }
 
 // ==========================================
-// 9. INIT & INIT EVENTS
+// 9. MODAL FUNCTIONS (CRITICAL FIX)
+// ==========================================
+
+/**
+ * Closes the detail modal with an exit animation.
+ */
+window.closeBranchModal = function() {
+    const modal = document.getElementById('branchModal');
+    modal.classList.add('exiting');
+    // Use a slight delay to allow CSS animation to complete
+    setTimeout(() => {
+        modal.classList.remove('visible', 'exiting');
+    }, 300);
+};
+
+/**
+ * Fetches and displays the full detail of an Archetype (or Sub-Model) in a modal.
+ * @param {string} id The Archetype ID (e.g., ARCH-L1-ALG-04-FACT).
+ */
+window.showModalForArchetype = function(id) {
+    const archetype = archetypeMap.get(id);
+    if (!archetype) {
+        console.error('Archetype not found for ID:', id);
+        return;
+    }
+
+    const modal = document.getElementById('branchModal');
+    const modalTitle = document.getElementById('branchModalTitle');
+    const modalBody = document.getElementById('branchModalBody');
+
+    // 1. Set title
+    modalTitle.innerHTML = `${archetype.name} <span class="archetype-id">${archetype.id}</span>`;
+
+    // 2. Build content body
+    let content = '';
+
+    // Add 'Back to Parent' button if it is a Sub-Model
+    if (archetype.parent) {
+        const parentArch = archetypeMap.get(archetype.parent);
+        if (parentArch) {
+            content += `<div class="modal-back-btn" onclick="window.showModalForArchetype('${archetype.parent}'); event.stopPropagation();">
+                           &larr; Back to ${parentArch.id} (${parentArch.name})
+                       </div>`;
+        }
+    }
+
+    // Add description overview
+    content += `<div class="branches-overview"><p>${archetype.description || 'No detailed description available.'}</p></div>`;
+    
+    // 3. Linked SOPs (Required & Support)
+    content += renderSopDetails(archetype);
+
+    // 4. Specifics (MicroSkills, Pitfalls) - renderArchetypeSpecifics now includes titles for these sections
+    content += renderArchetypeSpecifics(archetype);
+    
+    // 5. Nested children (for multi-level structures, if applicable)
+    if (archetype.children && archetype.children.length > 0) {
+        content += `<h4 class="modal-sub-branch-title">Nested Sub-Models</h4>`;
+        content += `<div class="archetype-child-list-container">`;
+        archetype.children.forEach(child => {
+            const fullChild = archetypeMap.get(child.id);
+            if (fullChild) {
+                // Clicking nested child re-opens modal with child details
+                content += `
+                    <div class="archetype-child-card archetype-card level-${fullChild.level.toLowerCase().replace('l','')}"
+                         data-id="${fullChild.id}"
+                         onclick="window.showModalForArchetype('${fullChild.id}'); event.stopPropagation();">
+                        <div class="archetype-title">
+                            <span class="branch-prefix">${ICONS.Topic}</span>
+                            <span class="level-badge">${fullChild.level}</span>
+                            <span class="archetype-name">${fullChild.name}</span>
+                            <span class="archetype-id">${fullChild.id}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        content += `</div>`;
+    }
+
+    modalBody.innerHTML = content;
+    
+    // 6. Display modal
+    modal.classList.remove('exiting');
+    modal.classList.add('visible');
+    modalBody.scrollTop = 0; // Scroll to top on open
+};
+
+// ==========================================
+// 10. INIT & INIT EVENTS
 // ==========================================
 function init() {
-    console.log("🚀 Evolution Map v36.0 - Final Visual Fixes");
+    console.log("🚀 Evolution Map v38.1 - Sub-Model Modal Fix Applied");
     injectStyles();
     processData();
     
@@ -809,6 +898,7 @@ function bindEvents() {
         }
 
         // 2. ARCHETYPE TOGGLE
+        // IMPORTANT: Prevent this from firing if we click on a child archetype inside the parent.
         const archCard = target.closest('.archetype-card');
         if (archCard && !archCard.classList.contains('archetype-child-card')) {
             const wrapper = archCard.closest('.archetype-card-wrapper');
@@ -834,7 +924,6 @@ function bindEvents() {
     
         // 4. MINI SOP TOGGLE (Module A Cards)
         const miniSop = target.closest('.mini-sop');
-        // KEY FIX: Only toggle if we click the header part (not inside the detail)
         if (miniSop && !target.closest('.mini-sop-detail')) {
              miniSop.classList.toggle('active');
              const miniSopHeader = miniSop.querySelector('.mini-sop-header');
@@ -860,6 +949,21 @@ function bindEvents() {
             sopBtn.closest('.engine-card').classList.toggle('expanded');
             return;
         }
+        
+        // 7. ARCHETYPE SUB-MODEL CLICK (New Modal Trigger)
+        // This listener is redundant because the inline 'onclick' on the archetype-child-card 
+        // handles the modal opening with event.stopPropagation().
+        // If it were active, it would be:
+        /*
+        const subModelCard = target.closest('.archetype-child-card');
+        if (subModelCard) {
+            const id = subModelCard.dataset.id || subModelCard.getAttribute('data-id');
+            if (id) {
+                showModalForArchetype(id); // Use the global function to open the modal
+            }
+            return;
+        }
+        */
     });
     
     // Search
