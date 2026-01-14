@@ -82,7 +82,9 @@
                 refresh: <g><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></g>,
                 layers: <g><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></g>,
                 hash: <g><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></g>,
-                table: <g><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></g>
+                table: <g><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></g>,
+                check: <polyline points="20 6 9 17 4 12"/>,
+                x: <g><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></g>
             };
             return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{icons[name] || icons['book']}</svg>;
         };
@@ -232,7 +234,7 @@
         ];
 
         // --- DATA ---
-        // FULL PRESERVATION OF CONTENT (Unchanged)
+        // FULL PRESERVATION OF CONTENT & SOP UPDATED TO MATCH PDF
         const historyData = [
           {
             id: "ARCH-L1-SBQ-01",
@@ -248,8 +250,13 @@
             commonErrors: ["Describing instead of inferring", "Quoting without explanation", "Over-inference beyond evidence", "Repeating the quote"],
             sop: {
               id: "SOP-HIS-SBQ-01",
+              name: "Basic Inference",
+              coreSkill: "Infer implied meaning using evidence and logical explanation.",
               steps: ["Identify implied meaning", "Write one valid inference", "Select strongest evidence (quote)", "Explain how evidence implies the inference"],
-              supportElements: ["Heuristics", "Sentence Frames", "Pitfalls to Avoid", "Micro-Skill Checklist"]
+              supportElements: ["Heuristics", "Sentence Frames", "Pitfalls to Avoid", "Micro-Skill Checklist"],
+              microSkills: ["Distinguish inference from description", "Select implication-rich quotes", "Build causal explanation"],
+              commonErrors: ["Description instead of inference", "Missing explanation", "Over-inference"],
+              example: "\"Hitler intended aggression\" supported by \"expand eastwards\"."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Build reflex ability to produce a one-sentence inference.", task: "Write one valid inferred meaning from a short line.", instructions: "Write one inference based on the given phrase.", qTemplate: "Write an inference based on: '{{Source Line}}'.", aTemplate: "The source suggests that..." },
@@ -272,8 +279,13 @@
             commonErrors: ["Evidence does not match inference", "Overly long quotes", "Weak or missing explanation"],
             sop: {
               id: "SOP-HIS-SBQ-02",
+              name: "Inference with Evidence",
+              coreSkill: "Draw precise inference supported by the most implication-rich evidence.",
               steps: ["Identify specific implied meaning", "Write precise inference", "Select strongest and most relevant phrase", "Provide tight causal explanation"],
-              supportElements: ["Heuristics for selecting action verbs", "Sentence patterns for tight alignment", "Pitfalls to avoid over-generalisation"]
+              supportElements: ["Heuristics for selecting action verbs", "Sentence patterns for tight alignment", "Pitfalls to avoid over-generalisation"],
+              microSkills: ["Match inference to evidence", "Identify high-impact words", "Avoid over-inference"],
+              commonErrors: ["Evidence does not match inference", "Long quotes", "Weak explanation"],
+              example: "\"Japan wanted domination\" supported by \"Asia belongs to Japan\"."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Build reflex to craft precise inference aligned with evidence.", task: "Write a precise inference from a short phrase.", instructions: "Write ONE inference matching the meaning of the phrase.", qTemplate: "Write an inference based on: '{{Source Line}}'.", aTemplate: "The source implies that..." },
@@ -296,8 +308,13 @@
             commonErrors: ["No similarity claim", "Two descriptions without comparison", "Irrelevant quotes"],
             sop: {
               id: "SOP-HIS-SBQ-03",
+              name: "Comparison - Similarity",
+              coreSkill: "Identify and justify shared viewpoints across sources.",
               steps: ["State similarity clearly", "Provide quote from Source A", "Provide quote from Source B", "Explain how both quotes show the same idea"],
-              supportElements: ["Parallel structure", "Highlight shared tones", "Pitfalls: dual description"]
+              supportElements: ["Parallel structure", "Highlight shared tones", "Pitfalls: dual description"],
+              microSkills: ["Identify shared ideas", "Match parallel evidence", "Write linking explanations"],
+              commonErrors: ["Missing similarity claim", "Describing without comparing"],
+              example: "Both show League was weak (\"failed to act\", \"stood by\")."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify one similarity in simple statements.", task: "Write ONE shared idea between two short lines.", instructions: "Identify what both lines show similarly.", qTemplate: "A: '...'\nB: '...'", aTemplate: "Both show that..." },
@@ -320,8 +337,13 @@
             commonErrors: ["Describing separately without contrast", "Missing difference claim", "Weak or irrelevant quotes"],
             sop: {
               id: "SOP-HIS-SBQ-04",
+              name: "Comparison - Difference",
+              coreSkill: "Identify and justify contrasting viewpoints between sources.",
               steps: ["State one clear difference", "Quote from Source A", "Quote from Source B", "Link both quotes to the contrasting claim"],
-              supportElements: ["Contrast markers", "Using polarity in quotes", "Pitfalls: describing separately"]
+              supportElements: ["Contrast markers", "Using polarity in quotes", "Pitfalls: describing separately"],
+              microSkills: ["Identify opposing attitudes", "Select contrasting evidence", "Build contrast logic"],
+              commonErrors: ["No difference claim", "Mismatched quotes"],
+              example: "A praises appeasement; B criticises it."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify one difference between two short lines.", task: "Write ONE contrasting idea.", instructions: "Identify how the two statements differ.", qTemplate: "A: '...'\nB: '...'", aTemplate: "A shows... while B shows..." },
@@ -344,8 +366,13 @@
             commonErrors: ["Writing message instead of purpose", "No audience identified", "No context provided"],
             sop: {
               id: "SOP-HIS-SBQ-05",
+              name: "Purpose",
+              coreSkill: "Identify why the author produced the source and what impact they intended on the audience.",
               steps: ["Identify purpose (persuade, warn, justify, encourage)", "Identify target audience", "Provide evidence showing persuasion/impact", "Add context to justify purpose"],
-              supportElements: ["Detect propaganda markers", "Emotional/modal verbs", "Context linkage"]
+              supportElements: ["Detect propaganda markers", "Emotional/modal verbs", "Context linkage"],
+              microSkills: ["Distinguish message vs purpose", "Identify audience", "Link context to motive"],
+              commonErrors: ["Writing message instead of purpose", "No audience"],
+              example: "Purpose = justify expansion; Quote = \"must expand\"; Context = Nazi propaganda."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Write 1-sentence purpose using a short line.", task: "Identify intention in a single phrase.", instructions: "Write why the author wants the audience to believe/do something.", qTemplate: "'{{Source Line}}'", aTemplate: "The purpose is to..." },
@@ -368,8 +395,13 @@
             commonErrors: ["Using provenance instead of content", "Weak or unrelated CK", "No final judgement"],
             sop: {
               id: "SOP-HIS-SBQ-06",
+              name: "Reliability - Content",
+              coreSkill: "Test accuracy of source claims using contextual knowledge (CK).",
               steps: ["State reliability claim", "Provide factual quote", "Use CK to corroborate or contradict", "Provide clear final judgement"],
-              supportElements: ["CK precision heuristics", "Avoid CK dump"]
+              supportElements: ["CK precision heuristics", "Avoid CK dump"],
+              microSkills: ["Identify factual statements", "Match CK with precision", "Reason reliability logically"],
+              commonErrors: ["Using provenance instead of content", "Missing judgement"],
+              example: "\"Invaded Poland 1939\" corroborated by CK."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify factual claim and test it with CK.", task: "Decide if a simple statement is accurate.", instructions: "State whether the statement is accurate using CK.", qTemplate: "Check accuracy: '{{Statement}}'", aTemplate: "This is (accurate/inaccurate) because..." },
@@ -392,8 +424,13 @@
             commonErrors: ["Describing provenance instead of evaluating it", "Not linking motive to reliability", "Missing conclusion"],
             sop: {
               id: "SOP-HIS-SBQ-07",
+              name: "Reliability - Provenance",
+              coreSkill: "Evaluate reliability based on author, motive, audience, and context.",
               steps: ["Identify provenance", "Identify motive or bias", "Explain effect of motive on reliability", "Give clear conclusion"],
-              supportElements: ["Bias markers", "Time-context linkage"]
+              supportElements: ["Bias markers", "Time-context linkage"],
+              microSkills: ["Detect motive", "Link bias to reliability"],
+              commonErrors: ["Describing provenance only", "Missing motive"],
+              example: "Nazi minister persuading Germans → biased → unreliable."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify motive from provenance.", task: "Explain author motive in one sentence.", instructions: "Write why the author produced this statement.", qTemplate: "Written by {{Author}}, {{Role}}. What might be their motive?", aTemplate: "The author would... because..." },
@@ -416,8 +453,13 @@
             commonErrors: ["Writing reliability instead of usefulness", "Vague usefulness claim", "Missing explanation"],
             sop: {
               id: "SOP-HIS-SBQ-08",
+              name: "Usefulness - Content",
+              coreSkill: "Evaluate usefulness based on what the source's content reveals.",
               steps: ["State usefulness claim", "Provide content quote", "Explain insight gained"],
-              supportElements: ["Insight verbs (shows/reveals)", "Specific usefulness (not general)"]
+              supportElements: ["Insight verbs (shows/reveals)", "Specific usefulness (not general)"],
+              microSkills: ["Identify insights", "Link content → insight"],
+              commonErrors: ["Confusing usefulness with reliability", "Repeating quote"],
+              example: "\"Asia belongs to Japan\" → reveals propaganda."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify insight from one line of content.", task: "Write what historians learn from the line.", instructions: "Write the insight shown.", qTemplate: "'{{Line}}'", aTemplate: "This is useful because it shows..." },
@@ -440,8 +482,13 @@
             commonErrors: ["Describing provenance only", "No link to usefulness", "Confusing usefulness with reliability"],
             sop: {
               id: "SOP-HIS-SBQ-09",
+              name: "Usefulness - Provenance",
+              coreSkill: "Evaluate usefulness from author, time, audience, or perspective gained.",
               steps: ["Identify provenance", "Identify perspective gained", "Explain why perspective is useful"],
-              supportElements: ["Time-period significance", "Perspective reasoning"]
+              supportElements: ["Time-period significance", "Perspective reasoning"],
+              microSkills: ["Identify viewpoint", "Link viewpoint → insight"],
+              commonErrors: ["Describing provenance only", "Mixing usefulness with reliability"],
+              example: "Japanese general 1942 → reveals wartime mindset."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify perspective from provenance.", task: "Write insight gained from who created the source.", instructions: "State what historians learn from the author/time.", qTemplate: "{{Provenance}}", aTemplate: "This is useful because it shows..." },
@@ -464,8 +511,13 @@
             commonErrors: ["No support/challenge claim", "Quotes not aligned", "No explanation"],
             sop: {
               id: "SOP-HIS-SBQ-10",
+              name: "Support / Challenge",
+              coreSkill: "Determine whether one source supports or challenges another.",
               steps: ["State support/challenge claim", "Provide quote from Source A", "Provide quote from Source B", "Explain relationship"],
-              supportElements: ["Tone contrast", "Polarity markers"]
+              supportElements: ["Tone contrast", "Polarity markers"],
+              microSkills: ["Identify alignment", "Match quotes correctly"],
+              commonErrors: ["No claim", "Mismatched evidence"],
+              example: "A challenges B on appeasement."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify whether two short lines support or challenge each other.", task: "Decide alignment or contradiction.", instructions: "Identify relationship.", qTemplate: "A: '...'\nB: '...'", aTemplate: "B (supports/challenges) A because..." },
@@ -488,8 +540,13 @@
             commonErrors: ["One-sided argument", "No conclusion", "Listing sources without judgement"],
             sop: {
               id: "SOP-HIS-SBQ-11",
+              name: "Multi-Source Judgment",
+              coreSkill: "Form balanced judgement using supporting and challenging evidence.",
               steps: ["Make judgement claim", "Provide supporting evidence", "Provide challenging evidence", "Make balanced final judgement"],
-              supportElements: ["Weighing language", "Balance structure"]
+              supportElements: ["Weighing language", "Balance structure"],
+              microSkills: ["Evaluate viewpoints", "Judge persuasiveness"],
+              commonErrors: ["One-sided argument", "No conclusion"],
+              example: "Support via aggression; challenge via appeasement."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify support vs challenge lines.", task: "Sort lines into support/challenge.", instructions: "Label each line.", qTemplate: "{{Lines}}", aTemplate: "Support: ... Challenge: ..." },
@@ -512,8 +569,13 @@
             commonErrors: ["Only explanation OR only inference", "Only inference, no explanation", "Misreading message"],
             sop: {
               id: "SOP-HIS-SBQ-12",
+              name: "Explain-Infer Hybrid",
+              coreSkill: "Combine explicit explanation and implied inference into a unified answer.",
               steps: ["Identify explicit message", "Identify implied inference", "Provide evidence", "Explain both layers"],
-              supportElements: ["Dual-layer reasoning", "Message/inference distinction"]
+              supportElements: ["Dual-layer reasoning", "Message/inference distinction"],
+              microSkills: ["Separate explicit vs implied meaning", "Extract multi-layer evidence"],
+              commonErrors: ["Only explanation OR only inference", "Confusing message vs inference"],
+              example: "Message = need land; inference = aggression."
             },
             drills: [
               { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Distinguish message vs inference.", task: "Label each line as explicit or implied.", instructions: "Decide which is message/inference.", qTemplate: "{{Lines}}", aTemplate: "Message: ... Inference: ..." },
@@ -895,6 +957,11 @@
                     </div>
                     <h2 className="text-5xl font-black text-slate-900 tracking-tight mb-2">Standard Operating Procedure</h2>
                     <p className="text-slate-500 font-bold text-lg">Protocol for: {archetype.name}</p>
+                    
+                    {/* NEW: SOP Core Skill Display */}
+                    <div className="mt-6 inline-block bg-white border border-indigo-100 rounded-xl px-6 py-3 shadow-sm max-w-2xl">
+                        <p className="text-indigo-900 font-medium italic">"{sop.coreSkill}"</p>
+                    </div>
                 </div>
                 
                 <div className="space-y-4">
@@ -922,6 +989,45 @@
                         </span>
                     ))}
                 </div>
+
+                {/* NEW: SOP Specific Micro-Skills and Errors */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                    <div className="bg-white p-8 rounded-[2rem] border border-emerald-100 shadow-sm">
+                        <h3 className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                            <Icon name="award" className="w-4 h-4" /> SOP Micro-Skills
+                        </h3>
+                        <ul className="space-y-3">
+                            {sop.microSkills.map((ms, idx) => (
+                                <li key={idx} className="flex items-start gap-3 text-slate-700 text-sm font-medium">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
+                                    {ms}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    
+                    <div className="bg-white p-8 rounded-[2rem] border border-rose-100 shadow-sm">
+                        <h3 className="text-[10px] font-black text-rose-600 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                            <Icon name="alert" className="w-4 h-4" /> SOP Common Errors
+                        </h3>
+                        <ul className="space-y-3">
+                            {sop.commonErrors.map((err, idx) => (
+                                <li key={idx} className="flex items-start gap-3 text-slate-700 text-sm font-medium">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0"></span>
+                                    {err}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+
+                {/* NEW: SOP Example */}
+                {sop.example && (
+                    <div className="mt-8 bg-slate-50 border border-slate-200 p-8 rounded-[2rem] text-center">
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] block mb-3">Concrete Example</span>
+                        <p className="text-slate-800 font-mono text-sm">{sop.example}</p>
+                    </div>
+                )}
             </div>
         );
 
