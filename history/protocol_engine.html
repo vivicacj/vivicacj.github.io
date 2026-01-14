@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIS Lab - Protocol Engine</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        
+        :root { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .active-indicator {
+            view-transition-name: active-tab;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.4s ease-out forwards; }
+
+        /* Tag Colors */
+        .tag-inference { background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff; }
+        .tag-comparison { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }
+        .tag-purpose { background: #fdf2f8; color: #db2777; border: 1px solid #fce7f3; }
+        .tag-reliability { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
+        .tag-usefulness { background: #f5f3ff; color: #7c3aed; border: 1px solid #ede9fe; }
+        .tag-judgement { background: #fefce8; color: #ca8a04; border: 1px solid #fef9c3; }
+        .tag-mixed { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-slate-900 overflow-hidden h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ICONS ---
+        const Icon = ({ name, className = "w-5 h-5" }) => {
+            const icons = {
+                book: <g><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></g>,
+                target: <g><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></g>,
+                search: <g><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></g>,
+                zap: <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>,
+                list: <g><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></g>,
+                pen: <g><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></g>,
+                compass: <g><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></g>,
+                award: <g><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></g>,
+                alert: <g><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></g>,
+                refresh: <g><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></g>,
+                layers: <g><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></g>,
+                // FIXED: Wrapped lines in <g> to make it valid JSX
+                hash: <g><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></g>
+            };
+            return <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{icons[name] || icons['book']}</svg>;
+        };
+
+        // --- DATA ---
+        // FULL PRESERVATION OF CONTENT
+        const historyData = [
+          {
+            id: "ARCH-L1-SBQ-01",
+            name: "Basic Inference",
+            level: "L1",
+            skillType: "Inference",
+            triggerStems: ["What is the message of this source?", "What can you tell from this source?", "What does the source tell you?", "What does the source suggest?"],
+            coreSkill: "Infer implied meaning that is not directly stated in the source.",
+            skillComponents: ["Inference", "Evidence", "Explanation"],
+            requiredMastery: "Produce inference + quote + explanation (L3 standard)",
+            essentialQuestion: "What does the source suggest about X?",
+            microSkills: ["Identify implied meaning", "Avoid description", "Select strongest quote", "Link evidence to inference"],
+            commonErrors: ["Describing instead of inferring", "Quoting without explanation", "Over-inference beyond evidence", "Repeating the quote"],
+            sop: {
+              id: "SOP-HIS-SBQ-01",
+              steps: ["Identify implied meaning", "Write one valid inference", "Select strongest evidence (quote)", "Explain how evidence implies the inference"],
+              supportElements: ["Heuristics", "Sentence Frames", "Pitfalls to Avoid", "Micro-Skill Checklist"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Build reflex ability to produce a one-sentence inference.", task: "Write one valid inferred meaning from a short line.", instructions: "Write one inference based on the given phrase.", qTemplate: "Write an inference based on: '{{Source Line}}'.", aTemplate: "The source suggests that..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full inference structure using a given source.", task: "Inference → Evidence → Explanation", instructions: "Use the source to write a full 3-part inference answer.", qTemplate: "{{Source Extract}}", aTemplate: "- The source suggests that...\n- This is suggested from '...'\n- This shows... because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Identify the strongest evidence that supports a given inference.", task: "Match inference → evidence.", instructions: "Circle/choose the line that best supports the inference.", qTemplate: "Inference: '...'\nSource: '...'", aTemplate: "The strongest evidence is: '...'." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Upgrade weak L2 inference answers to L3 quality.", task: "Add a missing explanation or fix misaligned inference.", instructions: "Improve the provided weak answer.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-02",
+            name: "Inference with Evidence",
+            level: "L1",
+            skillType: "Inference",
+            triggerStems: ["Why do you think...?", "What does the source imply?", "How do you know?"],
+            coreSkill: "Infer meaning with precise and directly supporting evidence.",
+            skillComponents: ["Inference", "Strong Evidence", "Tight Explanation"],
+            requiredMastery: "Inference supported by the strongest phrase + causal explanation",
+            essentialQuestion: "What does the source imply and how do you know?",
+            microSkills: ["Match inference exactly to quote", "Identify high-impact phrases", "Use causal explanation"],
+            commonErrors: ["Evidence does not match inference", "Overly long quotes", "Weak or missing explanation"],
+            sop: {
+              id: "SOP-HIS-SBQ-02",
+              steps: ["Identify specific implied meaning", "Write precise inference", "Select strongest and most relevant phrase", "Provide tight causal explanation"],
+              supportElements: ["Heuristics for selecting action verbs", "Sentence patterns for tight alignment", "Pitfalls to avoid over-generalisation"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Build reflex to craft precise inference aligned with evidence.", task: "Write a precise inference from a short phrase.", instructions: "Write ONE inference matching the meaning of the phrase.", qTemplate: "Write an inference based on: '{{Source Line}}'.", aTemplate: "The source implies that..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full inference using strongest evidence.", task: "Inference → Evidence → Tight Explanation", instructions: "Use the source to write a full 3-part inference answer.", qTemplate: "{{Source Extract}}", aTemplate: "- The source implies that...\n- This is shown by '...'\n- This proves... because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Find the strongest evidence supporting a given inference.", task: "Match inference → strongest quote.", instructions: "Identify the phrase that best supports the inference.", qTemplate: "Inference: '...'\nSource: '...'", aTemplate: "Best evidence: '...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak inference answers to L3 standard.", task: "Add missing explanation or adjust inference for precision.", instructions: "Improve the weak answer using source evidence.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-03",
+            name: "Comparison - Similarity",
+            level: "L1",
+            skillType: "Comparison",
+            triggerStems: ["How similar are these sources?", "In what ways do they agree?", "Compare the views of..."],
+            coreSkill: "Identify and explain similar viewpoints or messages across sources.",
+            skillComponents: ["Similarity Claim", "Evidence A", "Evidence B", "Linking Explanation"],
+            requiredMastery: "Clear similarity + quote A + quote B + explicit link",
+            essentialQuestion: "How are the two sources similar in message or purpose?",
+            microSkills: ["Identify shared attitudes or intentions", "Select parallel quotes", "Write linking statements"],
+            commonErrors: ["No similarity claim", "Two descriptions without comparison", "Irrelevant quotes"],
+            sop: {
+              id: "SOP-HIS-SBQ-03",
+              steps: ["State similarity clearly", "Provide quote from Source A", "Provide quote from Source B", "Explain how both quotes show the same idea"],
+              supportElements: ["Parallel structure", "Highlight shared tones", "Pitfalls: dual description"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify one similarity in simple statements.", task: "Write ONE shared idea between two short lines.", instructions: "Identify what both lines show similarly.", qTemplate: "A: '...'\nB: '...'", aTemplate: "Both show that..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full similarity structure with quotes.", task: "Similarity → Quote A → Quote B → Link", instructions: "Write a complete similarity answer using the sources.", qTemplate: "Source A: '...'\nSource B: '...'", aTemplate: "Both sources show that...\n- A states...; B states...\n- This shows similarity because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Identify quote pairs supporting a given similarity.", task: "Match similarity → evidence from A and B.", instructions: "Choose the pair of lines that best show similarity.", qTemplate: "Similarity: 'Both sources show...'\nEvidence Set: '...'", aTemplate: "Best matching quotes: A='...', B='...'." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak similarity links into strong ones.", task: "Add missing link or correct mismatched quotes.", instructions: "Improve the flawed answer.", qTemplate: "Weak Answer: '...'\nSource A: '...'\nSource B: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-04",
+            name: "Comparison - Difference",
+            level: "L1",
+            skillType: "Comparison",
+            triggerStems: ["How do the sources differ?", "How far do they agree/differ?", "Contrast the views..."],
+            coreSkill: "Identify and explain contrasting viewpoints or messages across sources.",
+            skillComponents: ["Difference Claim", "Evidence A", "Evidence B", "Linking Contrast"],
+            requiredMastery: "Clear difference + quote A + quote B + explicit contrast link",
+            essentialQuestion: "How do the two sources differ in their viewpoints or messages?",
+            microSkills: ["Identify opposite attitudes", "Select contrasting quotes", "Use comparative language"],
+            commonErrors: ["Describing separately without contrast", "Missing difference claim", "Weak or irrelevant quotes"],
+            sop: {
+              id: "SOP-HIS-SBQ-04",
+              steps: ["State one clear difference", "Quote from Source A", "Quote from Source B", "Link both quotes to the contrasting claim"],
+              supportElements: ["Contrast markers", "Using polarity in quotes", "Pitfalls: describing separately"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify one difference between two short lines.", task: "Write ONE contrasting idea.", instructions: "Identify how the two statements differ.", qTemplate: "A: '...'\nB: '...'", aTemplate: "A shows... while B shows..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full difference structure.", task: "Difference → Quote A → Quote B → Link", instructions: "Write a complete difference answer.", qTemplate: "Source A: '...'\nSource B: '...'", aTemplate: "- Source A argues that... while Source B argues that...\n- A states...; B states...\n- This shows a difference because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match difference claim → contrasting quote pair.", task: "Identify strongest contrasting pair.", instructions: "Choose the quotes that best show difference.", qTemplate: "Difference Claim: '...'\nEvidence Set: '...'", aTemplate: "A='...', B='...'." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Correct weak difference answers.", task: "Add difference claim, correct quotes, or add link.", instructions: "Improve weak answer.", qTemplate: "Weak Answer: '...'\nSource A: '...'\nSource B: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-05",
+            name: "Purpose",
+            level: "L1",
+            skillType: "Purpose",
+            triggerStems: ["Why was this source published?", "Why was this letter written?", "What is the purpose of this source?"],
+            coreSkill: "Identify the author's intention and target audience in producing the source.",
+            skillComponents: ["Purpose", "Evidence", "Context"],
+            requiredMastery: "Purpose + quote + contextual explanation",
+            essentialQuestion: "Why did the author create this source?",
+            microSkills: ["Identify intended action/impact on audience", "Distinguish purpose from message", "Use contextual knowledge effectively"],
+            commonErrors: ["Writing message instead of purpose", "No audience identified", "No context provided"],
+            sop: {
+              id: "SOP-HIS-SBQ-05",
+              steps: ["Identify purpose (persuade, warn, justify, encourage)", "Identify target audience", "Provide evidence showing persuasion/impact", "Add context to justify purpose"],
+              supportElements: ["Detect propaganda markers", "Emotional/modal verbs", "Context linkage"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Write 1-sentence purpose using a short line.", task: "Identify intention in a single phrase.", instructions: "Write why the author wants the audience to believe/do something.", qTemplate: "'{{Source Line}}'", aTemplate: "The purpose is to..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Full purpose answer with evidence + context.", task: "Purpose → Evidence → Context → Impact", instructions: "Use the source to craft a complete purpose answer.", qTemplate: "{{Source Extract}}", aTemplate: "The purpose is to...\n- This is shown by...\n- Given the context of..., the author wanted..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Identify which line best supports a given purpose.", task: "Choose evidence → matches purpose.", instructions: "Circle the phrase showing persuasion/impact.", qTemplate: "Purpose: '...'\nSource: '...'", aTemplate: "Evidence: '...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak purpose answers.", task: "Add audience, context, or correct purpose.", instructions: "Improve the answer.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-06",
+            name: "Reliability - Content",
+            level: "L1",
+            skillType: "Reliability",
+            triggerStems: ["Does Source X prove Source Y is wrong?", "Are you surprised by this source?", "Can you trust what this source says?", "Do you believe this account?"],
+            coreSkill: "Evaluate whether the content of the source is reliable using corroboration or contradiction.",
+            skillComponents: ["Claim (reliable/unreliable)", "Evidence from source", "CK corroboration/contradiction", "Final judgement"],
+            requiredMastery: "Claim + evidence + CK + conclusion",
+            essentialQuestion: "Can we trust what the source says? Why?",
+            microSkills: ["Identify factual claims", "Match CK to specific claims", "Decide reliability logically"],
+            commonErrors: ["Using provenance instead of content", "Weak or unrelated CK", "No final judgement"],
+            sop: {
+              id: "SOP-HIS-SBQ-06",
+              steps: ["State reliability claim", "Provide factual quote", "Use CK to corroborate or contradict", "Provide clear final judgement"],
+              supportElements: ["CK precision heuristics", "Avoid CK dump"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify factual claim and test it with CK.", task: "Decide if a simple statement is accurate.", instructions: "State whether the statement is accurate using CK.", qTemplate: "Check accuracy: '{{Statement}}'", aTemplate: "This is (accurate/inaccurate) because..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full reliability-content answer using CK.", task: "Claim → Quote → CK → Judgement", instructions: "Check accuracy of the chosen quote using CK.", qTemplate: "{{Source Extract}}", aTemplate: "The source is (reliable/unreliable) because...\n- It states '...'\n- This is (supported/contradicted) by CK: ...\n- Thus, the source is..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match CK to correct factual claim.", task: "Identify which line CK corroborates/contradicts.", instructions: "Choose the line that CK applies to.", qTemplate: "CK: '...'\nSource: '...'", aTemplate: "Best matching claim: '...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Fix CK application and judgement logic.", task: "Add correct CK or fix mismatch.", instructions: "Improve weak reliability answer.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-07",
+            name: "Reliability - Provenance",
+            level: "L1",
+            skillType: "Reliability",
+            triggerStems: ["Does the author make this reliable?", "Are you surprised by this source?", "Would you consider X or Y more reliable?"],
+            coreSkill: "Evaluate reliability based on author, motive, audience, and context.",
+            skillComponents: ["Provenance", "Motive/Bias", "Effect on reliability", "Conclusion"],
+            requiredMastery: "Provenance → motive → reliability judgement",
+            essentialQuestion: "Does who wrote this make it more or less reliable?",
+            microSkills: ["Identify role and audience", "Detect bias or vested interests", "Explain how motive affects trust"],
+            commonErrors: ["Describing provenance instead of evaluating it", "Not linking motive to reliability", "Missing conclusion"],
+            sop: {
+              id: "SOP-HIS-SBQ-07",
+              steps: ["Identify provenance", "Identify motive or bias", "Explain effect of motive on reliability", "Give clear conclusion"],
+              supportElements: ["Bias markers", "Time-context linkage"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify motive from provenance.", task: "Explain author motive in one sentence.", instructions: "Write why the author produced this statement.", qTemplate: "Written by {{Author}}, {{Role}}. What might be their motive?", aTemplate: "The author would... because..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Evaluate reliability from motive/bias.", task: "Provenance → Motive → Effect → Judgement", instructions: "Explain how provenance affects reliability.", qTemplate: "{{Source Extract}}", aTemplate: "- The source is (reliable/unreliable) because of its provenance.\n- It was produced by...\n- The author would... for... because...\n- Thus, the source is... reliable." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match motive to provenance.", task: "Identify which motive belongs to which author.", instructions: "Select correct motive for this author.", qTemplate: "Provenance: '...'\nMotive Options: '...'", aTemplate: "Correct motive: ..." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak reliability answers by adding motive/impact.", task: "Fix missing motive link.", instructions: "Improve the weak answer.", qTemplate: "Weak Answer: '...'\nProvenance: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-08",
+            name: "Usefulness - Content",
+            level: "L1",
+            skillType: "Usefulness",
+            triggerStems: ["How useful is this source?", "Which source is more useful?"],
+            coreSkill: "Evaluate usefulness of the source based on its content.",
+            skillComponents: ["Usefulness claim", "Evidence from source", "Explanation"],
+            requiredMastery: "Usefulness claim + content quote + link",
+            essentialQuestion: "How is this source useful for understanding X?",
+            microSkills: ["Identify what the source helps us understand", "Match quote to usefulness", "Explain relevance clearly"],
+            commonErrors: ["Writing reliability instead of usefulness", "Vague usefulness claim", "Missing explanation"],
+            sop: {
+              id: "SOP-HIS-SBQ-08",
+              steps: ["State usefulness claim", "Provide content quote", "Explain insight gained"],
+              supportElements: ["Insight verbs (shows/reveals)", "Specific usefulness (not general)"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify insight from one line of content.", task: "Write what historians learn from the line.", instructions: "Write the insight shown.", qTemplate: "'{{Line}}'", aTemplate: "This is useful because it shows..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Full usefulness answer with content evidence.", task: "Usefulness → Evidence → Insight", instructions: "Write how content gives historical insight.", qTemplate: "{{Source Extract}}", aTemplate: "- The source is useful for understanding...\n- It states '...'\n- This is useful because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match insight → evidence.", task: "Identify which quote reveals the insight.", instructions: "Select the most insightful line.", qTemplate: "Insight: '...'\nSource: '...'", aTemplate: "Best evidence: '...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak usefulness answers.", task: "Add missing insight or fix quote.", instructions: "Improve the weak answer.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-09",
+            name: "Usefulness - Provenance",
+            level: "L1",
+            skillType: "Usefulness",
+            triggerStems: ["How does the provenance make this useful?", "Which source is more useful?"],
+            coreSkill: "Evaluate usefulness based on who wrote it, when, and why.",
+            skillComponents: ["Provenance", "Usefulness reasoning", "Perspective gained"],
+            requiredMastery: "Provenance → perspective → usefulness claim",
+            essentialQuestion: "How does the provenance make this source useful?",
+            microSkills: ["Identify author/time/audience", "Explain usefulness of perspective"],
+            commonErrors: ["Describing provenance only", "No link to usefulness", "Confusing usefulness with reliability"],
+            sop: {
+              id: "SOP-HIS-SBQ-09",
+              steps: ["Identify provenance", "Identify perspective gained", "Explain why perspective is useful"],
+              supportElements: ["Time-period significance", "Perspective reasoning"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify perspective from provenance.", task: "Write insight gained from who created the source.", instructions: "State what historians learn from the author/time.", qTemplate: "{{Provenance}}", aTemplate: "This is useful because it shows..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Assess usefulness using author/time/audience.", task: "Provenance → Perspective → Insight", instructions: "Explain why provenance provides insight.", qTemplate: "{{Source Extract}}", aTemplate: "- The provenance makes the source useful for understanding...\n- It was produced by... in...\n- This gives insight into... because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match perspective → provenance.", task: "Choose provenance that gives needed insight.", instructions: "Select most useful provenance.", qTemplate: "Needed Insight: '...'\nProvenance Set: '...'", aTemplate: "Best provenance: ..." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Strengthen provenance → insight reasoning.", task: "Fix weak reasoning.", instructions: "Improve answer using perspective logic.", qTemplate: "Weak Answer: '...'\nProvenance: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-10",
+            name: "Support / Challenge",
+            level: "L1",
+            skillType: "Comparison",
+            triggerStems: ["Does Source X prove Source Y is wrong?", "How far does Source A show Source B is..."],
+            coreSkill: "Determine whether one source supports or challenges another.",
+            skillComponents: ["Support/Challenge claim", "Evidence A", "Evidence B", "Linking explanation"],
+            requiredMastery: "Claim + quote A + quote B + explicit link",
+            essentialQuestion: "Does Source A support or challenge Source B?",
+            microSkills: ["Match viewpoints", "Contrast messages accurately"],
+            commonErrors: ["No support/challenge claim", "Quotes not aligned", "No explanation"],
+            sop: {
+              id: "SOP-HIS-SBQ-10",
+              steps: ["State support/challenge claim", "Provide quote from Source A", "Provide quote from Source B", "Explain relationship"],
+              supportElements: ["Tone contrast", "Polarity markers"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify whether two short lines support or challenge each other.", task: "Decide alignment or contradiction.", instructions: "Identify relationship.", qTemplate: "A: '...'\nB: '...'", aTemplate: "B (supports/challenges) A because..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full support/challenge structure.", task: "Claim → Quote A → Quote B → Link", instructions: "Write full support/challenge answer.", qTemplate: "A: '...'\nB: '...'", aTemplate: "Source A claims that...\n- Source B (supports/challenges) this by saying '...'\n- This shows..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match claim → supporting/challenging quote pair.", task: "Choose correct pair.", instructions: "Select quotes that show support/challenge.", qTemplate: "Relationship Claim: '...'\nEvidence Set: '...'", aTemplate: "A='...', B='...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Fix weak support/challenge reasoning.", task: "Add missing link or correct misaligned quotes.", instructions: "Improve weak answer.", qTemplate: "Weak Answer: '...'\nA: '...'\nB: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-11",
+            name: "Multi-Source Judgment",
+            level: "L1",
+            skillType: "Judgement",
+            triggerStems: ["How far do these sources support this view?", "Using all the sources..."],
+            coreSkill: "Make an overall judgement using multiple sources and reasoning.",
+            skillComponents: ["Judgement claim", "Support evidence", "Challenge evidence", "Balanced conclusion"],
+            requiredMastery: "Balanced support + challenge + final judgement",
+            essentialQuestion: "What is the overall judgement after considering all sources?",
+            microSkills: ["Evaluate multiple viewpoints", "Construct balanced reasoning"],
+            commonErrors: ["One-sided argument", "No conclusion", "Listing sources without judgement"],
+            sop: {
+              id: "SOP-HIS-SBQ-11",
+              steps: ["Make judgement claim", "Provide supporting evidence", "Provide challenging evidence", "Make balanced final judgement"],
+              supportElements: ["Weighing language", "Balance structure"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Identify support vs challenge lines.", task: "Sort lines into support/challenge.", instructions: "Label each line.", qTemplate: "{{Lines}}", aTemplate: "Support: ... Challenge: ..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Write full balanced judgement.", task: "Judgement → Support → Challenge → Final Verdict", instructions: "Produce a complete judgement answer.", qTemplate: "{{Sources}}", aTemplate: "Overall, the sources suggest that...\n- Support comes from... because...\n- Challenge comes from... because...\n- On balance, ... is more convincing." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Identify which evidence belongs to support/challenge.", task: "Assign each quote correctly.", instructions: "Decide if each line supports or challenges.", qTemplate: "{{Source Extracts}}", aTemplate: "Support: ... Challenge: ..." },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair weak judgement answers.", task: "Add missing counterargument or final verdict.", instructions: "Improve weak judgement answer.", qTemplate: "Weak Answer: '...'\nSources: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          },
+          {
+            id: "ARCH-L1-SBQ-12",
+            name: "Explain-Infer Hybrid",
+            level: "L1",
+            skillType: "Mixed",
+            triggerStems: ["(Questions explicitly requiring explanation and inference)"], 
+            coreSkill: "Explain a message using explicit content + implied inference.",
+            skillComponents: ["Explanation (message)", "Inference (implied meaning)", "Evidence", "Link"],
+            requiredMastery: "Explanation + inference + quote + explanation link",
+            essentialQuestion: "What does the source say and what does it imply?",
+            microSkills: ["Distinguish message vs implied meaning", "Combine explicit + implied reasoning"],
+            commonErrors: ["Only explanation OR only inference", "Only inference, no explanation", "Misreading message"],
+            sop: {
+              id: "SOP-HIS-SBQ-12",
+              steps: ["Identify explicit message", "Identify implied inference", "Provide evidence", "Explain both layers"],
+              supportElements: ["Dual-layer reasoning", "Message/inference distinction"]
+            },
+            drills: [
+              { type: "0", name: "Reflex", loopStage: "Stage 2 - Activation", goal: "Distinguish message vs inference.", task: "Label each line as explicit or implied.", instructions: "Decide which is message/inference.", qTemplate: "{{Lines}}", aTemplate: "Message: ... Inference: ..." },
+              { type: "A", name: "Standard", loopStage: "Stage 3 - Execute & Fill", goal: "Produce full hybrid answer.", task: "Message → Inference → Evidence → Explanation", instructions: "Write complete hybrid answer.", qTemplate: "{{Source Extract}}", aTemplate: "The source says that...\n- This implies that...\n- This is shown by '...'\n- This is because..." },
+              { type: "B", name: "Reverse", loopStage: "Skill Building - Sensitivity", goal: "Match message/inference → evidence.", task: "Identify which line supports both layers.", instructions: "Select strongest evidence.", qTemplate: "Message: '...'\nInference: '...'\nSource: '...'", aTemplate: "Best evidence: '...'" },
+              { type: "C", name: "Patch", loopStage: "Stage 4 - Diagnose & Patch", goal: "Repair hybrid answers by completing both layers.", task: "Add inference or fix evidence/explanation.", instructions: "Improve weak hybrid answer.", qTemplate: "Weak Answer: '...'\nSource: '...'", aTemplate: "Improved Answer: ..." }
+            ]
+          }
+        ];
+
+        // --- COMPONENTS ---
+
+        const Sidebar = ({ selectedId, onSelect }) => (
+          <div className="w-80 bg-white border-r border-slate-200 h-full flex flex-col flex-shrink-0 shadow-lg z-20">
+            <div className="p-8 pb-6 bg-white border-b border-slate-100">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-100">
+                    <Icon name="book" className="text-white w-6 h-6" />
+                </div>
+                <div>
+                    <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">HIS Lab</h1>
+                    <p className="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">Protocol Engine</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-2">
+              {historyData.map((item) => {
+                const isActive = selectedId === item.id;
+                // Helper to color tags
+                const getTagColor = (type) => {
+                    const low = type.toLowerCase();
+                    if (low.includes('inference')) return 'tag-inference';
+                    if (low.includes('comparison')) return 'tag-comparison';
+                    if (low.includes('purpose')) return 'tag-purpose';
+                    if (low.includes('reliability')) return 'tag-reliability';
+                    if (low.includes('usefulness')) return 'tag-usefulness';
+                    if (low.includes('judgement')) return 'tag-judgement';
+                    if (low.includes('mixed')) return 'tag-mixed';
+                    return 'bg-slate-100 text-slate-600';
+                };
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelect(item.id)}
+                    className={`w-full text-left p-4 rounded-xl transition-all duration-300 group relative border ${
+                        isActive ? "bg-slate-50 border-indigo-200 shadow-sm" : "border-transparent hover:bg-slate-50"
+                    }`}
+                  >
+                    {isActive && <div className="absolute left-0 top-3 bottom-3 w-1 bg-indigo-600 rounded-r-full active-indicator" />}
+                    <div className="flex items-center justify-between mb-1.5">
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider ${getTagColor(item.skillType)}`}>
+                            {item.skillType}
+                        </span>
+                        {/* Display simplified ID but user knows full ID is in view */}
+                        <span className="text-[10px] font-mono font-bold text-slate-400 group-hover:text-slate-500">
+                            {item.id.replace('ARCH-L1-', '')}
+                        </span>
+                    </div>
+                    <div className={`text-sm font-bold ${isActive ? "text-slate-900" : "text-slate-500 group-hover:text-slate-700"}`}>
+                        {item.name}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+        const NavButton = ({ active, label, icon, onClick, colorClass }) => (
+            <button
+                onClick={onClick}
+                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border-2 ${
+                    active 
+                    ? `bg-white ${colorClass} shadow-sm scale-105` 
+                    : "bg-transparent border-transparent text-slate-400 hover:text-slate-600"
+                }`}
+            >
+                <Icon name={icon} className="w-4 h-4" />
+                {label}
+            </button>
+        );
+
+        const MethodologyView = () => (
+            <div className="max-w-5xl mx-auto space-y-12 animate-fadeIn py-4">
+                <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-3xl blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
+                    <div className="relative bg-white p-10 rounded-3xl border border-slate-100 shadow-xl overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full -mr-32 -mt-32 transition-transform group-hover:scale-110"></div>
+                        <div className="relative">
+                            <h2 className="text-4xl font-extrabold text-slate-900 mb-6 flex items-center gap-4">
+                                <Icon name="compass" className="w-10 h-10 text-indigo-600" />
+                                Reverse Learning Loop
+                            </h2>
+                            <p className="text-slate-500 text-lg leading-relaxed italic border-l-4 border-indigo-100 pl-6 mb-8">
+                                "History is not about memorizing stories; it is a procedure. Your complete learning loop consists of just these four steps: Identify Trigger, Call SOP, Fill Content, and Patch."
+                            </p>
+                            <div className="flex gap-4">
+                                <span className="px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-xs font-black uppercase">System Vers. 2026.01</span>
+                                <span className="px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-xs font-black uppercase tracking-widest animate-pulse-soft">Online & Verified</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    {[
+                        { step: "01", title: "IDENTIFY", icon: "search", color: "text-rose-500", bg: "bg-rose-50", desc: "Scan Trigger Stems -> Lock Archetype" },
+                        { step: "02", title: "CALL SOP", icon: "list", color: "text-purple-500", bg: "bg-purple-50", desc: "Recall SOP Steps -> Build Skeleton" },
+                        { step: "03", title: "EXECUTE", icon: "pen", color: "text-blue-500", bg: "bg-blue-50", desc: "Inject Source + Context -> Produce Answer" },
+                        { step: "04", title: "PATCH", icon: "refresh", color: "text-emerald-500", bg: "bg-emerald-50", desc: "Check Answer Key -> Diagnose -> Patch" }
+                    ].map((item, idx) => (
+                        <div key={idx} className="group p-6 bg-white border border-slate-100 rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col items-center text-center">
+                            <div className={`w-14 h-14 ${item.bg} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-sm`}>
+                                <Icon name={item.icon} className={`w-7 h-7 ${item.color}`} />
+                            </div>
+                            <h3 className="text-xl font-black text-slate-900 mb-2 tracking-tight">
+                                <span className="text-slate-300 block text-xs mb-1">STEP {item.step}</span> {item.title}
+                            </h3>
+                            <p className="text-slate-500 text-sm font-medium leading-relaxed">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                    <h3 className="font-black text-slate-900 mb-6 flex items-center gap-3 text-2xl tracking-tight border-b border-slate-100 pb-4">
+                        <Icon name="zap" className="w-8 h-8 text-amber-500" />
+                        Instruction to Student
+                    </h3>
+                    <div className="prose prose-slate text-lg text-slate-600 font-medium leading-loose">
+                        <ul className="list-disc pl-5 space-y-3 marker:text-amber-500">
+                        <li><strong className="text-slate-900">Trigger Stems:</strong> This determines which 'key' (Archetype) you need to use.</li>
+                        <li><strong className="text-slate-900">Call SOP:</strong> The corresponding Key Steps must pop up in your mind; you cannot skip a single step.</li>
+                        <li><strong className="text-slate-900">Fill Content:</strong> Fill the steps with words from the Source and the historical Context you have memorized.</li>
+                        <li><strong className="text-slate-900">Patch:</strong> If you didn't get full marks, identify which 'part' broke and fix it, instead of thinking you are 'not good at this'.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const DrillsView = ({ drills, archetypeId }) => {
+          const [activeTab, setActiveTab] = useState("0");
+          const activeDrill = drills.find(d => d.type === activeTab) || drills[0];
+          // Construction of Drill ID strictly based on pattern
+          const constructedDrillId = `DRILL-${activeTab}-${archetypeId.split('SBQ-').pop()}`;
+
+          return (
+            <div className="h-full flex flex-col space-y-6 animate-fadeIn">
+                <div className="flex items-center justify-between">
+                    <div className="flex p-1 bg-slate-200 rounded-xl w-fit">
+                        {["0", "A", "B", "C"].map((type) => (
+                        <button
+                            key={type}
+                            onClick={() => setActiveTab(type)}
+                            className={`px-6 py-2 rounded-lg text-xs font-black transition-all ${
+                            activeTab === type
+                                ? "bg-white text-indigo-600 shadow-sm"
+                                : "text-slate-500 hover:text-slate-700"
+                            }`}
+                        >
+                            DRILL-{type}
+                        </button>
+                        ))}
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-black text-white bg-indigo-500 px-3 py-1.5 rounded-md uppercase tracking-wider shadow-sm">
+                            {activeDrill.loopStage || 'Unknown Stage'}
+                        </span>
+                        <div className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest bg-white border border-slate-200 px-3 py-1.5 rounded-md">
+                            ID: DRILL-{activeTab}-{archetypeId.replace('ARCH-L1-SBQ-', 'HIS-')}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex-1 grid grid-cols-1 lg:grid-cols-5 gap-8 overflow-hidden">
+                    <div className="lg:col-span-2 space-y-6 overflow-y-auto pr-2 pb-10">
+                        <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm">
+                            <h3 className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-4">Objective</h3>
+                            <p className="text-slate-700 font-bold leading-relaxed">{activeDrill.goal}</p>
+                        </div>
+                        <div className="bg-slate-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
+                                <Icon name="zap" className="w-24 h-24" />
+                            </div>
+                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Core Task</h3>
+                            <p className="text-slate-200 font-medium leading-relaxed mb-8">{activeDrill.task}</p>
+                            <div className="pt-6 border-t border-slate-800">
+                                <h4 className="text-[10px] font-black text-indigo-400 uppercase mb-3">Operator Instruction</h4>
+                                <p className="text-sm text-slate-400 italic">"{activeDrill.instructions || "Execute standard protocol steps."}"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="lg:col-span-3 bg-white rounded-[2rem] border border-slate-100 shadow-sm flex flex-col overflow-hidden">
+                        <div className="bg-slate-50/50 p-6 border-b border-slate-100 flex justify-between items-center">
+                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Live Sandbox</h3>
+                            <div className="flex gap-2">
+                                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
+                                <span className="w-2 h-2 rounded-full bg-amber-500"></span>
+                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            </div>
+                        </div>
+                        <div className="flex-1 p-8 space-y-8 overflow-y-auto">
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <label className="text-[10px] font-black text-slate-400 uppercase">Input.Source</label>
+                                </div>
+                                <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 font-mono text-xs text-slate-600 leading-loose whitespace-pre-wrap">
+                                    {activeDrill.qTemplate}
+                                </div>
+                            </div>
+                            <div className="space-y-3">
+                                <label className="text-[10px] font-black text-indigo-400 uppercase">Output.Expected</label>
+                                <div className="bg-indigo-50/30 p-6 rounded-2xl border border-indigo-100 font-mono text-xs text-indigo-900 leading-loose whitespace-pre-wrap">
+                                    {activeDrill.aTemplate}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          );
+        };
+
+        const ArchetypeView = ({ data }) => {
+            const getTagColor = (type) => {
+                const low = type.toLowerCase();
+                if (low.includes('inference')) return 'tag-inference';
+                if (low.includes('comparison')) return 'tag-comparison';
+                if (low.includes('purpose')) return 'tag-purpose';
+                if (low.includes('reliability')) return 'tag-reliability';
+                if (low.includes('usefulness')) return 'tag-usefulness';
+                if (low.includes('judgement')) return 'tag-judgement';
+                if (low.includes('mixed')) return 'tag-mixed';
+                return 'bg-slate-100 text-slate-600';
+            };
+
+            return (
+            <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
+                <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden">
+                    <div className={`absolute top-0 right-0 w-1/3 h-full opacity-[0.03] flex items-center justify-center`}>
+                        <Icon name="target" className="w-64 h-64" />
+                    </div>
+                    <div className="relative">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest ${getTagColor(data.skillType)}`}>
+                                {data.skillType} Module
+                            </span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+                            <span className="text-[10px] font-mono font-bold text-slate-400">{data.id}</span>
+                        </div>
+                        <h2 className="text-5xl font-black text-slate-900 mb-4 tracking-tighter">{data.name}</h2>
+                        <p className="text-slate-500 text-lg font-medium max-w-2xl">{data.coreSkill}</p>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="md:col-span-2 bg-slate-900 p-10 rounded-[2.5rem] text-white shadow-xl">
+                        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-8">Detection Triggers</h3>
+                        <div className="grid grid-cols-1 gap-4">
+                            {data.triggerStems.map((stem, i) => (
+                                <div key={i} className="flex items-start gap-4 group">
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500 mt-2 group-hover:scale-150 transition-transform"></div>
+                                    <span className="text-lg font-bold text-slate-300 group-hover:text-white transition-colors cursor-default font-mono">"{stem}"</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="bg-white p-10 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6">Essential Question</h3>
+                            <p className="text-slate-900 text-lg font-bold leading-relaxed italic border-l-4 border-indigo-500 pl-4">
+                                "{data.essentialQuestion}"
+                            </p>
+                        </div>
+                        <div className="mt-8 pt-8 border-t border-slate-50">
+                            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Required Mastery</h4>
+                             <p className="text-slate-600 text-xs font-bold uppercase tracking-wider">{data.requiredMastery}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                 <div className="bg-indigo-50/50 p-10 rounded-[2.5rem] border border-indigo-100/50">
+                    <h3 className="flex items-center gap-2 text-[10px] font-black text-indigo-600 uppercase tracking-[0.3em] mb-8">
+                        <Icon name="layers" className="w-4 h-4" /> Skill Components
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                        {data.skillComponents.map((comp, i) => (
+                             <span key={i} className="px-5 py-2.5 bg-white text-indigo-900 font-bold rounded-xl shadow-sm border border-indigo-100">{comp}</span>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="bg-emerald-50/50 p-10 rounded-[2.5rem] border border-emerald-100/50">
+                        <h3 className="flex items-center gap-2 text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mb-8">
+                            <Icon name="award" className="w-4 h-4" /> Micro-Skills
+                        </h3>
+                        <ul className="space-y-4">
+                            {data.microSkills.map((s, i) => (
+                                <li key={i} className="flex items-start gap-4 text-slate-700 font-bold">
+                                    <div className="w-5 h-5 bg-white rounded-md border border-emerald-200 flex items-center justify-center text-[10px] mt-0.5 text-emerald-600">✓</div>
+                                    {s}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="bg-rose-50/50 p-10 rounded-[2.5rem] border border-rose-100/50">
+                        <h3 className="flex items-center gap-2 text-[10px] font-black text-rose-600 uppercase tracking-[0.3em] mb-8">
+                            <Icon name="alert" className="w-4 h-4" /> Logic Fractures
+                        </h3>
+                        <ul className="space-y-4">
+                            {data.commonErrors.map((e, i) => (
+                                <li key={i} className="flex items-start gap-4 text-slate-700 font-bold">
+                                    <div className="w-5 h-5 bg-white rounded-md border border-rose-200 flex items-center justify-center text-[10px] mt-0.5 text-rose-600">✕</div>
+                                    {e}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            );
+        };
+
+        const SOPView = ({ sop, archetype }) => (
+            <div className="max-w-4xl mx-auto py-10 animate-fadeIn">
+                <div className="text-center mb-16">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-xs font-mono font-bold mb-4">
+                        <Icon name="hash" className="w-3 h-3" />
+                        {sop.id}
+                    </div>
+                    <h2 className="text-5xl font-black text-slate-900 tracking-tight mb-2">Standard Operating Procedure</h2>
+                    <p className="text-slate-500 font-bold text-lg">Protocol for: {archetype.name}</p>
+                </div>
+                
+                <div className="space-y-4">
+                    {sop.steps.map((step, idx) => (
+                        <div key={idx} className="group relative flex items-center gap-8">
+                            <div className="w-16 h-16 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center text-xl font-black text-slate-200 group-hover:border-indigo-600 group-hover:text-indigo-600 transition-all duration-500 shadow-sm z-10">
+                                {idx + 1}
+                            </div>
+                            <div className="flex-1 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm group-hover:shadow-xl group-hover:translate-x-2 transition-all duration-500">
+                                <p className="text-lg font-bold text-slate-700">{step}</p>
+                            </div>
+                            {idx < sop.steps.length - 1 && (
+                                <div className="absolute left-8 top-16 bottom-0 w-0.5 bg-slate-100 -translate-x-1/2"></div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                <div className="mt-20 p-10 bg-indigo-600 rounded-[2.5rem] text-white shadow-2xl shadow-indigo-200 flex flex-wrap gap-4 items-center">
+                    <Icon name="zap" className="w-8 h-8 text-indigo-300" />
+                    <span className="text-[10px] font-black uppercase tracking-widest mr-4">Support Elements:</span>
+                    {sop.supportElements.map((el, idx) => (
+                        <span key={idx} className="px-6 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold border border-white/10 transition-colors cursor-default">
+                            {el}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        );
+
+        const App = () => {
+          const [selectedId, setSelectedId] = useState(historyData[0].id);
+          const [activeMainTab, setActiveMainTab] = useState("methodology"); 
+          const selectedData = historyData.find(d => d.id === selectedId) || historyData[0];
+
+          return (
+            <div className="flex h-screen bg-[#F8FAFC] text-slate-900 overflow-hidden font-sans">
+              <Sidebar selectedId={selectedId} onSelect={setSelectedId} />
+              
+              <div className="flex-1 flex flex-col min-w-0">
+                <header className="glass-header px-10 py-6 flex items-center justify-between z-10 sticky top-0">
+                  <div>
+                    <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1 font-mono">{selectedData.id}</h2>
+                    <h1 className="text-2xl font-black text-slate-900 tracking-tight">{selectedData.name}</h1>
+                  </div>
+                  <div className="flex bg-slate-200/50 p-1.5 rounded-2xl gap-1">
+                    <NavButton active={activeMainTab === "methodology"} label="Strategy" icon="compass" colorClass="text-indigo-600 border-indigo-100" onClick={() => setActiveMainTab("methodology")} />
+                    <NavButton active={activeMainTab === "info"} label="Archetype" icon="target" colorClass="text-indigo-600 border-indigo-100" onClick={() => setActiveMainTab("info")} />
+                    <NavButton active={activeMainTab === "sop"} label="SOP" icon="list" colorClass="text-purple-600 border-purple-100" onClick={() => setActiveMainTab("sop")} />
+                    <NavButton active={activeMainTab === "drills"} label="Exercise" icon="pen" colorClass="text-blue-600 border-blue-100" onClick={() => setActiveMainTab("drills")} />
+                  </div>
+                </header>
+
+                <main className="flex-1 overflow-y-auto p-10 scroll-smooth pb-20">
+                    {activeMainTab === "methodology" && <MethodologyView />}
+                    {activeMainTab === "info" && <ArchetypeView data={selectedData} />}
+                    {activeMainTab === "sop" && <SOPView sop={selectedData.sop} archetype={selectedData} />}
+                    {activeMainTab === "drills" && <DrillsView drills={selectedData.drills} archetypeId={selectedData.id} />}
+                </main>
+              </div>
+            </div>
+          );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
