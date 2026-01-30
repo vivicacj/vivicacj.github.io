@@ -4,22 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>O-Level Study Platform</title>
+    <!-- Phosphor Icons (为了配合 Cognitive Engine 的图标风格，但也兼容 emoji) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #e0e0e0; line-height: 1.6; overflow-x: hidden; }
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .header { text-align: center; padding: 60px 20px; }
+        
+        /* Header 样式 */
+        .header { text-align: center; padding: 40px 20px 20px 20px; }
         .header h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 10px; color: #ffffff; text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
         .header p { font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); max-width: 700px; margin: 0 auto; }
         
-        /* 修改为固定的 3x3 布局 */
+        /* --- NEW: Cognitive Engine Banner (新增的总控入口) --- */
+        .engine-banner {
+            max-width: 1200px;
+            margin: 20px auto 40px auto;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .engine-banner:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border-color: #60a5fa; /* Sky blue border on hover */
+        }
+        .engine-content h2 { color: #fff; font-size: 1.8rem; margin-bottom: 5px; display: flex; align-items: center; gap: 10px; }
+        .engine-content p { color: #e0e0e0; font-size: 1rem; margin: 0; }
+        .engine-icon { font-size: 3rem; color: #60a5fa; text-shadow: 0 0 20px rgba(96, 165, 250, 0.6); }
+        .engine-arrow { font-size: 1.5rem; color: white; background: rgba(255,255,255,0.2); padding: 10px; border-radius: 50%; }
+
+        /* Subjects Grid (保持你原有的 3x3) */
         .subjects-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
             gap: 30px; 
-            margin-top: 40px; 
+            margin-top: 20px; 
             max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
@@ -32,8 +63,8 @@
         .subject-title { font-size: 1.5rem; font-weight: 600; }
         .card-content { padding: 20px; background-color: white; color: #555; font-size: 0.95rem; border-top: 1px solid rgba(0,0,0,0.1); min-height: 100px; }
         
-        /* 所有科目的颜色 */
-        .study-portal .card-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        /* 颜色定义 */
+        .study-portal .card-header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); } /* 为了区分，稍微调亮了 Portal 的颜色 */
         .e-math .card-header { background-color: #8f94fb; }
         .h-chinese .card-header { background-color: #a8e063; }
         .a-math .card-header { background-color: #ffc837; }
@@ -43,6 +74,7 @@
         .poa .card-header { background-color: #c0392b; }
         .history .card-header { background-color: #434343; }
         
+        /* CTA & Footer */
         .cta-section { text-align: center; margin-top: 60px; padding: 40px 20px; }
         .cta-section h2 { font-size: 2.5rem; margin-bottom: 20px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
         .cta-buttons { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
@@ -50,12 +82,15 @@
         .cta-primary { background: rgba(255, 255, 255, 0.9); color: #333; }
         .cta-secondary { background: rgba(255, 255, 255, 0.2); color: white; border: 2px solid rgba(255, 255, 255, 0.5); }
         .cta-button:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.3); }
+        
         #notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background-color: #ff6b6b; color: white; padding: 15px 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s, transform 0.5s; }
         #notification.show { opacity: 1; visibility: visible; transform: translate(-50%, -20px); }
         
-        /* 响应式设计 */
+        /* 响应式 */
         @media (max-width: 1024px) { 
             .subjects-grid { grid-template-columns: repeat(2, 1fr); }
+            .engine-banner { flex-direction: column; text-align: center; gap: 20px; }
+            .engine-arrow { transform: rotate(90deg); }
         }
         @media (max-width: 768px) { 
             .header h1 { font-size: 2.5rem; } 
@@ -70,7 +105,23 @@
             <p>A centralized hub for Dennis's O-Level learning journey, integrating all subjects and analysis tools.</p>
         </div>
 
-        <div class="subjects-grid">
+        <!-- 🔥 INTEGRATED: Dennis Cognitive Engine Link -->
+        <!-- 修复：将文件名改为 dennis-cognitive-engine.html 以匹配你的实际文件 -->
+        <a href="dennis-cognitive-engine.html" class="engine-banner">
+            <div class="engine-icon">
+                <i class="ph-fill ph-cpu"></i>
+            </div>
+            <div class="engine-content">
+                <h2>Dennis Cognitive Engine <span style="font-size: 0.8rem; background: #60a5fa; padding: 2px 8px; border-radius: 10px; margin-left: 10px; vertical-align: middle;">AI SCHEDULER</span></h2>
+                <p>每日学习状态调度中心：红绿灯状态管理、资源自动切分与计划生成。</p>
+            </div>
+            <div class="engine-arrow">
+                <i class="ph-bold ph-arrow-right"></i>
+            </div>
+        </a>
+        <!-- End Integration -->
+
+        <div class="subjects-grid" id="subjects">
             <!-- 第一行 -->
             <a href="study-portal.html" class="subject-card study-portal">
                 <div class="card-header">
@@ -128,7 +179,8 @@
         <div class="cta-section">
             <h2>Ready to Begin?</h2>
             <div class="cta-buttons">
-                <a href="#subjects" class="cta-button cta-primary">Start Learning Journey</a>
+                <!-- 修改了这个链接，让它点击后滚动到科目 -->
+                <a href="#subjects" class="cta-button cta-primary">Select Subject</a>
                 <a href="g3-exam-timetable.html" class="cta-button cta-secondary">View Exam Timetable</a>
             </div>
         </div>
@@ -140,9 +192,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             const notification = document.getElementById('notification');
             const messages = [ "Welcome back! Let's make today productive.", "New analysis available for Higher Chinese.", "Remember to check the exam timetable regularly." ];
-            setTimeout(() => { const randomMessage = messages[Math.floor(Math.random() * messages.length)]; notification.textContent = randomMessage; notification.classList.add('show'); setTimeout(() => { notification.classList.remove('show'); }, 5000); }, 2000);
-            const learningJourneyButton = document.querySelector('a[href="#subjects"]');
-            if(learningJourneyButton) { const subjectsGrid = document.querySelector('.subjects-grid'); if(subjectsGrid && !subjectsGrid.id) { subjectsGrid.id = 'subjects'; } learningJourneyButton.addEventListener('click', function(e) { e.preventDefault(); document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' }); }); }
+            
+            setTimeout(() => { 
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)]; 
+                notification.textContent = randomMessage; 
+                notification.classList.add('show'); 
+                setTimeout(() => { notification.classList.remove('show'); }, 5000); 
+            }, 2000);
+            
+            // 修复了原来的平滑滚动逻辑
+            const ctaButtons = document.querySelectorAll('a[href^="#"]');
+            ctaButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
         });
     </script>
 </body>
