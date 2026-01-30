@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dennis Cognitive Engine V2.1 | 稳态调度系统</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        .traffic-light { transition: all 0.2s; cursor: pointer; border: 2px solid transparent; }
+        .traffic-light:hover { transform: scale(1.1); }
+        .traffic-light.active { border-color: white; box-shadow: 0 0 8px currentColor; }
+        
+        /* 霓虹灯效果 */
+        .neon-text { text-shadow: 0 0 10px rgba(56, 189, 248, 0.3); }
+        .glass-panel { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid #334155; }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        /* 进度条动画 */
+        .progress-bar-fill { transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useCallback } = React;
+
+        // 1. 常量定义：移除了 OFF 状态，纯靠 Active 开关控制
+        const SCORES = {
+            GREEN: 0,
+            YELLOW: 1,
+            RED: 2
+        };
+
+        const STATES = {
+            GREEN: { value: 0, color: 'bg-emerald-500', label: '稳定 (0)' },
+            YELLOW: { value: 1, color: 'bg-yellow-500', label: '波动 (1)' },
+            RED: { value: 2, color: 'bg-rose-500', label: '严重 (2)' }
+        };
+
+        // 2. 初始数据：增加 shortName，将 stableStreak 改为 stableDays
+        const INITIAL_SUBJECTS = [
+            { id: 'hcl', shortName: 'HCL', fullName: '高级华文', rep: 'YELLOW', exec: 'YELLOW', error: 'GREEN', daysToExam: 45, stableDays: 0, active: true },
+            { id: 'hist', shortName: 'HIST', fullName: '历史', rep: 'GREEN', exec: 'YELLOW', error: 'RED', daysToExam: 14, stableDays: 0, active: true },
+            { id: 'ss', shortName: 'SS', fullName: '社会研究', rep: 'YELLOW', exec: 'YELLOW', error: 'YELLOW', daysToExam: 30, stableDays: 0, active: true },
+            { id: 'el', shortName: 'EL', fullName: '英语', rep: 'GREEN', exec: 'GREEN', error: 'GREEN', daysToExam: 60, stableDays: 5, active: true },
+            { id: 'emath', shortName: 'E-Math', fullName: '普数', rep: 'GREEN', exec: 'GREEN', error: 'GREEN', daysToExam: 60, stableDays: 10, active: true },
+            { id: 'geo', shortName: 'GEO', fullName: '地理', rep: 'GREEN', exec: 'GREEN', error: 'GREEN', daysToExam: 60, stableDays: 3, active: true },
+            { id: 'poa', shortName: 'POA', fullName: '会计', rep: 'YELLOW', exec: 'YELLOW', error: 'GREEN', daysToExam: 60, stableDays: 0, active: true },
+            { id: 'phy', shortName: 'PHY', fullName: '物理', rep: 'GREEN', exec: 'GREEN', error: 'GREEN', daysToExam: 90, stableDays: 0, active: false },
+            { id: 'chem', shortName: 'CHEM', fullName: '化学', rep: 'GREEN', exec: 'GREEN', error: 'GREEN', daysToExam: 90, stableDays: 0, active: false },
+        ];
+
+        function App() {
+            const [totalTime, setTotalTime] = useState(150); 
+            const [subjects, setSubjects] = useState(INITIAL_SUBJECTS);
+
+            // 更新状态通用函数
+            const updateSubject = (id, field, value) => {
+                setSubjects(prev => prev.map(sub => 
+                    sub.id === id ? { ...sub, [field]: value } : sub
+                ));
+            };
+
+            const toggleActive = (id) => {
+                setSubjects(prev => prev.map(sub => 
+                    sub.id === id ? { ...sub, active: !sub.active } : sub
+                ));
+            };
+
+            // ---------------------------------------------------------
+            // 自动化逻辑 (useEffect): 状态重置与联动
+            // ---------------------------------------------------------
+            useEffect(() => {
+                setSubjects(prev => prev.map(sub => {
+                    // 计算严重度
+                    const severity = (2 * SCORES[sub.rep]) + (2 * SCORES[sub.exec]) + (3 * SCORES[sub.error]);
+                    
+                    // 防抖逻辑：如果状态变差 (Severity > 3)，强制重置 stableDays
+                    // 注意：这里只处理重置，不处理增加（增加是时间维度的，需手动）
+                    if (severity > 3 && sub.stableDays > 0) {
+                        return { ...sub, stableDays: 0 };
+                    }
+                    return sub;
+                }));
+            }, [subjects.map(s => s.rep + s.exec + s.error).join(',')]); // 仅当红绿灯变化时触发
+
+            // ---------------------------------------------------------
+            // 核心计算 1: Severity & Mode & Weight & MinTime
+            // ---------------------------------------------------------
+            const computedSubjects = useMemo(() => {
+                return subjects.map(sub => {
+                    if (!sub.active) {
+                        return { ...sub, mode: 'OFF', severity: 0, finalWeight: 0, minTime: 0, allocatedTime: 0 };
+                    }
+
+                    // 1. Severity Score
+                    const severity = (2 * SCORES[sub.rep]) + (2 * SCORES[sub.exec]) + (3 * SCORES[sub.error]);
+
+                    // 2. Mode 判定 (加入 stableDays 阈值)
+                    let mode = 'MAINTAIN';
+                    
+                    if (SCORES[sub.error] === SCORES.RED || severity >= 7) {
+                        mode = 'SPRINT';
+                    } else if (severity >= 4) {
+                        mode = 'TUNING';
+                    } else {
+                        // 只有连续稳定 3 天以上，才允许降为 Maintain
+                        if (sub.stableDays >= 3) {
+                            mode = 'MAINTAIN';
+                        } else {
+                            mode = 'TUNING'; // 观察期
+                        }
+                    }
+
+                    // 3. Base MinTime & Base Weight
+                    let baseWeight = 0;
+                    let minTime = 0;
+
+                    if (mode === 'SPRINT') {
+                        baseWeight = 5;
+                        minTime = 45; 
+                    } else if (mode === 'TUNING') {
+                        baseWeight = 3;
+                        minTime = 20;
+                    } else { // MAINTAIN
+                        baseWeight = 1;
+                        minTime = 10;
+                    }
+
+                    // 4. 考试临近乘子 & MinTime 修正 (Exam Floor)
+                    let multiplier = 1.0;
+                    let examFloor = 0;
+
+                    if (sub.daysToExam <= 7) {
+                        multiplier = 1.6;
+                        examFloor = 20; // 即使是 Maintain，考前7天最少20分钟
+                    } else if (sub.daysToExam <= 14) {
+                        multiplier = 1.3;
+                        examFloor = 15;
+                    } else if (sub.daysToExam <= 30) {
+                        multiplier = 1.1;
+                    }
+
+                    // 取最大值：模式底线 vs 考试底线
+                    minTime = Math.max(minTime, examFloor);
+                    const finalWeight = baseWeight * multiplier;
+
+                    return { ...sub, severity, mode, finalWeight, minTime, multiplier };
+                });
+            }, [subjects]);
+
+            // ---------------------------------------------------------
+            // 核心计算 2: 资源分配 (最大余额法 + 封顶重分配)
+            // ---------------------------------------------------------
+            const finalAllocations = useMemo(() => {
+                const activeSubs = computedSubjects.filter(s => s.active);
+                if (activeSubs.length === 0) return [];
+
+                // A. 分配 MinTime (保底)
+                let totalMinNeeded = activeSubs.reduce((acc, s) => acc + s.minTime, 0);
+                let remainingTime = totalTime - totalMinNeeded;
+                
+                let allocations = activeSubs.map(s => ({ 
+                    ...s, 
+                    baseAlloc: s.minTime, 
+                    shareAlloc: 0,
+                    finalAlloc: 0 
+                }));
+
+                // B. 如果时间不足 (Crash Mode)，按比例压缩 MinTime
+                if (remainingTime < 0) {
+                    // Crash Mode: 也是用最大余额法来做“减少”是不够的，这里简单用比例+回填
+                    // 简化版：直接按比例缩放，并保证 total = totalTime
+                    const ratio = totalTime / totalMinNeeded;
+                    // Step 1: Floor
+                    let currentSum = 0;
+                    allocations = allocations.map(s => {
+                        const val = Math.floor(s.minTime * ratio);
+                        currentSum += val;
+                        return { ...s, finalAlloc: val, remainder: (s.minTime * ratio) - val };
+                    });
+                    // Step 2: Remainder Distribution
+                    let diff = totalTime - currentSum;
+                    allocations.sort((a, b) => b.remainder - a.remainder);
+                    for (let i = 0; i < diff; i++) {
+                        allocations[i].finalAlloc += 1;
+                    }
+                    return allocations.sort((a, b) => b.finalWeight - a.finalWeight);
+                }
+
+                // C. 时间充足：分配剩余时间 (最大余额法 Largest Remainder Method)
+                if (remainingTime > 0) {
+                    const totalWeight = activeSubs.reduce((acc, s) => acc + s.finalWeight, 0);
+                    
+                    if (totalWeight > 0) {
+                        // Step 1: 计算理论份额 & Floor
+                        let distributedShareSum = 0;
+                        allocations = allocations.map(s => {
+                            const rawShare = (s.finalWeight / totalWeight) * remainingTime;
+                            const flooredShare = Math.floor(rawShare);
+                            distributedShareSum += flooredShare;
+                            return { ...s, shareAlloc: flooredShare, remainder: rawShare - flooredShare };
+                        });
+
+                        // Step 2: 回填余数 (Diff)
+                        let diff = remainingTime - distributedShareSum;
+                        // 按小数部分排序，大的优先拿 1 分钟
+                        allocations.sort((a, b) => b.remainder - a.remainder);
+                        for (let i = 0; i < diff; i++) {
+                            allocations[i].shareAlloc += 1;
+                        }
+
+                        // 合并 Base + Share
+                        allocations = allocations.map(s => ({
+                            ...s,
+                            finalAlloc: s.baseAlloc + s.shareAlloc
+                        }));
+                    }
+                } else {
+                     allocations = allocations.map(s => ({ ...s, finalAlloc: s.baseAlloc }));
+                }
+
+                // D. 封顶检查与重分配 (Cap Redistribution - Route 2)
+                const CAP_LIMIT = Math.floor(totalTime * 0.65);
+                let overflowTime = 0;
+
+                // Step 1: Check Cap & Collect Overflow
+                allocations = allocations.map(s => {
+                    if (s.finalAlloc > CAP_LIMIT) {
+                        const overflow = s.finalAlloc - CAP_LIMIT;
+                        overflowTime += overflow;
+                        return { ...s, finalAlloc: CAP_LIMIT, capped: true };
+                    }
+                    return { ...s, capped: false };
+                });
+
+                // Step 2: Redistribute Overflow to non-capped subjects
+                // 策略：简单加给权重最高的未封顶科目 (或按权重分，这里为了稳定选前者)
+                if (overflowTime > 0) {
+                    // 找未封顶的，按权重排序
+                    const eligible = allocations.filter(s => !s.capped).sort((a, b) => b.finalWeight - a.finalWeight);
+                    if (eligible.length > 0) {
+                        // 简单全给第一名 (Slightly aggressive but simple)
+                        // 或者：再跑一次比例？为了工程简单，这里平均分给前两名
+                        const count = Math.min(eligible.length, 2);
+                        const perShare = Math.floor(overflowTime / count);
+                        const remainder = overflowTime % count;
+                        
+                        for(let i=0; i<count; i++) {
+                            // 再次检查是否超标 (Edge case ignored for simplicity here)
+                            eligible[i].finalAlloc += perShare;
+                            if (i === 0) eligible[i].finalAlloc += remainder;
+                        }
+                        
+                        // 更新回 allocations 数组
+                        allocations = allocations.map(s => {
+                            const updated = eligible.find(e => e.id === s.id);
+                            return updated ? updated : s;
+                        });
+                    }
+                }
+
+                // E. 最终排序
+                return allocations.sort((a, b) => b.finalAlloc - a.finalAlloc);
+
+            }, [computedSubjects, totalTime]);
+
+            return (
+                <div className="max-w-6xl mx-auto p-4 md:p-6 min-h-screen flex flex-col gap-6">
+                    {/* Header */}
+                    <header className="flex flex-col md:flex-row md:justify-between md:items-end border-b border-slate-700 pb-4 gap-4">
+                        <div>
+                            <h1 className="text-2xl md:text-3xl font-bold text-sky-400 neon-text tracking-tight flex items-center gap-3">
+                                COGNITIVE ENGINE <span className="text-xs font-mono font-normal text-slate-400 border border-slate-600 px-1.5 py-0.5 rounded">V2.1 Stable</span>
+                            </h1>
+                            <p className="text-slate-500 text-xs md:text-sm mt-1">
+                                自动防抖 (Stabilization) · 最大余额分配 (No Slack) · 溢出重定向 (Redistribution)
+                            </p>
+                        </div>
+                        <div className="flex items-center gap-4 bg-slate-800/50 p-3 rounded-lg border border-slate-700">
+                            <div className="text-right">
+                                <label className="block text-[10px] text-slate-400 uppercase tracking-wider mb-1">Total Time (min)</label>
+                                <div className="flex items-baseline gap-2">
+                                    <input 
+                                        type="number" 
+                                        value={totalTime} 
+                                        onChange={(e) => setTotalTime(Math.max(0, Number(e.target.value)))}
+                                        className="bg-transparent text-sky-400 text-2xl font-mono font-bold w-20 text-right focus:outline-none border-b border-slate-600 focus:border-sky-500 transition-all"
+                                    />
+                                    <span className="text-sm text-slate-500">min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Main Grid */}
+                    <main className="grid lg:grid-cols-12 gap-6">
+                        
+                        {/* LEFT: Context Inputs */}
+                        <div className="lg:col-span-8 space-y-4">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2 uppercase tracking-wider">
+                                    <i className="ph ph-sliders-horizontal text-yellow-400"></i>
+                                    System Inputs
+                                </h2>
+                                <span className="text-[10px] text-slate-500 bg-slate-800 px-2 py-1 rounded border border-slate-700">
+                                    Logic: Sev>3 Auto-Reset StableDays
+                                </span>
+                            </div>
+                            
+                            <div className="glass-panel rounded-xl overflow-x-auto">
+                                <table className="w-full text-left border-collapse min-w-[600px]">
+                                    <thead>
+                                        <tr className="bg-slate-800/80 text-[10px] text-slate-400 uppercase tracking-wider">
+                                            <th className="p-3 w-10 text-center">Active</th>
+                                            <th className="p-3">Subject</th>
+                                            <th className="p-3 text-center w-24">Rep<br/><span className="normal-case opacity-50">Score x2</span></th>
+                                            <th className="p-3 text-center w-24">Exec<br/><span className="normal-case opacity-50">Score x2</span></th>
+                                            <th className="p-3 text-center w-24">Err<br/><span className="normal-case opacity-50">Score x3</span></th>
+                                            <th className="p-3 text-center w-20">Days<br/><span className="normal-case opacity-50">To Exam</span></th>
+                                            <th className="p-3 text-center w-20">Stable<br/><span className="normal-case opacity-50">Days</span></th>
+                                            <th className="p-3 text-center w-16">Sev.<br/><span className="normal-case opacity-50">Total</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-700/50 text-sm">
+                                        {computedSubjects.map(sub => (
+                                            <tr key={sub.id} className={`${!sub.active ? 'opacity-30 grayscale' : ''} hover:bg-slate-700/30 transition-colors`}>
+                                                <td className="p-3 text-center">
+                                                    <input 
+                                                        type="checkbox" 
+                                                        checked={sub.active} 
+                                                        onChange={() => toggleActive(sub.id)}
+                                                        className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-sky-500 focus:ring-offset-slate-900 cursor-pointer"
+                                                    />
+                                                </td>
+                                                <td className="p-3">
+                                                    <div className="font-bold text-slate-200 text-base">{sub.shortName}</div>
+                                                    <div className="text-[10px] text-slate-500">{sub.fullName}</div>
+                                                </td>
+                                                {/* Traffic Lights */}
+                                                <td className="p-3"><div className="flex justify-center"><TrafficLight val={sub.rep} onChange={(v) => updateSubject(sub.id, 'rep', v)} /></div></td>
+                                                <td className="p-3"><div className="flex justify-center"><TrafficLight val={sub.exec} onChange={(v) => updateSubject(sub.id, 'exec', v)} /></div></td>
+                                                <td className="p-3"><div className="flex justify-center"><TrafficLight val={sub.error} onChange={(v) => updateSubject(sub.id, 'error', v)} /></div></td>
+                                                
+                                                {/* Days To Exam */}
+                                                <td className="p-3 text-center">
+                                                     <input 
+                                                        type="number" 
+                                                        value={sub.daysToExam}
+                                                        disabled={!sub.active}
+                                                        onChange={(e) => updateSubject(sub.id, 'daysToExam', Number(e.target.value))}
+                                                        className={`w-12 bg-slate-800 border ${sub.daysToExam <= 14 ? 'border-blue-500/50 text-blue-400 font-bold' : 'border-slate-600 text-slate-400'} rounded text-center text-xs py-1 focus:outline-none focus:border-blue-500 transition-colors`}
+                                                    />
+                                                </td>
+
+                                                {/* Stable Days (Number Input) */}
+                                                <td className="p-3 text-center">
+                                                    <input 
+                                                        type="number"
+                                                        min="0"
+                                                        value={sub.stableDays}
+                                                        disabled={!sub.active}
+                                                        onChange={(e) => updateSubject(sub.id, 'stableDays', Number(e.target.value))}
+                                                        className={`w-12 bg-slate-800 border ${sub.stableDays >= 3 ? 'border-emerald-500/50 text-emerald-400 font-bold' : 'border-slate-600 text-slate-400'} rounded text-center text-xs py-1 focus:outline-none focus:border-emerald-500 transition-colors`}
+                                                    />
+                                                </td>
+
+                                                {/* Calculated Severity */}
+                                                <td className="p-3 text-center">
+                                                    {sub.active && (
+                                                        <span className={`font-mono font-bold text-lg ${
+                                                            sub.severity >= 7 ? 'text-rose-500' : 
+                                                            sub.severity >= 4 ? 'text-yellow-400' : 'text-emerald-400'
+                                                        }`}>
+                                                            {sub.severity}
+                                                        </span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* RIGHT: Allocations */}
+                        <div className="lg:col-span-4 space-y-4">
+                             <div className="flex items-center justify-between">
+                                <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2 uppercase tracking-wider">
+                                    <i className="ph ph-cpu text-sky-400"></i>
+                                    Allocations
+                                </h2>
+                                <span className="text-[10px] text-slate-500">Cap: {Math.floor(totalTime * 0.65)}m | No Slack</span>
+                            </div>
+
+                            <div className="space-y-3">
+                                {finalAllocations.filter(s => s.active).map(sub => (
+                                    <div key={sub.id} className="glass-panel p-3 rounded-xl relative overflow-hidden group border-l-4 transition-all duration-300"
+                                         style={{ 
+                                             borderColor: sub.mode === 'SPRINT' ? '#f43f5e' : sub.mode === 'TUNING' ? '#eab308' : '#10b981'
+                                         }}>
+                                        
+                                        <div className="flex justify-between items-center relative z-10">
+                                            <div className="flex flex-col">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-bold text-slate-200 text-lg">{sub.shortName}</span>
+                                                    
+                                                    {/* Mode Badge */}
+                                                    <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider border ${
+                                                        sub.mode === 'SPRINT' ? 'bg-rose-500/10 text-rose-400 border-rose-500/30' : 
+                                                        sub.mode === 'TUNING' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30' : 
+                                                        'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
+                                                    }`}>
+                                                        {sub.mode}
+                                                    </span>
+                                                </div>
+                                                
+                                                {/* Metadata Line */}
+                                                <div className="flex items-center gap-2 mt-1">
+                                                    {sub.daysToExam <= 14 && (
+                                                        <span className="text-[10px] flex items-center gap-1 text-blue-400">
+                                                            <i className="ph-fill ph-clock-countdown"></i> {sub.daysToExam}d
+                                                        </span>
+                                                    )}
+                                                    {sub.error === 'RED' && (
+                                                        <span className="text-[10px] flex items-center gap-1 text-rose-400 font-bold">
+                                                            <i className="ph-fill ph-warning"></i> ERR
+                                                        </span>
+                                                    )}
+                                                    {sub.capped && (
+                                                        <span className="text-[10px] flex items-center gap-1 text-purple-400" title="已封顶，溢出时间已重分配">
+                                                            <i className="ph-fill ph-arrow-line-up"></i> CAP
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex flex-col items-end">
+                                                <div className="flex items-baseline gap-1">
+                                                    <span className={`text-3xl font-mono font-bold ${
+                                                        sub.mode === 'SPRINT' ? 'text-white neon-text' : 
+                                                        sub.mode === 'TUNING' ? 'text-slate-100' : 'text-slate-400'
+                                                    }`}>
+                                                        {sub.finalAlloc}
+                                                    </span>
+                                                    <span className="text-xs text-slate-500">min</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Background Progress Bar */}
+                                        <div 
+                                            className={`absolute bottom-0 left-0 h-1 progress-bar-fill ${
+                                                 sub.mode === 'SPRINT' ? 'bg-rose-500' : 
+                                                 sub.mode === 'TUNING' ? 'bg-yellow-500' : 'bg-emerald-500'
+                                            }`}
+                                            style={{ width: `${(sub.finalAlloc / totalTime) * 100}%` }}
+                                        ></div>
+                                    </div>
+                                ))}
+
+                                {finalAllocations.filter(s => s.active).length === 0 && (
+                                    <div className="text-center p-8 text-slate-500 border border-dashed border-slate-700 rounded-xl bg-slate-800/30">
+                                        No active threads. Enable subjects on the left.
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Summary Footer */}
+                            <div className="mt-4 p-3 bg-slate-900/50 rounded-lg text-[10px] text-slate-500 font-mono border border-slate-800 flex justify-between">
+                                <span>Allocated: {finalAllocations.filter(s => s.active).reduce((a,b) => a + b.finalAlloc, 0)}m</span>
+                                <span>Total: {totalTime}m</span>
+                            </div>
+                        </div>
+
+                    </main>
+                </div>
+            );
+        }
+
+        // Helper: Traffic Light Component
+        const TrafficLight = ({ val, onChange }) => (
+            <div className="flex gap-1 bg-slate-800/80 p-1 rounded-full border border-slate-700 shadow-inner">
+                {['GREEN', 'YELLOW', 'RED'].map(k => (
+                    <div
+                        key={k}
+                        onClick={() => onChange(k)}
+                        className={`w-3 h-3 md:w-4 md:h-4 rounded-full ${STATES[k].color} ${val === k ? 'active opacity-100 ring-2 ring-white scale-110' : 'opacity-20 hover:opacity-60'} traffic-light`}
+                        title={STATES[k].label}
+                    />
+                ))}
+            </div>
+        );
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
