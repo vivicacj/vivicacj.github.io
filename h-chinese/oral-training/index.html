@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#17202a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="HCL Oral">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>HCL Oral Simulator｜高华口语训练</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; font-family: "Segoe UI", Arial, sans-serif; background: #f7f4ee; color: #17202a; }
+    button, textarea, select { font: inherit; }
+    button { cursor: pointer; border: 0; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .topbar { background: #fff; border-bottom: 1px solid #d9d1c4; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 22px; }
+    .header { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .eyebrow { color: #9a6a23; font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+    h1 { font-size: clamp(28px, 4vw, 42px); line-height: 1.05; }
+    .exam-pill { border: 1px solid #d9d1c4; background: #f7f4ee; border-radius: 10px; padding: 12px 16px; color: #475569; }
+    .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 20px; }
+    .tab { border: 1px solid #d9d1c4; border-radius: 10px; background: #fff; padding: 14px; text-align: left; color: #17202a; }
+    .tab.active { background: #17202a; color: #fff; border-color: #17202a; }
+    .tab strong { display: block; margin-bottom: 5px; }
+    .tab span { color: inherit; opacity: .72; font-size: 13px; line-height: 1.4; }
+    .grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 22px; align-items: start; }
+    .panel { border: 1px solid #d9d1c4; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 18px 48px rgba(23,32,42,.10); }
+    .video-title { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 12px; }
+    video { width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; background: #101820; border: 1px solid #d9d1c4; }
+    .prompt { font-size: clamp(22px, 3vw, 30px); line-height: 1.35; margin-top: 8px; }
+    .timer { background: #17202a; color: #fff; border-radius: 12px; padding: 24px; margin: 18px 0; text-align: center; }
+    .timer .time { font-size: clamp(54px, 9vw, 82px); font-weight: 900; font-variant-numeric: tabular-nums; line-height: 1; margin-top: 6px; }
+    .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .btn { border-radius: 8px; padding: 11px 16px; font-weight: 800; color: #fff; background: #17202a; }
+    .btn.jade { background: #256f5b; }
+    .btn.coral { background: #b74b42; }
+    .btn.light { background: #fff; color: #17202a; border: 1px solid #d9d1c4; }
+    .btn.small { padding: 8px 11px; font-size: 13px; }
+    .card { border: 1px solid #d9d1c4; border-radius: 10px; padding: 15px; background: #fff; }
+    .soft { background: #f7f4ee; }
+    textarea { width: 100%; min-height: 130px; resize: vertical; border: 1px solid #d9d1c4; border-radius: 8px; padding: 12px; margin-top: 9px; line-height: 1.55; }
+    .stack { display: grid; gap: 14px; }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .tagbox { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .tag { background: #f7f4ee; border-radius: 8px; padding: 8px 10px; font-size: 14px; font-weight: 700; }
+    .topic-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin-top: 14px; }
+    .topic-item { border: 1px solid #d9d1c4; border-radius: 10px; padding: 12px; background: #fff; }
+    .topic-id { color: #9a6a23; font-size: 12px; font-weight: 900; letter-spacing: .04em; }
+    .scene { border: 1px solid #d9d1c4; border-radius: 10px; padding: 13px; }
+    .muted { color: #64748b; font-size: 14px; line-height: 1.55; }
+    .score { font-size: 42px; font-weight: 900; }
+    .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 16px 0; }
+    .list { padding-left: 18px; margin-top: 9px; line-height: 1.65; }
+    .hidden { display: none !important; }
+    audio { width: 100%; margin-top: 8px; }
+    .footer-note { margin-top: 22px; color: #64748b; font-size: 14px; border: 1px solid #d9d1c4; background: #fff; border-radius: 10px; padding: 14px; }
+    .field { display: grid; gap: 7px; }
+    .field input { width: 100%; border: 1px solid #d9d1c4; border-radius: 8px; padding: 11px 12px; }
+    .field select { width: 100%; border: 1px solid #d9d1c4; border-radius: 8px; padding: 11px 12px; background: #fff; }
+    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 14px; }
+    .submit-status { font-size: 14px; color: #64748b; }
+    .recording-banner { border: 1px solid #b74b42; background: #fff5f3; border-radius: 10px; padding: 14px; }
+    .recording-dot { display: inline-block; width: 10px; height: 10px; border-radius: 999px; background: #b74b42; margin-right: 8px; }
+    .recording-item { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; border: 1px solid #d9d1c4; border-radius: 10px; padding: 12px; }
+    .recording-item audio { margin-top: 6px; }
+    .question-nav { display: grid; gap: 8px; }
+    .question-chip { width: 100%; text-align: left; border: 1px solid #d9d1c4; background: #fff; border-radius: 8px; padding: 10px; color: #17202a; }
+    .question-chip.active { border-color: #17202a; background: #17202a; color: #fff; }
+    .question-chip.done { border-color: #256f5b; }
+    .attempt-workspace { border: 2px solid #17202a; }
+    .attempt-section { border: 1px solid #d9d1c4; border-radius: 10px; padding: 14px; background: #fff; }
+    .attempt-section textarea { min-height: 115px; }
+    .attempt-section.current { border-color: #256f5b; background: #f6fffb; }
+    @media (max-width: 900px) {
+      .tabs, .grid, .two, .report-grid { grid-template-columns: 1fr; }
+      .wrap { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap header">
+      <div>
+        <div class="eyebrow">Singapore O-Level Higher Chinese 1116</div>
+        <h1>HCL Oral Simulator</h1>
+      </div>
+      <div class="exam-pill">
+        <strong>Paper 3 Oral · 40 marks</strong><br>
+        Presentation 20 · Discussion 20
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="planCardPanel" style="margin-bottom: 18px;"></section>
+    <nav id="tabs" class="tabs"></nav>
+    <section id="app" style="margin-top: 22px;"></section>
+    <div class="footer-note">MVP 版本使用本地文字稿规则诊断。录音提交后会保存到老师 iMac 的 Google Drive 同步文件夹：O-Level 2026 备考总库/10.ORAL/HCL。</div>
+  </main>
+
+  <script src="data/fallback-data.js"></script>
+  <script>
+    const modes = {
+      EXAM_MODE: ["Exam Mode", "10分钟准备，2分钟陈述，再完成考官问答。"],
+      TRAINING_MODE: ["Training Mode", "录像重点、词汇与2+1结构分段练习。"],
+      DIAGNOSTIC_MODE: ["Diagnostic Mode", "粘贴学生答案，检查内容与语言风险。"],
+      QUESTION_BANK_MODE: ["Question Bank Mode", "同一主题的口头报告与讨论题库。"]
+    };
+
+    const ATTEMPT_DB_NAME = "HCL_ORAL_PILOT_ATTEMPTS";
+    const ATTEMPT_STORE_NAME = "attempts";
+
+    const state = {
+      mode: "EXAM_MODE",
+      phase: "PREP",
+      prepSeconds: 600,
+      prepRunning: false,
+      prepTimer: null,
+      questionIndex: 0,
+      recordings: [],
+      activeRecording: null,
+      recordingSeconds: 0,
+      transcriptAssist: {
+        supported: false,
+        active: false,
+        status: "未启动",
+        target: null,
+        finalText: "",
+        interimText: "",
+        recognition: null
+      },
+      presentationTranscript: "",
+      discussionTranscripts: [],
+      diagnosticTranscript: "",
+      selectedPrompt: "",
+      selectedPromptIndex: 0,
+      selectedPromptObject: null,
+      planCard: {
+        task_id: "",
+        student_name: "Dennis",
+        subject: "HCL",
+        archetype_id: "HCL-ORAL-GROUP",
+        date: "",
+        practice_type: "[A2_PRACTICE]",
+        task_goal: "",
+        source_plan_row: "",
+        notion_page_url: ""
+      },
+      bankFilters: { year: "ALL", topic: "ALL", difficulty: "ALL", promptType: "ALL", hasVideo: "ALL", skill: "ALL" },
+      selfReflection: { confidence_level: null, multiple_choice: [], student_note: "" },
+      studentName: "",
+      submitStatus: "",
+      isSubmitting: false,
+      attemptDb: null,
+      currentAttemptId: "",
+      currentAttemptCreatedAt: "",
+      attemptHistory: [],
+      saveStatus: "Not saved yet",
+      saveTimer: null,
+      data: null
+    };
+
+    const standMarkers = ["我认为", "我的立场", "我觉得", "我同意", "我不同意", "仍然有", "有保留价值"];
+    const reasonMarkers = ["因为", "因此", "所以", "这说明", "原因", "第一", "第二", "此外", "另外"];
+    const extensionMarkers = ["社会", "社区", "年轻", "一代", "政府", "学校", "新加坡", "邻里", "传统行业"];
+
+    function formatTime(seconds) {
+      const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+      const sec = String(seconds % 60).padStart(2, "0");
+      return `${min}:${sec}`;
+    }
+
+    function formatClock(seconds) {
+      return formatTime(Math.max(0, Math.floor(seconds || 0)));
+    }
+
+    function newAttemptId() {
+      return `attempt-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function openAttemptDb() {
+      return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+          resolve(null);
+          return;
+        }
+        const request = indexedDB.open(ATTEMPT_DB_NAME, 1);
+        request.onupgradeneeded = event => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(ATTEMPT_STORE_NAME)) {
+            const store = db.createObjectStore(ATTEMPT_STORE_NAME, { keyPath: "id" });
+            store.createIndex("updatedAt", "updatedAt");
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function txStore(mode = "readonly") {
+      if (!state.attemptDb) return null;
+      return state.attemptDb.transaction(ATTEMPT_STORE_NAME, mode).objectStore(ATTEMPT_STORE_NAME);
+    }
+
+    function requestToPromise(request) {
+      return new Promise((resolve, reject) => {
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    function serializeAttempt() {
+      const prompt = currentPromptObject();
+      return {
+        id: state.currentAttemptId || newAttemptId(),
+        createdAt: state.currentAttemptCreatedAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        title: `${state.planCard.task_id || "No task_id"} · ${prompt?.question_id || "Prompt"} · ${new Date().toLocaleString()}`,
+        planCard: state.planCard,
+        mode: state.mode,
+        phase: state.phase,
+        prepSeconds: state.prepSeconds,
+        questionIndex: state.questionIndex,
+        selectedPromptId: prompt?.question_id || null,
+        selectedPromptIndex: state.selectedPromptIndex,
+        presentationTranscript: state.presentationTranscript,
+        discussionTranscripts: state.discussionTranscripts,
+        diagnosticTranscript: state.diagnosticTranscript,
+        selfReflection: state.selfReflection,
+        studentName: state.studentName,
+        recordings: state.recordings.map(item => ({
+          id: item.id,
+          label: item.label,
+          blob: item.blob,
+          durationSeconds: item.durationSeconds,
+          createdAt: item.createdAt
+        })),
+        capturePacketPreview: {
+          packet_version: "HCL_ORAL_CAPTURE_PACKET_V1",
+          task_id: state.planCard.task_id || "",
+          prompt_id: prompt?.question_id || null,
+          recording_count: state.recordings.length
+        }
+      };
+    }
+
+    async function refreshAttemptHistory() {
+      const store = txStore("readonly");
+      if (!store) return;
+      const records = await requestToPromise(store.getAll());
+      state.attemptHistory = records
+        .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)))
+        .map(record => ({
+          id: record.id,
+          title: record.title,
+          updatedAt: record.updatedAt,
+          task_id: record.planCard?.task_id || "",
+          prompt_id: record.selectedPromptId || "",
+          recording_count: record.recordings?.length || 0
+        }));
+    }
+
+    async function saveCurrentAttemptNow() {
+      const store = txStore("readwrite");
+      if (!store) {
+        state.saveStatus = "IndexedDB unavailable; current attempt is page memory only.";
+        return;
+      }
+      if (!state.currentAttemptId) state.currentAttemptId = newAttemptId();
+      if (!state.currentAttemptCreatedAt) state.currentAttemptCreatedAt = new Date().toISOString();
+      const record = serializeAttempt();
+      state.currentAttemptId = record.id;
+      await requestToPromise(store.put(record));
+      localStorage.setItem("hcl_oral_current_attempt_id", record.id);
+      state.saveStatus = `Saved locally ${new Date(record.updatedAt).toLocaleTimeString()}`;
+      await refreshAttemptHistory();
+    }
+
+    function scheduleAttemptSave() {
+      if (state.saveTimer) window.clearTimeout(state.saveTimer);
+      state.saveTimer = window.setTimeout(() => {
+        saveCurrentAttemptNow().catch(() => {
+          state.saveStatus = "Local autosave failed.";
+        });
+      }, 600);
+    }
+
+    async function loadAttemptRecord(id) {
+      const store = txStore("readonly");
+      if (!store || !id) return null;
+      return requestToPromise(store.get(id));
+    }
+
+    function applyAttemptRecord(record) {
+      if (!record) return false;
+      state.recordings.forEach(item => item.url && URL.revokeObjectURL(item.url));
+      state.currentAttemptId = record.id;
+      state.currentAttemptCreatedAt = record.createdAt;
+      state.planCard = { ...state.planCard, ...(record.planCard || {}) };
+      state.studentName = record.studentName || state.planCard.student_name || "Dennis";
+      const promptIndex = state.data.promptBank.prompts.findIndex(prompt => prompt.question_id === record.selectedPromptId);
+      if (promptIndex >= 0) {
+        state.selectedPromptIndex = promptIndex;
+        state.selectedPromptObject = state.data.promptBank.prompts[promptIndex];
+        state.selectedPrompt = state.selectedPromptObject.prompt;
+      }
+      state.mode = record.mode || "EXAM_MODE";
+      state.phase = record.phase || "PREP";
+      state.prepSeconds = typeof record.prepSeconds === "number" ? record.prepSeconds : 600;
+      state.questionIndex = record.questionIndex || 0;
+      state.presentationTranscript = record.presentationTranscript || "";
+      state.discussionTranscripts = currentDiscussionQuestions().map((_, index) => record.discussionTranscripts?.[index] || "");
+      state.diagnosticTranscript = record.diagnosticTranscript || "";
+      state.selfReflection = record.selfReflection || { confidence_level: null, multiple_choice: [], student_note: "" };
+      state.recordings = (record.recordings || []).map(item => ({
+        ...item,
+        url: item.blob ? URL.createObjectURL(item.blob) : ""
+      }));
+      state.saveStatus = `Restored local attempt ${new Date(record.updatedAt).toLocaleTimeString()}`;
+      return true;
+    }
+
+    async function resumeAttempt(id) {
+      const record = await loadAttemptRecord(id);
+      if (applyAttemptRecord(record)) {
+        localStorage.setItem("hcl_oral_current_attempt_id", id);
+        state.submitStatus = "已恢复本机保存的 attempt。";
+        render();
+      }
+    }
+
+    async function deleteAttempt(id) {
+      const store = txStore("readwrite");
+      if (!store) return;
+      await requestToPromise(store.delete(id));
+      if (state.currentAttemptId === id) {
+        localStorage.removeItem("hcl_oral_current_attempt_id");
+        startNewAttempt(false);
+      }
+      await refreshAttemptHistory();
+      render();
+    }
+
+    function startNewAttempt(confirmFirst = true) {
+      if (confirmFirst && (state.recordings.length || state.presentationTranscript.trim() || state.discussionTranscripts.some(item => item.trim()))) {
+        const ok = window.confirm("开始新的 attempt 会清空当前页面里的录音和文字稿；已自动保存的历史记录仍可恢复。要继续吗？");
+        if (!ok) return;
+      }
+      state.recordings.forEach(item => item.url && URL.revokeObjectURL(item.url));
+      state.currentAttemptId = newAttemptId();
+      state.currentAttemptCreatedAt = new Date().toISOString();
+      resetAttemptState();
+      localStorage.setItem("hcl_oral_current_attempt_id", state.currentAttemptId);
+      state.saveStatus = "New attempt started; autosave pending.";
+      scheduleAttemptSave();
+      render();
+    }
+
+    async function initAttemptStore() {
+      try {
+        state.attemptDb = await openAttemptDb();
+        if (!state.attemptDb) {
+          state.saveStatus = "IndexedDB unavailable; current attempt is page memory only.";
+          return;
+        }
+        await refreshAttemptHistory();
+        const lastId = localStorage.getItem("hcl_oral_current_attempt_id");
+        if (lastId) {
+          const restored = applyAttemptRecord(await loadAttemptRecord(lastId));
+          if (restored) return;
+        }
+        state.currentAttemptId = newAttemptId();
+        state.currentAttemptCreatedAt = new Date().toISOString();
+        state.saveStatus = "Local autosave ready.";
+        scheduleAttemptSave();
+      } catch (error) {
+        state.saveStatus = "Local autosave unavailable in this browser.";
+      }
+    }
+
+    function todayId() {
+      return new Date().toISOString().slice(0, 10).replaceAll("-", "");
+    }
+
+    function includesAny(text, words) {
+      return (words || []).some(word => word && text.includes(word));
+    }
+
+    function currentPromptObject() {
+      return state.selectedPromptObject || state.data.promptBank?.prompts?.find(prompt => prompt.video_id === state.data.exam.video_id) || null;
+    }
+
+    function currentPrompt() {
+      return currentPromptObject()?.prompt || state.selectedPrompt || state.data.exam.presentation_prompt;
+    }
+
+    function currentDiscussionSet() {
+      const prompt = currentPromptObject();
+      const sets = state.data.discussionSets?.sets || [];
+      if (prompt?.discussion_set_id) {
+        return sets.find(set => set.discussion_set_id === prompt.discussion_set_id);
+      }
+      return sets.find(set => set.discussion_set_id === "HCL-DISC-2021-D04") || null;
+    }
+
+    function currentDiscussionQuestions() {
+      const set = currentDiscussionSet();
+      if (set?.questions?.length) return set.questions.map(question => question.text);
+      return state.data.exam.discussion_questions;
+    }
+
+    function importPlanCardFromText(text) {
+      try {
+        const parsed = JSON.parse(text);
+        const identity = parsed.task_identity || parsed;
+        const oralSetup = parsed.oral_setup || {};
+        state.planCard = {
+          ...state.planCard,
+          ...identity,
+          task_id: identity.task_id || "",
+          student_name: identity.student_name || "Dennis",
+          subject: identity.subject || "HCL",
+          archetype_id: identity.archetype_id || "HCL-ORAL-GROUP",
+          date: identity.date || "",
+          practice_type: identity.practice_type || "[A2_PRACTICE]",
+          task_goal: identity.task_goal || oralSetup.task_goal || "",
+          source_plan_row: identity.source_plan_row || "",
+          notion_page_url: identity.notion_page_url || ""
+        };
+        if (oralSetup.prompt_id && state.data?.promptBank?.prompts) {
+          const promptIndex = state.data.promptBank.prompts.findIndex(prompt => prompt.question_id === oralSetup.prompt_id);
+          if (promptIndex >= 0) {
+            state.selectedPromptIndex = promptIndex;
+            state.selectedPromptObject = state.data.promptBank.prompts[promptIndex];
+            state.selectedPrompt = state.selectedPromptObject.prompt;
+            state.discussionTranscripts = currentDiscussionQuestions().map((_, index) => state.discussionTranscripts[index] || "");
+          }
+        }
+        state.studentName = state.planCard.student_name;
+        state.submitStatus = "Plan Card 已导入。本次 attempt 将使用主系统 task_id。";
+        scheduleAttemptSave();
+      } catch (error) {
+        state.submitStatus = "Plan Card JSON 无法解析，请检查是否复制了完整 JSON。";
+      }
+      render();
+    }
+
+    function notebookLMInstruction() {
+      return [
+        "Use the attached HCL_ORAL_CAPTURE_PACKET_V1 as raw oral attempt evidence.",
+        "Do not change task_id.",
+        "Do not invent archetype_id.",
+        "Subject must remain HCL.",
+        "Archetype_ID must remain HCL-ORAL-GROUP unless explicitly supplied by the Plan Card.",
+        "Mark the transcript using HCL 1116 Paper 3 oral rubric.",
+        "Return A2_RESULT_CANONICAL_V2 only.",
+        "Do not write EVIDENCE_VALID directly.",
+        "Do not declare HCL-ORAL-GROUP covered."
+      ].join("\n");
+    }
+
+    function createCapturePacket() {
+      const prompt = currentPromptObject();
+      const plan = state.planCard;
+      return {
+        packet_version: "HCL_ORAL_CAPTURE_PACKET_V1",
+        task_identity: {
+          task_id: plan.task_id,
+          student_name: plan.student_name || "Dennis",
+          subject: plan.subject || "HCL",
+          archetype_id: plan.archetype_id || "HCL-ORAL-GROUP",
+          date: plan.date,
+          practice_type: plan.practice_type || "[A2_PRACTICE]",
+          task_goal: plan.task_goal,
+          source_plan_row: plan.source_plan_row,
+          notion_page_url: plan.notion_page_url
+        },
+        oral_prompt: {
+          prompt_id: prompt?.question_id || "HCL-ORAL-WETMARKET",
+          prompt: currentPrompt(),
+          primary_topic: prompt?.primary_topic || state.data.exam.theme,
+          secondary_topics: prompt?.secondary_topics || [],
+          topic_keywords: prompt?.topic_keywords || [],
+          expected_dimensions: prompt?.expected_dimensions || [],
+          discussion_questions: currentDiscussionQuestions()
+        },
+        attempt: {
+          mode: state.mode,
+          prep_time_sec: 600,
+          presentation_time_sec: 120,
+          recording_count: state.recordings.length,
+          recordings: state.recordings.map(item => ({
+            label: item.label,
+            duration_seconds: item.durationSeconds || null,
+            created_at: item.createdAt,
+            size_bytes: item.blob?.size || null
+          })),
+          presentation_transcript: state.presentationTranscript,
+          discussion_transcripts: state.discussionTranscripts,
+          student_self_reflection: state.selfReflection
+        },
+        diagnostic_estimate: {
+          enabled: false,
+          not_official_score: true,
+          estimated_score: null,
+          strengths: [],
+          gaps: [],
+          next_drills: []
+        },
+        notebooklm_handoff_instruction: notebookLMInstruction(),
+        source_app: {
+          app_id: "HCL_ORAL_SIMULATOR_V2",
+          exported_at: new Date().toISOString()
+        }
+      };
+    }
+
+    function validateCapturePacket(packet) {
+      const fail = [];
+      const warn = [];
+      if (!packet.task_identity.task_id) fail.push("task_id is missing");
+      if (packet.task_identity.student_name !== "Dennis") fail.push("student_name is not Dennis");
+      if (packet.task_identity.subject !== "HCL") fail.push("subject is not HCL");
+      if (!packet.task_identity.archetype_id) fail.push("archetype_id is missing");
+      if (!packet.oral_prompt.prompt_id) fail.push("oral_prompt.prompt_id is missing");
+      if (!packet.oral_prompt.prompt) fail.push("oral_prompt.prompt is missing");
+      if (!packet.attempt.presentation_transcript && packet.attempt.recording_count < 1) warn.push("presentation transcript missing and no recording");
+      if (!Array.isArray(packet.attempt.discussion_transcripts)) fail.push("discussion_transcripts missing");
+      if (packet.diagnostic_estimate.enabled) warn.push("diagnostic_estimate should remain disabled for capture-only export");
+      if (currentPromptObject()?.needs_verification) warn.push("prompt needs_verification = true");
+      return { status: fail.length ? "FAIL" : warn.length ? "WARN" : "PASS", fail, warn };
+    }
+
+    function downloadCapturePacket() {
+      const packet = createCapturePacket();
+      const validation = validateCapturePacket(packet);
+      if (validation.status === "FAIL") {
+        state.submitStatus = `Capture Packet 导出失败：${validation.fail.join("；")}`;
+        render();
+        return;
+      }
+      const blob = new Blob([JSON.stringify(packet, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${packet.task_identity.task_id || "HCL-ORAL-CAPTURE"}-capture-packet.json`;
+      document.body.appendChild(link);
+      link.click();
+      window.setTimeout(() => {
+        URL.revokeObjectURL(url);
+        link.remove();
+      }, 1000);
+      state.submitStatus = `Capture Packet ${validation.status}：已触发下载。`;
+      render();
+    }
+
+    async function copyCapturePacket() {
+      const packet = createCapturePacket();
+      const validation = validateCapturePacket(packet);
+      if (validation.status === "FAIL") {
+        state.submitStatus = `Capture Packet 复制失败：${validation.fail.join("；")}`;
+        render();
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(JSON.stringify(packet, null, 2));
+        state.submitStatus = `Capture Packet ${validation.status}：已复制，可粘贴给 NotebookLM / marker。`;
+      } catch (error) {
+        state.submitStatus = "浏览器不允许复制 Capture Packet。请使用 Download Capture Packet。";
+      }
+      render();
+    }
+
+    async function copyNotebookLMInstruction() {
+      try {
+        await navigator.clipboard.writeText(notebookLMInstruction());
+        state.submitStatus = "NotebookLM Marking Instruction 已复制。";
+      } catch (error) {
+        state.submitStatus = "浏览器不允许自动复制，请手动复制 NotebookLM 指令。";
+      }
+      render();
+    }
+
+    function hasVideoStimulus() {
+      const prompt = currentPromptObject();
+      if (prompt) return Boolean(prompt.has_video && prompt.video_id === state.data.exam.video_id);
+      return true;
+    }
+
+    function stimulusPanel() {
+      if (hasVideoStimulus()) return videoPanel();
+      return `
+        <section class="panel stack">
+          <div class="video-title">
+            <h2>无视频刺激题</h2>
+            <span class="tag">Question Bank</span>
+          </div>
+          <div class="card soft">
+            <div class="eyebrow">Selected Oral Prompt</div>
+            <h2 class="prompt">${currentPrompt()}</h2>
+            <p class="muted" style="margin-top: 10px;">这道题目前没有配套录像短片。请按题目本身进行准备、陈述和讨论练习。</p>
+            ${promptMetaHtml()}
+          </div>
+        </section>
+      `;
+    }
+
+    function promptMetaHtml() {
+      const prompt = currentPromptObject();
+      if (!prompt) return "";
+      const tags = [prompt.year, prompt.day_label, prompt.session, prompt.primary_topic, ...(prompt.secondary_topics || [])].filter(Boolean);
+      return `<div class="tagbox">${tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>`;
+    }
+
+    function trainingProfile() {
+      const exam = state.data.exam;
+      const prompt = currentPromptObject();
+      if (prompt) {
+        const topic = state.data.topicBank.topics.find(item => item.name === prompt.primary_topic);
+        return {
+          keyTitle: `Topic Key Points · ${prompt.primary_topic}`,
+          keyPoints: (prompt.expected_dimensions || []).map((dimension, index) => ({
+            title: `Expected Dimension ${index + 1}`,
+            body: dimension
+          })).concat([
+            { title: "题目方向", body: prompt.prompt },
+            { title: "主题覆盖", body: [prompt.primary_topic, ...(prompt.secondary_topics || [])].join(" / ") }
+          ]),
+          vocabulary: Array.from(new Set([...(prompt.topic_keywords || []), ...(topic?.useful_phrases || [])])).slice(0, 14),
+          steps: [
+            "立场句：直接回答同意、不同意或部分同意。",
+            `第一点：围绕“${prompt.expected_dimensions?.[0] || prompt.topic_keywords?.[0] || prompt.primary_topic}”展开。`,
+            `第二点：扩展到“${prompt.expected_dimensions?.[1] || prompt.secondary_topics?.[0] || "新加坡社会"}”。`,
+            "让步：承认反方观点或现实挑战。",
+            "建议：从个人、学校/社区、政府/企业中选两层提出方法。",
+            "总结：回扣题目并重申立场。"
+          ],
+          drills: [
+            `30秒立场：用“我认为……”回应「${prompt.prompt}」。`,
+            `关键词展开：从 ${prompt.topic_keywords?.slice(0, 3).join("、") || prompt.primary_topic} 中选两个词各讲一层理由。`,
+            "责任分层：分别说明个人、学校/社区、政府/企业可以做什么。"
+          ]
+        };
+      }
+      const promptText = currentPrompt();
+      if (hasVideoStimulus()) {
+        return {
+          keyTitle: "Video Key Points",
+          keyPoints: exam.key_scenes.map(scene => ({
+            title: `${scene.timestamp} · ${scene.scene}`,
+            body: scene.inference
+          })),
+          vocabulary: exam.vocabulary_bank.slice(0, 10),
+          steps: exam.answer_structure.steps,
+          drills: [
+            "用一个录像细节证明湿巴刹有人情味。",
+            "用一个社会层面理由说明传统空间为什么值得保留。",
+            "提出一个让湿巴刹转型的具体建议。"
+          ]
+        };
+      }
+
+      if (promptText.includes("旧火车站") || promptText.includes("铁路走廊") || promptText.includes("历史") || promptText.includes("文化遗产") || promptText.includes("旧建筑")) {
+        return {
+          keyTitle: "Topic Key Points · 历史保育 / 铁路走廊",
+          keyPoints: [
+            { title: "立场", body: "可以同意：保留旧火车站和铁路走廊值得赞扬，因为它让城市发展不只追求效率，也保留共同记忆。" },
+            { title: "文化价值", body: "旧火车站和旧铁道见证新加坡的发展历程，能帮助年轻人理解过去，而不是只看到现代建筑。" },
+            { title: "社区价值", body: "铁路走廊可以成为散步、骑脚车、亲近自然和社区活动的公共空间。" },
+            { title: "教育价值", body: "学校可安排导览、历史探究或口述历史活动，让学生把课本知识和真实空间连接起来。" },
+            { title: "让步与平衡", body: "保育需要成本，也会占用土地；因此应通过活化用途，让旧空间继续服务现代社会。" }
+          ],
+          vocabulary: ["历史保育", "旧火车站", "铁路走廊", "文化记忆", "身份认同", "城市发展", "公共空间", "社区凝聚力", "活化利用", "代际传承", "休闲空间", "可持续发展"],
+          steps: [
+            "立场句：我同意/部分同意这是值得赞扬的举措，因为……",
+            "第一点：说明历史保育的价值，如文化记忆、身份认同、教育意义。",
+            "第二点：扩展到社区层面，如公共空间、休闲活动、居民凝聚力。",
+            "让步：承认土地有限、维护成本高、发展需求强。",
+            "建议：提出活化方式，如导览、展板、学校学习路线、社区活动。",
+            "总结：回扣城市发展与历史保育可以并行。"
+          ],
+          drills: [
+            "30秒立场练习：用“我同意，因为……”讲清楚你的主张。",
+            "证据练习：用“旧火车站/铁路走廊”各讲一个具体价值。",
+            "让步练习：先承认保育成本，再提出一个平衡方案。"
+          ]
+        };
+      }
+
+      return {
+        keyTitle: "Topic Key Points · 城市文化 / 社会议题",
+        keyPoints: [
+          { title: "立场", body: "先明确同意、不同意，或部分同意，避免只描述现象。" },
+          { title: "个人层面", body: "说明这个议题如何影响学生、家庭或日常生活。" },
+          { title: "社区层面", body: "扩展到邻里关系、公共空间、社会责任或文化认同。" },
+          { title: "社会层面", body: "联系新加坡的城市发展、政策取舍或年轻一代的价值观。" },
+          { title: "建议", body: "提出具体、可执行的方法，而不是只说“政府应该加强宣传”。" }
+        ],
+        vocabulary: ["社会责任", "公共利益", "年轻一代", "城市发展", "文化认同", "社区凝聚力", "政策取舍", "现代化", "传统价值", "可持续发展"],
+        steps: [
+          "立场句：我认为……",
+          "第一点：从个人或生活经验说明。",
+          "第二点：扩展到社区或社会影响。",
+          "让步：承认另一方观点或现实挑战。",
+          "建议：提出具体改进方法。",
+          "总结：回扣题目，强调意义。"
+        ],
+        drills: [
+          "立场练习：用一句话明确你的观点。",
+          "扩展练习：把一个个人例子提升到社会层面。",
+          "建议练习：提出一个具体做法并说明效果。"
+        ]
+      };
+    }
+
+    function resetAttemptState() {
+      if (state.activeRecording) stopActiveRecording(false);
+      state.phase = "PREP";
+      state.prepSeconds = 600;
+      state.prepRunning = false;
+      window.clearInterval(state.prepTimer);
+      state.questionIndex = 0;
+      state.recordings.forEach(item => item.url && URL.revokeObjectURL(item.url));
+      state.recordings = [];
+      state.recordingSeconds = 0;
+      state.presentationTranscript = "";
+      state.discussionTranscripts = currentDiscussionQuestions().map(() => "");
+      state.submitStatus = "";
+      state.isSubmitting = false;
+    }
+
+    function startPromptPractice(index, mode) {
+      const prompts = state.data.promptBank?.prompts || [];
+      state.selectedPromptIndex = index;
+      state.selectedPromptObject = prompts[index] || null;
+      state.selectedPrompt = state.selectedPromptObject?.prompt || state.data.exam.presentation_prompt;
+      state.currentAttemptId = newAttemptId();
+      state.currentAttemptCreatedAt = new Date().toISOString();
+      resetAttemptState();
+      state.mode = mode;
+      scheduleAttemptSave();
+      render();
+    }
+
+    function diagnose(transcript) {
+      const exam = state.data.exam;
+      const prompt = currentPromptObject();
+      const text = transcript.trim();
+      const promptKeywords = prompt?.topic_keywords || exam.vocabulary_bank;
+      const dimensionTerms = (prompt?.expected_dimensions || []).flatMap(item => item.split(/[，、,。；; ]+/)).filter(item => item.length >= 2);
+      const evidenceTerms = prompt?.has_video
+        ? exam.key_scenes.flatMap(scene => [scene.scene, scene.inference]).concat(promptKeywords, ["摊主", "鱼档", "湿巴刹", "超市", "新鲜食材", "人情味"])
+        : promptKeywords.concat(dimensionTerms, prompt?.secondary_topics || [], prompt?.primary_topic || "");
+      const keywordHits = promptKeywords.filter(word => text.includes(word)).length;
+      const dimensionHits = (prompt?.expected_dimensions || []).filter(item => includesAny(text, item.split(/[，、,。；; ]+/).filter(word => word.length >= 2))).length;
+      const vocabHits = promptKeywords.filter(word => text.includes(word)).length;
+      const connectorHits = reasonMarkers.filter(word => text.includes(word)).length;
+      const singaporeMarkers = ["新加坡", "我国", "本地", "政府", "学校", "社区", "公众", "居民", "年轻人", "国人"];
+      const responsibilityMarkers = ["个人", "家庭", "学校", "社区", "政府", "企业", "平台", "公众", "商家"];
+      const balancedMarkers = ["虽然", "不过", "但是", "然而", "另一方面", "不能否认", "部分同意"];
+      const conclusionMarkers = ["总的来说", "总结", "因此", "所以我认为", "由此可见"];
+      return {
+        clearStand: includesAny(text, standMarkers),
+        videoEvidence: includesAny(text, evidenceTerms),
+        topicKeywordCoverage: keywordHits,
+        expectedDimensionCoverage: dimensionHits,
+        developedReasons: connectorHits >= 2 || text.length > 90,
+        socialExtension: includesAny(text, extensionMarkers),
+        singaporeSocialExtension: includesAny(text, singaporeMarkers),
+        responsibilityLayering: responsibilityMarkers.filter(word => text.includes(word)).length >= 2,
+        balancedView: includesAny(text, balancedMarkers),
+        conclusion: includesAny(text, conclusionMarkers),
+        offTopic: text.length > 0 && keywordHits === 0 && dimensionHits === 0,
+        simpleLanguage: text.length < 80 || (vocabHits < 2 && connectorHits <= 3)
+      };
+    }
+
+    function clamp(value, max) {
+      return Math.max(0, Math.min(max, value));
+    }
+
+    function nextDrillsFromDiagnosis(diagnosis) {
+      const triggerMap = {
+        NO_CLEAR_STAND: "no_clear_stand",
+        UNDERDEVELOPED_REASON: "underdeveloped_reason",
+        NO_SINGAPORE_EXAMPLE: "no_singapore_example",
+        WEAK_RESPONSIBILITY_LAYERING: "weak_responsibility_layering",
+        ONE_SIDED_ANSWER: "one_sided_answer",
+        NO_CONCLUSION: "no_conclusion",
+        SIMPLE_LANGUAGE: "simple_language_risk"
+      };
+      const triggers = diagnosis.error_bank_entries.map(code => triggerMap[code]).filter(Boolean);
+      const drills = Object.entries(state.data.drillMap?.drills || {})
+        .filter(([, drill]) => drill.trigger.some(trigger => triggers.includes(trigger)))
+        .map(([drill_id, drill]) => ({ drill_id, name: drill.name, task: drill.task }));
+      return drills.length ? drills : [{ drill_id: "HCL-ORAL-DRILL-REASON-002", name: "原因展开训练", task: "用 因为→这会导致→所以 三步展开一个理由。" }];
+    }
+
+    function verdictFromScore(score) {
+      if (score >= 30) return "PASS";
+      if (score >= 20) return "PARTIAL";
+      return "FAIL";
+    }
+
+    function diagnosisFromFlags(flags) {
+      const taxonomy = state.data.taxonomy;
+      const codes = [];
+      if (!flags.clearStand) codes.push("NO_CLEAR_STAND");
+      if (!flags.videoEvidence) codes.push("NO_VIDEO_EVIDENCE");
+      if (!flags.developedReasons) codes.push("UNDERDEVELOPED_REASON");
+      if (!flags.socialExtension) codes.push("NO_SOCIAL_EXTENSION");
+      if (!flags.singaporeSocialExtension) codes.push("NO_SINGAPORE_EXAMPLE");
+      if (!flags.responsibilityLayering) codes.push("WEAK_RESPONSIBILITY_LAYERING");
+      if (!flags.balancedView) codes.push("ONE_SIDED_ANSWER");
+      if (!flags.conclusion) codes.push("NO_CONCLUSION");
+      if (flags.offTopic) codes.push("OFF_TOPIC");
+      if (flags.simpleLanguage) codes.push("SIMPLE_LANGUAGE");
+      const entries = taxonomy.errors.filter(error => codes.includes(error.code));
+      const strengths = [
+        flags.clearStand ? "立场较明确，能回应题目要求。" : "",
+        flags.videoEvidence ? "能结合录像或主题词作答。" : "",
+        flags.developedReasons ? "理由有一定发展，不只是列点。" : "",
+        flags.socialExtension ? "能从个人以外扩展到社区或社会层面。" : "",
+        flags.responsibilityLayering ? "能尝试从不同责任主体分析问题。" : ""
+      ].filter(Boolean);
+      return {
+        strengths: strengths.length ? strengths : ["已完成作答，可作为进一步训练的基础。"],
+        weaknesses: entries.map(entry => entry.label),
+        red_lines: entries.filter(entry => entry.code === "OFF_TOPIC").map(entry => entry.label),
+        if_then_patches: entries.map(entry => entry.if_then_patch),
+        error_bank_entries: entries.map(entry => entry.code)
+      };
+    }
+
+    function createReport(mode, presentationTranscript, discussionTranscripts) {
+      const { exam, rubric } = state.data;
+      const promptObject = currentPromptObject();
+      const discussionSet = currentDiscussionSet();
+      const joinedDiscussion = discussionTranscripts.join(" ");
+      const combined = `${presentationTranscript} ${joinedDiscussion}`.trim();
+      const flags = diagnose(combined);
+      const pFlags = diagnose(presentationTranscript || combined);
+      const dFlags = diagnose(joinedDiscussion || combined);
+      const diagnosis = diagnosisFromFlags(flags);
+
+      let pContent = 0;
+      if (pFlags.clearStand) pContent += 3;
+      if (pFlags.videoEvidence) pContent += 3;
+      if (pFlags.developedReasons) pContent += 3;
+      if (pFlags.socialExtension) pContent += 2;
+      if (!pFlags.offTopic) pContent += 2;
+      if (!pFlags.simpleLanguage) pContent += 1;
+
+      let pLanguage = 2;
+      if (!pFlags.simpleLanguage) pLanguage += 2;
+      if (pFlags.developedReasons) pLanguage += 1;
+      if (pFlags.videoEvidence) pLanguage += 1;
+
+      const answered = discussionTranscripts.filter(item => item.trim()).length;
+      let dReasoning = Math.min(answered * 2, 6);
+      if (dFlags.developedReasons) dReasoning += 3;
+      if (dFlags.socialExtension) dReasoning += 2;
+      if (dFlags.videoEvidence) dReasoning += 2;
+      if (!dFlags.offTopic) dReasoning += 1;
+
+      let dLanguage = 2;
+      if (!dFlags.simpleLanguage) dLanguage += 2;
+      if (dFlags.developedReasons) dLanguage += 1;
+      if (answered >= 3) dLanguage += 1;
+
+      const presentation = {
+        content_organisation: clamp(pContent, rubric.presentation.content_organisation.max),
+        language: clamp(pLanguage, rubric.presentation.language.max)
+      };
+      presentation.total = presentation.content_organisation + presentation.language;
+      const discussion = {
+        participation_reasoning: clamp(dReasoning, rubric.discussion.participation_reasoning.max),
+        language: clamp(dLanguage, rubric.discussion.language.max)
+      };
+      discussion.total = discussion.participation_reasoning + discussion.language;
+
+      const overall = presentation.total + discussion.total;
+      const estimatedScore = {
+        presentation,
+        discussion,
+        overall,
+        not_official_score: true
+      };
+      const nextDrills = nextDrillsFromDiagnosis(diagnosis);
+      const verdict = verdictFromScore(overall);
+      const taskId = `HCL-ORAL-${(promptObject?.question_id || "WETMARKET").replace("HCL-ORAL-", "")}-${todayId()}-01`;
+      const rawAttempt = {
+        task_id: taskId,
+        subject: "HCL",
+        syllabus: "1116",
+        paper: "Paper 3 Oral",
+        video_id: promptObject?.video_id || null,
+        mode,
+        prompt: currentPrompt(),
+        selected_prompt: promptObject,
+        discussion_set_id: discussionSet?.discussion_set_id || null,
+        recordings: state.recordings.map(item => ({ label: item.label, createdAt: item.createdAt, size_bytes: item.blob?.size || null })),
+        transcript_status: combined ? "provided_or_pasted" : "missing",
+        presentation_transcript: presentationTranscript,
+        discussion_transcripts: discussionTranscripts,
+        self_reflection: state.selfReflection,
+        score: estimatedScore,
+        estimated_score: estimatedScore,
+        diagnosis: {
+          strengths: diagnosis.strengths,
+          weaknesses: diagnosis.weaknesses,
+          red_lines: diagnosis.red_lines,
+          if_then_patches: diagnosis.if_then_patches
+        },
+        error_bank_entries: diagnosis.error_bank_entries,
+        learning_tracker: {
+          archetype_id: "HCL-OR-01",
+          status: "Tuning",
+          confidence: Math.round((overall / rubric.total) * 100),
+          next_drill: nextDrills[0]?.task || diagnosis.if_then_patches[0] || "用2+1结构完成一次两分钟完整陈述。"
+        }
+      };
+      const teacherReport = {
+        date: new Date().toISOString(),
+        student: state.studentName.trim() || "Dennis",
+        module_id: "HCL-ORAL-SIM-001",
+        mode,
+        question_id: promptObject?.question_id || "HCL-ORAL-WETMARKET",
+        prompt: currentPrompt(),
+        primary_topic: promptObject?.primary_topic || exam.theme,
+        secondary_topics: promptObject?.secondary_topics || [],
+        estimated_score: estimatedScore,
+        verdict,
+        strengths: diagnosis.strengths,
+        gaps: diagnosis.weaknesses,
+        evidence: {
+          topic_keywords: promptObject?.topic_keywords || exam.vocabulary_bank,
+          expected_dimensions: promptObject?.expected_dimensions || [],
+          discussion_questions: currentDiscussionQuestions()
+        },
+        next_drills: nextDrills,
+        operator_notes: "Rule-based practice diagnostic estimate. Not an official SEAB score."
+      };
+      const studentReport = {
+        title: "高华口试练习反馈",
+        today_topic: promptObject?.primary_topic || exam.theme,
+        what_you_did_well: diagnosis.strengths,
+        next_time_try: nextDrills.map(drill => drill.task),
+        one_sentence_goal: nextDrills[0]?.task || "下一次用清楚立场、两个理由和一个新加坡例子作答。",
+        self_reflection: state.selfReflection,
+        confidence_level: state.selfReflection.confidence_level,
+        multiple_choice_reflection: state.selfReflection.multiple_choice
+      };
+      const trackerExport = {
+        date: new Date().toISOString(),
+        student: state.studentName.trim() || "Dennis",
+        module_id: "HCL-ORAL-SIM-001",
+        prompt_id: promptObject?.question_id || "HCL-ORAL-WETMARKET",
+        year: promptObject?.year || null,
+        day_label: promptObject?.day_label || null,
+        session: promptObject?.session || null,
+        primary_topic: promptObject?.primary_topic || exam.theme,
+        secondary_topics: promptObject?.secondary_topics || [],
+        mode,
+        verdict,
+        estimated_score: estimatedScore,
+        strengths: diagnosis.strengths,
+        gaps: diagnosis.weaknesses,
+        next_drills: nextDrills,
+        confidence_level: state.selfReflection.confidence_level,
+        recording_count: state.recordings.length,
+        transcript_status: combined ? "provided_or_pasted" : "missing",
+        topic_coverage_update: {
+          primary_topic: promptObject?.primary_topic || exam.theme,
+          secondary_topics: promptObject?.secondary_topics || [],
+          increment: 1,
+          skill_gaps: diagnosis.weaknesses
+        }
+      };
+      return {
+        packet_version: "HCL_ORAL_REPORT_PACKET_V2",
+        teacher_report: teacherReport,
+        student_report: studentReport,
+        tracker_export: trackerExport,
+        raw_attempt: rawAttempt,
+        task_id: taskId,
+        score: estimatedScore,
+        estimated_score: estimatedScore,
+        diagnosis: rawAttempt.diagnosis,
+        error_bank_entries: rawAttempt.error_bank_entries,
+        learning_tracker: rawAttempt.learning_tracker
+      };
+    }
+
+    function exportJson(report) {
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${report.task_id}.json`;
+      document.body.appendChild(link);
+      link.click();
+      window.setTimeout(() => {
+        URL.revokeObjectURL(url);
+        link.remove();
+      }, 1000);
+      state.submitStatus = "JSON 已触发下载。如果浏览器没有下载，请点击 Copy JSON。";
+      render();
+    }
+
+    async function copyJson(report) {
+      const text = JSON.stringify(report, null, 2);
+      try {
+        await navigator.clipboard.writeText(text);
+        state.submitStatus = "JSON 已复制到剪贴板，可以粘贴给 ChatGPT / NotebookLM 审查。";
+      } catch (error) {
+        state.submitStatus = "浏览器不允许自动复制。请使用 Download JSON，或在报告页重新尝试。";
+      }
+      render();
+    }
+
+    function downloadRecording(index) {
+      const recording = state.recordings[index];
+      if (!recording) return;
+      const link = document.createElement("a");
+      link.href = recording.url;
+      link.download = `${String(index + 1).padStart(2, "0")}-${safeFileLabel(recording.label)}.webm`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+
+    function safeFileLabel(label) {
+      return label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "recording";
+    }
+
+    async function submitAssignment(report) {
+      if (window.location.protocol === "file:") {
+        state.submitStatus = "当前是 file:// 本地打开模式，不能使用 Submit Assignment。请先用 Download Audio 保存录音，并用 Export JSON 导出报告；如要提交到 iMac，需要启动上传服务器后用 http/https 链接打开。";
+        render();
+        return;
+      }
+      if (!state.recordings.length) {
+        state.submitStatus = "请先完成至少一段录音，再提交。";
+        render();
+        return;
+      }
+      state.isSubmitting = true;
+      state.submitStatus = "正在提交录音到老师的 iMac...";
+      render();
+
+      const form = new FormData();
+      form.append("student_name", state.studentName.trim() || "Dennis");
+      form.append("mode", state.mode);
+      form.append("presentation_transcript", state.presentationTranscript);
+      form.append("discussion_transcripts", JSON.stringify(state.discussionTranscripts, null, 2));
+      form.append("report_json", JSON.stringify(report, null, 2));
+      state.recordings.forEach((recording, index) => {
+        const filename = `${String(index + 1).padStart(2, "0")}-${safeFileLabel(recording.label)}.webm`;
+        form.append("recordings", recording.blob, filename);
+        form.append("recording_labels", recording.label);
+      });
+
+      try {
+        const response = await fetch("/api/submit-assignment", { method: "POST", body: form });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "提交失败");
+        state.submitStatus = `提交成功：${result.saved_to}`;
+      } catch (error) {
+        state.submitStatus = `提交失败：${error.message || "请确认老师的上传服务器仍在运行。"}`;
+      } finally {
+        state.isSubmitting = false;
+        render();
+      }
+    }
+
+    function stopActiveRecording(save = true) {
+      const active = state.activeRecording;
+      if (!active) return;
+      active.save = save;
+      if (active.timerId) window.clearInterval(active.timerId);
+      if (active.autoStopId) window.clearTimeout(active.autoStopId);
+      if (active.recorder?.state === "recording") active.recorder.stop();
+      else {
+        active.stream?.getTracks().forEach(track => track.stop());
+        state.activeRecording = null;
+        state.recordingSeconds = 0;
+        render();
+      }
+    }
+
+    function deleteRecording(index) {
+      const [removed] = state.recordings.splice(index, 1);
+      if (removed?.url) URL.revokeObjectURL(removed.url);
+      scheduleAttemptSave();
+      render();
+    }
+
+    function clearRecordings() {
+      state.recordings.forEach(item => item.url && URL.revokeObjectURL(item.url));
+      state.recordings = [];
+      scheduleAttemptSave();
+      render();
+    }
+
+    function transcriptAssistAvailable() {
+      return Boolean(window.SpeechRecognition || window.webkitSpeechRecognition);
+    }
+
+    function appendTranscript(target, text) {
+      const clean = (text || "").trim();
+      if (!clean) return;
+      if (target?.type === "discussion") {
+        const existing = state.discussionTranscripts[target.index] || "";
+        state.discussionTranscripts[target.index] = `${existing}${existing ? "\n" : ""}${clean}`;
+      } else {
+        state.presentationTranscript = `${state.presentationTranscript}${state.presentationTranscript ? "\n" : ""}${clean}`;
+      }
+      scheduleAttemptSave();
+    }
+
+    function startTranscriptAssist(target) {
+      state.transcriptAssist.supported = transcriptAssistAvailable();
+      state.transcriptAssist.target = target;
+      state.transcriptAssist.finalText = "";
+      state.transcriptAssist.interimText = "";
+      if (!state.transcriptAssist.supported) {
+        state.transcriptAssist.active = false;
+        state.transcriptAssist.status = "此浏览器不支持实时转文字；录音仍可保存，请之后手动输入 transcript。";
+        return;
+      }
+
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new Recognition();
+      recognition.lang = "zh-CN";
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.onstart = () => {
+        state.transcriptAssist.active = true;
+        state.transcriptAssist.status = "实时转文字进行中，可以边说边看草稿。";
+        render();
+      };
+      recognition.onresult = event => {
+        let finalText = "";
+        let interimText = "";
+        for (let i = event.resultIndex; i < event.results.length; i += 1) {
+          const chunk = event.results[i][0]?.transcript || "";
+          if (event.results[i].isFinal) finalText += chunk;
+          else interimText += chunk;
+        }
+        if (finalText) state.transcriptAssist.finalText += finalText;
+        state.transcriptAssist.interimText = interimText;
+        render();
+      };
+      recognition.onerror = event => {
+        state.transcriptAssist.status = `实时转文字暂停：${event.error || "浏览器识别错误"}。录音仍会保存。`;
+        state.transcriptAssist.active = false;
+        render();
+      };
+      recognition.onend = () => {
+        state.transcriptAssist.active = false;
+        if (state.activeRecording) {
+          state.transcriptAssist.status = "实时转文字已暂停；录音仍在继续。";
+        }
+        render();
+      };
+      state.transcriptAssist.recognition = recognition;
+      try {
+        recognition.start();
+      } catch (error) {
+        state.transcriptAssist.active = false;
+        state.transcriptAssist.status = "实时转文字无法启动；录音仍会保存。";
+      }
+    }
+
+    function stopTranscriptAssist(save = true) {
+      const assist = state.transcriptAssist;
+      if (assist.recognition) {
+        assist.recognition.onend = null;
+        try { assist.recognition.stop(); } catch (error) {}
+      }
+      if (save) {
+        const transcript = `${assist.finalText}${assist.interimText ? assist.interimText : ""}`.trim();
+        appendTranscript(assist.target, transcript);
+        assist.status = transcript ? "实时转文字已自动填入文字稿，可手动修改。" : "没有识别到文字；请手动输入 transcript。";
+      } else {
+        assist.status = "本次实时转文字已取消，未写入文字稿。";
+      }
+      assist.active = false;
+      assist.recognition = null;
+      assist.target = null;
+      assist.finalText = "";
+      assist.interimText = "";
+    }
+
+    async function recordAudio(label, maxSeconds, transcriptTarget = null) {
+      if (state.activeRecording) {
+        state.submitStatus = "已有录音正在进行。请先点击“停止并保存”或“取消本次录音”。";
+        render();
+        return;
+      }
+      if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        state.submitStatus = "手机浏览器当前不允许麦克风：请用 HTTPS 链接打开本页。http://局域网IP 通常只能浏览，不能录音。";
+        render();
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const recorder = new MediaRecorder(stream);
+        const chunks = [];
+        recorder.ondataavailable = event => chunks.push(event.data);
+        recorder.onstop = () => {
+          const active = state.activeRecording;
+          const shouldSave = active?.save !== false;
+          if (active?.timerId) window.clearInterval(active.timerId);
+          if (active?.autoStopId) window.clearTimeout(active.autoStopId);
+          stopTranscriptAssist(shouldSave);
+          stream.getTracks().forEach(track => track.stop());
+          if (shouldSave && chunks.length) {
+            const blob = new Blob(chunks, { type: "audio/webm" });
+            const url = URL.createObjectURL(blob);
+            const durationSeconds = Math.max(1, Math.round((Date.now() - (active?.startedAt || Date.now())) / 1000));
+            state.recordings.push({
+              id: `${Date.now()}-${state.recordings.length + 1}`,
+              label,
+              url,
+              blob,
+              durationSeconds,
+              createdAt: new Date().toISOString()
+            });
+            state.submitStatus = `${label} 已保存。可以播放检查，或删除后重录。`;
+          } else {
+            state.submitStatus = "本次录音已取消，未保存。";
+          }
+          state.activeRecording = null;
+          state.recordingSeconds = 0;
+          scheduleAttemptSave();
+          render();
+        };
+        recorder.start();
+        const startedAt = Date.now();
+        const timerId = window.setInterval(() => {
+          state.recordingSeconds = Math.round((Date.now() - startedAt) / 1000);
+          render();
+        }, 1000);
+        const autoStopId = maxSeconds ? window.setTimeout(() => stopActiveRecording(true), maxSeconds * 1000) : null;
+        state.activeRecording = { label, recorder, stream, startedAt, maxSeconds, timerId, autoStopId, save: true, transcriptTarget };
+        state.recordingSeconds = 0;
+        state.submitStatus = `${label} 正在录音。完成后请点击“停止并保存”。`;
+        startTranscriptAssist(transcriptTarget);
+        render();
+      } catch (error) {
+        state.submitStatus = "无法启动麦克风。请允许浏览器使用麦克风后再试。";
+        render();
+      }
+    }
+
+    function startPrep() {
+      state.prepRunning = !state.prepRunning;
+      if (state.prepRunning) {
+        state.prepTimer = window.setInterval(() => {
+          state.prepSeconds = Math.max(0, state.prepSeconds - 1);
+          if (state.prepSeconds === 0) {
+            window.clearInterval(state.prepTimer);
+            state.prepRunning = false;
+            state.phase = "PRESENTATION";
+            scheduleAttemptSave();
+          }
+          render();
+        }, 1000);
+      } else {
+        window.clearInterval(state.prepTimer);
+      }
+      scheduleAttemptSave();
+      render();
+    }
+
+    function renderTabs() {
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = Object.entries(modes).map(([key, value]) => `
+        <button class="tab ${state.mode === key ? "active" : ""}" data-mode="${key}">
+          <strong>${value[0]}</strong><span>${value[1]}</span>
+        </button>
+      `).join("");
+      tabs.querySelectorAll(".tab").forEach(tab => {
+        tab.addEventListener("click", () => {
+          state.mode = tab.dataset.mode;
+          scheduleAttemptSave();
+          render();
+        });
+      });
+    }
+
+    function attemptHistoryHtml() {
+      const rows = state.attemptHistory.slice(0, 8);
+      return `
+        <div class="card soft" style="margin-top: 14px;">
+          <div class="row" style="justify-content: space-between;">
+            <div>
+              <h3>Attempt History / 本机自动保存</h3>
+              <p class="muted">录音和 transcript 会保存在当前设备浏览器的 IndexedDB。换电脑、清浏览器数据或无痕模式不会保留。</p>
+            </div>
+            <div class="row">
+              <button class="btn light small" id="saveAttemptNow">立即保存</button>
+              <button class="btn coral small" id="newAttempt">新 attempt</button>
+            </div>
+          </div>
+          <p class="muted" style="margin-top: 8px;">
+            current_attempt_id: <strong>${state.currentAttemptId || "not started"}</strong><br>
+            save_status: <strong>${state.saveStatus}</strong>
+          </p>
+          <div class="stack" style="margin-top: 12px;">
+            ${rows.map(record => `
+              <div class="scene">
+                <div class="row" style="justify-content: space-between;">
+                  <div>
+                    <strong>${record.prompt_id || "No prompt"} · ${record.task_id || "No task_id"}</strong>
+                    <p class="muted">${new Date(record.updatedAt).toLocaleString()} · ${record.recording_count} recording(s)</p>
+                  </div>
+                  <div class="row">
+                    <button class="btn jade small resumeAttempt" data-id="${record.id}">恢复</button>
+                    <button class="btn light small deleteAttempt" data-id="${record.id}">删除</button>
+                  </div>
+                </div>
+              </div>
+            `).join("") || `<div class="scene"><p class="muted">还没有保存记录。开始录音或输入文字稿后会自动创建。</p></div>`}
+          </div>
+        </div>
+      `;
+    }
+
+    function bindAttemptHistoryControls() {
+      document.getElementById("newAttempt")?.addEventListener("click", () => startNewAttempt(true));
+      document.getElementById("saveAttemptNow")?.addEventListener("click", async () => {
+        await saveCurrentAttemptNow();
+        render();
+      });
+      document.querySelectorAll(".resumeAttempt").forEach(button => {
+        button.addEventListener("click", () => resumeAttempt(button.dataset.id));
+      });
+      document.querySelectorAll(".deleteAttempt").forEach(button => {
+        button.addEventListener("click", () => {
+          const ok = window.confirm("删除这条本机 attempt 记录吗？这个操作不能恢复。");
+          if (ok) deleteAttempt(button.dataset.id);
+        });
+      });
+    }
+
+    function renderPlanCardPanel() {
+      const plan = state.planCard;
+      const hasTask = Boolean(plan.task_id);
+      const sample = {
+        task_id: `HCL-ORAL-${todayId()}-OPEN01`,
+        student_name: "Dennis",
+        subject: "HCL",
+        archetype_id: "HCL-ORAL-GROUP",
+        date: new Date().toISOString().slice(0, 10),
+        practice_type: "[A2_PRACTICE]",
+        task_goal: "HCL oral exam-mode practice",
+        source_plan_row: "",
+        notion_page_url: ""
+      };
+      document.getElementById("planCardPanel").innerHTML = `
+        <section class="panel">
+          <div class="eyebrow">PART 0 - MAIN SYSTEM PLAN CARD</div>
+          <h2>Capture Frontend · NotebookLM / marker is marking authority</h2>
+          <p class="muted" style="margin-top: 8px;">本网页只负责录音、转录、整理证据和导出 capture packet。网页不会输出最终 A1/A2 verdict，也不会声明 evidence valid 或 mastered。</p>
+          <div class="two" style="margin-top: 14px;">
+            <div>
+              <h3>Paste Plan Card</h3>
+              <textarea id="planCardInput" style="min-height: 150px;" placeholder='${JSON.stringify(sample, null, 2)}'></textarea>
+              <div class="row" style="margin-top: 10px;">
+                <button class="btn jade" id="importPlanCard">Import Plan Card</button>
+                <button class="btn light" id="useSamplePlanCard">Use Sample Plan Card</button>
+              </div>
+            </div>
+            <div class="card soft">
+              <h3>${hasTask ? "Locked Attempt Identity" : "No Plan Card Imported Yet"}</h3>
+              <p class="muted">task_id: <strong>${plan.task_id || "missing"}</strong></p>
+              <p class="muted">student_name: <strong>${plan.student_name || "Dennis"}</strong></p>
+              <p class="muted">subject: <strong>${plan.subject || "HCL"}</strong></p>
+              <p class="muted">archetype_id: <strong>${plan.archetype_id || "HCL-ORAL-GROUP"}</strong></p>
+              <p class="muted">date: <strong>${plan.date || "missing"}</strong></p>
+            </div>
+          </div>
+          ${attemptHistoryHtml()}
+        </section>
+      `;
+      document.getElementById("importPlanCard")?.addEventListener("click", () => {
+        importPlanCardFromText(document.getElementById("planCardInput").value);
+      });
+      document.getElementById("useSamplePlanCard")?.addEventListener("click", () => {
+        importPlanCardFromText(JSON.stringify(sample));
+      });
+      bindAttemptHistoryControls();
+    }
+
+    function captureExportHtml() {
+      const packet = createCapturePacket();
+      const validation = validateCapturePacket(packet);
+      return `
+        <div class="panel">
+          <div class="eyebrow">Capture Packet Export</div>
+          <h2>HCL_ORAL_CAPTURE_PACKET_V1</h2>
+          <p class="muted">导出给 NotebookLM / marker 使用。网页只输出 raw oral attempt evidence，不做最终批改。</p>
+          <div class="card soft" style="margin-top: 12px;">
+            <strong>Validation: ${validation.status}</strong>
+            ${validation.fail.length ? `<p class="muted">FAIL: ${validation.fail.join("；")}</p>` : ""}
+            ${validation.warn.length ? `<p class="muted">WARN: ${validation.warn.join("；")}</p>` : ""}
+          </div>
+          <div class="row" style="margin-top: 12px;">
+            <button class="btn jade" id="copyCapturePacket">Copy Capture Packet</button>
+            <button class="btn" id="downloadCapturePacket">Download Capture Packet</button>
+            <button class="btn light" id="copyNotebookLMInstruction">Copy NotebookLM Instruction</button>
+          </div>
+          <div class="card" style="margin-top: 12px;">
+            <h3>NotebookLM Marking Instruction</h3>
+            <textarea readonly style="min-height: 170px;">${notebookLMInstruction()}</textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    function bindCaptureExportControls() {
+      document.getElementById("copyCapturePacket")?.addEventListener("click", copyCapturePacket);
+      document.getElementById("downloadCapturePacket")?.addEventListener("click", downloadCapturePacket);
+      document.getElementById("copyNotebookLMInstruction")?.addEventListener("click", copyNotebookLMInstruction);
+    }
+
+    function videoPanel() {
+      const exam = state.data.exam;
+      return `
+        <section class="stack">
+          <div class="video-title">
+            <h2>${exam.title}</h2>
+            <span class="tag">${exam.paper}</span>
+          </div>
+          <video src="${exam.video_src}" controls></video>
+        </section>
+      `;
+    }
+
+    function trainingStimulusHtml() {
+      const profile = trainingProfile();
+      return `<div class="panel"><h2>${profile.keyTitle}</h2><div class="stack" style="margin-top: 14px;">${profile.keyPoints.map(point => `<div class="scene"><strong>${point.title}</strong><p class="muted">${point.body}</p></div>`).join("")}</div></div>`;
+    }
+
+    function trainingVocabularyHtml() {
+      const profile = trainingProfile();
+      return `<div class="panel"><h2>Vocabulary Bank · 当前题目</h2><div class="tagbox">${profile.vocabulary.map(word => `<span class="tag">${word}</span>`).join("")}</div></div>`;
+    }
+
+    function trainingStructureHtml() {
+      const profile = trainingProfile();
+      return `<div class="panel"><h2>Answer Structure · 当前题目</h2><div class="stack" style="margin-top: 14px;">${profile.steps.map((step, index) => `<div class="scene">${index + 1}. ${step}</div>`).join("")}</div></div>`;
+    }
+
+    function activeRecordingHtml() {
+      if (!state.activeRecording) return "";
+      const elapsed = state.recordingSeconds;
+      const limit = state.activeRecording.maxSeconds ? ` / ${formatClock(state.activeRecording.maxSeconds)}` : "";
+      const assist = state.transcriptAssist;
+      const liveText = `${assist.finalText}${assist.interimText ? assist.interimText : ""}`.trim();
+      return `
+        <div class="recording-banner">
+          <strong><span class="recording-dot"></span>正在录音：${state.activeRecording.label}</strong>
+          <p class="muted" style="margin-top: 6px;">已录 ${formatClock(elapsed)}${limit}。结束时请点击“停止并保存”；如果录错了，点击“取消本次录音”。</p>
+          <div class="card soft" style="margin-top: 10px;">
+            <strong>AI智能录音 + 实时转文字</strong>
+            <p class="muted">${assist.status || "准备启动实时转文字。"}</p>
+            <textarea readonly style="min-height: 90px;" placeholder="识别到的文字会实时显示在这里，停止并保存后会自动填入文字稿。">${liveText}</textarea>
+          </div>
+          <div class="row" style="margin-top: 10px;">
+            <button class="btn coral" id="stopRecording">停止并保存</button>
+            <button class="btn light" id="cancelRecording">取消本次录音</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function trainingDrillsHtml() {
+      const profile = trainingProfile();
+      return `<div class="panel"><h2>Targeted Drills · 当前题目</h2><div class="stack" style="margin-top: 14px;">${profile.drills.map((drill, index) => `<div class="scene"><strong>Drill ${index + 1}</strong><p class="muted">${drill}</p></div>`).join("")}</div>${activeRecordingHtml()}<div class="row" style="margin-top: 14px;"><button class="btn coral practice" ${state.activeRecording ? "disabled" : ""}>分段录音</button><button class="btn jade practiceFull" ${state.activeRecording ? "disabled" : ""}>完整2分钟录音</button></div>${recordingsHtml()}${assignmentSubmitHtml(createReport("TRAINING_MODE", state.presentationTranscript, state.discussionTranscripts))}</div>`;
+    }
+
+    function recordingsHtml() {
+      if (!state.recordings.length) return `<div class="card soft"><strong>Saved Recordings</strong><p class="muted">还没有保存的录音。开始录音后，请点击“停止并保存”。</p><p class="muted">提示：file:// 模式下录音只在当前页面临时保存，刷新会消失。</p></div>`;
+      return `
+        <div class="card">
+          <div class="row" style="justify-content: space-between;">
+            <h3>Saved Recordings · ${state.recordings.length}</h3>
+            <button class="btn light small" id="clearRecordings">清空全部录音</button>
+          </div>
+          <p class="muted" style="margin-top: 8px;">录音默认只临时保存在当前浏览器页面。要保留到电脑，请点击 Download Audio。</p>
+          <div class="stack" style="margin-top: 12px;">
+            ${state.recordings.map((item, index) => `
+              <div class="recording-item">
+                <div>
+                  <div><strong>${index + 1}. ${item.label}</strong></div>
+                  <div class="muted">时长约 ${formatClock(item.durationSeconds)} · ${new Date(item.createdAt).toLocaleTimeString()}</div>
+                  <audio src="${item.url}" controls></audio>
+                </div>
+                <div class="stack">
+                  <button class="btn light small downloadRecording" data-index="${index}">Download Audio</button>
+                  <button class="btn light small deleteRecording" data-index="${index}">删除</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function assignmentSubmitHtml(report) {
+      const isFileMode = window.location.protocol === "file:";
+      return `
+        <div class="card soft">
+          <h3>Submit Assignment</h3>
+          <p class="muted">${isFileMode ? "当前是 file:// 测试模式：不能直接提交到 iMac。请使用 Download Audio 保存录音，并用 Export JSON 导出报告。" : "录音会通过同一个 Wi‑Fi 上传到老师 iMac，并同步到 Google Drive 的 10.ORAL/HCL 文件夹。"}</p>
+          <label class="field" style="margin-top: 10px;">
+            <strong>Student Name</strong>
+            <input id="studentName" value="${state.studentName}" placeholder="Dennis">
+          </label>
+          <div class="row" style="margin-top: 12px;">
+            <button class="btn jade" id="submitAssignment" ${state.isSubmitting || isFileMode ? "disabled" : ""}>${isFileMode ? "Submit requires upload server" : state.isSubmitting ? "Submitting..." : "Submit Assignment"}</button>
+            <span class="submit-status">${state.recordings.length} recording(s) ready</span>
+          </div>
+          ${state.submitStatus ? `<p class="submit-status" style="margin-top: 10px;">${state.submitStatus}</p>` : ""}
+        </div>
+      `;
+    }
+
+    function reportHtml(report) {
+      const rubric = state.data.rubric;
+      return `
+        <section class="panel">
+          <div class="row" style="justify-content: space-between;">
+            <div><div class="eyebrow">练习诊断估计 · Practice Diagnostic Estimate</div><div class="score">${report.estimated_score.overall} / ${rubric.total}</div><p class="muted">not_official_score: true</p></div>
+            <div class="row"><button class="btn" id="exportJson">Download JSON</button><button class="btn light" id="copyJson">Copy JSON</button></div>
+          </div>
+          <div class="card soft" style="margin-top: 12px;"><strong>Practice guidance only.</strong><p class="muted">This web app is not the marking authority. NotebookLM / marker will mark the capture packet and return A2_RESULT_CANONICAL_V2.</p></div>
+          <div class="report-grid">
+            <div class="card"><h3>Oral Presentation</h3><p class="muted">内容组织：${report.estimated_score.presentation.content_organisation} / ${rubric.presentation.content_organisation.max}</p><p class="muted">语言：${report.estimated_score.presentation.language} / ${rubric.presentation.language.max}</p><h3>${report.estimated_score.presentation.total} / ${rubric.presentation.total}</h3></div>
+            <div class="card"><h3>Discussion</h3><p class="muted">参与与思辨：${report.estimated_score.discussion.participation_reasoning} / ${rubric.discussion.participation_reasoning.max}</p><p class="muted">语言：${report.estimated_score.discussion.language} / ${rubric.discussion.language.max}</p><h3>${report.estimated_score.discussion.total} / ${rubric.discussion.total}</h3></div>
+          </div>
+          <div class="two">
+            <div><h3>Strengths</h3><ul class="list">${report.diagnosis.strengths.map(item => `<li>${item}</li>`).join("")}</ul></div>
+            <div><h3>Weaknesses</h3><ul class="list">${report.diagnosis.weaknesses.map(item => `<li>${item}</li>`).join("") || "<li>暂无明显风险。</li>"}</ul></div>
+          </div>
+          <div class="card soft" style="margin-top: 14px;"><h3>Next Drill</h3><p class="muted">${report.learning_tracker.next_drill}</p></div>
+          ${selfReflectionHtml()}
+        </section>
+      `;
+    }
+
+    function selfReflectionHtml() {
+      const options = ["我有明确立场", "我有解释原因", "我有举例", "我有联系新加坡社会", "我能回应追问", "我说得比较流利", "我需要更多词汇", "我需要更清楚的结构"];
+      return `
+        <div class="card" style="margin-top: 14px;">
+          <h3>Student Self-Reflection</h3>
+          <div class="filters">
+            <label class="field"><strong>Confidence</strong><select id="confidenceLevel">
+              <option value="">请选择</option>
+              ${[1,2,3,4,5].map(value => `<option value="${value}" ${String(state.selfReflection.confidence_level || "") === String(value) ? "selected" : ""}>${value}</option>`).join("")}
+            </select></label>
+          </div>
+          <div class="tagbox">${options.map(option => `<label class="tag"><input type="checkbox" class="reflectChoice" value="${option}" ${state.selfReflection.multiple_choice.includes(option) ? "checked" : ""}> ${option}</label>`).join("")}</div>
+          <textarea id="studentNote" placeholder="学生自评备注">${state.selfReflection.student_note}</textarea>
+        </div>
+      `;
+    }
+
+    function bindSelfReflection() {
+      document.getElementById("confidenceLevel")?.addEventListener("change", event => {
+        state.selfReflection.confidence_level = event.target.value ? Number(event.target.value) : null;
+        scheduleAttemptSave();
+      });
+      document.querySelectorAll(".reflectChoice").forEach(input => {
+        input.addEventListener("change", () => {
+          state.selfReflection.multiple_choice = Array.from(document.querySelectorAll(".reflectChoice:checked")).map(item => item.value);
+          scheduleAttemptSave();
+        });
+      });
+      document.getElementById("studentNote")?.addEventListener("input", event => {
+        state.selfReflection.student_note = event.target.value;
+        scheduleAttemptSave();
+      });
+    }
+
+    function bindRecordingControls() {
+      document.getElementById("stopRecording")?.addEventListener("click", () => stopActiveRecording(true));
+      document.getElementById("cancelRecording")?.addEventListener("click", () => stopActiveRecording(false));
+      document.getElementById("clearRecordings")?.addEventListener("click", clearRecordings);
+      document.querySelectorAll(".downloadRecording").forEach(button => {
+        button.addEventListener("click", () => downloadRecording(Number(button.dataset.index)));
+      });
+      document.querySelectorAll(".deleteRecording").forEach(button => {
+        button.addEventListener("click", () => deleteRecording(Number(button.dataset.index)));
+      });
+    }
+
+    function transcriptToolsHtml(target, index = "") {
+      return `
+        <div class="card soft">
+          <strong>Transcript 文字稿</strong>
+          <p class="muted">实时转文字成功时会自动填入这里；如果没有识别到文字，可以点击“粘贴剪贴板文字稿”，或直接手动输入。</p>
+          <div class="row" style="margin-top: 10px;">
+            <button class="btn light small pasteTranscript" data-target="${target}" data-index="${index}">粘贴剪贴板文字稿</button>
+            <button class="btn light small copyTranscript" data-target="${target}" data-index="${index}">复制文字稿</button>
+            <button class="btn light small clearTranscript" data-target="${target}" data-index="${index}">清空文字稿</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function getTranscriptValue(target, index) {
+      if (target === "discussion") return state.discussionTranscripts[Number(index)] || "";
+      if (target === "diagnostic") return state.diagnosticTranscript || "";
+      return state.presentationTranscript || "";
+    }
+
+    function setTranscriptValue(target, index, value) {
+      if (target === "discussion") state.discussionTranscripts[Number(index)] = value;
+      else if (target === "diagnostic") state.diagnosticTranscript = value;
+      else state.presentationTranscript = value;
+    }
+
+    async function pasteTranscript(target, index) {
+      try {
+        const text = await navigator.clipboard.readText();
+        if (!text.trim()) {
+          state.submitStatus = "剪贴板里没有可粘贴的文字。";
+        } else {
+          const existing = getTranscriptValue(target, index);
+          setTranscriptValue(target, index, `${existing}${existing ? "\n" : ""}${text.trim()}`);
+          state.submitStatus = "已粘贴到文字稿，可继续手动修改。";
+          scheduleAttemptSave();
+        }
+      } catch (error) {
+        state.submitStatus = "浏览器不允许读取剪贴板。请直接在文字稿框里手动粘贴。";
+      }
+      render();
+    }
+
+    async function copyTranscript(target, index) {
+      try {
+        await navigator.clipboard.writeText(getTranscriptValue(target, index));
+        state.submitStatus = "文字稿已复制到剪贴板。";
+      } catch (error) {
+        state.submitStatus = "浏览器不允许自动复制。请手动选择文字稿复制。";
+      }
+      render();
+    }
+
+    function bindTranscriptTools() {
+      document.querySelectorAll(".pasteTranscript").forEach(button => {
+        button.addEventListener("click", () => pasteTranscript(button.dataset.target, button.dataset.index));
+      });
+      document.querySelectorAll(".copyTranscript").forEach(button => {
+        button.addEventListener("click", () => copyTranscript(button.dataset.target, button.dataset.index));
+      });
+      document.querySelectorAll(".clearTranscript").forEach(button => {
+        button.addEventListener("click", () => {
+          setTranscriptValue(button.dataset.target, button.dataset.index, "");
+          state.submitStatus = "文字稿已清空。";
+          scheduleAttemptSave();
+          render();
+        });
+      });
+    }
+
+    function attemptTextBundle() {
+      const questions = currentDiscussionQuestions();
+      return [
+        `题目：${currentPrompt()}`,
+        "",
+        "【口头报告陈述】",
+        state.presentationTranscript || "（未填写）",
+        "",
+        "【考官讨论】",
+        ...questions.flatMap((question, index) => [
+          `讨论题 ${index + 1}：${question}`,
+          state.discussionTranscripts[index] || "（未填写）",
+          ""
+        ])
+      ].join("\n");
+    }
+
+    async function copyAttemptText() {
+      try {
+        await navigator.clipboard.writeText(attemptTextBundle());
+        state.submitStatus = "完整作答文本已复制：题目、陈述、讨论题和对应转录都在里面。";
+      } catch (error) {
+        state.submitStatus = "浏览器不允许自动复制。请手动选择工作区文字复制。";
+      }
+      render();
+    }
+
+    function attemptWorkspaceHtml(questions) {
+      return `
+        <div class="panel attempt-workspace">
+          <div class="row" style="justify-content: space-between;">
+            <div>
+              <div class="eyebrow">Attempt Transcript Workspace</div>
+              <h2>本次作答文本总表</h2>
+            </div>
+            <button class="btn light small" id="copyAttemptText">复制完整作答文本</button>
+          </div>
+          <p class="muted" style="margin-top: 8px;">这里是唯一的文字存储区：题目、陈述转录、每一道讨论题和对应转录都会保留在这里。录音转文字成功后会自动填到对应格子；没有自动识别时，可直接粘贴或手动输入。</p>
+          <div class="stack" style="margin-top: 14px;">
+            <div class="attempt-section">
+              <div class="eyebrow">Selected Prompt</div>
+              <h3>${currentPrompt()}</h3>
+              ${promptMetaHtml()}
+            </div>
+            <div class="attempt-section ${state.phase === "PRESENTATION" ? "current" : ""}">
+              <div class="row" style="justify-content: space-between;">
+                <h3>1. Oral Presentation Transcript</h3>
+                <span class="muted">${state.presentationTranscript.trim().length} chars</span>
+              </div>
+              <textarea id="presentationTranscriptWorkspace" placeholder="陈述录音的实时转文字会填到这里；也可以手动粘贴参考稿或修改。">${state.presentationTranscript}</textarea>
+            </div>
+            ${questions.map((question, index) => `
+              <div class="attempt-section ${state.phase === "DISCUSSION" && state.questionIndex === index ? "current" : ""}">
+                <div class="row" style="justify-content: space-between;">
+                  <h3>Discussion Q${index + 1}</h3>
+                  <span class="muted">${(state.discussionTranscripts[index] || "").trim().length} chars</span>
+                </div>
+                <p class="muted"><strong>问题：</strong>${question}</p>
+                <textarea class="discussionTranscriptWorkspace" data-index="${index}" placeholder="第 ${index + 1} 道讨论题的转录文字会填到这里；也可以手动输入。">${state.discussionTranscripts[index] || ""}</textarea>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function bindAttemptWorkspace() {
+      document.getElementById("presentationTranscriptWorkspace")?.addEventListener("input", event => {
+        state.presentationTranscript = event.target.value;
+        scheduleAttemptSave();
+      });
+      document.querySelectorAll(".discussionTranscriptWorkspace").forEach(field => {
+        field.addEventListener("input", () => {
+          state.discussionTranscripts[Number(field.dataset.index)] = field.value;
+          scheduleAttemptSave();
+        });
+      });
+      document.getElementById("copyAttemptText")?.addEventListener("click", copyAttemptText);
+    }
+
+    function syncCurrentDiscussionTranscript() {
+      const field = document.querySelector(`.discussionTranscriptWorkspace[data-index="${state.questionIndex}"]`) || document.getElementById("discussionTranscript");
+      if (field) state.discussionTranscripts[state.questionIndex] = field.value;
+    }
+
+    function goToDiscussionQuestion(index) {
+      syncCurrentDiscussionTranscript();
+      state.questionIndex = Math.max(0, Math.min(currentDiscussionQuestions().length - 1, index));
+      scheduleAttemptSave();
+      render();
+    }
+
+    function discussionProgressHtml(questions) {
+      return `
+        <div class="card soft">
+          <strong>Discussion Progress</strong>
+          <p class="muted">每一道题的文字稿都会保存在本页内存中。点击题号可返回修改。</p>
+          <div class="question-nav" style="margin-top: 10px;">
+            ${questions.map((question, index) => {
+              const hasAnswer = Boolean((state.discussionTranscripts[index] || "").trim());
+              return `<button class="question-chip ${index === state.questionIndex ? "active" : ""} ${hasAnswer ? "done" : ""}" data-index="${index}">
+                Question ${index + 1}${hasAnswer ? " · 已有文字稿" : " · 未填写"}<br>
+                <span style="font-size: 13px; opacity: .78;">${question}</span>
+              </button>`;
+            }).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function discussionActionButtonsHtml(questions) {
+      return `
+        <div class="row">
+          <button class="btn light" id="prevDiscussion" ${state.questionIndex === 0 ? "disabled" : ""}>上一题</button>
+          <button class="btn jade" id="nextDiscussionTop">${state.questionIndex + 1 < questions.length ? "保存本题，进入下一题" : "保存本题，生成报告"}</button>
+        </div>
+      `;
+    }
+
+    function bindDiscussionControls(questions) {
+      document.querySelectorAll(".question-chip").forEach(button => {
+        button.addEventListener("click", () => goToDiscussionQuestion(Number(button.dataset.index)));
+      });
+      document.getElementById("prevDiscussion")?.addEventListener("click", () => goToDiscussionQuestion(state.questionIndex - 1));
+      const goNext = () => {
+        syncCurrentDiscussionTranscript();
+        if (state.questionIndex + 1 < questions.length) state.questionIndex += 1;
+        else state.phase = "REPORT";
+        scheduleAttemptSave();
+        render();
+      };
+      document.getElementById("nextDiscussionTop")?.addEventListener("click", goNext);
+      document.getElementById("nextQuestion")?.addEventListener("click", goNext);
+    }
+
+    function renderExam() {
+      const questions = currentDiscussionQuestions();
+      const report = createReport("EXAM_MODE", state.presentationTranscript, state.discussionTranscripts);
+      let right = `
+        <section class="panel stack">
+          <div>
+            <div class="eyebrow">Presentation Prompt · ${currentPromptObject()?.question_id || "默认模拟题"}</div>
+            <h2 class="prompt">${currentPrompt()}</h2>
+            ${promptMetaHtml()}
+            <div class="row" style="margin-top: 12px;">
+              <button class="btn light small" id="backToBank">返回题库换题</button>
+            </div>
+          </div>
+      `;
+      if (state.phase === "PREP") {
+        right += `
+          <div class="timer"><div class="eyebrow">Preparation Timer</div><div class="time">${formatTime(state.prepSeconds)}</div></div>
+          <div class="row">
+            <button class="btn jade" id="togglePrep">${state.prepRunning ? "暂停" : "开始准备"}</button>
+            <button class="btn light" id="resetPrep">重置</button>
+            <button class="btn" id="goPresentation">开始陈述</button>
+          </div>
+        `;
+      }
+      if (state.phase === "PRESENTATION") {
+        right += `
+          <div class="card soft"><strong>Oral Presentation</strong><p class="muted">最长2分钟。10分钟准备结束后也会自动进入这个阶段。</p></div>
+          ${activeRecordingHtml()}
+          <button class="btn coral" id="recordPresentation" ${state.activeRecording ? "disabled" : ""}>开始2分钟录音</button>
+          <div class="card soft"><strong>文字稿位置</strong><p class="muted">陈述录音的转文字会进入下方“本次作答文本总表”的 Oral Presentation Transcript，不会因为进入讨论而消失。</p></div>
+          <button class="btn" id="goDiscussion">进入讨论</button>
+        `;
+      }
+      if (state.phase === "DISCUSSION") {
+        const q = questions[state.questionIndex];
+        right += `
+          ${discussionProgressHtml(questions)}
+          <div class="card soft"><div class="eyebrow">Question ${state.questionIndex + 1} / ${questions.length}</div><h2>${q}</h2></div>
+          ${activeRecordingHtml()}
+          <button class="btn coral" id="recordDiscussion" ${state.activeRecording ? "disabled" : ""}>录制本题回答</button>
+          <div class="card soft"><strong>文字稿位置</strong><p class="muted">本题录音的转文字会进入下方“Discussion Q${state.questionIndex + 1}”对应格子。你可以随时切换题号回来修改。</p></div>
+          ${discussionActionButtonsHtml(questions)}
+          <button class="btn jade" id="nextQuestion">${state.questionIndex + 1 < questions.length ? "Next Question" : "Generate Report"}</button>
+        `;
+      }
+      right += attemptWorkspaceHtml(questions);
+      if (state.phase === "REPORT") right += reportHtml(report);
+      right += captureExportHtml() + recordingsHtml() + assignmentSubmitHtml(report) + "</section>";
+      document.getElementById("app").innerHTML = `<div class="grid">${stimulusPanel()}${right}</div>`;
+
+      document.getElementById("togglePrep")?.addEventListener("click", startPrep);
+      document.getElementById("backToBank")?.addEventListener("click", () => { state.mode = "QUESTION_BANK_MODE"; scheduleAttemptSave(); render(); });
+      document.getElementById("resetPrep")?.addEventListener("click", () => { state.prepSeconds = 600; state.prepRunning = false; window.clearInterval(state.prepTimer); scheduleAttemptSave(); render(); });
+      document.getElementById("goPresentation")?.addEventListener("click", () => { state.phase = "PRESENTATION"; scheduleAttemptSave(); render(); });
+      document.getElementById("recordPresentation")?.addEventListener("click", () => recordAudio("Oral Presentation Recording", 120, { type: "presentation" }));
+      document.getElementById("goDiscussion")?.addEventListener("click", () => { state.phase = "DISCUSSION"; scheduleAttemptSave(); render(); });
+      document.getElementById("recordDiscussion")?.addEventListener("click", () => recordAudio(`Discussion Question ${state.questionIndex + 1}`, null, { type: "discussion", index: state.questionIndex }));
+      bindDiscussionControls(questions);
+      document.getElementById("exportJson")?.addEventListener("click", () => exportJson(createReport("EXAM_MODE", state.presentationTranscript, state.discussionTranscripts)));
+      document.getElementById("copyJson")?.addEventListener("click", () => copyJson(createReport("EXAM_MODE", state.presentationTranscript, state.discussionTranscripts)));
+      bindSelfReflection();
+      document.getElementById("studentName")?.addEventListener("input", event => { state.studentName = event.target.value; scheduleAttemptSave(); });
+      document.getElementById("submitAssignment")?.addEventListener("click", () => submitAssignment(createReport("EXAM_MODE", state.presentationTranscript, state.discussionTranscripts)));
+      bindRecordingControls();
+      bindTranscriptTools();
+      bindAttemptWorkspace();
+      bindCaptureExportControls();
+    }
+
+    function renderTraining() {
+      document.getElementById("app").innerHTML = `
+        <div class="grid">
+          ${stimulusPanel()}
+          <section class="stack">
+            <div class="panel">
+              <div class="eyebrow">Current Training Prompt · ${currentPromptObject()?.question_id || "默认模拟题"}</div>
+              <h2 class="prompt">${currentPrompt()}</h2>
+              ${promptMetaHtml()}
+              <div class="row" style="margin-top: 12px;"><button class="btn light small" id="backToBank">返回题库换题</button></div>
+            </div>
+            ${trainingStimulusHtml()}
+            ${trainingVocabularyHtml()}
+            ${trainingStructureHtml()}
+            ${trainingDrillsHtml()}
+            ${attemptWorkspaceHtml(currentDiscussionQuestions())}
+            ${captureExportHtml()}
+          </section>
+        </div>
+      `;
+      document.getElementById("backToBank")?.addEventListener("click", () => { state.mode = "QUESTION_BANK_MODE"; scheduleAttemptSave(); render(); });
+      document.querySelector(".practice")?.addEventListener("click", () => recordAudio("Training Section Practice", null, { type: "presentation" }));
+      document.querySelector(".practiceFull")?.addEventListener("click", () => recordAudio("Training Full 2-minute Presentation", 120, { type: "presentation" }));
+      document.getElementById("studentName")?.addEventListener("input", event => { state.studentName = event.target.value; scheduleAttemptSave(); });
+      document.getElementById("submitAssignment")?.addEventListener("click", () => submitAssignment(createReport("TRAINING_MODE", state.presentationTranscript, state.discussionTranscripts)));
+      bindRecordingControls();
+      bindTranscriptTools();
+      bindAttemptWorkspace();
+      bindCaptureExportControls();
+    }
+
+    function renderDiagnostic() {
+      const flags = diagnose(state.diagnosticTranscript);
+      const report = createReport("DIAGNOSTIC_MODE", state.diagnosticTranscript, []);
+      document.getElementById("app").innerHTML = `
+        <div class="grid">
+          <section class="panel">
+            <h2>Paste Transcript</h2>
+            <p class="muted" style="margin-top: 8px;">当前诊断题目：${currentPrompt()}</p>
+            ${promptMetaHtml()}
+            ${transcriptToolsHtml("diagnostic")}
+            <textarea id="diagnosticTranscript" style="min-height: 310px;" placeholder="粘贴学生陈述或讨论答案...">${state.diagnosticTranscript}</textarea>
+            <div class="stack" style="margin-top: 14px;">
+              <div>引用题目证据/关键词：${flags.videoEvidence ? "是" : "否"}</div>
+              <div>明确立场：${flags.clearStand ? "是" : "否"}</div>
+              <div>理由发展：${flags.developedReasons ? "是" : "否"}</div>
+              <div>个人/社区/社会延伸：${flags.socialExtension ? "是" : "否"}</div>
+              <div>新加坡/本地延伸：${flags.singaporeSocialExtension ? "是" : "否"}</div>
+              <div>责任分层：${flags.responsibilityLayering ? "是" : "否"}</div>
+              <div>偏题风险：${flags.offTopic ? "有" : "低"}</div>
+              <div>语言过简：${flags.simpleLanguage ? "有" : "低"}</div>
+            </div>
+          </section>
+          ${reportHtml(report)}
+          ${captureExportHtml()}
+        </div>
+      `;
+      document.getElementById("diagnosticTranscript")?.addEventListener("input", event => { state.diagnosticTranscript = event.target.value; scheduleAttemptSave(); renderDiagnostic(); });
+      document.getElementById("exportJson")?.addEventListener("click", () => exportJson(createReport("DIAGNOSTIC_MODE", state.diagnosticTranscript, [])));
+      document.getElementById("copyJson")?.addEventListener("click", () => copyJson(createReport("DIAGNOSTIC_MODE", state.diagnosticTranscript, [])));
+      bindSelfReflection();
+      bindTranscriptTools();
+      bindCaptureExportControls();
+    }
+
+    function renderQuestionBank() {
+      const prompts = state.data.promptBank?.prompts || [];
+      const topicBank = state.data.topicBank;
+      const years = Array.from(new Set(prompts.map(prompt => prompt.year))).sort();
+      const topics = topicBank.topics.map(topic => topic.name);
+      const difficulties = Array.from(new Set(prompts.map(prompt => prompt.difficulty_band))).sort();
+      const promptTypes = Array.from(new Set(prompts.map(prompt => prompt.prompt_type))).sort();
+      const skillOptions = Array.from(new Set(prompts.flatMap(prompt => prompt.skill_focus || []))).sort();
+      const filtered = prompts.filter(prompt => {
+        const filters = state.bankFilters;
+        return (filters.year === "ALL" || String(prompt.year) === filters.year)
+          && (filters.topic === "ALL" || prompt.primary_topic === filters.topic || (prompt.secondary_topics || []).includes(filters.topic))
+          && (filters.difficulty === "ALL" || prompt.difficulty_band === filters.difficulty)
+          && (filters.promptType === "ALL" || prompt.prompt_type === filters.promptType)
+          && (filters.hasVideo === "ALL" || String(prompt.has_video) === filters.hasVideo)
+          && (filters.skill === "ALL" || (prompt.skill_focus || []).includes(filters.skill));
+      });
+      const optionHtml = (items, selected) => items.map(item => `<option value="${item}" ${String(selected) === String(item) ? "selected" : ""}>${item}</option>`).join("");
+      document.getElementById("app").innerHTML = `
+        <section class="panel" style="margin-bottom: 18px;">
+          <div class="eyebrow">${topicBank.version || topicBank.bank_id}</div>
+          <h2>${topicBank.title} · ${topicBank.topics.length}大主题</h2>
+          <div class="topic-grid">${topicBank.topics.map(topic => `<div class="topic-item"><div class="topic-id">${topic.topic_id || topic.id}</div><strong>${topic.name}</strong><p class="muted">${topic.coverage || ""}</p></div>`).join("")}</div>
+        </section>
+        <section class="panel">
+          <h2>Oral Presentation Prompts · ${filtered.length} / ${prompts.length}题</h2>
+          <p class="muted">选择一题后，可直接进入 Exam Mode 或 Training Mode。有视频的题会显示对应视频；无视频题只显示题目刺激。</p>
+          <div class="filters">
+            <label class="field"><strong>Year</strong><select class="bank-filter" data-filter="year"><option value="ALL">全部年份</option>${optionHtml(years, state.bankFilters.year)}</select></label>
+            <label class="field"><strong>Topic</strong><select class="bank-filter" data-filter="topic"><option value="ALL">全部主题</option>${optionHtml(topics, state.bankFilters.topic)}</select></label>
+            <label class="field"><strong>Difficulty</strong><select class="bank-filter" data-filter="difficulty"><option value="ALL">全部难度</option>${optionHtml(difficulties, state.bankFilters.difficulty)}</select></label>
+            <label class="field"><strong>Prompt Type</strong><select class="bank-filter" data-filter="promptType"><option value="ALL">全部题型</option>${optionHtml(promptTypes, state.bankFilters.promptType)}</select></label>
+            <label class="field"><strong>Video</strong><select class="bank-filter" data-filter="hasVideo"><option value="ALL">全部</option><option value="true" ${state.bankFilters.hasVideo === "true" ? "selected" : ""}>有视频</option><option value="false" ${state.bankFilters.hasVideo === "false" ? "selected" : ""}>无视频</option></select></label>
+            <label class="field"><strong>Skill</strong><select class="bank-filter" data-filter="skill"><option value="ALL">全部能力</option>${optionHtml(skillOptions, state.bankFilters.skill)}</select></label>
+          </div>
+          <div class="stack" style="margin-top: 14px;">${filtered.map(prompt => {
+            const index = prompts.indexOf(prompt);
+            const discussion = state.data.discussionSets.sets.find(set => set.discussion_set_id === prompt.discussion_set_id);
+            return `<div class="scene">
+              <div class="eyebrow">${prompt.question_id} · ${prompt.year} ${prompt.day_label}${prompt.session ? " " + prompt.session : ""} · ${prompt.has_video ? "有视频刺激" : "无视频刺激"}</div>
+              <h3>${prompt.prompt}</h3>
+              <div class="tagbox">${[prompt.primary_topic, ...(prompt.secondary_topics || []), prompt.difficulty_band].map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+              <p class="muted" style="margin-top: 8px;">关键词：${(prompt.topic_keywords || []).join("、")}</p>
+              <p class="muted">会话题：${discussion?.questions?.[0]?.text || "未绑定"}</p>
+              <div class="row" style="margin-top: 12px;"><button class="btn jade small start-exam" data-index="${index}">用这题进入 Exam Mode</button><button class="btn light small start-training" data-index="${index}">用这题进入 Training Mode</button></div>
+            </div>`;
+          }).join("") || `<div class="scene"><h3>没有符合筛选的题目。</h3></div>`}</div>
+        </section>
+      `;
+      document.querySelectorAll(".bank-filter").forEach(select => {
+        select.addEventListener("change", () => {
+          state.bankFilters[select.dataset.filter] = select.value;
+          renderQuestionBank();
+        });
+      });
+      document.querySelectorAll(".start-exam").forEach(button => {
+        button.addEventListener("click", () => startPromptPractice(Number(button.dataset.index), "EXAM_MODE"));
+      });
+      document.querySelectorAll(".start-training").forEach(button => {
+        button.addEventListener("click", () => startPromptPractice(Number(button.dataset.index), "TRAINING_MODE"));
+      });
+    }
+
+    function render() {
+      renderPlanCardPanel();
+      renderTabs();
+      if (state.mode === "EXAM_MODE") renderExam();
+      if (state.mode === "TRAINING_MODE") renderTraining();
+      if (state.mode === "DIAGNOSTIC_MODE") renderDiagnostic();
+      if (state.mode === "QUESTION_BANK_MODE") renderQuestionBank();
+    }
+
+    async function init() {
+      let exam;
+      let rubric;
+      let taxonomy;
+      let topicBank;
+      let promptBank;
+      let discussionSets;
+      let drillMap;
+      try {
+        [exam, rubric, taxonomy, topicBank, promptBank, discussionSets, drillMap] = await Promise.all([
+          fetch("data/wet-market.exam.json").then(response => {
+            if (!response.ok) throw new Error("exam json missing");
+            return response.json();
+          }),
+          fetch("data/rubric.hcl1116.json").then(response => {
+            if (!response.ok) throw new Error("rubric json missing");
+            return response.json();
+          }),
+          fetch("data/error-taxonomy.json").then(response => {
+            if (!response.ok) throw new Error("taxonomy json missing");
+            return response.json();
+          }),
+          fetch("data/topic-bank.hcl-oral.json").then(response => {
+            if (!response.ok) throw new Error("topic bank missing");
+            return response.json();
+          }),
+          fetch("data/prompts.hcl-oral.2016-2025.json").then(response => {
+            if (!response.ok) throw new Error("prompt bank missing");
+            return response.json();
+          }),
+          fetch("data/discussion-sets.hcl-oral.json").then(response => {
+            if (!response.ok) throw new Error("discussion sets missing");
+            return response.json();
+          }),
+          fetch("data/drill-map.hcl-oral.json").then(response => {
+            if (!response.ok) throw new Error("drill map missing");
+            return response.json();
+          })
+        ]);
+      } catch (error) {
+        if (!window.HCL_ORAL_DATA) throw error;
+        ({ exam, rubric, taxonomy, topicBank, promptBank, discussionSets, drillMap } = window.HCL_ORAL_DATA);
+      }
+      state.data = { exam, rubric, taxonomy, topicBank, promptBank, discussionSets, drillMap };
+      state.selectedPromptObject = promptBank?.prompts?.find(prompt => prompt.question_id === "HCL-ORAL-2021-D04") || null;
+      state.selectedPrompt = state.selectedPromptObject?.prompt || exam.presentation_prompt;
+      state.selectedPromptIndex = promptBank?.prompts?.indexOf(state.selectedPromptObject) || 0;
+      state.discussionTranscripts = currentDiscussionQuestions().map(() => "");
+      await initAttemptStore();
+      render();
+    }
+
+    init().catch(() => {
+      document.getElementById("app").innerHTML = '<section class="panel"><h2>无法加载口语训练数据</h2><p class="muted">请检查 data 文件夹是否完整。</p></section>';
+    });
+
+    if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {
+          console.warn("HCL Oral Pilot service worker registration failed.");
+        });
+      });
+    }
+  </script>
+</body>
+</html>
