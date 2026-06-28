@@ -1,0 +1,51 @@
+{
+  "rubric_id": "HCL1116_ORAL_RUBRIC",
+  "total": 40,
+  "presentation": {
+    "total": 20,
+    "content_organisation": {
+      "max": 14,
+      "criteria": [
+        "clear_stand",
+        "uses_video_evidence",
+        "develops_reasons",
+        "organised_structure",
+        "relevant_examples",
+        "conclusion"
+      ]
+    },
+    "language": {
+      "max": 6,
+      "criteria": [
+        "fluency",
+        "clarity",
+        "vocabulary",
+        "sentence_variety",
+        "pronunciation"
+      ]
+    }
+  },
+  "discussion": {
+    "total": 20,
+    "participation_reasoning": {
+      "max": 14,
+      "criteria": [
+        "answers_question_directly",
+        "explains_viewpoint",
+        "gives_reasons",
+        "responds_to_follow_up",
+        "extends_idea"
+      ]
+    },
+    "language": {
+      "max": 6,
+      "criteria": [
+        "fluency",
+        "clarity",
+        "vocabulary",
+        "sentence_variety",
+        "pronunciation"
+      ]
+    }
+  }
+}

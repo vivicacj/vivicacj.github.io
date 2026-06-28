@@ -1,0 +1,54 @@
+{
+  "version": "HCL_ORAL_DRILL_MAP_V1",
+  "drills": {
+    "HCL-ORAL-DRILL-STANCE-001": {
+      "name": "明确立场训练",
+      "trigger": [
+        "no_clear_stand"
+      ],
+      "task": "用一句话回答：我同意 / 我不同意 / 我部分同意，并说明一个原因。"
+    },
+    "HCL-ORAL-DRILL-REASON-002": {
+      "name": "原因展开训练",
+      "trigger": [
+        "underdeveloped_reason"
+      ],
+      "task": "用 因为→这会导致→所以 三步展开一个理由。"
+    },
+    "HCL-ORAL-DRILL-SG-EXAMPLE-003": {
+      "name": "新加坡例子训练",
+      "trigger": [
+        "no_singapore_example"
+      ],
+      "task": "为当前题目补一个新加坡社会、学校、社区或政府相关例子。"
+    },
+    "HCL-ORAL-DRILL-RESPONSIBILITY-004": {
+      "name": "责任分层训练",
+      "trigger": [
+        "weak_responsibility_layering"
+      ],
+      "task": "分别说明个人、学校/社区、政府/企业的责任。"
+    },
+    "HCL-ORAL-DRILL-CONCESSION-005": {
+      "name": "让步反驳训练",
+      "trigger": [
+        "one_sided_answer"
+      ],
+      "task": "先承认反方合理处，再说明为什么自己的立场更有说服力。"
+    },
+    "HCL-ORAL-DRILL-CONCLUSION-006": {
+      "name": "结尾回扣训练",
+      "trigger": [
+        "no_conclusion"
+      ],
+      "task": "用一句话回到题目，重申立场。"
+    },
+    "HCL-ORAL-DRILL-VOCAB-007": {
+      "name": "主题词汇训练",
+      "trigger": [
+        "simple_language_risk"
+      ],
+      "task": "从当前主题词库中选 5 个词，分别造句。"
+    }
+  }
+}

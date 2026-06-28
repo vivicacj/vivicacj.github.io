@@ -1,0 +1,55 @@
+{
+  "taxonomy_id": "HCL1116_ORAL_ERROR_TAXONOMY",
+  "errors": [
+    {
+      "code": "NO_CLEAR_STAND",
+      "label": "立场不清楚",
+      "if_then_patch": "如果开头没有明确立场，就用“我认为传统湿巴刹仍然有保留价值，因为……”作为第一句。"
+    },
+    {
+      "code": "NO_VIDEO_EVIDENCE",
+      "label": "没有引用录像细节",
+      "if_then_patch": "如果答案太空泛，就加入至少一个画面细节，例如顾客与摊主交流、鱼档售卖新鲜食材。"
+    },
+    {
+      "code": "UNDERDEVELOPED_REASON",
+      "label": "理由发展不足",
+      "if_then_patch": "如果只讲观点没有解释，就补上“这说明……因此……”来发展原因。"
+    },
+    {
+      "code": "NO_SOCIAL_EXTENSION",
+      "label": "缺少社会层面延伸",
+      "if_then_patch": "如果只谈个人喜好，就扩展到社区凝聚力、年轻一代或传统行业传承。"
+    },
+    {
+      "code": "NO_SINGAPORE_EXAMPLE",
+      "label": "缺少新加坡例子",
+      "if_then_patch": "如果答案太抽象，就补一个本地学校、社区、政府政策或日常生活例子。"
+    },
+    {
+      "code": "WEAK_RESPONSIBILITY_LAYERING",
+      "label": "责任分层不足",
+      "if_then_patch": "如果只说一方应该负责，就分别说明个人、学校/社区、政府/企业的责任。"
+    },
+    {
+      "code": "ONE_SIDED_ANSWER",
+      "label": "论证过于单面",
+      "if_then_patch": "如果只讲赞成或反对，就加入“虽然……但是……”的让步反驳。"
+    },
+    {
+      "code": "NO_CONCLUSION",
+      "label": "没有结尾回扣",
+      "if_then_patch": "如果结尾突然停止，就用一句话回到题目并重申立场。"
+    },
+    {
+      "code": "OFF_TOPIC",
+      "label": "偏题",
+      "if_then_patch": "如果答案主要谈超市便利，就回扣湿巴刹是否有保留价值。"
+    },
+    {
+      "code": "SIMPLE_LANGUAGE",
+      "label": "语言过于简单",
+      "if_then_patch": "如果词汇重复，就替换为“保留价值、消费习惯、社区凝聚力、现代化转型”等主题词。"
+    }
+  ]
+}
